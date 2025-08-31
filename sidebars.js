@@ -60,6 +60,7 @@ const sidebars = {
         'installation/embedding',
         'installation/image_gen',
         'installation/dalle',
+        'installation/fallback_models',
       ],
     },
     {
