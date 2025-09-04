@@ -61,6 +61,7 @@ const sidebars = {
         'installation/image_gen',
         'installation/dalle',
         'installation/fallback_models',
+        'installation/prompt_cache'
       ],
     },
     {

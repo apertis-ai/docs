@@ -3,6 +3,6 @@
     "position": 3,
     "link": {
         "type": "generated-index",
-        "description": "Chatbox AI, Cursor IDE, 沉浸式翻譯, Continue Dev, Cline, LangChain, LlamaIndex"
+        "description": "Prompt Cache, Chatbox AI, Cursor IDE, 沉浸式翻譯, Continue Dev, Cline, LangChain, LlamaIndex"
     }
 }
