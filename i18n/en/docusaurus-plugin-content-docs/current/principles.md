@@ -1,4 +1,4 @@
-# Why Choose Stima AI?
+# Why Choose Apertis?
 
 ## 🚀 Perfect Balance of Performance and Cost
 - **Smart Price Optimization**: Find the most competitive prices across multiple providers
