@@ -12,12 +12,8 @@
     "description": "The label of footer link with label=Stima API 官網 linking to https://api.stima.tech"
   },
   "link.item.label.StimaChat 對話系統": {
-    "message": "StimaChat Conversation System",
-    "description": "The label of footer link with label=StimaChat 對話系統 linking to https://chat.stima.tech"
-  },
-  "link.item.label.Stima Research 研究報告": {
-    "message": "Research",
-    "description": "The label of footer link with label=Stima Research 研究報告 linking to https://blog.stima.tech"
+    "message": "Web Chat Service",
+    "description": "The label of footer link with label=Web Chat Service linking to https://chat.stima.tech"
   },
   "link.item.label.Stima Playground": {
     "message": "Playground",
@@ -33,7 +29,7 @@
   },
   "link.item.label.Email": {
     "message": "Email",
-    "description": "The label of footer link with label=Email linking to mailto:support@stima.tech"
+    "description": "The label of footer link with label=Email linking to mailto:hi@apertis.ai"
   },
   "link.item.label.Facebook": {
     "message": "Facebook",

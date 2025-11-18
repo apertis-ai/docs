@@ -186,7 +186,7 @@ const config = {
             items: [
               {
                 label: 'Email',
-                href: 'mailto:support@stima.tech',
+                href: 'mailto:hi@apertis.ai',
               },
               {
                 label: 'Facebook',
