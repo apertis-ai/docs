@@ -34,6 +34,6 @@ print(response.choices[0])
 
 ## 參數說明
 
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.stima.tech/#pricing)。
+- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.stima.tech/models)。
 - `<IMAGE_URL>`: 要讀取的圖片 URL。
 - `STIMA_API_KEY`: 您的 API 金鑰

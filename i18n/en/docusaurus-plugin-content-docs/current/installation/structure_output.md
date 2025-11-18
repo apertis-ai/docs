@@ -72,5 +72,5 @@ print(data.decode("utf-8"))
 ```
 
 ## Parameter
-- `model`: See [Model List](https://api.stima.tech/#pricing).
+- `model`: See [Model List](https://api.stima.tech/models).
 - `STIMA_API_KEY`: Your Stima [API Key](https://api.stima.tech/token).

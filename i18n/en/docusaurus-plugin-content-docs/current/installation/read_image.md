@@ -33,6 +33,6 @@ print(response.choices[0])
 ```
 
 ## Parameters
-- `<MODEL>`: The model to use, see [Model List](https://api.stima.tech/#pricing).
+- `<MODEL>`: The model to use, see [Model List](https://api.stima.tech/models).
 - `<IMAGE_URL>`: The URL of the image to read.
 - `STIMA_API_KEY`: Your API key.

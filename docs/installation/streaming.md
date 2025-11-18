@@ -22,6 +22,6 @@ for chunk in stream:
 
 ## 參數說明
 
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.stima.tech/#pricing)。
+- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.stima.tech/models)。
 - `stream`: 是否開啟流式輸出，目前僅支援 `True`。
 - `STIMA_API_KEY`: 您的 API 金鑰

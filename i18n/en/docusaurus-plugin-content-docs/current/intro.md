@@ -4,8 +4,8 @@ sidebar_position: 1
 
 # Quick Overview
 
-### 1. Homepage - **[Stima API](https://api.stima.tech/)**
-Click **[Stima API](https://api.stima.tech/)** to visit the official website, where you can find the currently supported **applications**, the **[model support list](https://api.stima.tech/#pricing)**, and **more information**.
+### 1. Homepage - **[Apertis](https://api.stima.tech/)**
+Click **[Apertis](https://api.stima.tech/)** to visit the official website, where you can find the currently supported **applications**, the **[model support list](https://api.stima.tech/models)**, and **more information**.
 
 ### 2. Login
 Click on the "Login" button in the top-right corner to register and log in. Currently, **email** and **username** login methods are supported.
@@ -26,7 +26,7 @@ You can customize your API Key settings, including **quota allocation**, **model
 
 ### 4. Credits
 
-After purchasing a plan on the [Stima API Purchase Page](https://payment.stima.tech/) and obtaining a top-up code, navigate to this section to add credits. Enter the top-up code and click "Top-Up" to complete the process.  
+After purchasing a plan on the [Apertis Purchase Page](https://payment.stima.tech/) and obtaining a top-up code, navigate to this section to add credits. Enter the top-up code and click "Top-Up" to complete the process.  
 You can revisit this section at any time to top up or **check your remaining credits**.
 
 ![image](static/img/intro_4.png)

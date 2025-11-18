@@ -27,7 +27,7 @@ Roo Code is a solution that enables developers to easily integrate Stima API int
 - Select `Settings` and `API Providers` in the Roo Code settings page, and choose `OpenAI Compatible` API mode
 - Enter `https://api.stima.tech/v1` in the `Base URL` field
 - Enter your API key in the `OpenAI API Key` field
-- Enter the model alias in the `Model` field, refer to [Model List](https://api.stima.tech/#pricing)
+- Enter the model alias in the `Model` field, refer to [Model List](https://api.stima.tech/models)
 ![image](../static/img/roocode_2.png)
 
 After completing the input fields, you can start using the extension with the model you want!

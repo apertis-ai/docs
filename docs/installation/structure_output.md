@@ -73,5 +73,5 @@ print(data.decode("utf-8"))
 
 ## 參數說明
 
-- `model`: 請見[模型列表](https://api.stima.tech/#pricing)。
+- `model`: 請見[模型列表](https://api.stima.tech/models)。
 - `STIMA_API_KEY`: 您的 API 金鑰。

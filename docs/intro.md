@@ -5,7 +5,7 @@ sidebar_position: 1
 # 快速了解 Stima API 
 
 ### 1. 網站連結 - **[Stima API](https://api.stima.tech/)**
-點擊 **[Stima API](https://api.stima.tech/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://api.stima.tech/#pricing)**，以及 **更多資訊**。
+點擊 **[Stima API](https://api.stima.tech/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://api.stima.tech/models)**，以及 **更多資訊**。
 
 
 ### 2. 登入 

@@ -21,6 +21,6 @@ for chunk in stream:
 ```
 
 ## Parameters
-- `<MODEL>`: The model to use, see [Model List](https://api.stima.tech/#pricing).
+- `<MODEL>`: The model to use, see [Model List](https://api.stima.tech/models).
 - `stream`: Whether to enable streaming output, currently only supports `True`.
 - `STIMA_API_KEY`: Your API key.
