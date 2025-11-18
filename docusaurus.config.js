@@ -30,14 +30,9 @@ const config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'zh-Hant',
-    locales: ['zh-Hant', 'en'],
+    defaultLocale: 'en',
+    locales: ['en'],
     localeConfigs: {
-      'zh-Hant': {
-        label: '繁體中文',
-        direction: 'ltr',
-        htmlLang: 'zh-TW',
-      },
       en: {
         label: 'English',
         direction: 'ltr',
@@ -150,10 +145,6 @@ const config = {
           {
             href: 'https://api.stima.tech',
             label: 'Stima API 官網',
-            position: 'right',
-          },
-          {
-            type: 'localeDropdown',
             position: 'right',
           },
         ],
