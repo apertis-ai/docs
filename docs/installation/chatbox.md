@@ -14,7 +14,7 @@ Chatbox AI 是一個圖形化的聊天介面，其優點為 **使用API Key進�
 
 點擊左下角的設定，將會看到【模型設置的畫面】，於【模型提供方】選擇 `添加自定義提供方`管道，再者，於 `API 模式`選擇 `OpenAI API 兼容`，因為我們提供 OpenAI API 的模型呼叫格式，所以可以直接選擇。
 
-請在【API金鑰】處輸入您的 API Key，並於【API域名】輸入`https://api.stima.tech`，並選擇您欲使用的模型。選擇完之後可以微調一些數值(如 `temperature`, `Top P` 等)，並按下儲存即可開始使用模型。
+請在【API金鑰】處輸入您的 API Key，並於【API域名】輸入`https://api.apertis.ai`，並選擇您欲使用的模型。選擇完之後可以微調一些數值(如 `temperature`, `Top P` 等)，並按下儲存即可開始使用模型。
 
 ![image](https://hackmd.io/_uploads/S1JVicdoR.png)
 
@@ -25,7 +25,7 @@ Chatbox AI 是一個圖形化的聊天介面，其優點為 **使用API Key進�
 
 * **API模式** : OPENAI API兼容
 * **名稱** : 任意(方便辨識是Claude 3.5 Sonnet即可)
-* **API域名** : `https://api.stima.tech`
+* **API域名** : `https://api.apertis.ai`
 * **API路徑** : 無須變動
 * **API金鑰** : 你的API Key
 * **模型** : `claude-3-5-sonnet-20240620`

@@ -86,7 +86,7 @@ import openai
 # 配置 Stima API
 client = openai.OpenAI(
     api_key="your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 # 使用備用模型的聊天請求
@@ -119,7 +119,7 @@ if hasattr(response, 'headers'):
 import requests
 import json
 
-url = "https://api.stima.tech/v1/chat/completions"
+url = "https://api.apertis.ai/v1/chat/completions"
 headers = {
     "Authorization": "Bearer your-api-key",
     "Content-Type": "application/json"
@@ -157,7 +157,7 @@ except requests.exceptions.RequestException as e:
 
 ```bash
 # 基本 Fallback 請求
-curl -X POST "https://api.stima.tech/v1/chat/completions" \
+curl -X POST "https://api.apertis.ai/v1/chat/completions" \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
@@ -178,7 +178,7 @@ curl -X POST "https://api.stima.tech/v1/chat/completions" \
 
 ```bash
 # 顯示完整 headers 以檢查 fallback 使用情況
-curl -X POST "https://api.stima.tech/tech/chat/completions" \
+curl -X POST "https://api.apertis.ai/tech/chat/completions" \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -D headers.txt \

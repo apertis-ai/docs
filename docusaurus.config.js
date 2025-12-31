@@ -207,7 +207,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © 2024 - 2025 Stima AI, LLC.`,
+        copyright: `Copyright © 2024 - 2026 Stima AI, LLC.`,
       },
       prism: {
         theme: prismThemes.github,

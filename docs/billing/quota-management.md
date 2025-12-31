@@ -104,7 +104,7 @@ Check quota programmatically:
 import requests
 
 response = requests.get(
-    "https://api.stima.tech/api/user/token",
+    "https://api.apertis.ai/api/user/token",
     headers={"Authorization": "Bearer sk-your-api-key"}
 )
 

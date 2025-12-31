@@ -27,7 +27,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-your-apertis-key",
-    base_url="https://api.stima.tech/v1"  # Only change needed
+    base_url="https://api.apertis.ai/v1"  # Only change needed
 )
 ```
 
@@ -48,7 +48,7 @@ Apertis provides access to 60+ models including:
 
 ### How do I get an API key?
 
-1. Sign up at [api.stima.tech](https://api.stima.tech)
+1. Sign up at [api.apertis.ai](https://api.apertis.ai)
 2. Go to **API Keys** section
 3. Click **Create New Key**
 4. Copy and securely store your key
@@ -126,7 +126,7 @@ Contact support at hi@apertis.ai for refund requests. Refunds are handled case-b
 ### What's the API base URL?
 
 ```
-https://api.stima.tech/v1
+https://api.apertis.ai/v1
 ```
 
 ### What's the rate limit?
@@ -218,7 +218,7 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(
     model="gpt-4o",
     openai_api_key="sk-your-key",
-    openai_api_base="https://api.stima.tech/v1"
+    openai_api_base="https://api.apertis.ai/v1"
 )
 ```
 

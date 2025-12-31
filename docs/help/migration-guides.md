@@ -22,7 +22,7 @@ client = OpenAI(
 # After (Apertis)
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 ```
 
@@ -38,7 +38,7 @@ const client = new OpenAI({
 // After (Apertis)
 const client = new OpenAI({
   apiKey: 'sk-apertis-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 ```
 
@@ -50,14 +50,14 @@ curl https://api.openai.com/v1/chat/completions \
   ...
 
 # After (Apertis)
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer sk-apertis-key" \
   ...
 ```
 
 ### Step 2: Get Your Apertis API Key
 
-1. Sign up at [api.stima.tech](https://api.stima.tech)
+1. Sign up at [api.apertis.ai](https://api.apertis.ai)
 2. Navigate to **API Keys**
 3. Create a new API key
 4. Store it securely
@@ -70,7 +70,7 @@ export OPENAI_API_KEY="sk-openai-key"
 
 # After
 export APERTIS_API_KEY="sk-apertis-key"
-export APERTIS_BASE_URL="https://api.stima.tech/v1"
+export APERTIS_BASE_URL="https://api.apertis.ai/v1"
 ```
 
 ### Step 4: Test Your Integration
@@ -153,7 +153,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -234,7 +234,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -273,7 +273,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -301,7 +301,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -333,7 +333,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -360,7 +360,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-apertis-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 ```
 
@@ -378,7 +378,7 @@ llm = ChatOpenAI(model="gpt-4")
 llm = ChatOpenAI(
     model="gpt-4o",
     openai_api_key="sk-apertis-key",
-    openai_api_base="https://api.stima.tech/v1"
+    openai_api_base="https://api.apertis.ai/v1"
 )
 ```
 
@@ -394,7 +394,7 @@ llm = OpenAI(model="gpt-4")
 llm = OpenAI(
     model="gpt-4o",
     api_key="sk-apertis-key",
-    api_base="https://api.stima.tech/v1"
+    api_base="https://api.apertis.ai/v1"
 )
 ```
 

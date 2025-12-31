@@ -4,7 +4,7 @@ API keys are used to authenticate requests to the Apertis API. This guide explai
 
 ## Obtaining Your API Key
 
-1. **Sign up or log in** to your account at [Apertis Dashboard](https://api.stima.tech)
+1. **Sign up or log in** to your account at [Apertis Dashboard](https://api.apertis.ai)
 2. Navigate to **API Keys** section in the dashboard
 3. Click **Create New Key** to generate a new API key
 4. Copy and securely store your API key - it will only be shown once
@@ -32,7 +32,7 @@ sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Include your API key in the `Authorization` header with the `Bearer` prefix:
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -48,7 +48,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -66,7 +66,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 const response = await client.chat.completions.create({
@@ -206,7 +206,7 @@ Revoking a key is immediate and cannot be undone. Any applications using that ke
 Use the `/v1/models` endpoint to verify your API key is working:
 
 ```bash
-curl https://api.stima.tech/v1/models \
+curl https://api.apertis.ai/v1/models \
   -H "Authorization: Bearer sk-your-api-key"
 ```
 

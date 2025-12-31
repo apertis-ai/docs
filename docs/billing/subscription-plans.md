@@ -222,7 +222,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-sub-your-subscription-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 # Quota is tracked against your subscription

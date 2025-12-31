@@ -4,13 +4,13 @@ Get up and running with the Apertis API in under 5 minutes. This guide walks you
 
 ## Prerequisites
 
-- An Apertis account ([Sign up here](https://api.stima.tech))
-- An API key ([Get your key](https://api.stima.tech))
+- An Apertis account ([Sign up here](https://api.apertis.ai))
+- An API key ([Get your key](https://api.apertis.ai))
 - Basic knowledge of HTTP requests or a programming language
 
 ## Step 1: Get Your API Key
 
-1. Log in to [Apertis Dashboard](https://api.stima.tech)
+1. Log in to [Apertis Dashboard](https://api.apertis.ai)
 2. Navigate to **API Keys**
 3. Click **Create New Key**
 4. Copy your key (format: `sk-xxxxxxxx`)
@@ -26,7 +26,7 @@ Choose your preferred method:
 ### Using cURL
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-your-api-key" \
   -d '{
@@ -52,7 +52,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -80,7 +80,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 async function main() {
@@ -258,7 +258,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ.get("APERTIS_API_KEY"),
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 ```
 
@@ -271,7 +271,7 @@ from openai import OpenAI, APIError, RateLimitError
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 try:
@@ -302,7 +302,7 @@ Now that you've made your first API call, explore more:
 
 ### Base URL
 ```
-https://api.stima.tech/v1
+https://api.apertis.ai/v1
 ```
 
 ### Authentication

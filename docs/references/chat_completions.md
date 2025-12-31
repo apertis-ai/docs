@@ -6,7 +6,7 @@
 ## HTTP 請求
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <STIMA_API_KEY>" \
     -d '{

@@ -4,7 +4,7 @@
 ### 使用 Stima API
 請選擇 Cline 擴充功能右上角設定按鈕，選擇 `Settings`
 - 在 API Provider 欄位選擇 `OpenAI Compatible`
-- 在 Base URL 欄位填入 `https://api.stima.tech/v1`
+- 在 Base URL 欄位填入 `https://api.apertis.ai/v1`
 - 在 API Key 欄位填入您的 API Key
 ---
 *如下圖所示 (以 `Anthropic Claude 3.5 Sonnet 20240620` 為例)*

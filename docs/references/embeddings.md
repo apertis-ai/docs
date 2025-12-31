@@ -8,7 +8,7 @@ Stima API 提供 Embedding API 讓開發者可以將文字轉換為向量，並�
 import http.client
 import json
 
-conn = http.client.HTTPSConnection("api.stima.tech")
+conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
    "model": "text-embedding-3-large",
    "input": "The food was delicious and the waiter..."

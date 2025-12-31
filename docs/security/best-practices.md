@@ -11,7 +11,7 @@ API keys should never be visible in browser or mobile app code:
 ```javascript
 // ❌ WRONG - Key exposed in frontend
 const apiKey = "sk-abc123...";
-fetch('https://api.stima.tech/v1/chat/completions', {
+fetch('https://api.apertis.ai/v1/chat/completions', {
   headers: { 'Authorization': `Bearer ${apiKey}` }
 });
 
@@ -37,7 +37,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ.get("APERTIS_API_KEY"),
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 ```
 
@@ -170,7 +170,7 @@ import OpenAI from 'openai';
 const app = express();
 const client = new OpenAI({
   apiKey: process.env.APERTIS_API_KEY,
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 app.post('/api/chat', async (req, res) => {
@@ -338,10 +338,10 @@ Always use HTTPS for API calls:
 
 ```python
 # ✅ CORRECT - HTTPS
-base_url = "https://api.stima.tech/v1"
+base_url = "https://api.apertis.ai/v1"
 
 # ❌ WRONG - HTTP (insecure)
-base_url = "http://api.stima.tech/v1"
+base_url = "http://api.apertis.ai/v1"
 ```
 
 ### Certificate Validation
@@ -352,14 +352,14 @@ Never disable SSL certificate validation:
 # ❌ DANGEROUS - Never do this in production
 client = OpenAI(
     api_key="sk-xxx",
-    base_url="https://api.stima.tech/v1",
+    base_url="https://api.apertis.ai/v1",
     http_client=httpx.Client(verify=False)  # INSECURE!
 )
 
 # ✅ CORRECT - Use proper certificates
 client = OpenAI(
     api_key="sk-xxx",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 ```
 
@@ -369,7 +369,7 @@ Restrict outbound connections:
 
 ```
 # Allow only necessary outbound
-ALLOW outbound to api.stima.tech:443
+ALLOW outbound to api.apertis.ai:443
 DENY outbound to all other
 ```
 

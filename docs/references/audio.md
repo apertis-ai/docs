@@ -53,7 +53,7 @@ Content-Type: multipart/form-data
 
 **cURL:**
 ```bash
-curl https://api.stima.tech/v1/audio/transcriptions \
+curl https://api.apertis.ai/v1/audio/transcriptions \
   -H "Authorization: Bearer sk-your-api-key" \
   -F file="@audio.mp3" \
   -F model="whisper-1"
@@ -65,7 +65,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 audio_file = open("audio.mp3", "rb")
@@ -84,7 +84,7 @@ import fs from 'fs';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 const transcript = await client.audio.transcriptions.create({
@@ -204,7 +204,7 @@ print(translation.text)  # English translation
 
 **cURL:**
 ```bash
-curl https://api.stima.tech/v1/audio/translations \
+curl https://api.apertis.ai/v1/audio/translations \
   -H "Authorization: Bearer sk-your-api-key" \
   -F file="@french_audio.mp3" \
   -F model="whisper-1"
@@ -292,7 +292,7 @@ fs.writeFileSync('output.mp3', buffer);
 
 **cURL:**
 ```bash
-curl https://api.stima.tech/v1/audio/speech \
+curl https://api.apertis.ai/v1/audio/speech \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{

@@ -7,7 +7,7 @@ from openai import OpenAI
 
 
 client = OpenAI(
-    base_url="https://api.stima.tech/v1",
+    base_url="https://api.apertis.ai/v1",
     api_key="<STIMA_API_KEY>"
 )
 stream = client.chat.completions.create(
@@ -22,6 +22,6 @@ for chunk in stream:
 
 ## 參數說明
 
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.stima.tech/models)。
+- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.apertis.ai/models)。
 - `stream`: 是否開啟流式輸出，目前僅支援 `True`。
 - `STIMA_API_KEY`: 您的 API 金鑰

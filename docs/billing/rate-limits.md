@@ -96,7 +96,7 @@ from openai import OpenAI, RateLimitError
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 def make_request_with_retry(messages, max_retries=5):
@@ -123,7 +123,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 async function makeRequestWithRetry(messages, maxRetries = 5) {
@@ -239,7 +239,7 @@ key_cycle = itertools.cycle(api_keys)
 def get_client():
     return OpenAI(
         api_key=next(key_cycle),
-        base_url="https://api.stima.tech/v1"
+        base_url="https://api.apertis.ai/v1"
     )
 ```
 

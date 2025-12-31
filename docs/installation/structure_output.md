@@ -7,7 +7,7 @@
 import http.client
 import json
 
-conn = http.client.HTTPSConnection("api.stima.tech")
+conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
    "model": "gpt-4o",
    "messages": [
@@ -73,5 +73,5 @@ print(data.decode("utf-8"))
 
 ## 參數說明
 
-- `model`: 請見[模型列表](https://api.stima.tech/models)。
+- `model`: 請見[模型列表](https://api.apertis.ai/models)。
 - `STIMA_API_KEY`: 您的 API 金鑰。

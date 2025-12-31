@@ -50,7 +50,7 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 
 ### Top-Up Process
 
-1. Log in to [Dashboard](https://api.stima.tech)
+1. Log in to [Dashboard](https://api.apertis.ai)
 2. Go to **Billing** → **Add Funds**
 3. Select amount
 4. Choose payment method
@@ -195,7 +195,7 @@ Check balance programmatically:
 import requests
 
 response = requests.get(
-    "https://api.stima.tech/api/user/self",
+    "https://api.apertis.ai/api/user/self",
     headers={"Authorization": "Bearer sk-your-api-key"}
 )
 

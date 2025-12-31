@@ -8,7 +8,7 @@ Stima API 提供 Image Generation API 讓開發者可以生成圖片，以下主
 import requests
 import json
 
-url = "https://api.stima.tech/v1/chat/completions"
+url = "https://api.apertis.ai/v1/chat/completions"
 
 payload = json.dumps({
    "max_tokens": 4096,
@@ -46,7 +46,7 @@ print(response.text)
 import requests
 import json
 
-url = "https://api.stima.tech/v1/chat/completions"
+url = "https://api.apertis.ai/v1/chat/completions"
 
 payload = json.dumps({
    "max_tokens": 4096,
@@ -77,7 +77,7 @@ print(response.text)
 ## 使用方式 (以 bash 為例)
 
 ```bash
-curl -X POST "https://api.stima.tech/v1/chat/completions" \
+curl -X POST "https://api.apertis.ai/v1/chat/completions" \
   -H "Accept: application/json" \
   -H "Authorization: Bearer <STIMA_API_KEY>" \
   -H "Content-Type: application/json" \

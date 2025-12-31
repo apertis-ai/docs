@@ -518,7 +518,7 @@ from openai import OpenAI, APIError, RateLimitError, AuthenticationError
 
 client = OpenAI(
     api_key="sk-your-api-key",
-    base_url="https://api.stima.tech/v1"
+    base_url="https://api.apertis.ai/v1"
 )
 
 try:
@@ -544,7 +544,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.stima.tech/v1'
+  baseURL: 'https://api.apertis.ai/v1'
 });
 
 try {

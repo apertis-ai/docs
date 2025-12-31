@@ -6,7 +6,7 @@
 import requests
 import json
 
-url = "https://api.stima.tech/v1/images/generations"
+url = "https://api.apertis.ai/v1/images/generations"
 
 payload = json.dumps({
    "model": "MODEL_NAME",

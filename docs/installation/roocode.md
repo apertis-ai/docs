@@ -14,19 +14,19 @@ Roo Code 是一個讓開發者能夠輕鬆整合 Stima API 到自己專案的解
 
 ### API 端點
 
-- **[https://api.stima.tech/v1](https://api.stima.tech/v1)**
+- **[https://api.apertis.ai/v1](https://api.apertis.ai/v1)**
 
 ### API 金鑰設定
 
-1. 請先至 [Stima API](https://api.stima.tech/token) 註冊並取得您的 API 金鑰
+1. 請先至 [Stima API](https://api.apertis.ai/token) 註冊並取得您的 API 金鑰
 2. API 金鑰格式為 `sk-` 開頭的字串
 3. 請妥善保管您的 API 金鑰，不要外流或公開分享
 
 ## 安裝範例
 - 在 Roo Code 的設定頁面中選取 `Settings` 以及 `API Providers`專區, 並選取 `OpenAI Compatible` 的 API 模式
-- 在 `Base URL` 處輸入 `https://api.stima.tech/v1`
+- 在 `Base URL` 處輸入 `https://api.apertis.ai/v1`
 - 在 `OpenAI API Key` 處輸入您的 API 金鑰
-- 在 `Model` 處輸入模型的呼叫別名，參考[模型列表](https://api.stima.tech/models)
+- 在 `Model` 處輸入模型的呼叫別名，參考[模型列表](https://api.apertis.ai/models)
 ![image](../static/img/roocode_2.png)
 
 完成上述設定後，即可開始使用您想要的模型！

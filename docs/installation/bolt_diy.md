@@ -13,17 +13,17 @@ bolt.diy 是一個讓開發者能夠輕鬆整合 Stima API 到自己專案的解
 
 ### API 端點
 
-- **[https://api.stima.tech](https://api.stima.tech)**
+- **[https://api.apertis.ai](https://api.apertis.ai)**
 
 ### API 金鑰設定
 
-1. 請先至 [Stima API](https://api.stima.tech/token) 註冊並取得您的 API 金鑰
+1. 請先至 [Stima API](https://api.apertis.ai/token) 註冊並取得您的 API 金鑰
 2. API 金鑰格式為 `sk-` 開頭的字串
 3. 請妥善保管您的 API 金鑰，不要外流或公開分享
 
 ## 安裝範例
 - 在 bolt.diy 的設定頁面中選取 `Provider`, 並選取 `OpenAILike` 的 API 模式
-- 在 `Base URL` 處輸入 `https://api.stima.tech`
+- 在 `Base URL` 處輸入 `https://api.apertis.ai`
 ![image](../static/img/bolt_1.png)
 
 - 在 `API Key` 處輸入您的 API 金鑰

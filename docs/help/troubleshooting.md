@@ -9,7 +9,7 @@ This guide helps you diagnose and resolve common issues when using the Apertis A
 Verify your API key is working:
 
 ```bash
-curl https://api.stima.tech/v1/models \
+curl https://api.apertis.ai/v1/models \
   -H "Authorization: Bearer sk-your-api-key"
 ```
 
@@ -202,7 +202,7 @@ If your subscription token (`sk-sub-xxx`) isn't working:
 
 2. **List available models:**
    ```bash
-   curl https://api.stima.tech/v1/models \
+   curl https://api.apertis.ai/v1/models \
      -H "Authorization: Bearer sk-your-api-key"
    ```
 
@@ -267,7 +267,7 @@ Your API key may not have access to the requested model:
    ```python
    client = OpenAI(
        api_key="sk-xxx",
-       base_url="https://api.stima.tech/v1",
+       base_url="https://api.apertis.ai/v1",
        timeout=120.0  # 120 seconds
    )
    ```
@@ -315,7 +315,7 @@ SSL: CERTIFICATE_VERIFY_FAILED
 
 **Symptoms:**
 ```
-Failed to resolve 'api.stima.tech'
+Failed to resolve 'api.apertis.ai'
 ```
 
 **Solutions:**
@@ -324,7 +324,7 @@ Failed to resolve 'api.stima.tech'
 2. **Try alternative DNS:**
    ```bash
    # Use Google DNS
-   nslookup api.stima.tech 8.8.8.8
+   nslookup api.apertis.ai 8.8.8.8
    ```
 3. **Flush DNS cache:**
    ```bash
@@ -361,7 +361,7 @@ Failed to resolve 'api.stima.tech'
    ```python
    client = OpenAI(
        api_key="sk-xxx",
-       base_url="https://api.stima.tech/v1",
+       base_url="https://api.apertis.ai/v1",
        timeout=httpx.Timeout(60.0, read=300.0)
    )
    ```
@@ -382,7 +382,7 @@ httpx_logger.setLevel(logging.DEBUG)
 
 **cURL:**
 ```bash
-curl -v https://api.stima.tech/v1/models \
+curl -v https://api.apertis.ai/v1/models \
   -H "Authorization: Bearer sk-your-api-key"
 ```
 

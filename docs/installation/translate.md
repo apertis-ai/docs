@@ -24,7 +24,7 @@
 
 - **APIKEY** : 輸入您的Stima API Key
 - **模型** : gpt-3.5-turbo(建議)、gpt-4-turbo、gpt-4o 擇一
-- **自訂API位址** : `https://api.stima.tech`
+- **自訂API位址** : `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/SkNYXNdo0.png)
 
@@ -40,7 +40,7 @@
 
 - **APIKEY** : 輸入您的Stima API Key
 - **模型** : 請選擇【設置更多模型】
-- **自訂API位址** : `https://api.stima.tech`
+- **自訂API位址** : `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/B1PfrNOsR.png)
 

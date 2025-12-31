@@ -10,7 +10,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=key,
-    base_url="https://api.stima.tech/v1/"
+    base_url="https://api.apertis.ai/v1/"
 )
 
 chat_completion = client.chat.completions.create(
@@ -28,7 +28,7 @@ print(chat_completion.choices[0].message.content)
 
 ```javascript
 const apiKey = '<STIMA_API_KEY>';
-const apiUrl = 'https://api.stima.tech/v1/chat/completions';
+const apiUrl = 'https://api.apertis.ai/v1/chat/completions';
 
 async function callOpenAI(prompt) {
   const response = await fetch(apiUrl, {
@@ -60,7 +60,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: '<STIMA_API_KEY>', // 請確保在環境變數中設定了您的 Stima API 金鑰
-  baseURL: 'https://api.stima.tech/v1', // 替換為 Stima API 端點
+  baseURL: 'https://api.apertis.ai/v1', // 替換為 Stima API 端點
 });
 
 
@@ -90,7 +90,7 @@ getChatCompletion('Hello world');
 請將 `<STIMA_API_KEY>`, `model`數值修改成您的 **API Key** 及 **模型別名**。
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <STIMA_API_KEY>" \
     -d '{

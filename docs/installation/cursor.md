@@ -40,7 +40,7 @@ Cursor IDE 是加強版的 AI 驅動程式碼編輯器。它是 Visual Studio Co
 
 ![image](https://hackmd.io/_uploads/BkDbZNqcC.png)
 
-請前往下方的【OpenAI API Key】欄位，輸入您的 API Key。打開【Override OpenAI Base URL】選項，並輸入以下 API 呼叫之網址：`https://api.stima.tech/v1` 。最後，點擊右上角的Verify按鈕。若沒有出現任何錯誤提示，則表示已成功完成設定。
+請前往下方的【OpenAI API Key】欄位，輸入您的 API Key。打開【Override OpenAI Base URL】選項，並輸入以下 API 呼叫之網址：`https://api.apertis.ai/v1` 。最後，點擊右上角的Verify按鈕。若沒有出現任何錯誤提示，則表示已成功完成設定。
 
 ![image](https://hackmd.io/_uploads/SJVqOgviA.png)
 
@@ -50,7 +50,7 @@ Cursor IDE 是加強版的 AI 驅動程式碼編輯器。它是 Visual Studio Co
 
 ### 選擇模型
 
-接下來，請參考[模型支援列表](https://api.stima.tech/)，並點擊下方的【Add model】按鈕。之後，輸入模型名稱，請注意這裡必須與我們提供的**模型呼叫別名**相同，否則無法使用對應之模型。例如：
+接下來，請參考[模型支援列表](https://api.apertis.ai/)，並點擊下方的【Add model】按鈕。之後，輸入模型名稱，請注意這裡必須與我們提供的**模型呼叫別名**相同，否則無法使用對應之模型。例如：
 
 - 欲使用**Claude 3.5 Sonnet**，請輸入 `cow-3-5-sonnet-20240620`
 - 欲使用**GPT-4o**，請輸入 `gpt-4o`
