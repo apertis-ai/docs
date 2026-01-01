@@ -203,14 +203,13 @@ Revoking a key is immediate and cannot be undone. Any applications using that ke
 
 ### Checking Key Status
 
-Use the `/v1/models` endpoint to verify your API key is working:
+Use the `/api/models` endpoint to verify the API is accessible:
 
 ```bash
-curl https://api.apertis.ai/v1/models \
-  -H "Authorization: Bearer sk-your-api-key"
+curl https://api.apertis.ai/api/models
 ```
 
-A successful response confirms your API key is valid and active.
+A successful response confirms the API is available. To verify your API key specifically, make a test request to the chat completions endpoint.
 
 ## Related Topics
 

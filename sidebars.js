@@ -147,6 +147,8 @@ const sidebars = {
       collapsed: true,
       items: [
         'references/chat_completions',
+        'references/responses',
+        'references/messages',
         'references/embeddings',
         'references/audio',
         'references/models',

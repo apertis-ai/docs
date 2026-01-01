@@ -9,8 +9,7 @@ This guide helps you diagnose and resolve common issues when using the Apertis A
 Verify your API key is working:
 
 ```bash
-curl https://api.apertis.ai/v1/models \
-  -H "Authorization: Bearer sk-your-api-key"
+curl https://api.apertis.ai/api/models
 ```
 
 **Expected Response:**
@@ -202,8 +201,7 @@ If your subscription token (`sk-sub-xxx`) isn't working:
 
 2. **List available models:**
    ```bash
-   curl https://api.apertis.ai/v1/models \
-     -H "Authorization: Bearer sk-your-api-key"
+   curl https://api.apertis.ai/api/models
    ```
 
 3. **Check model availability:**
@@ -382,8 +380,7 @@ httpx_logger.setLevel(logging.DEBUG)
 
 **cURL:**
 ```bash
-curl -v https://api.apertis.ai/v1/models \
-  -H "Authorization: Bearer sk-your-api-key"
+curl -v https://api.apertis.ai/api/models
 ```
 
 ### Request/Response Inspection
