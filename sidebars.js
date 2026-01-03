@@ -63,10 +63,15 @@ const sidebars = {
           label: 'AI Coding Assistants',
           collapsed: true,
           items: [
+            'installation/claude-code',
+            'installation/opencode',
+            'installation/crush',
+            'installation/goose',
             'installation/cline',
             'installation/cursor',
             'installation/continue',
             'installation/roocode',
+            'installation/kilo-code',
           ],
         },
         {

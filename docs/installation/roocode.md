@@ -1,32 +1,88 @@
-# Roo Code (prev. Roo Cline) 
+# Roo Code
 
-Roo Code 是一個讓開發者能夠輕鬆整合 Stima API 到自己專案的解決方案。透過提供完整的 API 端點和相容性支援，開發者可以快速將大型語言模型的功能導入至各種應用程式中。
+Roo Code is an intelligent VS Code extension that assists with project analysis, code generation, and refactoring. It provides a seamless way to integrate AI-powered development capabilities directly into your IDE.
 
-## 特點
+## Features
 
-- **OpenAI 相容 API**: 完全相容於 OpenAI 的 API 格式，讓您可以輕鬆將現有的 OpenAI 專案轉換為使用 Stima API
-- **多樣化的程式語言支援**: 支援 Python、Node.js、Java 等多種程式語言的開發
-- **彈性的模型選擇**: 可以根據需求選擇不同的模型，包括 GPT、Claude、Gemini 等系列
-- **簡單的整合流程**: 只需修改 API 端點和金鑰即可完成整合
+- **Project Analysis**: Summarizes project structure and analyzes modules
+- **Code Generation**: Creates code based on natural language descriptions
+- **Refactoring**: Suggests and implements code improvements
+- **Documentation**: Generates documentation for your codebase
+- **Issue Diagnosis**: Identifies problems and suggests fixes
+
+## Installation
+
+### Step 1: Install Extension
+
+1. Launch VS Code
+2. Click the Extensions icon on the left sidebar
+3. Search for "Roo Code"
+4. Click **Install**
+5. Select "Trust the Author" when prompted
+
+### Step 2: Open Settings
+
+Navigate to Roo Code settings:
+- Click the Roo Code icon in the sidebar
+- Select **Settings** → **API Providers**
+
 ![image](../static/img/roocode_1.png)
 
-## 基本設定
+## Configure Apertis API
 
-### API 端點
+### API Provider Setup
 
-- **[https://api.apertis.ai/v1](https://api.apertis.ai/v1)**
+1. Select **OpenAI Compatible** as the API mode
+2. Enter the Base URL: `https://api.apertis.ai/v1`
+3. Enter your API Key (obtain from [Apertis Dashboard](https://api.apertis.ai/token))
+4. Enter the model name from the [Model List](https://api.apertis.ai/)
 
-### API 金鑰設定
-
-1. 請先至 [Stima API](https://api.apertis.ai/token) 註冊並取得您的 API 金鑰
-2. API 金鑰格式為 `sk-` 開頭的字串
-3. 請妥善保管您的 API 金鑰，不要外流或公開分享
-
-## 安裝範例
-- 在 Roo Code 的設定頁面中選取 `Settings` 以及 `API Providers`專區, 並選取 `OpenAI Compatible` 的 API 模式
-- 在 `Base URL` 處輸入 `https://api.apertis.ai/v1`
-- 在 `OpenAI API Key` 處輸入您的 API 金鑰
-- 在 `Model` 處輸入模型的呼叫別名，參考[模型列表](https://api.apertis.ai/models)
 ![image](../static/img/roocode_2.png)
 
-完成上述設定後，即可開始使用您想要的模型！
+### Available Models
+
+| Model | Name to Enter |
+|-------|---------------|
+| Claude 3.5 Sonnet | `claude-3-5-sonnet-20241022` |
+| Claude 3.5 Haiku | `claude-3-5-haiku-20241022` |
+| GPT-4o | `gpt-4o` |
+| GPT-4o mini | `gpt-4o-mini` |
+| Gemini 2.0 Flash | `gemini-2.0-flash-exp` |
+
+## Permissions Setup
+
+Roo Code allows you to configure three permission categories:
+
+- **File Operations**: Read and write access to project files
+- **Auto-approve**: Automatically approve certain actions
+- **Project Access**: Control which projects Roo Code can access
+
+## Capabilities
+
+Once configured, Roo Code can assist with:
+
+- **Project Structure**: Summarize and understand your codebase
+- **Module Analysis**: Analyze functionality and dependencies
+- **Code Refactoring**: Optimize and improve code quality
+- **Documentation**: Generate docs for functions and modules
+- **Issue Diagnosis**: Identify bugs and suggest fixes
+
+## Troubleshooting
+
+### Connection Issues
+
+- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Ensure the Base URL is `https://api.apertis.ai/v1`
+- Check that the model name matches the [Model List](https://api.apertis.ai/) exactly
+
+### Extension Not Working
+
+- Restart VS Code after configuration changes
+- Check the Output panel for error messages
+- Ensure you have trusted the extension author
+
+## Related Resources
+
+- [Model List](https://api.apertis.ai/)
+- [API Keys Management](https://api.apertis.ai/token)
+- [Cline Extension](/installation/cline) - Alternative VS Code AI assistant
