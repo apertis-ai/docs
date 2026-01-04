@@ -1,6 +1,6 @@
 # Web Chat Service 
 
-**[StimaChat](https://chat.stima.tech)** is an advanced conversation system developed by Stima Tech, featuring a **bidirectional multi-turn dialogue** mode and supporting interactions with **100+ large language models**.
+**[StimaChat](https://chat.apertis.ai)** is an advanced conversation system developed by Stima Tech, featuring a **bidirectional multi-turn dialogue** mode and supporting interactions with **100+ large language models**.
 
 ## Features
 

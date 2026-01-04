@@ -9,15 +9,15 @@
   },
   "link.item.label.Stima API 官網": {
     "message": "Stima API",
-    "description": "The label of footer link with label=Stima API 官網 linking to https://api.stima.tech"
+    "description": "The label of footer link with label=Stima API 官網 linking to https://api.apertis.ai"
   },
   "link.item.label.StimaChat 對話系統": {
     "message": "Web Chat Service",
-    "description": "The label of footer link with label=Web Chat Service linking to https://chat.stima.tech"
+    "description": "The label of footer link with label=Web Chat Service linking to https://chat.apertis.ai"
   },
   "link.item.label.Stima Playground": {
     "message": "Playground",
-    "description": "The label of footer link with label=Stima Playground linking to https://playground.stima.tech"
+    "description": "The label of footer link with label=Stima Playground linking to https://playground.apertis.ai"
   },
   "link.item.label.法律裁判書檢索系統 (台灣)": {
     "message": "Law Judgment Documents Retrieval System (Taiwan)",

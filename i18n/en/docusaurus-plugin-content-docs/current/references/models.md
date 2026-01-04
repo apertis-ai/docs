@@ -10,7 +10,7 @@ Returns all available models, including model names, model descriptions, and mod
 ### HTTP Request
 
 ```bash
-curl https://api.stima.tech/v1/models \
+curl https://api.apertis.ai/v1/models \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <STIMA_API_KEY>"
 ```

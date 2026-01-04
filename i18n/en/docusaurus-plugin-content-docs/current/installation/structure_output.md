@@ -7,7 +7,7 @@ Through Stima API's structured output feature, developers can convert API respon
 import http.client
 import json
 
-conn = http.client.HTTPSConnection("api.stima.tech")
+conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
    "model": "gpt-4o",
    "messages": [
@@ -72,5 +72,5 @@ print(data.decode("utf-8"))
 ```
 
 ## Parameter
-- `model`: See [Model List](https://api.stima.tech/models).
-- `STIMA_API_KEY`: Your Stima [API Key](https://api.stima.tech/token).
+- `model`: See [Model List](https://api.apertis.ai/models).
+- `STIMA_API_KEY`: Your Stima [API Key](https://api.apertis.ai/token).

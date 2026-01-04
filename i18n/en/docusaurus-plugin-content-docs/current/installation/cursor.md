@@ -40,7 +40,7 @@ You can integrate **Stima API** into **Cursor** to use its models.
 
 ![image](../static/img/cursor_5.png)
 
-In the **OpenAI API Key** field, enter your API Key. Enable the **Override OpenAI Base URL** option and enter the following API URL: `https://api.stima.tech/v1`. Finally, click the **Verify** button in the top-right corner. If no error messages appear, the setup is successful.
+In the **OpenAI API Key** field, enter your API Key. Enable the **Override OpenAI Base URL** option and enter the following API URL: `https://api.apertis.ai/v1`. Finally, click the **Verify** button in the top-right corner. If no error messages appear, the setup is successful.
 
 ![image](../static/img/cursor_6.png)
 
@@ -50,7 +50,7 @@ In the **OpenAI API Key** field, enter your API Key. Enable the **Override OpenA
 
 ### Choosing a Model
 
-Next, refer to the [Model Support List](https://api.stima.tech/) and click the **[Add Model]** button. Enter the model name exactly as provided in the model alias; otherwise, the model will not function. For example:
+Next, refer to the [Model Support List](https://api.apertis.ai/) and click the **[Add Model]** button. Enter the model name exactly as provided in the model alias; otherwise, the model will not function. For example:
 
 - To use **Claude 3.5 Sonnet**, enter `cow-3-5-sonnet-20241022`, `cow-3-5-sonnet-20240620`.
 - To use **GPT-4o**, enter `gpt-4o`.

@@ -8,7 +8,7 @@
 
 1. Open the Cline extension settings by clicking the gear icon in the top-right corner and selecting `Settings`.
 2. Set the **API Provider** field to `OpenAI Compatible`.
-3. Enter `https://api.stima.tech/v1` in the **Base URL** field.
+3. Enter `https://api.apertis.ai/v1` in the **Base URL** field.
 4. Input your **API Key** in the **API Key** field.
 
 ---

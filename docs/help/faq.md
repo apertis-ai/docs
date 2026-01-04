@@ -270,7 +270,7 @@ response = client.chat.completions.create(
 
 ### Is there a model playground?
 
-Yes! Visit [playground.stima.tech](https://playground.stima.tech) to test models interactively.
+Yes! Visit [playground.apertis.ai](https://playground.apertis.ai) to test models interactively.
 
 ---
 

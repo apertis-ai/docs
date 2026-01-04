@@ -125,7 +125,7 @@ Claude Code provides powerful capabilities including:
 
 ## Related Resources
 
-- [Apertis API Documentation](https://docs.stima.tech)
+- [Apertis API Documentation](https://docs.apertis.ai)
 - [Model List](https://api.apertis.ai/)
 - [API Keys Management](https://api.apertis.ai/token)
 - [Claude Code Official Documentation](https://docs.anthropic.com/en/docs/claude-code/configuration)

@@ -31,7 +31,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
   "models": [
     {
       "model": "claude-3-5-sonnet-20241022",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "Claude 3.5",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -39,7 +39,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "claude-3-5-haiku-20241022",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "Claude 3.5",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -47,7 +47,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "claude-3-5-sonnet-20240620",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "Claude 3.5",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -55,7 +55,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "gpt-4o",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "GPT-4o",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -63,7 +63,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "gpt-4-turbo",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "GPT-4-Turbo",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -71,7 +71,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "gpt-3.5-turbo",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "GPT-3.5-Turbo",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -79,7 +79,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "gemini-1.5-pro-latest",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "gemini-1.5-pro-latest",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -87,7 +87,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     },
     {
       "model": "gemini-1.5-flash-latest",
-      "apiBase": "https://api.stima.tech/v1",
+      "apiBase": "https://api.apertis.ai/v1",
       "title": "gemini-1.5-flash-latest",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
@@ -107,7 +107,7 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
   },
   "tabAutocompleteModel": {
     "model": "gpt-4o",
-    "apiBase": "https://api.stima.tech/v1",
+    "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-4o",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai"

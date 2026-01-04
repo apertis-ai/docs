@@ -15,19 +15,19 @@ Roo Code is a solution that enables developers to easily integrate Stima API int
 
 ### API Endpoint
 
-- **[https://api.stima.tech/v1](https://api.stima.tech/v1)**
+- **[https://api.apertis.ai/v1](https://api.apertis.ai/v1)**
 
 ### API Key Setup
 
-1. Register and obtain your API key at [Stima API](https://api.stima.tech/token)
+1. Register and obtain your API key at [Stima API](https://api.apertis.ai/token)
 2. API keys start with `sk-`
 3. Please keep your API key secure and do not share it publicly
 
 ## Installation Example
 - Select `Settings` and `API Providers` in the Roo Code settings page, and choose `OpenAI Compatible` API mode
-- Enter `https://api.stima.tech/v1` in the `Base URL` field
+- Enter `https://api.apertis.ai/v1` in the `Base URL` field
 - Enter your API key in the `OpenAI API Key` field
-- Enter the model alias in the `Model` field, refer to [Model List](https://api.stima.tech/models)
+- Enter the model alias in the `Model` field, refer to [Model List](https://api.apertis.ai/models)
 ![image](../static/img/roocode_2.png)
 
 After completing the input fields, you can start using the extension with the model you want!

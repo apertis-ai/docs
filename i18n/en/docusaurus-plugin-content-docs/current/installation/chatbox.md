@@ -13,7 +13,7 @@ Visit the **[Chatbox AI Official Website](https://chatboxai.app/zh-TW)** to down
 
 Click the settings icon in the bottom-left corner to access the **Model Configuration** screen. Under **Model Providers**, select `Add Custom Provider`. Then, choose `OpenAI API Compatible` in the `API Mode` dropdown. Since we provide models in OpenAI API-compatible formats, you can directly use this option.
 
-Enter your API Key in the **API Key** field and set **API Base URL** to `https://api.stima.tech`. Select the model you wish to use. Adjust additional parameters like `temperature` and `Top P` if needed, then click Save to start using the model.
+Enter your API Key in the **API Key** field and set **API Base URL** to `https://api.apertis.ai`. Select the model you wish to use. Adjust additional parameters like `temperature` and `Top P` if needed, then click Save to start using the model.
 
 ![image](../static/img/chatbox_2.png)
 
@@ -22,7 +22,7 @@ For example, to use **Claude 3.5 Sonnet**, input the following settings:
 
 - **API Mode**: OpenAI API Compatible
 - **Name**: Any name (e.g., "Claude 3.5 Sonnet" for easy identification)
-- **API Base URL**: `https://api.stima.tech`
+- **API Base URL**: `https://api.apertis.ai`
 - **API Path**: No changes needed
 - **API Key**: Your API Key
 - **Model**: `claude-3-5-sonnet-20240620`

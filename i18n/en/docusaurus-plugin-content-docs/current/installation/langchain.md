@@ -8,7 +8,7 @@ pip install langchain-openai
 
 ### Stima API Usage Example
 
-Please obtain your API Key from [**Stima API Key**](https://api.stima.tech/token)
+Please obtain your API Key from [**Stima API Key**](https://api.apertis.ai/token)
 
 ```python
 from langchain_openai import ChatOpenAI
@@ -16,7 +16,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 CONFIG = {
     "api_key": "STIMA_API_KEY",
-    "base_url": "https://api.stima.tech/v1",
+    "base_url": "https://api.apertis.ai/v1",
     "model": "gpt-4o-mini",
     "temperature": 0.7,
     "request_timeout": 30,

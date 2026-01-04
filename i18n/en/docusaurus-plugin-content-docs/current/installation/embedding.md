@@ -8,7 +8,7 @@ Stima API provides the Embedding API for developers to convert text into vectors
 import http.client
 import json
 
-conn = http.client.HTTPSConnection("api.stima.tech")
+conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
    "model": "text-embedding-3-large",
    "input": "The food was delicious and the waiter..."
@@ -32,7 +32,7 @@ print(data.decode("utf-8"))
 ## Jina AI Embedding Model Usage (Example in Python)
 
 ```bash
-curl -X POST "https://api.stima.tech/v1/embeddings" \
+curl -X POST "https://api.apertis.ai/v1/embeddings" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <STIMA_API_KEY>" \
   -d '{

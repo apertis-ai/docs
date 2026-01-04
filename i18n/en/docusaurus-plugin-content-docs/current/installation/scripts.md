@@ -10,7 +10,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=key,
-    base_url="https://api.stima.tech/v1/"
+    base_url="https://api.apertis.ai/v1/"
 )
 
 chat_completion = client.chat.completions.create(
@@ -28,7 +28,7 @@ print(chat_completion.choices[0].message.content)
 
 ```javascript
 const apiKey = '<STIMA_API_KEY>';
-const apiUrl = 'https://api.stima.tech/v1/chat/completions';
+const apiUrl = 'https://api.apertis.ai/v1/chat/completions';
 
 async function callOpenAI(prompt) {
   const response = await fetch(apiUrl, {
@@ -60,7 +60,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: '<STIMA_API_KEY>', // Please ensure that the Stima API key is set in the environment variables
-  baseURL: 'https://api.stima.tech/v1', // Replace with Stima API endpoint
+  baseURL: 'https://api.apertis.ai/v1', // Replace with Stima API endpoint
 });
 
 
@@ -89,7 +89,7 @@ To use `cURL` to call Stima API, you only need to modify the `api_key` and `mode
 Please replace `<STIMA_API_KEY>` and `model` values with your **API Key** and **model alias**.
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
+curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <STIMA_API_KEY>" \
     -d '{

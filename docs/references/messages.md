@@ -1,7 +1,7 @@
 # Messages API (Anthropic Format)
 
 ```
-POST /messages
+POST /v1/messages
 ```
 
 The Messages API provides compatibility with Anthropic's native API format, allowing you to use Anthropic SDKs directly with Apertis.
@@ -9,7 +9,7 @@ The Messages API provides compatibility with Anthropic's native API format, allo
 ## HTTP Request
 
 ```bash
-curl https://api.apertis.ai/messages \
+curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
     -H "anthropic-version: 2023-06-01" \

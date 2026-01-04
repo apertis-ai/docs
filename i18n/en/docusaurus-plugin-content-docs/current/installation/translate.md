@@ -25,7 +25,7 @@ In the service provider selection below, choose 【Custom API Key】 and click �
 
 - **APIKEY**: Enter your Stima API Key
 - **Model**: Choose one from gpt-3.5-turbo(recommended), gpt-4-turbo, gpt-4o
-- **Custom API URL**: `https://api.stima.tech`
+- **Custom API URL**: `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/SkNYXNdo0.png)
 
@@ -41,7 +41,7 @@ In the same interface, but with changes to the model section.
 
 - **APIKEY**: Enter your Stima API Key
 - **Model**: Please select 【Set More Models】
-- **Custom API URL**: `https://api.stima.tech`
+- **Custom API URL**: `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/B1PfrNOsR.png)
 

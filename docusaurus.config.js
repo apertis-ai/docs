@@ -13,7 +13,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://docs.stima.tech',
+  url: 'https://docs.apertis.ai',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -109,7 +109,7 @@ const config = {
         logo: {
           alt: 'Logo',
           src: 'img/logo.png',
-          href: 'https://docs.stima.tech',
+          href: 'https://docs.apertis.ai',
         },
         items: [
           // {
@@ -143,7 +143,7 @@ const config = {
             label: '開源模型',
           },
           {
-            href: 'https://api.stima.tech',
+            href: 'https://api.apertis.ai',
             label: 'Stima API 官網',
             position: 'right',
           },
@@ -157,19 +157,19 @@ const config = {
             items: [
               {
                 label: 'Stima API 官網',
-                href: 'https://api.stima.tech',
+                href: 'https://api.apertis.ai',
               },
               {
                 label: 'StimaChat 對話系統',
-                href: 'https://chat.stima.tech',
+                href: 'https://chat.apertis.ai',
               },
               {
                 label: 'Research',
-                href: 'https://blog.stima.tech',
+                href: 'https://blog.apertis.ai',
               },
               {
                 label: 'Playground',
-                href: 'https://playground.stima.tech',
+                href: 'https://playground.apertis.ai',
               },
               {
                 label: '法律裁判書檢索系統 (台灣)',

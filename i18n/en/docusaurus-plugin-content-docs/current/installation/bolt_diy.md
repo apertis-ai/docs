@@ -13,17 +13,17 @@ bolt.diy is a solution that enables developers to easily integrate Stima API int
 
 ### API Endpoint
 
-- **[https://api.stima.tech](https://api.stima.tech)**
+- **[https://api.apertis.ai](https://api.apertis.ai)**
 
 ### API Key Setup
 
-1. Register and obtain your API key at [Stima API](https://api.stima.tech/token)
+1. Register and obtain your API key at [Stima API](https://api.apertis.ai/token)
 2. API keys start with `sk-`
 3. Please keep your API key secure and do not share it publicly
 
 ## Installation Example
 - Select `Provider` in the bolt.diy settings page, and choose `OpenAILike` API mode
-- Enter `https://api.stima.tech` in the `Base URL` field
+- Enter `https://api.apertis.ai` in the `Base URL` field
 ![image](../static/img/bolt_1.png)
 
 - Enter your API key in the `API Key` field
