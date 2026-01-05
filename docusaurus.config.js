@@ -8,7 +8,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Apertis 使用指南',
+  title: 'Apertis Documentation',
   tagline: '',
   favicon: 'img/favicon.ico',
 
@@ -105,7 +105,7 @@ const config = {
       // image: 'img/docusaurus-social-card.jpg',
       image: 'img/logo.png',
       navbar: {
-        title: 'Apertis 使用指南',
+        title: 'Apertis Documentation',
         logo: {
           alt: 'Logo',
           src: 'img/logo.png',

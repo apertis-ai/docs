@@ -1,23 +1,23 @@
 {
   "title.stima": {
-    "message": "Apertis 使用指南"
+    "message": "Apertis Documentation"
   },
   "nav.docs": {
-    "message": "所有文件"
+    "message": "All Documents"
   },
   "nav.usage": {
-    "message": "使用場景"
+    "message": "Use Cases"
   },
   "nav.installation": {
-    "message": "功能"
+    "message": "Features"
   },
   "nav.stimachat": {
-    "message": "Chat 對話系統"
+    "message": "Chat"
   },
   "nav.opensource": {
-    "message": "開源模型"
+    "message": "Open Source LLMs"
   },
   "nav.website": {
-    "message": "Apertis 官網"
+    "message": "Apertis Website"
   }
 }
