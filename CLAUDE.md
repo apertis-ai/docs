@@ -64,6 +64,13 @@ When editing:
 - Check for both "Stima" and "Apertis" references
 - Maintain consistency with the English documentation standard
 
+## Git Commit Guidelines
+
+- **Do NOT mention "Claude" in commit messages**
+- Focus on what changed, not how it was done
+- Use conventional commit format: `type: description`
+- Example: `docs: Update API endpoint URLs` (not `docs: Claude updated API endpoint URLs`)
+
 ## Configuration Notes
 
 - Node.js >=18.0 required
