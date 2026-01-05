@@ -1,6 +1,6 @@
 # Fallback Models 備用模型機制
 
-Stima API 提供強大的備用模型（Fallback Models）機制，當主要模型請求失敗時，系統會自動切換到備用模型，確保服務的高可用性和穩定性。
+Apertis 提供強大的備用模型（Fallback Models）機制，當主要模型請求失敗時，系統會自動切換到備用模型，確保服務的高可用性和穩定性。
 
 ## 功能概述
 
@@ -83,7 +83,7 @@ Stima API 提供強大的備用模型（Fallback Models）機制，當主要模�
 ```python
 import openai
 
-# 配置 Stima API
+# 配置 Apertis
 client = openai.OpenAI(
     api_key="your-api-key",
     base_url="https://api.apertis.ai/v1"

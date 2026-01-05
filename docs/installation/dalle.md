@@ -14,7 +14,7 @@ payload = json.dumps({
    "n": 1,
    "size": "1024x1024"
 })
-api_key = "STIMA_API_KEY"
+api_key = "APERTIS_API_KEY"
 headers = {
    'Authorization': f'Bearer {api_key}',
    'Content-Type': 'application/json'
@@ -29,4 +29,4 @@ print(response.text)
 
 - `<MODEL>`: 要使用的模型，目前支援 `gpt-image-1`, `dall-e-3`。
 - `size`: 圖片大小，目前僅支援 `1024x1024`, `1792x1024`, `1024x1792`。
-- `STIMA_API_KEY`: 您的 API 金鑰
+- `APERTIS_API_KEY`: 您的 API 金鑰

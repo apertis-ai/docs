@@ -30,11 +30,11 @@ If you had the `Continue` development assistant installed in VSCode, the system 
 
 ![image](../static/img/cursor_4.png)
 
-## Using Stima API Models
+## Using Apertis Models
 
 ### Setting Up API Key
 
-You can integrate **Stima API** into **Cursor** to use its models.
+You can integrate **Apertis** into **Cursor** to use its models.
 
 1. Navigate to the **Models** section.
 
@@ -56,7 +56,7 @@ Next, refer to the [Model Support List](https://api.apertis.ai/) and click the *
 - To use **GPT-4o**, enter `gpt-4o`.
 - To use **Gemini 1.5 Pro**, enter `gemini-1.5-pro-latest`.
 
-**Important Note**: When using Stima API's Claude models, ensure to replace the default Claude model name with the provided alias. For example, use `cow-3-5-sonnet-20240620` instead of `claude-3-5-sonnet-20240620`.
+**Important Note**: When using Apertis's Claude models, ensure to replace the default Claude model name with the provided alias. For example, use `cow-3-5-sonnet-20240620` instead of `claude-3-5-sonnet-20240620`.
 
 ![image](../static/img/cursor_8.png)
 

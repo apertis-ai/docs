@@ -1,11 +1,11 @@
-# Call Stima API via OpenAI SDK
+# Call Apertis via OpenAI SDK
 
 ### Python
 
-Stima API provides **OpenAI Compatible APIs**, so you can use the `OpenAI` package in `Python` and modify the `model` variable to call all supported models.
+Apertis provides **OpenAI Compatible APIs**, so you can use the `OpenAI` package in `Python` and modify the `model` variable to call all supported models.
 
 ```python
-key = '<STIMA_API_KEY>' # Please replace with your API Key
+key = '<APERTIS_API_KEY>' # Please replace with your API Key
 from openai import OpenAI
 
 client = OpenAI(
@@ -27,7 +27,7 @@ print(chat_completion.choices[0].message.content)
 ### JavaScript
 
 ```javascript
-const apiKey = '<STIMA_API_KEY>';
+const apiKey = '<APERTIS_API_KEY>';
 const apiUrl = 'https://api.apertis.ai/v1/chat/completions';
 
 async function callOpenAI(prompt) {
@@ -59,8 +59,8 @@ callOpenAI('Hello world').then(reply => console.log(reply));
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: '<STIMA_API_KEY>', // Please ensure that the Stima API key is set in the environment variables
-  baseURL: 'https://api.apertis.ai/v1', // Replace with Stima API endpoint
+  apiKey: '<APERTIS_API_KEY>', // Please ensure that the Apertis key is set in the environment variables
+  baseURL: 'https://api.apertis.ai/v1', // Replace with Apertis endpoint
 });
 
 
@@ -85,13 +85,13 @@ getChatCompletion('Hello world');
 
 ### cURL
 
-To use `cURL` to call Stima API, you only need to modify the `api_key` and `model` variables to call all supported models.  
-Please replace `<STIMA_API_KEY>` and `model` values with your **API Key** and **model alias**.
+To use `cURL` to call Apertis, you only need to modify the `api_key` and `model` variables to call all supported models.  
+Please replace `<APERTIS_API_KEY>` and `model` values with your **API Key** and **model alias**.
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer <STIMA_API_KEY>" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
         "model": "<MODEL_ALIAS>",
         "messages": [

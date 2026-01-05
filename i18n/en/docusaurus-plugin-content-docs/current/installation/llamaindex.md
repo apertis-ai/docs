@@ -3,9 +3,9 @@
 ```bash
 pip install llama-index
 ```
-### Using Stima API
+### Using Apertis
 
-Please obtain your API Key from [**Stima API Key**](https://api.apertis.ai/token)
+Please obtain your API Key from [**Apertis Key**](https://api.apertis.ai/token)
 
 ```python
 from llama_index.llms.openai import OpenAI

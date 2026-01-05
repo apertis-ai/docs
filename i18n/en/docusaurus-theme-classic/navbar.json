@@ -15,13 +15,13 @@
   "item.label.功能": {
     "message": "Features"
   },
-  "item.label.StimaChat 對話系統": {
+  "item.label.Chat 對話系統": {
     "message": "Web Chat Service"
   },
   "item.label.開源模型": {
     "message": "Open Source LLMs"
   },
-  "item.label.Stima API 官網": {
+  "item.label.Apertis 官網": {
     "message": "Apertis"
   }
 }

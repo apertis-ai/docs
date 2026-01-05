@@ -8,7 +8,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Stima API 是一個整合多種大型語言模型的統一 API 平台，提供了一系列的 AI 模型服務，可以幫助你快速構建自己的應用。
+        Apertis 是一個整合多種大型語言模型的統一 API 平台，提供了一系列的 AI 模型服務，可以幫助你快速構建自己的應用。
       </>
     ),
   },
@@ -17,7 +17,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Stima API 使用指南幫助您快速上手，了解如何使用 Stima API 讓日常生活受惠於 AI 的便利。
+        Apertis 使用指南幫助您快速上手，了解如何使用 Apertis 讓日常生活受惠於 AI 的便利。
       </>
     ),
   },
@@ -26,7 +26,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Stima API 幫助開發者快速在開發過程中，使用多種大型語言模型輔助開發，並且可以快速部署到自己的應用中。
+        Apertis 幫助開發者快速在開發過程中，使用多種大型語言模型輔助開發，並且可以快速部署到自己的應用中。
       </>
     ),
   },

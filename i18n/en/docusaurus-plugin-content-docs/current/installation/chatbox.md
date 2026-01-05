@@ -1,6 +1,6 @@
 # Chatbox AI
 
-Chatbox AI is a graphical chat interface designed for **interacting with APIs via API Keys in a user-friendly UI**. Unlike using OpenAI or Claude's official interfaces, which often require **subscription fees or impose usage limits**, or purchasing an API Key that demands programming knowledge to create a custom interface, Chatbox AI eliminates these barriers. It allows users to seamlessly interact with **Stima API and over 60 models** through a familiar interface, enabling **one-click switching between different models**, making it easy to select the best model for specific tasks.
+Chatbox AI is a graphical chat interface designed for **interacting with APIs via API Keys in a user-friendly UI**. Unlike using OpenAI or Claude's official interfaces, which often require **subscription fees or impose usage limits**, or purchasing an API Key that demands programming knowledge to create a custom interface, Chatbox AI eliminates these barriers. It allows users to seamlessly interact with **Apertis and over 60 models** through a familiar interface, enabling **one-click switching between different models**, making it easy to select the best model for specific tasks.
 
 ### Download and Installation
 

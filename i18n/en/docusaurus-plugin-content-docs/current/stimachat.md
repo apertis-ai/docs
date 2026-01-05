@@ -1,18 +1,18 @@
 # Web Chat Service 
 
-**[StimaChat](https://chat.apertis.ai)** is an advanced conversation system developed by Stima Tech, featuring a **bidirectional multi-turn dialogue** mode and supporting interactions with **100+ large language models**.
+**[Chat](https://chat.apertis.ai)** is an advanced conversation system developed by Apertis AI, featuring a **bidirectional multi-turn dialogue** mode and supporting interactions with **100+ large language models**.
 
 ## Features
 
-- **Bidirectional Multi-Turn Dialogue**: StimaChat allows users to engage in bidirectional multi-turn conversations, not only answering questions but also proactively asking them.
-- **Multilingual Support**: StimaChat supports communication in multiple languages, including Chinese, English, Japanese, Korean, and more.
-- **Advanced conversation Technology**: StimaChat leverages cutting-edge conversation technologies, including **semantic understanding**, **sentiment analysis**, and **intent recognition**, to better understand user intent and emotions.
+- **Bidirectional Multi-Turn Dialogue**: Chat allows users to engage in bidirectional multi-turn conversations, not only answering questions but also proactively asking them.
+- **Multilingual Support**: Chat supports communication in multiple languages, including Chinese, English, Japanese, Korean, and more.
+- **Advanced conversation Technology**: Chat leverages cutting-edge conversation technologies, including **semantic understanding**, **sentiment analysis**, and **intent recognition**, to better understand user intent and emotions.
 
 ## How to Use
 
 ### Access the Conversation Interface
 
-Once you log in and create an API Key, each key will have a blue **[StimaChat Service]** button next to it. Click this button to use the corresponding API Key for chatting.
+Once you log in and create an API Key, each key will have a blue **[Chat Service]** button next to it. Click this button to use the corresponding API Key for chatting.
 
 ![](./static/img/stimachat_1.png)
 

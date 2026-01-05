@@ -1,6 +1,6 @@
 # 結構化輸出
 
-透過 Stima API 的結構化輸出功能，開發者可以將 API 的回應轉換為特定的 JSON 格式，這對於需要特定資料結構的應用場景非常有用。
+透過 Apertis 的結構化輸出功能，開發者可以將 API 的回應轉換為特定的 JSON 格式，這對於需要特定資料結構的應用場景非常有用。
 
 ## 使用方式 (以 Python 為例)
 ```
@@ -62,7 +62,7 @@ payload = json.dumps({
 })
 headers = {
    'Accept': 'application/json',
-   'Authorization': 'Bearer <STIMA_API_KEY>',
+   'Authorization': 'Bearer <APERTIS_API_KEY>',
    'Content-Type': 'application/json'
 }
 conn.request("POST", "/v1/chat/completions", payload, headers)
@@ -74,4 +74,4 @@ print(data.decode("utf-8"))
 ## 參數說明
 
 - `model`: 請見[模型列表](https://api.apertis.ai/models)。
-- `STIMA_API_KEY`: 您的 API 金鑰。
+- `APERTIS_API_KEY`: 您的 API 金鑰。

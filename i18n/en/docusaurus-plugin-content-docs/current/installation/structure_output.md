@@ -1,6 +1,6 @@
 # Structured Output
 
-Through Stima API's structured output feature, developers can convert API responses into specific JSON formats, which is particularly useful for application scenarios requiring specific data structures.
+Through Apertis's structured output feature, developers can convert API responses into specific JSON formats, which is particularly useful for application scenarios requiring specific data structures.
 
 ## Use Example 
 ```
@@ -62,7 +62,7 @@ payload = json.dumps({
 })
 headers = {
    'Accept': 'application/json',
-   'Authorization': 'Bearer <STIMA_API_KEY>',
+   'Authorization': 'Bearer <APERTIS_API_KEY>',
    'Content-Type': 'application/json'
 }
 conn.request("POST", "/v1/chat/completions", payload, headers)
@@ -73,4 +73,4 @@ print(data.decode("utf-8"))
 
 ## Parameter
 - `model`: See [Model List](https://api.apertis.ai/models).
-- `STIMA_API_KEY`: Your Stima [API Key](https://api.apertis.ai/token).
+- `APERTIS_API_KEY`: Your Apertis [API Key](https://api.apertis.ai/token).

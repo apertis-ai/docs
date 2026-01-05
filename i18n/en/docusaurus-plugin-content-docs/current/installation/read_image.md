@@ -7,7 +7,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.apertis.ai/v1",
-    api_key="<STIMA_API_KEY>"
+    api_key="<APERTIS_API_KEY>"
 )
 
 response = client.chat.completions.create(
@@ -35,4 +35,4 @@ print(response.choices[0])
 ## Parameters
 - `<MODEL>`: The model to use, see [Model List](https://api.apertis.ai/models).
 - `<IMAGE_URL>`: The URL of the image to read.
-- `STIMA_API_KEY`: Your API key.
+- `APERTIS_API_KEY`: Your API key.

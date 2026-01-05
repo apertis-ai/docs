@@ -1,6 +1,6 @@
 # Base URL and API Key Connection Guide
 
-Stima Tech provides `BASE_URL` and `API Key` configurations for integrating with custom projects. Different applications may require different `BASE_URL` options.
+Apertis AI provides `BASE_URL` and `API Key` configurations for integrating with custom projects. Different applications may require different `BASE_URL` options.
 
 ### BASE_URL
 
@@ -12,4 +12,4 @@ The following three connection endpoints are available:
 
 ### API Key
 
-Visit **[Stima API](https://api.apertis.ai/token)** to obtain your `API Key`.
+Visit **[Apertis](https://api.apertis.ai/token)** to obtain your `API Key`.

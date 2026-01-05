@@ -38,7 +38,7 @@ Click the Cline icon in the sidebar, then select the settings button in the top 
 | API Key | Your Apertis API key |
 | Model | Select from model list below |
 
-![image](https://raw.githubusercontent.com/Stima-Tech/documentation/refs/heads/main/static/img/cline.png)
+![image](https://raw.githubusercontent.com/Apertis-AI/documentation/refs/heads/main/static/img/cline.png)
 
 ### Available Models
 

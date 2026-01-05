@@ -2,7 +2,7 @@
 
 ## Open-Source Model Services
 
-At Stima Tech, we specialize in offering a variety of cutting-edge open-source large language model services. These models, developed by globally leading technology companies, are carefully fine-tuned and optimized by our team to meet the unique requirements of diverse clients.
+At Apertis AI, we specialize in offering a variety of cutting-edge open-source large language model services. These models, developed by globally leading technology companies, are carefully fine-tuned and optimized by our team to meet the unique requirements of diverse clients.
 
 ### Llama Models
 
@@ -10,7 +10,7 @@ The Llama series, developed by Meta (formerly Facebook), is one of the most adva
 
 ### Gemma Models
 
-The Gemma models, developed by Google, are also leading open-source language models with exceptional language understanding and generation capabilities. Trained on large-scale datasets, the Gemma models excel in handling complex language tasks, such as conversational systems, content generation, and information retrieval. Stima Tech is committed to integrating this powerful tool into diverse business scenarios, enabling clients to implement AI-driven solutions.
+The Gemma models, developed by Google, are also leading open-source language models with exceptional language understanding and generation capabilities. Trained on large-scale datasets, the Gemma models excel in handling complex language tasks, such as conversational systems, content generation, and information retrieval. Apertis AI is committed to integrating this powerful tool into diverse business scenarios, enabling clients to implement AI-driven solutions.
 
 ### Qwen Models
 
@@ -18,8 +18,8 @@ The Qwen series, introduced by Alibaba, is among the most advanced open-source l
 
 ### Mistral Models
 
-Developed by Mistral AI, the Mistral models are high-performance open-source language models. These models excel in multiple language tasks, including language understanding, text generation, and language translation. Stima Tech is dedicated to introducing this powerful tool into various business scenarios to help clients achieve AI-powered solutions.
+Developed by Mistral AI, the Mistral models are high-performance open-source language models. These models excel in multiple language tasks, including language understanding, text generation, and language translation. Apertis AI is dedicated to introducing this powerful tool into various business scenarios to help clients achieve AI-powered solutions.
 
 ## Model List
 
-For a comprehensive list of models we offer, please visit: [**Stima API Model List**](https://api.apertis.ai/models)
+For a comprehensive list of models we offer, please visit: [**Apertis Model List**](https://api.apertis.ai/models)

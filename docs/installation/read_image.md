@@ -7,7 +7,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.apertis.ai/v1",
-    api_key="<STIMA_API_KEY>"
+    api_key="<APERTIS_API_KEY>"
 )
 
 response = client.chat.completions.create(
@@ -36,4 +36,4 @@ print(response.choices[0])
 
 - `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.apertis.ai/models)。
 - `<IMAGE_URL>`: 要讀取的圖片 URL。
-- `STIMA_API_KEY`: 您的 API 金鑰
+- `APERTIS_API_KEY`: 您的 API 金鑰

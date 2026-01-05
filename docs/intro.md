@@ -2,10 +2,10 @@
 sidebar_position: 1
 ---
 
-# 快速了解 Stima API 
+# 快速了解 Apertis 
 
-### 1. 網站連結 - **[Stima API](https://api.apertis.ai/)**
-點擊 **[Stima API](https://api.apertis.ai/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://api.apertis.ai/models)**，以及 **更多資訊**。
+### 1. 網站連結 - **[Apertis](https://api.apertis.ai/)**
+點擊 **[Apertis](https://api.apertis.ai/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://api.apertis.ai/models)**，以及 **更多資訊**。
 
 
 ### 2. 登入 
@@ -29,7 +29,7 @@ sidebar_position: 1
 
 ### 4. 加值區
 
-當於[Stima API 購買頁面](https://payment.stima.tech/)購買方案並取得加值碼後，即來到此區進行自助加值。輸入加值碼後點擊「加值」即可完成額度加值。
+當於[Apertis 購買頁面](https://payment.stima.tech/)購買方案並取得加值碼後，即來到此區進行自助加值。輸入加值碼後點擊「加值」即可完成額度加值。
 後續在使用過程中，您可以隨時回到此處進行加值以及 **查詢剩餘額度**。
 
 ![image](static/img/credits.png)

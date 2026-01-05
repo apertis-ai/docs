@@ -8,7 +8,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Stima API 使用指南',
+  title: 'Apertis 使用指南',
   tagline: '',
   favicon: 'img/favicon.ico',
 
@@ -20,7 +20,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'Stima-Tech', // Usually your GitHub org/user name.
+  organizationName: 'Apertis-AI', // Usually your GitHub org/user name.
   projectName: 'documentation', // Usually your repo name.
 
   onBrokenLinks: 'warn',
@@ -105,7 +105,7 @@ const config = {
       // image: 'img/docusaurus-social-card.jpg',
       image: 'img/logo.png',
       navbar: {
-        title: 'Stima API 使用指南',
+        title: 'Apertis 使用指南',
         logo: {
           alt: 'Logo',
           src: 'img/logo.png',
@@ -134,7 +134,7 @@ const config = {
             type: 'doc',
             docId: 'stimachat',
             position: 'left',
-            label: 'StimaChat 對話系統',
+            label: 'Chat 對話系統',
           },
           {
             type: 'doc',
@@ -144,7 +144,7 @@ const config = {
           },
           {
             href: 'https://api.apertis.ai',
-            label: 'Stima API 官網',
+            label: 'Apertis 官網',
             position: 'right',
           },
         ],
@@ -156,11 +156,11 @@ const config = {
             title: '服務',
             items: [
               {
-                label: 'Stima API 官網',
+                label: 'Apertis 官網',
                 href: 'https://api.apertis.ai',
               },
               {
-                label: 'StimaChat 對話系統',
+                label: 'Chat 對話系統',
                 href: 'https://chat.apertis.ai',
               },
               {
@@ -207,7 +207,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © 2024 - 2026 Stima AI, LLC.`,
+        copyright: `Apertis AI © 2024-2026 STIMA AI LLC. ALL RIGHTS RESERVED.`,
       },
       prism: {
         theme: prismThemes.github,

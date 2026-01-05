@@ -6,16 +6,16 @@ pip install langchain
 pip install langchain-openai
 ```
 
-### Stima API Usage Example
+### Apertis Usage Example
 
-Please obtain your API Key from [**Stima API Key**](https://api.apertis.ai/token)
+Please obtain your API Key from [**Apertis Key**](https://api.apertis.ai/token)
 
 ```python
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
 CONFIG = {
-    "api_key": "STIMA_API_KEY",
+    "api_key": "APERTIS_API_KEY",
     "base_url": "https://api.apertis.ai/v1",
     "model": "gpt-4o-mini",
     "temperature": 0.7,

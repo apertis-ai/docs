@@ -2,7 +2,7 @@
 
 This is a **bilingual translation extension**. Unlike traditional **Google Translate** which directly overlays translations on the original text, requiring you to revert the translation to view the original text, Immersive Translation **inserts translations below the original text** for bilingual parallel reading. When translations are confusing, you can directly reference the original text. Additionally, Immersive Translation **supports current popular large language models** such as `GPT-4o`, `Gemini 1.5 Flash`, etc., significantly improving translation accuracy.
 
-Besides webpage translation, Immersive Translation officially provides features like: **full PDF translation**, **real-time YouTube subtitle translation**, and **EPUB e-book translation**. Below, we'll detail how to install and use the models provided by **Stima API**.
+Besides webpage translation, Immersive Translation officially provides features like: **full PDF translation**, **real-time YouTube subtitle translation**, and **EPUB e-book translation**. Below, we'll detail how to install and use the models provided by **Apertis**.
 
 ### Getting the Immersive Translation Extension
 
@@ -11,7 +11,7 @@ First, search for "Immersive Translation" in the Google or Edge extension store.
 ![](https://hackmd.io/_uploads/Sy__11WL1g.png)
 ![](https://hackmd.io/_uploads/ry8_lVdoA.png)
 
-### Setting Up the Service Provider - Stima API
+### Setting Up the Service Provider - Apertis
 
 After installation, you should find Immersive Translation in the top right corner. Click it and select 【Options】 in the bottom left.
 
@@ -23,7 +23,7 @@ Please log in to your account in the basic settings, choosing any login method. 
 
 In the service provider selection below, choose 【Custom API Key】 and click 【Show More Options】
 
-- **APIKEY**: Enter your Stima API Key
+- **APIKEY**: Enter your Apertis Key
 - **Model**: Choose one from gpt-3.5-turbo(recommended), gpt-4-turbo, gpt-4o
 - **Custom API URL**: `https://api.apertis.ai`
 
@@ -39,7 +39,7 @@ After entering, click 【Test Service】 in the top right. A successful validati
 
 In the same interface, but with changes to the model section.
 
-- **APIKEY**: Enter your Stima API Key
+- **APIKEY**: Enter your Apertis Key
 - **Model**: Please select 【Set More Models】
 - **Custom API URL**: `https://api.apertis.ai`
 

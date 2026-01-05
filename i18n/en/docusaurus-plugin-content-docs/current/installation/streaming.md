@@ -8,7 +8,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.apertis.ai/v1",
-    api_key="<STIMA_API_KEY>"
+    api_key="<APERTIS_API_KEY>"
 )
 stream = client.chat.completions.create(
     model="<MODEL>",
@@ -23,4 +23,4 @@ for chunk in stream:
 ## Parameters
 - `<MODEL>`: The model to use, see [Model List](https://api.apertis.ai/models).
 - `stream`: Whether to enable streaming output, currently only supports `True`.
-- `STIMA_API_KEY`: Your API key.
+- `APERTIS_API_KEY`: Your API key.

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Stima API includes a powerful Prompt Cache feature that significantly improves system performance, reduces processing time for repeated requests, and lowers API costs. When the same prompt is requested multiple times, the system returns results directly from the cache without calling the upstream AI model again.
+Apertis includes a powerful Prompt Cache feature that significantly improves system performance, reduces processing time for repeated requests, and lowers API costs. When the same prompt is requested multiple times, the system returns results directly from the cache without calling the upstream AI model again.
 
 ## Key Features
 

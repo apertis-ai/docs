@@ -1,6 +1,6 @@
 # Fallback Models
 
-Stima API provides a powerful fallback model mechanism that automatically switches to backup models when the primary model request fails, ensuring high availability and service stability.
+Apertis provides a powerful fallback model mechanism that automatically switches to backup models when the primary model request fails, ensuring high availability and service stability.
 
 ## Overview
 
@@ -83,7 +83,7 @@ The system automatically triggers fallback models in the following situations:
 ```python
 import openai
 
-# Configure Stima API
+# Configure Apertis
 client = openai.OpenAI(
     api_key="your-api-key",
     base_url="https://api.apertis.ai/v1"

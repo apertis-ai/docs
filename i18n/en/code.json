@@ -1,6 +1,6 @@
 {
   "title.stima": {
-    "message": "Stima API Guide"
+    "message": "Apertis Guide"
   },
   "nav.docs": {
     "message": "All Documents"
@@ -12,7 +12,7 @@
     "message": "Uses & Apps"
   },
   "nav.stimachat": {
-    "message": "StimaChat System"
+    "message": "Chat System"
   },
   "nav.opensource": {
     "message": "Open Source Models"
@@ -21,7 +21,7 @@
     "message": "Cursor IDE Subscription"
   },
   "nav.website": {
-    "message": "Stima API Website"
+    "message": "Apertis Website"
   },
   "服務": {
     "message": "Services"
@@ -29,11 +29,11 @@
   "聯繫我們": {
     "message": "Contact Us"
   },
-  "Stima Research 研究報告": {
-    "message": "Stima Research Reports"
+  "Research": {
+    "message": "Apertis Research Reports"
   },
-  "Stima Tech 伺服器狀態": {
-    "message": "Stima Tech Server Status"
+  "服務狀態": {
+    "message": "Apertis AI Server Status"
   },
   "Cursor IDE 歷史版本安裝檔": {
     "message": "Cursor IDE Historical Versions"

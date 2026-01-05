@@ -6,7 +6,7 @@ Quick answers to common questions about the Apertis API.
 
 ### What is Apertis?
 
-Apertis (formerly Stima API) is a unified API platform that provides access to 60+ AI models through a single, OpenAI-compatible interface. Instead of managing multiple API keys and different SDKs, you can use one API to access models from OpenAI, Anthropic, Google, and more.
+Apertis is a unified API platform that provides access to 60+ AI models through a single, OpenAI-compatible interface. Instead of managing multiple API keys and different SDKs, you can use one API to access models from OpenAI, Anthropic, Google, and more.
 
 ### How is Apertis different from using providers directly?
 

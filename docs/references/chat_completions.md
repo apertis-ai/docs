@@ -8,7 +8,7 @@
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer <STIMA_API_KEY>" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
         "model": "<MODEL_ALIAS>",
         "messages": [
@@ -20,7 +20,7 @@ curl https://api.apertis.ai/v1/chat/completions \
     }'
 ```
 
-- `<STIMA_API_KEY>`: 您的 API 金鑰
+- `<APERTIS_API_KEY>`: 您的 API 金鑰
 - `<MODEL_ALIAS>`: 要使用的模型
 - `<MESSAGES>`: 要傳送給模型的訊息
 

@@ -12,10 +12,10 @@ Returns all available models, including model names, model descriptions, and mod
 ```bash
 curl https://api.apertis.ai/v1/models \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer <STIMA_API_KEY>"
+    -H "Authorization: Bearer <APERTIS_API_KEY>"
 ```
 
-- `<STIMA_API_KEY>`: Your API key
+- `<APERTIS_API_KEY>`: Your API key
 
 ### Response
 

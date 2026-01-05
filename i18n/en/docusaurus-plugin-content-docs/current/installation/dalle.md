@@ -14,7 +14,7 @@ payload = json.dumps({
    "n": 1,
    "size": "1024x1024"
 })
-api_key = "STIMA_API_KEY"
+api_key = "APERTIS_API_KEY"
 headers = {
    'Authorization': f'Bearer {api_key}',
    'Content-Type': 'application/json'
@@ -29,5 +29,5 @@ print(response.text)
 
 - `model`: The model to use, currently supports `dall-e-3`
 - `size`: The size of the image, currently supports `1024x1024`, `1792x1024`, `1024x1792`
-- `STIMA_API_KEY`: Your API key
+- `APERTIS_API_KEY`: Your API key
 
