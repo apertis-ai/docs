@@ -50,7 +50,7 @@ In the **OpenAI API Key** field, enter your API Key. Enable the **Override OpenA
 
 ### Choosing a Model
 
-Next, refer to the [Model Support List](https://api.apertis.ai/) and click the **[Add Model]** button. Enter the model name exactly as provided in the model alias; otherwise, the model will not function. For example:
+Next, refer to the [Model Support List](https://apertis.ai/models) and click the **[Add Model]** button. Enter the model name exactly as provided in the model alias; otherwise, the model will not function. For example:
 
 - To use **Claude 3.5 Sonnet**, enter `cow-3-5-sonnet-20241022`, `cow-3-5-sonnet-20240620`.
 - To use **GPT-4o**, enter `gpt-4o`.

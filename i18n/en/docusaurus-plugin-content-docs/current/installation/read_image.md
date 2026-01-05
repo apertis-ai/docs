@@ -33,6 +33,6 @@ print(response.choices[0])
 ```
 
 ## Parameters
-- `<MODEL>`: The model to use, see [Model List](https://api.apertis.ai/models).
+- `<MODEL>`: The model to use, see [Model List](https://apertis.ai/models).
 - `<IMAGE_URL>`: The URL of the image to read.
 - `APERTIS_API_KEY`: Your API key.

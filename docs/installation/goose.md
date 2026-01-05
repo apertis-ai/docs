@@ -101,7 +101,7 @@ Once configured, Goose can assist with:
 
 ### Provider Not Working
 
-- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
 - Check the Base URL is correct for your provider type
 - Try switching between Anthropic and OpenAI compatible modes
 
@@ -113,7 +113,7 @@ Once configured, Goose can assist with:
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Claude Code](/installation/claude-code) - Terminal-based AI coding tool
 - [Goose Official Documentation](https://block.github.io/goose/docs/quickstart/)

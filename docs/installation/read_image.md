@@ -34,6 +34,6 @@ print(response.choices[0])
 
 ## 參數說明
 
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.apertis.ai/models)。
+- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://apertis.ai/models)。
 - `<IMAGE_URL>`: 要讀取的圖片 URL。
 - `APERTIS_API_KEY`: 您的 API 金鑰

@@ -5,7 +5,7 @@ Cursor IDE is an AI-powered code editor built as an enhanced fork of Visual Stud
 ## Requirements
 
 - Cursor IDE (Pro or higher recommended for custom model configuration)
-- An Apertis API Key (obtain from [Apertis Dashboard](https://api.apertis.ai/token))
+- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
 
 ## Installation
 
@@ -55,7 +55,7 @@ Navigate to **Settings** → **Models** in Cursor IDE.
 
 ### Step 3: Add Models
 
-Click **Add model** and enter the model name. The model name must match the [Model List](https://api.apertis.ai/) exactly.
+Click **Add model** and enter the model name. The model name must match the [Model List](https://apertis.ai/models) exactly.
 
 Available models include:
 
@@ -80,18 +80,18 @@ Go to the chat interface and select your newly added model from the dropdown.
 
 ### Model Not Working
 
-- Ensure the model name matches exactly with the [Model List](https://api.apertis.ai/)
+- Ensure the model name matches exactly with the [Model List](https://apertis.ai/models)
 - Verify your API key is valid and has sufficient quota
 - Check that the base URL is set to `https://api.apertis.ai/v1`
 
 ### Connection Errors
 
 - Check your network connection
-- Verify the API key in your [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify the API key in your [Apertis Dashboard](https://apertis.ai/token)
 - Ensure the base URL is correctly entered with no trailing slash
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Claude Code Integration](/installation/claude-code) - For terminal-based AI coding

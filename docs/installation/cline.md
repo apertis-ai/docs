@@ -80,9 +80,9 @@ Cline supports Model Context Protocol (MCP) servers for enhanced functionality:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
 - Ensure the Base URL is `https://api.apertis.ai/v1`
-- Check that the model name matches the [Model List](https://api.apertis.ai/) exactly
+- Check that the model name matches the [Model List](https://apertis.ai/models) exactly
 
 ### Extension Not Working
 
@@ -92,7 +92,7 @@ Cline supports Model Context Protocol (MCP) servers for enhanced functionality:
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Roo Code Extension](/installation/roocode) - Alternative VS Code AI assistant
 - [Kilo Code Extension](/installation/kilo-code) - Another VS Code AI coding tool

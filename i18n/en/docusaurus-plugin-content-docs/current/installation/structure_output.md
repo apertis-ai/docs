@@ -72,5 +72,5 @@ print(data.decode("utf-8"))
 ```
 
 ## Parameter
-- `model`: See [Model List](https://api.apertis.ai/models).
-- `APERTIS_API_KEY`: Your Apertis [API Key](https://api.apertis.ai/token).
+- `model`: See [Model List](https://apertis.ai/models).
+- `APERTIS_API_KEY`: Your Apertis [API Key](https://apertis.ai/token).

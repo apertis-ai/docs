@@ -22,4 +22,4 @@ Developed by Mistral AI, the Mistral models are high-performance open-source lan
 
 ## Model List
 
-For a comprehensive list of models we offer, please visit: [**Apertis Model List**](https://api.apertis.ai/models)
+For a comprehensive list of models we offer, please visit: [**Apertis Model List**](https://apertis.ai/models)

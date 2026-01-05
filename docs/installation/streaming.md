@@ -22,6 +22,6 @@ for chunk in stream:
 
 ## 參數說明
 
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://api.apertis.ai/models)。
+- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://apertis.ai/models)。
 - `stream`: 是否開啟流式輸出，目前僅支援 `True`。
 - `APERTIS_API_KEY`: 您的 API 金鑰

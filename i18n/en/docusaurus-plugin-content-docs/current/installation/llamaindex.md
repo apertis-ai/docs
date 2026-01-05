@@ -5,7 +5,7 @@ pip install llama-index
 ```
 ### Using Apertis
 
-Please obtain your API Key from [**Apertis Key**](https://api.apertis.ai/token)
+Please obtain your API Key from [**Apertis Key**](https://apertis.ai/token)
 
 ```python
 from llama_index.llms.openai import OpenAI

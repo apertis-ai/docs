@@ -4,8 +4,8 @@ sidebar_position: 1
 
 # Quick Overview
 
-### 1. Homepage - **[Apertis](https://api.apertis.ai/)**
-Click **[Apertis](https://api.apertis.ai/)** to visit the official website, where you can find the currently supported **applications**, the **[model support list](https://api.apertis.ai/models)**, and **more information**.
+### 1. Homepage - **[Apertis](https://apertis.ai/)**
+Click **[Apertis](https://apertis.ai/)** to visit the official website, where you can find the currently supported **applications**, the **[model support list](https://apertis.ai/models)**, and **more information**.
 
 ### 2. Login
 Click on the "Login" button in the top-right corner to register and log in. Currently, **email** and **username** login methods are supported.

@@ -4,8 +4,8 @@ sidebar_position: 1
 
 # 快速了解 Apertis 
 
-### 1. 網站連結 - **[Apertis](https://api.apertis.ai/)**
-點擊 **[Apertis](https://api.apertis.ai/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://api.apertis.ai/models)**，以及 **更多資訊**。
+### 1. 網站連結 - **[Apertis](https://apertis.ai/)**
+點擊 **[Apertis](https://apertis.ai/)** 進入官網，即可看到目前支援的 **應用程式**、**[模型支援列表](https://apertis.ai/models)**，以及 **更多資訊**。
 
 
 ### 2. 登入 

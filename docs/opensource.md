@@ -22,4 +22,4 @@ Mistral 模型是由Mistral AI公司提出的，是一款高性能的開源語�
 
 ## 模型列表
 
-欲了解我們提供的完整模型列表，請見：[**Apertis AI 模型列表**](https://api.apertis.ai/models)
+欲了解我們提供的完整模型列表，請見：[**Apertis AI 模型列表**](https://apertis.ai/models)

@@ -17,7 +17,7 @@ bolt.diy is a solution that enables developers to easily integrate Apertis into 
 
 ### API Key Setup
 
-1. Register and obtain your API key at [Apertis](https://api.apertis.ai/token)
+1. Register and obtain your API key at [Apertis](https://apertis.ai/token)
 2. API keys start with `sk-`
 3. Please keep your API key secure and do not share it publicly
 

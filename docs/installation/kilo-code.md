@@ -32,8 +32,8 @@ After installation, select **"Use your own API key"** option to configure custom
 1. Open Kilo Code settings
 2. Select **OpenAI Compatible** as the API Provider
 3. Enter the Base URL: `https://api.apertis.ai/v1`
-4. Enter your API Key (obtain from [Apertis Dashboard](https://api.apertis.ai/token))
-5. Select a model from the [Model List](https://api.apertis.ai/)
+4. Enter your API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+5. Select a model from the [Model List](https://apertis.ai/models)
 
 ### Configuration Summary
 
@@ -77,9 +77,9 @@ Kilo Code supports MCP (Model Context Protocol) for enhanced functionality:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
 - Ensure the Base URL is `https://api.apertis.ai/v1`
-- Check that the model name matches the [Model List](https://api.apertis.ai/) exactly
+- Check that the model name matches the [Model List](https://apertis.ai/models) exactly
 
 ### Extension Not Working
 
@@ -89,7 +89,7 @@ Kilo Code supports MCP (Model Context Protocol) for enhanced functionality:
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Roo Code Extension](/installation/roocode) - Alternative VS Code AI assistant
 - [Cline Extension](/installation/cline) - Another VS Code AI coding tool

@@ -19,7 +19,7 @@ Roo Code is a solution that enables developers to easily integrate Apertis into 
 
 ### API Key Setup
 
-1. Register and obtain your API key at [Apertis](https://api.apertis.ai/token)
+1. Register and obtain your API key at [Apertis](https://apertis.ai/token)
 2. API keys start with `sk-`
 3. Please keep your API key secure and do not share it publicly
 
@@ -27,7 +27,7 @@ Roo Code is a solution that enables developers to easily integrate Apertis into 
 - Select `Settings` and `API Providers` in the Roo Code settings page, and choose `OpenAI Compatible` API mode
 - Enter `https://api.apertis.ai/v1` in the `Base URL` field
 - Enter your API key in the `OpenAI API Key` field
-- Enter the model alias in the `Model` field, refer to [Model List](https://api.apertis.ai/models)
+- Enter the model alias in the `Model` field, refer to [Model List](https://apertis.ai/models)
 ![image](../static/img/roocode_2.png)
 
 After completing the input fields, you can start using the extension with the model you want!

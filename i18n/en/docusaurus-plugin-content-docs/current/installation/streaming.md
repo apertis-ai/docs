@@ -21,6 +21,6 @@ for chunk in stream:
 ```
 
 ## Parameters
-- `<MODEL>`: The model to use, see [Model List](https://api.apertis.ai/models).
+- `<MODEL>`: The model to use, see [Model List](https://apertis.ai/models).
 - `stream`: Whether to enable streaming output, currently only supports `True`.
 - `APERTIS_API_KEY`: Your API key.

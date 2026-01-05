@@ -122,7 +122,7 @@ OpenCode supports Model Context Protocol servers:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
 - Ensure the Base URL is set correctly
 - Check environment variables are exported
 
@@ -137,7 +137,7 @@ opencode auth login
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Claude Code](/installation/claude-code) - Alternative terminal AI coding tool
 - [OpenCode Documentation](https://opencode.ai/docs)

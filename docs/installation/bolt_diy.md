@@ -17,7 +17,7 @@ bolt.diy 是一個讓開發者能夠輕鬆整合 Apertis 到自己專案的解�
 
 ### API 金鑰設定
 
-1. 請先至 [Apertis](https://api.apertis.ai/token) 註冊並取得您的 API 金鑰
+1. 請先至 [Apertis](https://apertis.ai/token) 註冊並取得您的 API 金鑰
 2. API 金鑰格式為 `sk-` 開頭的字串
 3. 請妥善保管您的 API 金鑰，不要外流或公開分享
 

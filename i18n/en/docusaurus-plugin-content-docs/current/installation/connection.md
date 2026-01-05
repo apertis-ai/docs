@@ -12,4 +12,4 @@ The following three connection endpoints are available:
 
 ### API Key
 
-Visit **[Apertis](https://api.apertis.ai/token)** to obtain your `API Key`.
+Visit **[Apertis](https://apertis.ai/token)** to obtain your `API Key`.

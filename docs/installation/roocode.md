@@ -34,8 +34,8 @@ Navigate to Roo Code settings:
 
 1. Select **OpenAI Compatible** as the API mode
 2. Enter the Base URL: `https://api.apertis.ai/v1`
-3. Enter your API Key (obtain from [Apertis Dashboard](https://api.apertis.ai/token))
-4. Enter the model name from the [Model List](https://api.apertis.ai/)
+3. Enter your API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+4. Enter the model name from the [Model List](https://apertis.ai/models)
 
 ![image](../static/img/roocode_2.png)
 
@@ -71,9 +71,9 @@ Once configured, Roo Code can assist with:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://api.apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
 - Ensure the Base URL is `https://api.apertis.ai/v1`
-- Check that the model name matches the [Model List](https://api.apertis.ai/) exactly
+- Check that the model name matches the [Model List](https://apertis.ai/models) exactly
 
 ### Extension Not Working
 
@@ -83,6 +83,6 @@ Once configured, Roo Code can assist with:
 
 ## Related Resources
 
-- [Model List](https://api.apertis.ai/)
-- [API Keys Management](https://api.apertis.ai/token)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
 - [Cline Extension](/installation/cline) - Alternative VS Code AI assistant

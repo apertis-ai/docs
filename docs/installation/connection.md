@@ -16,4 +16,4 @@ Apertis 提供 `BASE_URL` 與 `API Key` 連接至自建專案，不同的應用�
 - **[https://api.apertis.ai/api/models](https://api.apertis.ai/api/models)** - List available models (no auth required)
 
 ### API Key
-請至 **[Apertis Dashboard](https://api.apertis.ai/token)** 取得 `API Key`。
+請至 **[Apertis Dashboard](https://apertis.ai/token)** 取得 `API Key`。
