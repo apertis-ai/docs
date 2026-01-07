@@ -15,7 +15,7 @@ Claude Code supports custom API endpoints through environment variables. Configu
 | Variable | Value |
 |----------|-------|
 | `ANTHROPIC_AUTH_TOKEN` | Your Apertis API key |
-| `ANTHROPIC_BASE_URL` | `https://api.apertis.ai/v1/chat/completions` |
+| `ANTHROPIC_BASE_URL` | `https://api.apertis.ai` |
 | `API_TIMEOUT_MS` | `3000000` |
 
 ### Method 1: Settings File (Recommended)
@@ -26,7 +26,7 @@ Edit or create `~/.claude/settings.json`:
 {
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "your_apertis_api_key",
-    "ANTHROPIC_BASE_URL": "https://api.apertis.ai/v1/chat/completions",
+    "ANTHROPIC_BASE_URL": "https://api.apertis.ai",
     "API_TIMEOUT_MS": "3000000"
   }
 }
@@ -41,7 +41,7 @@ Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard]
 Set the environment variables directly in your shell:
 
 ```bash
-export ANTHROPIC_BASE_URL="https://api.apertis.ai/v1/chat/completions"
+export ANTHROPIC_BASE_URL="https://api.apertis.ai"
 export ANTHROPIC_AUTH_TOKEN="your_apertis_api_key"
 export API_TIMEOUT_MS="3000000"
 ```
@@ -50,7 +50,7 @@ To make these permanent, add them to your shell profile (`~/.bashrc`, `~/.zshrc`
 
 ```bash
 # Add to ~/.zshrc or ~/.bashrc
-export ANTHROPIC_BASE_URL="https://api.apertis.ai/v1/chat/completions"
+export ANTHROPIC_BASE_URL="https://api.apertis.ai"
 export ANTHROPIC_AUTH_TOKEN="your_apertis_api_key"
 export API_TIMEOUT_MS="3000000"
 ```
@@ -64,7 +64,7 @@ source ~/.zshrc  # or source ~/.bashrc
 
 ```cmd
 setx ANTHROPIC_AUTH_TOKEN your_apertis_api_key
-setx ANTHROPIC_BASE_URL https://api.apertis.ai/v1/chat/completions
+setx ANTHROPIC_BASE_URL https://api.apertis.ai
 setx API_TIMEOUT_MS 3000000
 ```
 
@@ -72,7 +72,7 @@ setx API_TIMEOUT_MS 3000000
 
 ```powershell
 [System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', 'your_apertis_api_key', 'User')
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://api.apertis.ai/v1/chat/completions', 'User')
+[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://api.apertis.ai', 'User')
 [System.Environment]::SetEnvironmentVariable('API_TIMEOUT_MS', '3000000', 'User')
 ```
 
@@ -97,7 +97,7 @@ You can customize which models Claude Code uses by adding model mappings:
 {
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "your_apertis_api_key",
-    "ANTHROPIC_BASE_URL": "https://api.apertis.ai/v1/chat/completions",
+    "ANTHROPIC_BASE_URL": "https://api.apertis.ai",
     "API_TIMEOUT_MS": "3000000",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-20250514",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-20250514",
@@ -128,7 +128,7 @@ claude --version
 If you encounter connection errors:
 
 1. Verify your API key is correct at [Apertis Dashboard](https://apertis.ai/token)
-2. Ensure the base URL is set to `https://api.apertis.ai/v1/chat/completions`
+2. Ensure the base URL is set to `https://api.apertis.ai`
 3. Check your network connection and firewall settings
 
 ## Environment Variables Reference
@@ -136,7 +136,7 @@ If you encounter connection errors:
 | Variable | Description |
 |----------|-------------|
 | `ANTHROPIC_AUTH_TOKEN` | Your Apertis API key |
-| `ANTHROPIC_BASE_URL` | Custom API endpoint URL (`https://api.apertis.ai/v1/chat/completions`) |
+| `ANTHROPIC_BASE_URL` | Custom API endpoint URL (`https://api.apertis.ai`) |
 | `API_TIMEOUT_MS` | API request timeout in milliseconds (`3000000`) |
 | `ANTHROPIC_DEFAULT_OPUS_MODEL` | Default model for opus tier |
 | `ANTHROPIC_DEFAULT_SONNET_MODEL` | Default model for sonnet tier |
