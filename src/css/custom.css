@@ -1,48 +1,317 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Apertis Documentation - Custom CSS
+ * Comprehensive UI improvements based on OpenRouter design patterns
  */
 
-/* You can override the default Infima variables here. */
+/* ==========================================================================
+   PHASE 2: Color Palette and Typography
+   ========================================================================== */
+
 :root {
-  /* --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b; */
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-color-primary: #293A4B;
-  --ifm-color-primary-dark: #293A4B;
-  --ifm-color-primary-darker: #293A4B;
-  --ifm-color-primary-darkest: #293A4B;
-  /* --
-  --ifm-color-primary-light: #48607a;
-  --ifm-color-primary-lighter: #48607a;
-  --ifm-color-primary-lightest: #48607a; */
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Light mode - refined professional blue palette */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-code-font-size: 0.9rem;
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-paragraph-margin-bottom: 1.25rem;
+
+  /* Code blocks */
+  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
+  --ifm-code-background: #f8fafc;
+  --ifm-code-border-radius: 0.5rem;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #48a38f;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Dark mode - OpenRouter-inspired */
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #93c5fd;
+  --ifm-color-primary-lighter: #bfdbfe;
+  --ifm-color-primary-lightest: #dbeafe;
+
+  /* Background colors */
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  --ifm-navbar-background-color: #000000;
+  --ifm-footer-background-color: #000000;
+
+  /* Code blocks */
+  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.15);
+  --ifm-code-background: #1e293b;
 }
 
+/* Typography refinements */
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
 
-/* 為導航欄項目添加微妙的動態效果 */
+h2 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.markdown p {
+  line-height: 1.75;
+}
+
+/* ==========================================================================
+   PHASE 1: Code Block Enhancements
+   ========================================================================== */
+
+/* Modern code block container */
+.theme-code-block {
+  border-radius: 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+[data-theme='dark'] .theme-code-block {
+  border-color: var(--ifm-color-emphasis-300);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Line highlighting */
+.theme-code-block-highlighted-line {
+  background-color: rgba(37, 99, 235, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .theme-code-block-highlighted-line {
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+/* Error line highlighting */
+.code-block-error-line {
+  background-color: rgba(239, 68, 68, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid #ef4444;
+}
+
+/* Copy button styling */
+.theme-code-block button[class*='copyButton'] {
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 0.375rem;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.theme-code-block:hover button[class*='copyButton'] {
+  opacity: 1;
+}
+
+.theme-code-block button[class*='copyButton']:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+/* Code block title/language label */
+.theme-code-block .prism-code {
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   PHASE 3: Admonition / Callout Styling
+   ========================================================================== */
+
+.alert {
+  border-radius: 0.75rem;
+  border-left-width: 4px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert .admonitionHeading_node_modules-\@docusaurus-theme-classic-lib-theme-Admonition-Layout-styles-module {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Note - Blue */
+.alert--secondary {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-color: #3b82f6;
+}
+
+/* Tip - Green */
+.alert--success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border-color: #22c55e;
+}
+
+/* Warning - Amber */
+.alert--warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-color: #f59e0b;
+}
+
+/* Danger - Red */
+.alert--danger {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+  border-color: #ef4444;
+}
+
+/* Info - Cyan */
+.alert--info {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border-color: #06b6d4;
+}
+
+/* Dark mode admonition adjustments */
+[data-theme='dark'] .alert {
+  background-blend-mode: overlay;
+}
+
+/* ==========================================================================
+   PHASE 4: Sidebar Enhancement
+   ========================================================================== */
+
+/* Modern sidebar styling */
+.menu {
+  padding: 1rem 0;
+}
+
+.menu__link {
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu__link:hover {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.menu__link--active {
+  background-color: var(--ifm-color-primary-lightest);
+  font-weight: 600;
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+/* Category styling */
+.menu__list-item-collapsible {
+  border-radius: 0.5rem;
+}
+
+.menu__caret {
+  transition: transform 0.2s ease;
+}
+
+/* Sidebar category icons */
+.sidebar-category--getting-started > .menu__list-item-collapsible > a::before {
+  content: '🚀';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--auth > .menu__list-item-collapsible > a::before {
+  content: '🔐';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--billing > .menu__list-item-collapsible > a::before {
+  content: '💳';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--integrations > .menu__list-item-collapsible > a::before {
+  content: '🔌';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--api-capabilities > .menu__list-item-collapsible > a::before {
+  content: '⚡';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--config > .menu__list-item-collapsible > a::before {
+  content: '⚙️';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--api-reference > .menu__list-item-collapsible > a::before {
+  content: '📖';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--security > .menu__list-item-collapsible > a::before {
+  content: '🛡️';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--help > .menu__list-item-collapsible > a::before {
+  content: '❓';
+  margin-right: 0.5rem;
+}
+
+.sidebar-category--resources > .menu__list-item-collapsible > a::before {
+  content: '📚';
+  margin-right: 0.5rem;
+}
+
+/* ==========================================================================
+   PHASE 5: Navbar Enhancement
+   ========================================================================== */
+
+/* Modern navbar with glassmorphism */
+.navbar {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: rgba(0, 0, 0, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.navbar__title {
+  font-weight: 600;
+}
+
+.navbar__link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: background-color 0.15s ease;
+}
+
+.navbar__link:hover {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.navbar__link--active {
+  font-weight: 600;
+}
+
+/* Animated underline for navbar items */
 .navbar__item {
   position: relative;
   transition: color 0.2s ease;
-  cursor: pointer; /* 明確指示項目可點擊 */
 }
 
 .navbar__item::after {
@@ -52,7 +321,7 @@
   height: 2px;
   bottom: -2px;
   left: 0;
-  background-color: var(--ifm-navbar-link-hover-color);
+  background-color: var(--ifm-color-primary);
   transform: scaleX(0);
   transition: transform 0.2s ease-in-out;
 }
@@ -61,32 +330,103 @@
   transform: scaleX(1);
 }
 
-/* 為當前活動的導航項保持 Docusaurus 的默認樣式 */
-.navbar__link--active {
-  font-weight: 600; /* 稍微加粗以表示當前頁面 */
-}
-
 .navbar__link--active::after {
-  transform: scaleX(0); /* 初始狀態不顯示下劃線 */
-  background-color: var(--ifm-navbar-link-active-color);
+  transform: scaleX(0);
+  background-color: var(--ifm-color-primary);
 }
 
-/* 當前活動項的懸停效果 */
 .navbar__link--active:hover::after {
   transform: scaleX(1);
 }
 
-/* 為特殊項目添加輕微的強調 */
-.navbar__item--special {
+/* ==========================================================================
+   Search Enhancement
+   ========================================================================== */
+
+.navbar__search-input {
+  border-radius: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  padding: 0.5rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar__search-input:focus {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+/* Search results highlight */
+.search-result-match {
+  background-color: rgba(37, 99, 235, 0.2);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Micro-interactions and Polish
+   ========================================================================== */
+
+/* Card hover effects */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Link hover effects in content */
+.markdown a {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.markdown a:hover {
+  border-bottom-color: var(--ifm-color-primary);
+}
+
+/* Table improvements */
+table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+th {
+  background-color: var(--ifm-color-emphasis-100);
   font-weight: 600;
 }
 
-.navbar__item--special::after {
-  background-color: var(--ifm-color-primary);
+[data-theme='dark'] th {
+  background-color: var(--ifm-color-emphasis-200);
 }
 
-/* 輕微的懸停顏色變化，增強可點擊感 */
-.navbar__item:hover {
-  color: var(--ifm-navbar-link-hover-color);
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
+/* Footer improvements */
+.footer {
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.footer__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.footer__link-item {
+  transition: color 0.15s ease;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary-light);
+}

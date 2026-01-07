@@ -26,6 +26,13 @@ const config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  stylesheets: [
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+      type: 'text/css',
+    },
+  ],
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -52,6 +59,9 @@ const config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
           routeBasePath: '',
+          remarkPlugins: [
+            [require('@docusaurus/remark-plugin-npm2yarn'), { sync: true }],
+          ],
         },
         blog: {
           showReadingTime: true,
@@ -69,10 +79,7 @@ const config = {
           onUntruncatedBlogPosts: 'warn',
         },
         theme: {
-          customCss: [
-            './src/css/custom.css',
-            './src/css/hover-highlight.css',
-          ]
+          customCss: './src/css/custom.css',
         },
       },
     ],
@@ -160,7 +167,7 @@ const config = {
                 href: 'https://api.apertis.ai',
               },
               {
-                label: 'Chat 對話系統',
+                label: 'Chat',
                 href: 'https://chat.apertis.ai',
               },
               {
@@ -170,10 +177,6 @@ const config = {
               {
                 label: 'Playground',
                 href: 'https://playground.apertis.ai',
-              },
-              {
-                label: '法律裁判書檢索系統 (台灣)',
-                href: 'https://lawir.stima.tech',
               },
               {
                 label: '服務狀態',
@@ -202,7 +205,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/stima-tech',
+                href: 'https://github.com/Apertis',
               },
             ],
           },

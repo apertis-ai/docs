@@ -18,6 +18,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Getting Started',
+      className: 'sidebar-category--getting-started',
       collapsed: false,
       items: [
         'intro',
@@ -32,6 +33,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Authentication',
+      className: 'sidebar-category--auth',
       collapsed: false,
       items: [
         'authentication/api-keys',
@@ -42,6 +44,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Billing & Quotas',
+      className: 'sidebar-category--billing',
       collapsed: false,
       items: [
         'billing/subscription-plans',
@@ -56,6 +59,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Integrations',
+      className: 'sidebar-category--integrations',
       collapsed: false,
       items: [
         {
@@ -100,6 +104,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'API Capabilities',
+      className: 'sidebar-category--api-capabilities',
       collapsed: false,
       items: [
         {
@@ -138,6 +143,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Configuration',
+      className: 'sidebar-category--config',
       collapsed: true,
       items: [
         'installation/connection',
@@ -149,6 +155,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'API Reference',
+      className: 'sidebar-category--api-reference',
       collapsed: true,
       items: [
         'references/chat_completions',
@@ -164,6 +171,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Security',
+      className: 'sidebar-category--security',
       collapsed: true,
       items: [
         'security/best-practices',
@@ -174,6 +182,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Help & Support',
+      className: 'sidebar-category--help',
       collapsed: true,
       items: [
         'help/faq',
@@ -187,6 +196,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Additional Resources',
+      className: 'sidebar-category--resources',
       collapsed: true,
       items: [
         'opensource',
