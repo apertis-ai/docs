@@ -45,10 +45,15 @@ The Messages API supports both authentication methods:
 | `model` | string | Yes | The Claude model to use |
 | `messages` | array | Yes | Array of message objects |
 | `max_tokens` | integer | Yes | Maximum tokens in the response |
-| `system` | string | No | System prompt |
+| `system` | string | No | System prompt (top-level, not in messages) |
 | `temperature` | number | No | Sampling temperature (0-1). Default: 1 |
+| `top_p` | number | No | Nucleus sampling threshold (0-1) |
+| `top_k` | integer | No | Top-k sampling (Anthropic specific) |
 | `stream` | boolean | No | Enable streaming. Default: false |
 | `stop_sequences` | array | No | Custom stop sequences |
+| `tools` | array | No | Tools/functions the model can call |
+| `tool_choice` | object | No | Controls tool selection behavior |
+| `metadata` | object | No | Request metadata (e.g., user_id) |
 
 ## Example Usage
 
