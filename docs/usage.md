@@ -52,7 +52,7 @@ export const RedText = ({children}) => (
 
 ### **Anthropic**
 **應用場域**：**Claude** 是目前最強的**程式開發助理**，其能透過 Retrieval Augmented Generation (RAG) 理解您的程式並提供協助。搭配 Cursor 進行 Codebase 的 RAG，將能通過分析整段程式以解決問題，並提供開發提示，進而提升開發效率。
-**Claude 推薦的模型**為`claude-3-5-sonnet-20240620`, `claude-3-5-sonnet-20241022`。
+**Claude 推薦的模型**為 `claude-opus-4-5-20251101`, `claude-sonnet-4-20250514`, `claude-3-5-sonnet-20241022`。
 
 ### **Google**
 **應用場域**：Gemini 的模型能力較為通用，其最大的特點為以較低的價格提供優質的服務。其應用場域包含**翻譯網頁內容、大量 PDF（如論文、專利）**。

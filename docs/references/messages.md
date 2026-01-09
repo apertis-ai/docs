@@ -1,10 +1,14 @@
-# Messages API (Anthropic Format)
+# Messages API (Native Anthropic)
 
 ```
 POST /v1/messages
 ```
 
-The Messages API provides compatibility with Anthropic's native API format, allowing you to use Anthropic SDKs directly with Apertis.
+The Messages API is a **native Anthropic endpoint** that routes directly to Anthropic-type channels. This endpoint uses the native Anthropic request/response format without any conversion, allowing you to use Anthropic SDKs directly with Apertis.
+
+:::info Native Endpoint
+This endpoint exclusively routes to Anthropic-type channels, ensuring full compatibility with Anthropic's API format including streaming, tool use, and all Claude-specific features.
+:::
 
 ## HTTP Request
 
@@ -129,6 +133,29 @@ with client.messages.stream(
         print(text, end="", flush=True)
 ```
 
+### Streaming with curl
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+  -H "x-api-key: <APERTIS_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-opus-4-5-20251101",
+    "max_tokens": 100,
+    "stream": true,
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+SSE events returned:
+- `message_start` - Initial message metadata
+- `content_block_start` - Start of content block
+- `content_block_delta` - Incremental text chunks
+- `content_block_stop` - End of content block
+- `message_delta` - Final usage and stop reason
+- `message_stop` - Stream complete
+
 ### Vision (Image Input)
 
 ```python
@@ -186,17 +213,19 @@ message = client.messages.create(
 
 ## Supported Models
 
-The Messages API supports all Claude models:
+The Messages API supports Claude models via Anthropic-type channels:
 
 | Model | Description |
 |-------|-------------|
-| `claude-3-5-sonnet-20241022` | Latest Sonnet - balanced performance |
-| `claude-3-opus-20240229` | Most capable Claude model |
-| `claude-3-sonnet-20240229` | Previous generation Sonnet |
-| `claude-3-haiku-20240307` | Fast and efficient |
+| `claude-opus-4-5-20251101` | Claude Opus 4.5 - most capable |
+| `claude-sonnet-4-20250514` | Claude Sonnet 4 - balanced |
+| `claude-3-5-sonnet-20241022` | Claude 3.5 Sonnet - fast and capable |
+| `claude-3-opus-20240229` | Claude 3 Opus |
+| `claude-3-sonnet-20240229` | Claude 3 Sonnet |
+| `claude-3-haiku-20240307` | Claude 3 Haiku - fast and efficient |
 
-:::tip
-You can also use non-Claude models through this endpoint. The request will be automatically translated to the appropriate format.
+:::warning Anthropic Channels Only
+This endpoint routes exclusively to Anthropic-type channels. If you need to access non-Claude models, use the [Chat Completions](./chat_completions) endpoint instead.
 :::
 
 ## Differences from Direct Anthropic API
@@ -205,7 +234,8 @@ You can also use non-Claude models through this endpoint. The request will be au
 |---------|---------|------------------|
 | Base URL | `https://api.apertis.ai` | `https://api.anthropic.com` |
 | API Key | Apertis API key | Anthropic API key |
-| Model Access | All models via single key | Claude models only |
+| Request Format | Native Anthropic (no conversion) | Native Anthropic |
+| Streaming | Full SSE support | Full SSE support |
 | Billing | Unified Apertis billing | Anthropic billing |
 
 ## Related Topics
