@@ -12,7 +12,6 @@ The Messages API provides compatibility with Anthropic's native API format, allo
 curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
-    -H "anthropic-version: 2023-06-01" \
     -d '{
         "model": "claude-3-5-sonnet-20241022",
         "max_tokens": 1024,
@@ -21,6 +20,10 @@ curl https://api.apertis.ai/v1/messages \
         ]
     }'
 ```
+
+:::note
+The `anthropic-version` header is optional and will be ignored. Apertis handles API version compatibility automatically.
+:::
 
 ## Authentication
 

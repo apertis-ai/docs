@@ -27,9 +27,18 @@ sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ## Using Your API Key
 
-### Authentication Header
+### Authentication Methods
 
-Include your API key in the `Authorization` header with the `Bearer` prefix:
+Apertis supports two authentication methods:
+
+| Method | Header | Example |
+|--------|--------|---------|
+| Bearer Token | `Authorization` | `Authorization: Bearer sk-your-api-key` |
+| API Key | `x-api-key` | `x-api-key: sk-your-api-key` |
+
+Both methods work across all endpoints. The `x-api-key` header provides compatibility with Anthropic SDKs.
+
+### Example: Bearer Token (OpenAI SDKs)
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
@@ -40,6 +49,23 @@ curl https://api.apertis.ai/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
+
+### Example: x-api-key (Anthropic SDKs)
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+  -H "x-api-key: sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-3-5-sonnet-20241022",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+:::tip
+When both headers are provided, `Authorization` takes precedence over `x-api-key`.
+:::
 
 ### Python Example
 
