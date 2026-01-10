@@ -40,20 +40,42 @@ The Messages API supports both authentication methods:
 
 ## Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `model` | string | Yes | The Claude model to use |
-| `messages` | array | Yes | Array of message objects |
-| `max_tokens` | integer | Yes | Maximum tokens in the response |
-| `system` | string | No | System prompt (top-level, not in messages) |
-| `temperature` | number | No | Sampling temperature (0-1). Default: 1 |
-| `top_p` | number | No | Nucleus sampling threshold (0-1) |
-| `top_k` | integer | No | Top-k sampling (Anthropic specific) |
-| `stream` | boolean | No | Enable streaming. Default: false |
-| `stop_sequences` | array | No | Custom stop sequences |
-| `tools` | array | No | Tools/functions the model can call |
-| `tool_choice` | object | No | Controls tool selection behavior |
-| `metadata` | object | No | Request metadata (e.g., user_id) |
+### Required Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` | string | The Claude model to use |
+| `messages` | array | Array of message objects |
+| `max_tokens` | integer | Maximum tokens in the response |
+
+### Optional Parameters (Native Anthropic)
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `system` | string | System prompt (top-level, not in messages) |
+| `temperature` | number | Sampling temperature (0-1). Default: 1 |
+| `top_p` | number | Nucleus sampling threshold (0-1) |
+| `top_k` | integer | Top-k sampling (Anthropic specific) |
+| `stream` | boolean | Enable streaming. Default: false |
+| `stop_sequences` | array | Custom stop sequences |
+| `tools` | array | Tools/functions the model can call |
+| `tool_choice` | object | Controls tool selection behavior |
+| `metadata` | object | Request metadata (e.g., user_id) |
+
+### Extended Parameters (OpenAI-compatible)
+
+These additional parameters are supported for compatibility with upstream providers:
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `n` | integer | Number of completions to generate. Default: 1 |
+| `stop` | string/array | Up to 4 sequences where the API will stop generating |
+| `presence_penalty` | number | Penalize new topics (-2.0 to 2.0). Default: 0 |
+| `frequency_penalty` | number | Penalize repetition (-2.0 to 2.0). Default: 0 |
+| `logit_bias` | object | Map of token IDs to bias values (-100 to 100) |
+| `user` | string | Unique identifier for end-user tracking |
+| `response_format` | object | Specify output format (e.g., JSON mode) |
+| `seed` | number | Seed for deterministic sampling |
 
 ## Example Usage
 
