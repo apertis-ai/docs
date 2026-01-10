@@ -1,26 +1,270 @@
-# Chat Completions
-```json
-/v1/chat/completions
+# Chat Completions API
+
+```
+POST /v1/chat/completions
 ```
 
-## HTTP 請求
+The Chat Completions API is an **OpenAI-compatible endpoint** that provides unified access to multiple AI model providers. This endpoint follows the OpenAI API format, making it easy to integrate with existing applications.
+
+:::info OpenAI Compatible
+This endpoint is fully compatible with OpenAI's Chat Completions API format. You can use OpenAI SDKs directly with Apertis by changing the base URL.
+:::
+
+## HTTP Request
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "<MODEL_ALIAS>",
+        "model": "gpt-4o-mini",
         "messages": [
-            {
-                "role": "system",
-                "content": "<MESSAGES>"
-            }
+            {"role": "user", "content": "Hello!"}
         ]
     }'
 ```
 
-- `<APERTIS_API_KEY>`: 您的 API 金鑰
-- `<MODEL_ALIAS>`: 要使用的模型
-- `<MESSAGES>`: 要傳送給模型的訊息
+## Authentication
 
+| Header | Format | Example |
+|--------|--------|---------|
+| `Authorization` | Bearer token | `Authorization: Bearer sk-your-api-key` |
+
+## Parameters
+
+### Required Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` | string | ID of the model to use (e.g., `gpt-4o-mini`, `claude-3-5-sonnet-20241022`) |
+| `messages` | array | Array of message objects in the conversation |
+
+### Optional Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `temperature` | number | Sampling temperature (0-2). Higher values increase randomness. Default: 1 |
+| `top_p` | number | Nucleus sampling threshold (0-1). Alternative to temperature sampling |
+| `n` | integer | Number of chat completions to generate. Default: 1 |
+| `stream` | boolean | Enable streaming responses. Default: false |
+| `stop` | string/array | Up to 4 sequences where the API will stop generating |
+| `max_tokens` | integer | Maximum tokens to generate in the response |
+| `presence_penalty` | number | Penalize new topics (-2.0 to 2.0). Default: 0 |
+| `frequency_penalty` | number | Penalize repetition (-2.0 to 2.0). Default: 0 |
+| `logit_bias` | object | Map of token IDs to bias values (-100 to 100) |
+| `user` | string | Unique identifier for end-user tracking |
+| `response_format` | object | Specify output format (e.g., `{"type": "json_object"}` for JSON mode) |
+| `seed` | integer | Seed for deterministic sampling |
+| `tools` | array | List of tools/functions the model can call |
+| `tool_choice` | string/object | Controls tool selection (`none`, `auto`, or specific tool) |
+
+### Extended Parameters
+
+These additional parameters are supported for upstream provider compatibility:
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `extra_body` | object | Additional parameters for upstream providers (e.g., `enable_thinking`) |
+| `top_k` | integer | Top-k sampling (provider-specific) |
+
+## Example Usage
+
+### Python (OpenAI SDK)
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-your-api-key",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "user", "content": "What is the meaning of life?"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+### JavaScript (OpenAI SDK)
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: 'sk-your-api-key',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create({
+  model: 'gpt-4o-mini',
+  messages: [
+    { role: 'user', content: 'What is the meaning of life?' }
+  ]
+});
+
+console.log(response.choices[0].message.content);
+```
+
+### With System Prompt
+
+```python
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Tell me about the weather."}
+    ]
+)
+```
+
+### Multi-turn Conversation
+
+```python
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "user", "content": "What is Python?"},
+        {"role": "assistant", "content": "Python is a high-level programming language..."},
+        {"role": "user", "content": "How do I install it?"}
+    ]
+)
+```
+
+### Streaming
+
+```python
+stream = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Write a poem about coding."}],
+    stream=True
+)
+
+for chunk in stream:
+    if chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="")
+```
+
+### With All Parameters
+
+```python
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Count 1 to 5"}],
+    max_tokens=100,
+    temperature=0.7,
+    top_p=0.9,
+    n=1,
+    presence_penalty=0.1,
+    frequency_penalty=0.1,
+    logit_bias={"50256": -100},  # Discourage specific tokens
+    user="user-123",
+    seed=42,
+    response_format={"type": "text"}
+)
+```
+
+### Function Calling / Tools
+
+```python
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get the current weather in a location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "City name"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "What's the weather in Tokyo?"}],
+    tools=tools,
+    tool_choice="auto"
+)
+```
+
+## Response Format
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "object": "chat.completion",
+  "created": 1704067200,
+  "model": "gpt-4o-mini-2024-07-18",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hello! How can I help you today?"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 9,
+    "completion_tokens": 10,
+    "total_tokens": 19
+  }
+}
+```
+
+## Streaming Response
+
+When `stream: true`, responses are sent as Server-Sent Events (SSE):
+
+```
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"!"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+```
+
+## Supported Models
+
+The Chat Completions API supports models from multiple providers:
+
+| Provider | Example Models |
+|----------|---------------|
+| OpenAI | `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo` |
+| Anthropic | `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`, `claude-3-haiku-20240307` |
+| Google | `gemini-1.5-pro`, `gemini-1.5-flash` |
+| Meta | `llama-3.1-70b`, `llama-3.1-8b` |
+| And more... | Check the [Models](/references/models) endpoint for full list |
+
+## Error Responses
+
+| Status Code | Description |
+|-------------|-------------|
+| 400 | Bad Request - Invalid parameters |
+| 401 | Unauthorized - Invalid API key |
+| 402 | Payment Required - Insufficient quota |
+| 429 | Rate Limited - Too many requests |
+| 500 | Internal Server Error |
+| 503 | Service Unavailable - Model not available |
+
+## Related Topics
+
+- [Messages API](/references/messages) - Native Anthropic format
+- [Responses API](/references/responses) - Alternative endpoint
+- [Models](/references/models) - List available models
