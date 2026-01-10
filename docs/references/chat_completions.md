@@ -66,6 +66,9 @@ These additional parameters are supported for upstream provider compatibility:
 |-----------|------|-------------|
 | `extra_body` | object | Additional parameters for upstream providers (e.g., `enable_thinking`) |
 | `top_k` | integer | Top-k sampling (provider-specific) |
+| `reasoning_effort` | string | Controls reasoning model effort level (`low`, `medium`, `high`) |
+| `stream_options` | object | Stream settings: `{ include_usage: boolean }` |
+| `thinking` | object | Deep thinking control: `{ type: "enabled" \| "disabled" \| "auto" }` |
 
 ## Example Usage
 
