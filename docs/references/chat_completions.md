@@ -235,6 +235,92 @@ response = client.chat.completions.create(
 )
 ```
 
+### Vision (Image Input)
+
+Send images for analysis using multimodal models like GPT-4o or Claude:
+
+```python
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What do you see in this image?"
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "https://example.com/image.jpg"
+                    }
+                }
+            ]
+        }
+    ]
+)
+```
+
+#### With Base64 Encoded Image
+
+```python
+import base64
+
+with open("image.png", "rb") as f:
+    image_data = base64.standard_b64encode(f.read()).decode("utf-8")
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Describe this image"
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/png;base64,{image_data}"
+                    }
+                }
+            ]
+        }
+    ]
+)
+```
+
+### Extended Thinking (Google Gemini)
+
+Use `extra_body` to enable thinking features for Google Gemini models:
+
+```python
+response = client.chat.completions.create(
+    model="gemini-2.5-pro",
+    messages=[{"role": "user", "content": "Solve this step by step..."}],
+    extra_body={
+        "google": {
+            "thinking_config": {
+                "thinking_budget": 10240
+            }
+        }
+    }
+)
+```
+
+### Deterministic Output with Seed
+
+```python
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Tell me a joke"}],
+    seed=42,  # Same seed = reproducible output
+    temperature=0.7
+)
+```
+
 ## Response Format
 
 ```json
