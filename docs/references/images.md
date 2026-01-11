@@ -160,26 +160,97 @@ response = client.images.generate(
 | `dall-e-3` | Higher quality, better prompt following |
 | `gpt-image-1` | Latest model with transparent background support |
 
-## Image Edits (Coming Soon)
+## Image Edits
 
 ```
 POST /v1/images/edits
 ```
 
-The Image Edits endpoint allows you to edit or extend existing images. This endpoint is currently in development.
+The Image Edits endpoint allows you to edit or extend existing images using models like gpt-image-1.
 
-### Planned Parameters
+### HTTP Request
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `image` | file | The image to edit (PNG, max 4MB) |
-| `prompt` | string | A text description of the desired edit |
-| `mask` | file | Mask image indicating areas to edit |
-| `model` | string | Model to use |
-| `n` | integer | Number of images to generate |
-| `size` | string | Size of the generated images |
-| `background` | string | Background type (gpt-image-1 only) |
-| `moderation` | string | Moderation level (gpt-image-1 only) |
+```bash
+curl https://api.apertis.ai/v1/images/edits \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -F "image=@original.png" \
+    -F "prompt=Add a rainbow in the sky" \
+    -F "model=gpt-image-1" \
+    -F "size=1024x1024"
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 25MB for gpt-image-1 |
+| `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for gpt-image-1 |
+| `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
+| `model` | string | No | Model to use: `gpt-image-1`, `gpt-image-1-all`, `flux-kontext-pro`, `flux-kontext-max` |
+| `n` | integer | No | Number of images to generate (1-10). Default: 1 |
+| `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `1024x1024` |
+| `quality` | string | No | Quality: `high`, `medium`, `low`. Default for gpt-image-1 |
+| `response_format` | string | No | Response format: `url`, `b64_json`. gpt-image-1 always returns base64 |
+| `background` | string | No | Background type: `transparent`, `opaque`, `auto`. Default: `auto` |
+| `moderation` | string | No | Moderation level: `low`, `auto`. Default: `auto` |
+
+### Example Usage
+
+#### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-your-api-key",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.images.edit(
+    model="gpt-image-1",
+    image=open("original.png", "rb"),
+    prompt="Add a sunset in the background",
+    n=1,
+    size="1024x1024"
+)
+
+print(response.data[0].url)
+```
+
+#### JavaScript
+
+```javascript
+import OpenAI from 'openai';
+import fs from 'fs';
+
+const client = new OpenAI({
+  apiKey: 'sk-your-api-key',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.images.edit({
+  model: 'gpt-image-1',
+  image: fs.createReadStream('original.png'),
+  prompt: 'Add a sunset in the background',
+  n: 1,
+  size: '1024x1024'
+});
+
+console.log(response.data[0].url);
+```
+
+#### With Mask for Inpainting
+
+```python
+response = client.images.edit(
+    model="gpt-image-1",
+    image=open("original.png", "rb"),
+    mask=open("mask.png", "rb"),
+    prompt="Replace the masked area with a beautiful garden",
+    n=1,
+    size="1024x1024"
+)
+```
 
 ## Related Topics
 
