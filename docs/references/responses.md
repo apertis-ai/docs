@@ -41,15 +41,21 @@ curl https://api.apertis.ai/v1/responses \
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
+| `instructions` | string | High-level instructions for model behavior |
 | `stream` | boolean | Enable streaming responses. Default: false |
 | `temperature` | number | Sampling temperature (0-2). Default: 1 |
 | `max_tokens` | integer | Maximum tokens in the response |
+| `max_output_tokens` | integer | Upper bound for tokens including reasoning tokens |
 | `tools` | array | List of tools the model can use (including web search) |
 | `tool_choice` | string/object | Controls tool selection behavior |
+| `max_tool_calls` | integer | Maximum number of tool calls allowed |
+| `parallel_tool_calls` | boolean | Whether to allow parallel tool execution |
 | `reasoning` | object | Reasoning configuration (see below) |
 | `text` | object | Text output configuration (see below) |
-| `store` | boolean | Whether to store the response |
-| `metadata` | object | Request metadata |
+| `store` | boolean | Whether to store the response for state management |
+| `previous_response_id` | string | ID of previous response for multi-turn conversations |
+| `truncation` | string | Context overflow handling (e.g., `"auto"`) |
+| `metadata` | object | Request metadata (up to 16 key-value pairs) |
 
 ### Reasoning Parameter
 
@@ -192,6 +198,38 @@ response = client.responses.create(
 )
 ```
 
+### With Instructions
+
+Use `instructions` to provide high-level guidance for model behavior:
+
+```python
+response = client.responses.create(
+    model="gpt-4o",
+    instructions="You are a helpful coding assistant. Always provide code examples.",
+    input="How do I read a file in Python?"
+)
+```
+
+### Stateful Conversations
+
+Use `store` and `previous_response_id` for multi-turn conversations with state:
+
+```python
+# First request - store the response
+response1 = client.responses.create(
+    model="gpt-4o",
+    input="My name is Alice.",
+    store=True
+)
+
+# Follow-up request - reference the previous response
+response2 = client.responses.create(
+    model="gpt-4o",
+    input="What's my name?",
+    previous_response_id=response1.id
+)
+```
+
 ### With Function Calling
 
 ```python
@@ -265,8 +303,13 @@ All chat models available through Apertis are supported with the Responses API:
 |---------|--------------|------------------|
 | Input field | `input` | `messages` |
 | String input | Supported | Not supported |
+| Instructions | `instructions` parameter | System message in `messages` |
 | Reasoning config | `reasoning` object | `reasoning_effort` string |
 | Text config | `text` object | Not available |
+| State management | `store`, `previous_response_id` | Manual message array |
+| Token limit | `max_output_tokens` | `max_tokens` |
+| Tool call limits | `max_tool_calls`, `parallel_tool_calls` | Not available |
+| Truncation | `truncation` parameter | Not available |
 
 ## Related Topics
 
