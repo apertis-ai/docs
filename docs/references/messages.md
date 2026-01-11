@@ -61,6 +61,31 @@ The Messages API supports both authentication methods:
 | `tools` | array | Tools/functions the model can call |
 | `tool_choice` | object | Controls tool selection behavior |
 | `metadata` | object | Request metadata (e.g., user_id) |
+| `thinking` | object | Extended thinking configuration (see below) |
+
+### Thinking Parameter
+
+The `thinking` parameter enables Claude's extended thinking capability for more complex reasoning:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `type` | string | `"enabled"` or `"disabled"` |
+| `budget_tokens` | integer | Token budget for thinking (1024-32768) |
+
+```python
+# Extended Thinking Example
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=4096,
+    thinking={
+        "type": "enabled",
+        "budget_tokens": 10240
+    },
+    messages=[
+        {"role": "user", "content": "Solve this complex math problem step by step..."}
+    ]
+)
+```
 
 ### Extended Parameters (OpenAI-compatible)
 
