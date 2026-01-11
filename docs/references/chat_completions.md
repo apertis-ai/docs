@@ -69,6 +69,40 @@ These additional parameters are supported for upstream provider compatibility:
 | `reasoning_effort` | string | Controls reasoning model effort level (`low`, `medium`, `high`) |
 | `stream_options` | object | Stream settings: `{ include_usage: boolean }` |
 | `thinking` | object | Deep thinking control: `{ type: "enabled" \| "disabled" \| "auto" }` |
+| `web_search_options` | object | Web search configuration for search-enabled models |
+
+### Web Search Options
+
+The `web_search_options` parameter enables web search for supported models:
+- `gpt-4o-search-preview`
+- `gpt-4o-mini-search-preview`
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `search_context_size` | string | Amount of search context: `low`, `medium` (default), `high` |
+| `user_location` | object | Geolocation for localized results |
+| `filters` | array | Domain allow-list (up to 100 URLs) |
+
+```python
+# Web Search Example
+response = client.chat.completions.create(
+    model="gpt-4o-search-preview",
+    web_search_options={
+        "search_context_size": "medium",
+        "user_location": {
+            "type": "approximate",
+            "approximate": {
+                "country": "US",
+                "city": "San Francisco",
+                "region": "California"
+            }
+        }
+    },
+    messages=[
+        {"role": "user", "content": "What's the weather today?"}
+    ]
+)
+```
 
 ## Example Usage
 
