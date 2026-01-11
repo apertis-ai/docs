@@ -52,6 +52,10 @@ curl https://api.apertis.ai/v1/images/generations \
 |-----------|------|-------------|
 | `background` | string | Background type: `transparent`, `opaque`, `auto`. Default: `auto` |
 | `moderation` | string | Moderation level: `low`, `auto`. Default: `auto` |
+| `output_format` | string | Output format: `png`, `jpeg`, `webp`. Default: `png` |
+| `output_compression` | integer | Compression level (0-100%) for `jpeg`/`webp` output formats. Default: `100` |
+
+> **Note:** GPT image models always return base64-encoded images (`b64_json`). The `response_format` parameter with `url` option is not supported for these models.
 
 ### Size Options
 
@@ -131,6 +135,8 @@ response = client.images.generate(
 
 ## Response Format
 
+### DALL-E Response (with URL)
+
 ```json
 {
   "created": 1699000000,
@@ -143,15 +149,37 @@ response = client.images.generate(
 }
 ```
 
+### GPT Image Response (base64)
+
+```json
+{
+  "created": 1699000000,
+  "data": [
+    {
+      "b64_json": "iVBORw0KGgoAAAANSUhEUgAA..."
+    }
+  ],
+  "usage": {
+    "total_tokens": 100,
+    "input_tokens": 50,
+    "output_tokens": 50
+  }
+}
+```
+
 ### Response Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `created` | integer | Unix timestamp of when the image was created |
 | `data` | array | Array of generated image objects |
-| `data[].url` | string | URL of the generated image (when response_format is `url`) |
-| `data[].b64_json` | string | Base64-encoded image (when response_format is `b64_json`) |
+| `data[].url` | string | URL of the generated image (DALL-E models only, valid for 60 minutes) |
+| `data[].b64_json` | string | Base64-encoded image (GPT image models, or when `response_format` is `b64_json`) |
 | `data[].revised_prompt` | string | The prompt used to generate the image (may be revised by the model) |
+| `usage` | object | Token usage information (GPT image models only) |
+| `usage.total_tokens` | integer | Total tokens used |
+| `usage.input_tokens` | integer | Input tokens used |
+| `usage.output_tokens` | integer | Output tokens used |
 
 ## Supported Models
 
@@ -185,16 +213,30 @@ curl https://api.apertis.ai/v1/images/edits \
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 25MB for gpt-image-1/1.5 |
+| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 50MB for gpt-image-1/1.5 |
 | `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for gpt-image-1/1.5 |
 | `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
 | `model` | string | No | Model to use: `gpt-image-1`, `gpt-image-1.5`, `flux-kontext-pro`, `flux-kontext-max` |
 | `n` | integer | No | Number of images to generate (1-10). Default: 1 |
-| `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `1024x1024` |
+| `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `auto` |
 | `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` for gpt-image-1/1.5 |
-| `response_format` | string | No | Response format: `url`, `b64_json`. gpt-image-1/1.5 always returns base64 |
-| `background` | string | No | Background type: `transparent`, `opaque`, `auto`. Default: `auto` |
-| `moderation` | string | No | Moderation level: `low`, `auto`. Default: `auto` |
+| `response_format` | string | No | Response format: `url`, `b64_json`. GPT image models always return base64 |
+| `user` | string | No | A unique identifier for the end-user |
+
+### gpt-image-1 and gpt-image-1.5 Edit Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `background` | string | Background type: `transparent`, `opaque`, `auto`. Default: `auto` |
+| `moderation` | string | Moderation level: `low`, `auto`. Default: `auto` |
+| `output_format` | string | Output format: `png`, `jpeg`, `webp`. Default: `png` |
+| `output_compression` | integer | Compression level (0-100%) for `jpeg`/`webp` output formats. Default: `100` |
+
+### gpt-image-1 Only Parameter
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `input_fidelity` | string | Control how much the model matches input image features: `high`, `low`. Default: `low` |
 
 ### Example Usage
 
