@@ -209,6 +209,7 @@ response = client.chat.completions.create(
   "object": "chat.completion",
   "created": 1704067200,
   "model": "gpt-4o-mini-2024-07-18",
+  "system_fingerprint": "fp_abc123",
   "choices": [
     {
       "index": 0,
@@ -227,21 +228,53 @@ response = client.chat.completions.create(
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier for the completion |
+| `object` | string | Object type, always `chat.completion` |
+| `created` | integer | Unix timestamp when the response was generated |
+| `model` | string | The model used for completion |
+| `system_fingerprint` | string | Backend configuration identifier (when available) |
+| `choices` | array | List of completion choices |
+| `usage` | object | Token usage statistics |
+
+### Choices Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `index` | integer | Index of this choice in the array |
+| `message` | object | The assistant's message with `role` and `content` |
+| `finish_reason` | string | Why the model stopped: `stop`, `length`, `tool_calls`, or `content_filter` |
+
+### Usage Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `prompt_tokens` | integer | Tokens in the input prompt |
+| `completion_tokens` | integer | Tokens in the generated response |
+| `total_tokens` | integer | Total tokens used (prompt + completion) |
+
 ## Streaming Response
 
 When `stream: true`, responses are sent as Server-Sent Events (SSE):
 
 ```
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"!"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"!"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":9,"completion_tokens":3,"total_tokens":12}}
 
 data: [DONE]
 ```
+
+:::tip Stream Options
+Use `stream_options: { "include_usage": true }` to receive token usage in the final chunk.
+:::
 
 ## Supported Models
 
