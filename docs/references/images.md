@@ -4,7 +4,7 @@
 POST /v1/images/generations
 ```
 
-The Images API generates images from text prompts using models like DALL-E and gpt-image-1.
+The Images API generates images from text prompts using models like DALL-E, gpt-image-1, and gpt-image-1.5.
 
 ## HTTP Request
 
@@ -46,7 +46,7 @@ curl https://api.apertis.ai/v1/images/generations \
 | `style` | string | Style of the image: `vivid`, `natural`. Default: `vivid` |
 | `user` | string | A unique identifier for the end-user |
 
-### gpt-image-1 Specific Parameters
+### gpt-image-1 and gpt-image-1.5 Specific Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -60,6 +60,7 @@ curl https://api.apertis.ai/v1/images/generations \
 | `dall-e-2` | `256x256`, `512x512`, `1024x1024` |
 | `dall-e-3` | `1024x1024`, `1792x1024`, `1024x1792` |
 | `gpt-image-1` | `1024x1024`, `1536x1024`, `1024x1536`, `auto` |
+| `gpt-image-1.5` | `1024x1024`, `1536x1024`, `1024x1536`, `auto` |
 
 ## Example Usage
 
@@ -158,7 +159,8 @@ response = client.images.generate(
 |-------|-------------|
 | `dall-e-2` | Original DALL-E model, fast generation |
 | `dall-e-3` | Higher quality, better prompt following |
-| `gpt-image-1` | Latest model with transparent background support |
+| `gpt-image-1` | Advanced model with transparent background support |
+| `gpt-image-1.5` | Latest model with enhanced image quality and transparent background support |
 
 ## Image Edits
 
@@ -166,7 +168,7 @@ response = client.images.generate(
 POST /v1/images/edits
 ```
 
-The Image Edits endpoint allows you to edit or extend existing images using models like gpt-image-1.
+The Image Edits endpoint allows you to edit or extend existing images using models like gpt-image-1 and gpt-image-1.5.
 
 ### HTTP Request
 
@@ -183,14 +185,14 @@ curl https://api.apertis.ai/v1/images/edits \
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 25MB for gpt-image-1 |
-| `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for gpt-image-1 |
+| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 25MB for gpt-image-1/1.5 |
+| `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for gpt-image-1/1.5 |
 | `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
-| `model` | string | No | Model to use: `gpt-image-1`, `gpt-image-1-all`, `flux-kontext-pro`, `flux-kontext-max` |
+| `model` | string | No | Model to use: `gpt-image-1`, `gpt-image-1.5`, `flux-kontext-pro`, `flux-kontext-max` |
 | `n` | integer | No | Number of images to generate (1-10). Default: 1 |
 | `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `1024x1024` |
-| `quality` | string | No | Quality: `high`, `medium`, `low`. Default for gpt-image-1 |
-| `response_format` | string | No | Response format: `url`, `b64_json`. gpt-image-1 always returns base64 |
+| `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` for gpt-image-1/1.5 |
+| `response_format` | string | No | Response format: `url`, `b64_json`. gpt-image-1/1.5 always returns base64 |
 | `background` | string | No | Background type: `transparent`, `opaque`, `auto`. Default: `auto` |
 | `moderation` | string | No | Moderation level: `low`, `auto`. Default: `auto` |
 
