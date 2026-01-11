@@ -241,6 +241,53 @@ message = client.messages.create(
 )
 ```
 
+### PDF Document Input
+
+Claude can analyze PDF documents directly. Use the `document` content type with base64-encoded PDF data:
+
+```python
+import base64
+
+with open("document.pdf", "rb") as f:
+    pdf_data = base64.standard_b64encode(f.read()).decode("utf-8")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=4096,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "document",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "application/pdf",
+                        "data": pdf_data
+                    }
+                },
+                {
+                    "type": "text",
+                    "text": "Summarize this document."
+                }
+            ]
+        }
+    ]
+)
+```
+
+#### Document Source Options
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | `"base64"` for encoded data |
+| `media_type` | string | `"application/pdf"` for PDF files |
+| `data` | string | Base64-encoded document content |
+
+:::tip Supported Formats
+Currently, PDF (`application/pdf`) is the primary supported document format for Claude models.
+:::
+
 ## Response Format
 
 ```json
