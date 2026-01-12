@@ -1,6 +1,6 @@
 # Video API
 
-The Video API generates videos from text prompts using models like Veo2 and Veo3. Video generation is asynchronous - you create a task and poll for completion.
+The Video API generates videos from text prompts using models like Veo2, Veo3, and Sora-2. Video generation is asynchronous - you create a task and poll for completion.
 
 ## Create Video
 
@@ -55,6 +55,23 @@ curl https://api.apertis.ai/v1/video/create \
 | `veo2-fast-frames` | 2 | First and last frame references |
 | `veo3-pro-frames` | 1 | First frame reference only |
 | `veo2-fast-components` | 3 | Video element components |
+
+#### Sora-2 Specific Parameters
+
+For Sora-2 models (`sora-2`, `sora-2-pro`), the following parameters are used instead:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Model ID: `sora-2`, `sora-2-pro` |
+| `prompt` | string | Yes | Text description of the desired video |
+| `images` | array | Yes | Array of image URLs for reference |
+| `orientation` | string | No | Video orientation: `portrait` or `landscape` |
+| `size` | string | No | Quality level: `small` (~720p) or `large` (1080p HD) |
+| `duration` | integer | No | Video duration: `10`, `15`, or `25` seconds |
+| `watermark` | boolean | No | Enable watermark. Default: true |
+| `private` | boolean | No | Keep video private (unpublished). Default: false |
+| `character_url` | string | No | Video URL (1-3 seconds) for character creation |
+| `character_timestamps` | string | No | Character timing in `{start},{end}` format |
 
 ### Response Format
 
@@ -247,6 +264,77 @@ response = httpx.post(
 )
 ```
 
+### Sora-2 Complete Workflow
+
+```python
+import httpx
+import time
+
+client_headers = {
+    "Authorization": "Bearer sk-your-api-key",
+    "Content-Type": "application/json"
+}
+
+# Step 1: Create video generation task with Sora-2
+response = httpx.post(
+    "https://api.apertis.ai/v1/video/create",
+    headers=client_headers,
+    json={
+        "model": "sora-2",
+        "prompt": "A cinematic scene of a person walking through a forest",
+        "images": ["https://example.com/reference.jpg"],
+        "orientation": "landscape",  # "portrait" or "landscape"
+        "size": "large",  # "small" (~720p) or "large" (1080p)
+        "duration": 10,  # 10, 15, or 25 seconds
+        "watermark": True,
+        "private": False
+    }
+)
+
+task = response.json()
+task_id = task["id"]
+print(f"Task created: {task_id}")
+
+# Step 2: Poll for completion
+while True:
+    query_response = httpx.get(
+        f"https://api.apertis.ai/v1/video/query?id={task_id}",
+        headers=client_headers
+    )
+    result = query_response.json()
+    status = result["status"]
+    print(f"Status: {status}")
+
+    if status == "completed":
+        print(f"Video URL: {result['video_url']}")
+        break
+    elif status == "failed":
+        print("Video generation failed")
+        break
+
+    time.sleep(10)
+```
+
+### Sora-2 with Character Creation
+
+```python
+# Create video with custom character
+response = httpx.post(
+    "https://api.apertis.ai/v1/video/create",
+    headers=client_headers,
+    json={
+        "model": "sora-2-pro",
+        "prompt": "A character dancing in a studio",
+        "images": ["https://example.com/reference.jpg"],
+        "orientation": "portrait",
+        "size": "large",
+        "duration": 15,
+        "character_url": "https://example.com/character-video.mp4",  # 1-3 second video
+        "character_timestamps": "0,3"  # Use frames 0-3 seconds
+    }
+)
+```
+
 ---
 
 ## Alternative API: /v1/videos
@@ -388,6 +476,8 @@ while True:
 
 ## Supported Models
 
+### Veo Models
+
 | Model | Description | Aspect Ratio Support |
 |-------|-------------|---------------------|
 | `veo2` | Veo 2 base model | No |
@@ -403,6 +493,22 @@ while True:
 | `veo3.1-fast` | Veo 3.1 fast generation | Yes (`16:9`, `9:16`) |
 | `veo_3_1` | Veo 3.1 (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
 | `veo_3_1-fast` | Veo 3.1 fast (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
+
+### Sora Models
+
+| Model | Description | Duration Support |
+|-------|-------------|------------------|
+| `sora-2` | Sora 2 base model | 10 seconds |
+| `sora-2-pro` | Sora 2 professional quality | 10, 15, or 25 seconds |
+
+:::note Sora-2 Model Parameters
+Sora-2 models use different parameters than Veo models:
+- **orientation**: `portrait` or `landscape` (instead of `aspect_ratio`)
+- **size**: `small` (~720p) or `large` (1080p HD)
+- **duration**: Video length in seconds (10, 15, or 25)
+- **images**: Required array of reference image URLs
+- **character_url** / **character_timestamps**: Optional character creation support
+:::
 
 ## Error Responses
 
