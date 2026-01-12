@@ -66,6 +66,7 @@ These additional parameters are supported for upstream provider compatibility:
 |-----------|------|-------------|
 | `extra_body` | object | Additional parameters for upstream providers (e.g., `enable_thinking`) |
 | `top_k` | integer | Top-k sampling (provider-specific) |
+| `reasoning` | object | Reasoning mode config: `{ enabled: boolean, effort: string, summary: string }` |
 | `reasoning_effort` | string | Controls reasoning model effort level (`low`, `medium`, `high`) |
 | `stream_options` | object | Stream settings: `{ include_usage: boolean }` |
 | `thinking` | object | Deep thinking control: `{ type: "enabled" \| "disabled" \| "auto" }` |
@@ -330,6 +331,51 @@ response = client.chat.completions.create(
 )
 ```
 
+### Video Input
+
+Some multimodal models (like `glm-4.6v`) support video content analysis:
+
+```python
+response = client.chat.completions.create(
+    model="glm-4.6v",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What is happening in this video?"
+                },
+                {
+                    "type": "video_url",
+                    "video_url": {
+                        "url": "https://example.com/video.mp4"
+                    }
+                }
+            ]
+        }
+    ]
+)
+```
+
+#### Combined Image and Video
+
+```python
+response = client.chat.completions.create(
+    model="glm-4.6v",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "Compare this image and video"},
+                {"type": "image_url", "image_url": {"url": "https://example.com/image.jpg"}},
+                {"type": "video_url", "video_url": {"url": "https://example.com/video.mp4"}}
+            ]
+        }
+    ]
+)
+```
+
 #### With Base64 Encoded Image
 
 ```python
@@ -377,6 +423,62 @@ response = client.chat.completions.create(
     }
 )
 ```
+
+### Reasoning Mode
+
+Some models (like `glm-4.6`) support reasoning mode for step-by-step thinking:
+
+```python
+# Enable reasoning mode
+response = client.chat.completions.create(
+    model="glm-4.6",
+    messages=[
+        {"role": "user", "content": "How many r's are in 'strawberry'?"}
+    ],
+    extra_body={"reasoning": {"enabled": True}}
+)
+
+# Get the reasoning details from the response
+assistant_message = response.choices[0].message
+```
+
+#### Multi-turn Reasoning
+
+Pass `reasoning_details` back in subsequent requests to continue reasoning:
+
+```python
+# First request with reasoning
+response1 = client.chat.completions.create(
+    model="glm-4.6",
+    messages=[{"role": "user", "content": "How many r's are in 'strawberry'?"}],
+    extra_body={"reasoning": {"enabled": True}}
+)
+
+msg = response1.choices[0].message
+
+# Second request - preserve reasoning_details for continuity
+response2 = client.chat.completions.create(
+    model="glm-4.6",
+    messages=[
+        {"role": "user", "content": "How many r's are in 'strawberry'?"},
+        {
+            "role": "assistant",
+            "content": msg.content,
+            "reasoning_details": msg.reasoning_details  # Pass back unmodified
+        },
+        {"role": "user", "content": "Are you sure? Think again."}
+    ],
+    extra_body={"reasoning": {"enabled": True}}
+)
+```
+
+#### Reasoning Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `reasoning.enabled` | boolean | Enable/disable reasoning mode |
+| `reasoning.effort` | string | Reasoning effort level: `low`, `medium`, `high` |
+| `reasoning.summary` | string | Summary style: `auto`, `concise`, `detailed` |
 
 ### Deterministic Output with Seed
 
