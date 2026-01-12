@@ -474,6 +474,310 @@ while True:
 
 ---
 
+## Sora-2 Extended API
+
+Sora-2 models support an extended set of endpoints for video generation, remixing, and character management.
+
+### Create Video (Sora)
+
+```
+POST /v1/videos
+```
+
+Creates a video generation task using Sora-2 models with multipart/form-data.
+
+#### HTTP Request
+
+```bash
+curl https://api.apertis.ai/v1/videos \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -F "model=sora-2" \
+    -F "prompt=A cinematic scene of a person walking through a forest" \
+    -F "seconds=10" \
+    -F "size=1280x720" \
+    -F "watermark=false" \
+    -F "private=false" \
+    -F "input_reference=@reference.jpg"
+```
+
+#### Parameters (multipart/form-data)
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Model ID: `sora-2`, `sora-2-pro` |
+| `prompt` | string | Yes | Text description of the desired video |
+| `seconds` | string | Yes | Video duration: `4`, `8`, `10`, `12`, `15`, or `25` |
+| `size` | string | Yes | Video dimensions: `720x1280`, `1280x720`, `480x480`, `1080x1080` |
+| `input_reference` | file | No | Reference image file for the video |
+| `watermark` | string | No | Enable watermark: `true` or `false` |
+| `private` | string | No | Keep video private: `true` or `false` |
+| `style` | string | No | Style preset for the video |
+| `metadata` | string | No | Custom metadata JSON |
+
+#### Character Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `character_url` | string | URL of video (1-3 seconds) to create character from |
+| `character_timestamps` | string | Start and end time for character extraction: `"start,end"` (e.g., `"1,3"`) |
+| `character_from_task` | string | Task ID to use for character reference |
+| `character_create` | object | Character creation options: `create_self_portrait`, `save_to_library` |
+
+:::tip Using Characters in Prompts
+After creating a character via `/sora/v1/characters`, use `@username` in your prompt to reference that character in video generation.
+:::
+
+#### Response Format
+
+```json
+{
+  "id": "sora-2:1234567890-abcdefgh",
+  "object": "video",
+  "model": "sora-2",
+  "status": "pending",
+  "progress": 0,
+  "created_at": 1704067200,
+  "seconds": 10,
+  "size": "1280x720"
+}
+```
+
+### Get Video Status (Sora)
+
+```
+GET /v1/videos/{id}
+```
+
+Query the status of a Sora video generation task.
+
+#### HTTP Request
+
+```bash
+curl "https://api.apertis.ai/v1/videos/sora-2:1234567890-abcdefgh" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+#### Response Format
+
+```json
+{
+  "id": "sora-2:1234567890-abcdefgh",
+  "status": "completed",
+  "progress": 100,
+  "video_url": "https://storage.example.com/videos/output.mp4",
+  "model": "sora-2",
+  "seconds": 10,
+  "size": "1280x720"
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Task identifier |
+| `status` | string | Task status: `pending`, `processing`, `completed`, `failed` |
+| `progress` | integer | Generation progress (0-100) |
+| `video_url` | string/null | URL to the generated video (when completed) |
+| `model` | string | Model used for generation |
+| `seconds` | integer | Video duration |
+| `size` | string | Video dimensions |
+
+### Get Video Content (Sora)
+
+```
+GET /v1/videos/{id}/content
+```
+
+Retrieve the video content directly from a completed Sora generation.
+
+#### HTTP Request
+
+```bash
+curl "https://api.apertis.ai/v1/videos/sora-2:1234567890-abcdefgh/content" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+#### Response Format
+
+```json
+{
+  "id": "sora-2:1234567890-abcdefgh",
+  "status": "completed",
+  "video_url": "https://storage.example.com/videos/output.mp4",
+  "enhanced_prompt": "A cinematic scene of a person walking through a forest...",
+  "status_update_time": 1704067500
+}
+```
+
+### Remix Video (Sora)
+
+```
+POST /v1/videos/{id}/remix
+```
+
+Create a new video by remixing/editing an existing Sora video.
+
+#### HTTP Request
+
+```bash
+curl "https://api.apertis.ai/v1/videos/sora-2:1234567890-abcdefgh/remix" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "prompt": "Add dramatic lighting and slow motion effect",
+        "size": "1280x720"
+    }'
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `prompt` | string | Yes | Description of the edit/remix to apply |
+| `size` | string | No | Override output dimensions |
+
+#### Response Format
+
+```json
+{
+  "id": "sora-2:remix-9876543210-xyz",
+  "object": "video",
+  "status": "pending",
+  "progress": 0
+}
+```
+
+### Create Character
+
+```
+POST /sora/v1/characters
+```
+
+Create a character from a video that can be referenced in future video generations.
+
+#### HTTP Request
+
+```bash
+# From video URL
+curl https://api.apertis.ai/sora/v1/characters \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "url": "https://example.com/character-video.mp4",
+        "timestamps": "1,3"
+    }'
+
+# From existing task
+curl https://api.apertis.ai/sora/v1/characters \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "from_task": "sora-2:1234567890-abcdefgh",
+        "timestamps": "0,2"
+    }'
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | One of `url` or `from_task` | Video URL (1-3 seconds recommended) |
+| `from_task` | string | One of `url` or `from_task` | Task ID to extract character from |
+| `timestamps` | string | No | Start and end time: `"start,end"` (e.g., `"1,3"`) |
+
+#### Response Format
+
+```json
+{
+  "id": "char_abc123xyz",
+  "username": "my_character",
+  "permalink": "https://sora.example.com/characters/my_character",
+  "profile_picture_url": "https://storage.example.com/characters/my_character.jpg"
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique character identifier |
+| `username` | string | Character username for prompt references (use `@username`) |
+| `permalink` | string | Public link to the character profile |
+| `profile_picture_url` | string | Character thumbnail image URL |
+
+### Example: Complete Sora Workflow with Characters
+
+```python
+import httpx
+import time
+
+headers = {"Authorization": "Bearer sk-your-api-key"}
+
+# Step 1: Create a character from a video
+char_response = httpx.post(
+    "https://api.apertis.ai/sora/v1/characters",
+    headers=headers,
+    json={
+        "url": "https://example.com/person-video.mp4",
+        "timestamps": "1,3"
+    }
+)
+character = char_response.json()
+username = character["username"]
+print(f"Character created: @{username}")
+
+# Step 2: Generate video featuring the character
+with open("reference.jpg", "rb") as f:
+    video_response = httpx.post(
+        "https://api.apertis.ai/v1/videos",
+        headers=headers,
+        data={
+            "model": "sora-2-pro",
+            "prompt": f"@{username} walking through a futuristic city at night",
+            "seconds": "15",
+            "size": "1280x720",
+            "watermark": "false"
+        },
+        files={"input_reference": f}
+    )
+
+task = video_response.json()
+video_id = task["id"]
+print(f"Video task created: {video_id}")
+
+# Step 3: Poll for completion
+while True:
+    status_resp = httpx.get(
+        f"https://api.apertis.ai/v1/videos/{video_id}",
+        headers=headers
+    )
+    result = status_resp.json()
+    print(f"Status: {result['status']}, Progress: {result.get('progress', 0)}%")
+
+    if result["status"] == "completed":
+        print(f"Video URL: {result['video_url']}")
+        break
+    elif result["status"] == "failed":
+        print("Video generation failed")
+        break
+
+    time.sleep(10)
+
+# Step 4: Optionally remix the video
+remix_response = httpx.post(
+    f"https://api.apertis.ai/v1/videos/{video_id}/remix",
+    headers=headers,
+    json={
+        "prompt": "Add cinematic color grading and dramatic lighting"
+    }
+)
+remix_task = remix_response.json()
+print(f"Remix task created: {remix_task['id']}")
+```
+
+---
+
 ## Supported Models
 
 ### Veo Models
