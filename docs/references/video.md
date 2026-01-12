@@ -510,6 +510,134 @@ Sora-2 models use different parameters than Veo models:
 - **character_url** / **character_timestamps**: Optional character creation support
 :::
 
+---
+
+## Sora-2 Chat Completions API
+
+Sora-2 models also support video generation through the standard `/v1/chat/completions` endpoint with streaming responses.
+
+### HTTP Request
+
+```bash
+curl https://api.apertis.ai/v1/chat/completions \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "sora-2",
+        "stream": true,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Generate a video of a serene lake with mountains"
+            }
+        ]
+    }'
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Model ID: `sora-2`, `sora-2-pro` |
+| `stream` | boolean | Recommended | Enable streaming responses (recommended: `true`) |
+| `messages` | array | Yes | Message array with video prompt in content |
+
+### Streaming Response
+
+The response uses Server-Sent Events (SSE) format with progress updates:
+
+```
+data: {"choices":[{"delta":{"content":"task_id: sora-2:1234567890-abcdefgh"}}]}
+
+data: {"choices":[{"delta":{"content":"progress: 25%"}}]}
+
+data: {"choices":[{"delta":{"content":"video_url: https://storage.example.com/videos/output.mp4"}}]}
+
+data: [DONE]
+```
+
+### Python Example
+
+```python
+import httpx
+
+# Sora-2 video generation via chat/completions with streaming
+with httpx.stream(
+    "POST",
+    "https://api.apertis.ai/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer sk-your-api-key",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "sora-2",
+        "stream": True,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Generate a video of a serene lake with mountains"
+            }
+        ]
+    }
+) as response:
+    for line in response.iter_lines():
+        if line.startswith("data: "):
+            data = line[6:]
+            if data == "[DONE]":
+                break
+            # Parse SSE data for task_id and video_url
+            print(data)
+```
+
+### JavaScript Example
+
+```javascript
+// Sora-2 video generation via chat/completions with streaming
+const response = await fetch('https://api.apertis.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer sk-your-api-key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: 'sora-2',
+    stream: true,
+    messages: [
+      {
+        role: 'user',
+        content: 'Generate a video of a serene lake with mountains'
+      }
+    ]
+  })
+});
+
+// Process SSE stream for video generation progress
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+
+  const chunk = decoder.decode(value);
+  const lines = chunk.split('\n');
+
+  for (const line of lines) {
+    if (line.startsWith('data: ')) {
+      const data = line.slice(6);
+      if (data === '[DONE]') break;
+      // Parse SSE data for task_id and video_url
+      console.log(JSON.parse(data));
+    }
+  }
+}
+```
+
+:::tip When to Use Chat Completions vs Video Create
+- Use `/v1/chat/completions` for simple video generation with streaming progress
+- Use `/v1/video/create` when you need full control over parameters like `orientation`, `size`, `duration`, `character_url`, etc.
+:::
+
 ## Error Responses
 
 | Status Code | Description |
