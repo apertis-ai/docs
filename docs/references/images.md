@@ -32,7 +32,16 @@ curl https://api.apertis.ai/v1/images/generations \
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `prompt` | string | A text description of the desired image(s). Maximum 4000 characters |
+| `prompt` | string | A text description of the desired image(s). See prompt limits below |
+
+### Prompt Length Limits
+
+| Model | Max Prompt Length |
+|-------|-------------------|
+| `dall-e-2` | 1000 characters |
+| `dall-e-3` | 4000 characters |
+| `gpt-image-1` | 32000 characters |
+| `gpt-image-1.5` | 32000 characters |
 
 ### Optional Parameters
 
