@@ -33,19 +33,21 @@ Content-Type: multipart/form-data
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `file` | file | Yes | Audio file (max 25 MB) |
-| `model` | string | Yes | Model ID (e.g., `whisper-1`) |
+| `model` | string | Yes | Model ID: `whisper-1` or `gpt-4o-mini-transcribe` |
 | `language` | string | No | Language code (ISO 639-1) |
 | `prompt` | string | No | Context or spelling hints |
 | `response_format` | string | No | `json`, `text`, `srt`, `vtt`, `verbose_json` |
-| `temperature` | number | No | Sampling temperature (0-1) |
+| `temperature` | number | No | Sampling temperature (0-1, default 0) |
 
 ### Supported Audio Formats
 
+- `flac`
 - `mp3`
 - `mp4`
 - `mpeg`
 - `mpga`
 - `m4a`
+- `ogg`
 - `wav`
 - `webm`
 
