@@ -136,7 +136,7 @@ These models support `/v1/responses` natively (no conversion needed):
 GET /v1/models
 ```
 
-Returns detailed model information in OpenAI-compatible format. This endpoint requires authentication.
+Returns all public models in OpenAI-compatible format. This endpoint requires authentication but returns the same model list as `/api/models`.
 
 ### HTTP Request
 
