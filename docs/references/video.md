@@ -247,6 +247,145 @@ response = httpx.post(
 )
 ```
 
+---
+
+## Alternative API: /v1/videos
+
+An alternative video generation API using multipart/form-data with reference images.
+
+### Create Video with Reference Image
+
+```
+POST /v1/videos
+```
+
+Creates a video generation task with a reference image input.
+
+#### HTTP Request
+
+```bash
+curl https://api.apertis.ai/v1/videos \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -F "model=veo_3_1" \
+    -F "prompt=A serene lake with mountains" \
+    -F "seconds=5" \
+    -F "size=16x9" \
+    -F "input_reference=@reference.jpg"
+```
+
+#### Parameters (multipart/form-data)
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Model ID: `veo_3_1`, `veo_3_1-fast` |
+| `prompt` | string | Yes | Text description of the desired video |
+| `seconds` | string | Yes | Video duration in seconds |
+| `size` | string | Yes | Aspect ratio: `16x9` (landscape) or `720x1280` (portrait) |
+| `input_reference` | file | Yes | Reference image file (base image for video) |
+| `watermark` | string | No | Enable watermark: `true` or `false` |
+
+#### Response Format
+
+```json
+{
+  "id": "video_55cb73b3-60af-40c8-95fd-eae8fd758ade",
+  "object": "video",
+  "model": "veo_3_1",
+  "status": "queued",
+  "progress": 0,
+  "created_at": 1704067200,
+  "seconds": 5,
+  "size": "16x9"
+}
+```
+
+### Get Video Status
+
+```
+GET /v1/videos/{id}
+```
+
+Query the status of a video generation task.
+
+#### HTTP Request
+
+```bash
+curl "https://api.apertis.ai/v1/videos/video_55cb73b3-60af-40c8-95fd-eae8fd758ade" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+#### Response Format
+
+```json
+{
+  "id": "video_55cb73b3-60af-40c8-95fd-eae8fd758ade",
+  "status": "completed",
+  "progress": 100,
+  "video_url": "https://storage.example.com/videos/output.mp4",
+  "enhanced_prompt": "A serene mountain lake...",
+  "status_update_time": 1704067500
+}
+```
+
+### Get Video Content
+
+```
+GET /v1/videos/{id}/content
+```
+
+Retrieve the video content directly.
+
+#### HTTP Request
+
+```bash
+curl "https://api.apertis.ai/v1/videos/video_55cb73b3-60af-40c8-95fd-eae8fd758ade/content" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+### Example: Complete Workflow
+
+```python
+import httpx
+import time
+
+headers = {"Authorization": "Bearer sk-your-api-key"}
+
+# Step 1: Create video with reference image
+with open("reference.jpg", "rb") as f:
+    response = httpx.post(
+        "https://api.apertis.ai/v1/videos",
+        headers=headers,
+        data={
+            "model": "veo_3_1",
+            "prompt": "A serene lake with mountains",
+            "seconds": "5",
+            "size": "16x9"
+        },
+        files={"input_reference": f}
+    )
+
+task = response.json()
+video_id = task["id"]
+print(f"Video created: {video_id}")
+
+# Step 2: Poll for completion
+while True:
+    status_resp = httpx.get(
+        f"https://api.apertis.ai/v1/videos/{video_id}",
+        headers=headers
+    )
+    result = status_resp.json()
+    print(f"Status: {result['status']}, Progress: {result.get('progress', 0)}%")
+
+    if result["status"] == "completed":
+        print(f"Video URL: {result['video_url']}")
+        break
+
+    time.sleep(10)
+```
+
+---
+
 ## Supported Models
 
 | Model | Description | Aspect Ratio Support |
@@ -262,6 +401,8 @@ response = httpx.post(
 | `veo3-pro-frames` | Veo 3 with frame reference (max 1 image) | Yes (`16:9`, `9:16`) |
 | `veo3.1` | Veo 3.1 latest model | Yes (`16:9`, `9:16`) |
 | `veo3.1-fast` | Veo 3.1 fast generation | Yes (`16:9`, `9:16`) |
+| `veo_3_1` | Veo 3.1 (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
+| `veo_3_1-fast` | Veo 3.1 fast (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
 
 ## Error Responses
 
