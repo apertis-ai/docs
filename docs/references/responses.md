@@ -288,14 +288,55 @@ response = client.responses.create(
 
 ## Supported Models
 
-All chat models available through Apertis are supported with the Responses API:
+All chat models available through Apertis are supported with the Responses API. The API intelligently routes requests based on model capabilities:
 
-| Provider | Example Models |
-|----------|---------------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini` |
-| Anthropic | `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229` |
-| Google | `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-2.5-pro` |
-| Meta | `llama-3.1-70b`, `llama-3.1-8b` |
+### Models with Native /v1/responses Support
+
+These models natively support the Responses API format on upstream providers:
+
+| Model Series | Examples |
+|-------------|----------|
+| **o1 Series** | `o1`, `o1-preview`, `o1-mini`, `o1-2024-12-17` |
+| **o3 Series** | `o3`, `o3-mini`, `o3-2025-04-16` |
+| **o4 Series** | `o4-mini`, `o4-mini-2025-04-16` |
+| **GPT-5 Series** | `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*` |
+| **Codex Models** | `gpt-5-codex`, `gpt-5-codex-*` |
+
+### Responses-Only Models
+
+Some advanced models **only** support the `/v1/responses` endpoint and cannot be used with `/v1/chat/completions` or `/v1/messages`:
+
+| Model | Description |
+|-------|-------------|
+| `gpt-5-pro` | GPT-5 Pro variant |
+| `gpt-5-chat-latest` | Latest GPT-5 chat model |
+| `gpt-5-mini` | GPT-5 Mini |
+| `gpt-5-nano` | GPT-5 Nano |
+| `gpt-5-codex-*` | GPT-5 Codex variants |
+| `o1-pro` | O1 Pro |
+| `codex-mini` | Codex Mini |
+
+:::warning Responses-Only Models
+When using responses-only models, you must use the `/v1/responses` endpoint. Requests to `/v1/chat/completions` or `/v1/messages` will return an error for these models.
+:::
+
+### All Other Models
+
+For models that don't natively support `/v1/responses` (like Claude, Gemini, GPT-4o, etc.), Apertis automatically:
+
+1. Routes the request via `/v1/chat/completions` internally
+2. Converts the response back to Responses API format
+3. Returns the response in the expected format
+
+This means you can use **any model** with the Responses API - the conversion is handled transparently.
+
+| Provider | Example Models | Native Support |
+|----------|---------------|----------------|
+| OpenAI | `gpt-4o`, `gpt-4o-mini` | Via fallback |
+| Anthropic | `claude-sonnet-4-20250514`, `claude-opus-4` | Via fallback |
+| Google | `gemini-2.5-pro`, `gemini-2.5-flash` | Via fallback |
+| Meta | `llama-3.1-70b`, `llama-3.1-8b` | Via fallback |
+| xAI | `grok-3`, `grok-3-reasoning` | Via fallback |
 
 ## Differences from Chat Completions
 

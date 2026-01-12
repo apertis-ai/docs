@@ -408,6 +408,22 @@ The Chat Completions API supports models from multiple providers:
 | Meta | `llama-3.1-70b`, `llama-3.1-8b` |
 | And more... | Check the [Models](/references/models) endpoint for full list |
 
+:::warning Responses-Only Models
+Some advanced models **only** support the `/v1/responses` endpoint and cannot be used with `/v1/chat/completions`:
+
+| Model | Description |
+|-------|-------------|
+| `gpt-5-pro` | GPT-5 Pro variant |
+| `gpt-5-chat-latest` | Latest GPT-5 chat model |
+| `gpt-5-mini` | GPT-5 Mini |
+| `gpt-5-nano` | GPT-5 Nano |
+| `gpt-5-codex-*` | GPT-5 Codex variants |
+| `o1-pro` | O1 Pro |
+| `codex-mini` | Codex Mini |
+
+For these models, use the [Responses API](/references/responses) instead.
+:::
+
 ## Error Responses
 
 | Status Code | Description |

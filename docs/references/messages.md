@@ -325,6 +325,8 @@ The Messages API supports Claude models via Anthropic-type channels:
 
 :::warning Anthropic Channels Only
 This endpoint routes exclusively to Anthropic-type channels. If you need to access non-Claude models, use the [Chat Completions](./chat_completions) endpoint instead.
+
+Note: Some advanced OpenAI models (like `gpt-5-pro`, `o1-pro`, `gpt-5-codex-*`) only support the [Responses API](/references/responses) and cannot be used with this endpoint.
 :::
 
 ## Differences from Direct Anthropic API
