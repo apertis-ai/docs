@@ -61,28 +61,9 @@ Output tokens typically cost more than input tokens:
 | GPT-3.5 series | 1.33x |
 | GPT-4 series | 2.0x |
 
-### Model Rate Examples
+### Model Pricing
 
-Different models have different costs per 1K tokens:
-
-| Model | Input (per 1K) | Output (per 1K) |
-|-------|----------------|-----------------|
-| GPT-3.5 Turbo | $0.0005 | $0.0015 |
-| GPT-4o | $0.0025 | $0.01 |
-| GPT-4o-mini | $0.00015 | $0.0006 |
-| Claude 3.5 Sonnet | $0.003 | $0.015 |
-| Claude 3 Opus | $0.015 | $0.075 |
-
-### Calculation Example
-
-For a GPT-4o request with 1,000 prompt tokens and 500 completion tokens:
-
-```
-Input Cost:  1,000 × $0.0025/1K = $0.0025
-Output Cost: 500 × $0.01/1K × 2.0 = $0.01
-
-Total: $0.0125 quota consumed
-```
+Different models have different costs per token. For current model pricing, please visit the [Models page](https://apertis.ai/models).
 
 ## Monitoring Quota Usage
 

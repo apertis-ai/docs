@@ -451,14 +451,7 @@ full_transcript = " ".join(transcripts)
 
 ## Pricing
 
-Audio API pricing is based on duration:
-
-| Service | Model | Price |
-|---------|-------|-------|
-| Transcription | whisper-1 | $0.006/minute |
-| Translation | whisper-1 | $0.006/minute |
-| TTS | tts-1 | $0.015/1K chars |
-| TTS HD | tts-1-hd | $0.030/1K chars |
+For current model pricing, please visit the [Models page](https://apertis.ai/models).
 
 ## Related Topics
 

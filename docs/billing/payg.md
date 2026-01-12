@@ -66,30 +66,12 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 
 ## PAYG Pricing
 
-### Token Pricing
-
-PAYG uses standard pricing per 1K tokens:
-
-| Model | Input | Output |
-|-------|-------|--------|
-| GPT-3.5 Turbo | $0.0005 | $0.0015 |
-| GPT-4o | $0.0025 | $0.01 |
-| GPT-4o-mini | $0.00015 | $0.0006 |
-| Claude 3.5 Sonnet | $0.003 | $0.015 |
-| Claude 3 Opus | $0.015 | $0.075 |
+PAYG uses standard pricing per token based on the model used. For current model pricing, please visit the [Models page](https://apertis.ai/models).
 
 ### Cost Calculation
 
 ```
 Cost = (Input Tokens × Input Rate) + (Output Tokens × Output Rate)
-```
-
-**Example**: GPT-4o request with 1,000 input and 500 output tokens:
-
-```
-Input:  1,000 × $0.0025/1K = $0.0025
-Output: 500 × $0.01/1K = $0.005
-Total:  $0.0075
 ```
 
 ## PAYG Fallback for Subscriptions

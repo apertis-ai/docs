@@ -104,7 +104,7 @@ Usage is calculated per token:
 Cost = (Input Tokens × Input Rate) + (Output Tokens × Output Rate)
 ```
 
-Different models have different rates. [View pricing →](../billing/quota-management)
+Different models have different rates. [View current pricing →](https://apertis.ai/models)
 
 ### What happens when I run out of quota?
 
