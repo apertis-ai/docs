@@ -74,19 +74,63 @@ These additional parameters are supported for upstream provider compatibility:
 ### Web Search Options
 
 The `web_search_options` parameter enables web search for supported models:
-- `gpt-4o-search-preview`
-- `gpt-4o-mini-search-preview`
+- `gpt-5-search-api` - GPT-5 with web search capability
+- `gpt-4o-search-preview` - GPT-4o with web search
+- `gpt-4o-mini-search-preview` - GPT-4o Mini with web search
+
+:::warning Web Search Models Only
+The `web_search_options` parameter only works with the models listed above. Using it with other models will have no effect.
+:::
 
 | Option | Type | Description |
 |--------|------|-------------|
 | `search_context_size` | string | Amount of search context: `low`, `medium` (default), `high` |
 | `user_location` | object | Geolocation for localized results |
-| `filters` | array | Domain allow-list (up to 100 URLs) |
+| `filters` | array | Domain allow-list (up to 100 URLs, omit http/https prefix) |
+
+#### search_context_size
+
+Controls the amount of web search context included:
+- `low` - Minimal context, faster responses
+- `medium` - Balanced context (default)
+- `high` - Maximum context, more comprehensive
+
+#### user_location
+
+Provides location context for localized search results:
+
+```json
+{
+  "user_location": {
+    "type": "approximate",
+    "approximate": {
+      "country": "US",
+      "city": "San Francisco",
+      "region": "California"
+    }
+  }
+}
+```
+
+#### filters
+
+Domain allow-list to restrict search results (up to 100 URLs):
+
+```json
+{
+  "filters": ["openai.com", "github.com", "stackoverflow.com"]
+}
+```
+
+:::tip
+When specifying domains in filters, omit the HTTP/HTTPS prefix. Use `openai.com` instead of `https://openai.com/`. Subdomains are automatically included.
+:::
+
+### Web Search Example
 
 ```python
-# Web Search Example
 response = client.chat.completions.create(
-    model="gpt-4o-search-preview",
+    model="gpt-5-search-api",
     web_search_options={
         "search_context_size": "medium",
         "user_location": {
@@ -96,12 +140,36 @@ response = client.chat.completions.create(
                 "city": "San Francisco",
                 "region": "California"
             }
-        }
+        },
+        "filters": ["reuters.com", "apnews.com"]
     },
     messages=[
-        {"role": "user", "content": "What's the weather today?"}
+        {"role": "user", "content": "What are today's top news headlines?"}
     ]
 )
+```
+
+### Web Search Response
+
+Responses from web search models include `url_citation` annotations with source references:
+
+```json
+{
+  "choices": [{
+    "message": {
+      "content": "According to recent reports...",
+      "annotations": [
+        {
+          "type": "url_citation",
+          "start_index": 0,
+          "end_index": 27,
+          "url": "https://example.com/article",
+          "title": "Article Title"
+        }
+      ]
+    }
+  }]
+}
 ```
 
 ## Example Usage
