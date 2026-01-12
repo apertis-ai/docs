@@ -89,6 +89,45 @@ The response includes models from various providers and categories:
 Free-tier models are indicated with a `:free` suffix (e.g., `gemini-2.5-flash:free`, `deepseek-r1:free`).
 :::
 
+### Endpoint Compatibility
+
+Different models support different API endpoints. Apertis provides automatic fallback routing so you can use any endpoint with most models.
+
+#### Endpoint Support Matrix
+
+| Endpoint | Supported Models | Fallback Behavior |
+|----------|-----------------|-------------------|
+| `/v1/chat/completions` | Most models | Native support |
+| `/v1/messages` | All models | Claude → native Anthropic; Others → via chat/completions |
+| `/v1/responses` | All models | o1/o3/o4/gpt-5 → native; Others → via chat/completions |
+
+#### Responses-Only Models
+
+These models **only** support `/v1/responses` and cannot be used with other endpoints:
+
+| Model | Description |
+|-------|-------------|
+| `gpt-5-pro` | GPT-5 Pro variant |
+| `gpt-5-chat-latest` | Latest GPT-5 chat model |
+| `gpt-5-mini` | GPT-5 Mini |
+| `gpt-5-nano` | GPT-5 Nano |
+| `gpt-5-codex-*` | GPT-5 Codex variants |
+| `o1-pro` | O1 Pro |
+| `codex-mini` | Codex Mini |
+
+:::warning
+Attempting to use responses-only models with `/v1/chat/completions` or `/v1/messages` will result in an error. Use `/v1/responses` instead.
+:::
+
+#### Models with Native /v1/responses Support
+
+These models support `/v1/responses` natively (no conversion needed):
+
+- **o1 Series**: `o1`, `o1-preview`, `o1-mini`, `o1-2024-12-17`
+- **o3 Series**: `o3`, `o3-mini`, `o3-2025-04-16`
+- **o4 Series**: `o4-mini`, `o4-mini-2025-04-16`
+- **GPT-5 Series**: `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*`
+
 ---
 
 ## OpenAI-Compatible Models API
