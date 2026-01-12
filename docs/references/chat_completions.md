@@ -71,6 +71,8 @@ These additional parameters are supported for upstream provider compatibility:
 | `stream_options` | object | Stream settings: `{ include_usage: boolean }` |
 | `thinking` | object | Deep thinking control: `{ type: "enabled" \| "disabled" \| "auto" }` |
 | `web_search_options` | object | Web search configuration for search-enabled models |
+| `modalities` | array | Output modalities: `["text"]` (default) or `["text", "audio"]` for audio models |
+| `audio` | object | Audio output config: `{ voice: string, format: string }` for audio models |
 
 ### Web Search Options
 
@@ -405,6 +407,71 @@ response = client.chat.completions.create(
     ]
 )
 ```
+
+### Audio Input
+
+Audio models (like `gpt-4o-audio-preview`) support audio input and output via the Chat Completions endpoint:
+
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-your-api-key",
+    base_url="https://api.apertis.ai/v1"
+)
+
+# Load and encode audio file
+with open("audio.wav", "rb") as f:
+    audio_data = base64.standard_b64encode(f.read()).decode("utf-8")
+
+response = client.chat.completions.create(
+    model="gpt-4o-audio-preview",
+    modalities=["text", "audio"],  # Enable audio output
+    audio={
+        "voice": "alloy",  # alloy, ash, ballad, coral, echo, sage, shimmer, verse
+        "format": "wav"    # wav, mp3, flac, opus, pcm16
+    },
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What is being said in this audio?"
+                },
+                {
+                    "type": "input_audio",
+                    "input_audio": {
+                        "data": audio_data,
+                        "format": "wav"  # wav, mp3, flac, opus, pcm16
+                    }
+                }
+            ]
+        }
+    ]
+)
+```
+
+#### Audio Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `modalities` | array | Output modalities: `["text"]` (default) or `["text", "audio"]` |
+| `audio.voice` | string | Voice for audio output: `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, `verse` |
+| `audio.format` | string | Audio format: `wav`, `mp3`, `flac`, `opus`, `pcm16` |
+
+#### Input Audio Content Type
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | Must be `input_audio` |
+| `input_audio.data` | string | Base64-encoded audio data |
+| `input_audio.format` | string | Audio format: `wav`, `mp3`, `flac`, `opus`, `pcm16` |
+
+:::info Audio Models
+Audio input/output is only supported by audio-capable models such as `gpt-4o-audio-preview`. Check the model's capabilities before using audio features.
+:::
 
 ### Extended Thinking (Google Gemini)
 
