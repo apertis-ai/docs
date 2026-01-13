@@ -30,7 +30,12 @@ const sidebars = {
     },
 
     // Web Search (independent top-level page)
-    'web-search',
+    {
+      type: 'doc',
+      id: 'web-search',
+      label: 'Web Search',
+      className: 'sidebar-item--new',
+    },
 
     // Authentication
     {
