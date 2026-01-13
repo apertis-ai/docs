@@ -29,6 +29,9 @@ const sidebars = {
       ],
     },
 
+    // Web Search (independent top-level page)
+    'web-search',
+
     // Authentication
     {
       type: 'category',
