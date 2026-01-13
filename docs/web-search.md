@@ -21,8 +21,9 @@ curl https://api.apertis.ai/v1/chat/completions \
   -d '{
     "model": "gpt-4o-mini:web",
     "messages": [
-      {"role": "user", "content": "Who won the 2024 Nobel Prize in Physics?"}
-    ]
+      {"role": "user", "content": "What is the stock price of Apple today?"}
+    ],
+    "max_tokens": 100
   }'
 ```
 
@@ -52,8 +53,9 @@ In addition to standard Chat Completions parameters, you can use these web searc
 {
   "model": "gpt-4o-mini:web",
   "messages": [
-    {"role": "user", "content": "What are the new features in React 19?"}
+    {"role": "user", "content": "What is the stock price of Apple today?"}
   ],
+  "max_tokens": 100,
   "web_results_count": 5,
   "web_content_length": "medium"
 }
@@ -65,50 +67,96 @@ The response includes a `web_sources` array listing all referenced sources:
 
 ```json
 {
-  "id": "chatcmpl-xxx",
   "model": "gpt-4o-mini",
+  "system_fingerprint": "fp_f97eff32c5",
   "choices": [
     {
+      "index": 0,
+      "finish_reason": "stop",
       "message": {
         "role": "assistant",
-        "content": "The 2024 Nobel Prize in Physics was awarded jointly to John Hopfield and Geoffrey Hinton..."
+        "content": "As of January 6, 2026, the stock price of Apple (NASDAQ: AAPL) is $262.36, reflecting a decline of $4.90 from the previous day [1]."
       }
     }
   ],
+  "usage": {
+    "prompt_tokens": 1265,
+    "completion_tokens": 43,
+    "total_tokens": 1308
+  },
   "web_sources": [
     {
-      "title": "2024 Nobel Prize in Physics",
-      "url": "https://www.nobelprize.org/prizes/physics/2024/",
-      "snippet": "The Nobel Prize in Physics 2024 was awarded jointly to John J. Hopfield and Geoffrey E. Hinton..."
+      "title": "Stock Price - Apple Investor Relations",
+      "url": "https://investor.apple.com/stock-price/default.aspx",
+      "snippet": "Stock Price - Apple\nJanuary 6, 2026 4:00 p.m. ET..."
     },
     {
-      "title": "Nobel Prize in Physics - Wikipedia",
-      "url": "https://en.wikipedia.org/wiki/Nobel_Prize_in_Physics",
-      "snippet": "The 2024 Nobel Prize in Physics was awarded to pioneers of artificial neural networks..."
+      "title": "NASDAQ:AAPL Stock Price — TradingView",
+      "url": "https://www.tradingview.com/symbols/NASDAQ-AAPL/",
+      "snippet": "Apple Stock Chart — NASDAQ:AAPL Stock Price..."
+    },
+    {
+      "title": "Apple Stock Price Today | NASDAQ: AAPL Live - Investing.com",
+      "url": "https://www.investing.com/equities/apple-computer-inc",
+      "snippet": "Apple Stock Price Today | NASDAQ: AAPL Live..."
+    },
+    {
+      "title": "AAPL Stock Price | Apple Inc. Stock Quote | MarketWatch",
+      "url": "https://www.marketwatch.com/investing/stock/aapl",
+      "snippet": "AAPL Stock Price | Apple Inc. Stock Quote..."
     }
-  ]
+  ],
+  "error": {
+    "message": "",
+    "type": "",
+    "param": "",
+    "code": null
+  }
 }
 ```
 
 ## Streaming Mode
 
-When using streaming mode, a search indicator message appears first, followed by the model response:
+When using streaming mode with `"stream": true`, a search indicator appears first, followed by the model response chunks:
+
+### Streaming Request
+
+```json
+{
+  "model": "gpt-4o-mini:web",
+  "messages": [
+    {"role": "user", "content": "What is the weather in Tokyo today?"}
+  ],
+  "max_tokens": 80,
+  "stream": true
+}
+```
+
+### Streaming Response
 
 ```
-data: {"choices":[{"delta":{"content":"🔍 Web searching...\n\n"}}]}
+data: {"id":"web-search","object":"chat.completion.chunk","created":1768287477,"model":"","choices":[{"index":0,"delta":{"role":"assistant","content":"🔍 Web searching...\n\n"}}]}
 
-data: {"choices":[{"delta":{"content":"Based on the search results..."}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"The"}}]}
+
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" weather"}}]}
+
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" in"}}]}
+
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" Tokyo"}}]}
 
 ...
-
-data: {"web_sources":[{"title":"...","url":"...","snippet":"..."}]}
 
 data: [DONE]
 ```
 
+The first chunk contains the `🔍 Web searching...` indicator with `id: "web-search"`, followed by regular streaming chunks from the model.
+
 ## HTTP Headers
 
-The response includes these HTTP headers:
+The response includes these HTTP headers for monitoring web search status:
 
 | Header | Description |
 |--------|-------------|
@@ -116,19 +164,30 @@ The response includes these HTTP headers:
 | `X-Web-Search-Count` | Number of search results retrieved |
 | `X-Web-Search-Status` | Search status: `success`, `failed`, or `no_results` |
 
+Example response headers:
+```
+x-web-search-used: true
+x-web-search-count: 5
+x-web-search-status: success
+```
+
 ## Use Cases
 
 ### 1. Real-Time Information
 
 Query current news, stock prices, weather, and other real-time information:
 
-```json
-{
-  "model": "gpt-4o:web",
-  "messages": [
-    {"role": "user", "content": "What is TSMC's stock price today?"}
-  ]
-}
+```bash
+curl https://api.apertis.ai/v1/chat/completions \
+  -H "Authorization: Bearer $APERTIS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini:web",
+    "messages": [
+      {"role": "user", "content": "What is the latest news about AI?"}
+    ],
+    "max_tokens": 150
+  }'
 ```
 
 ### 2. Technical Documentation
@@ -165,9 +224,17 @@ Search for the latest research papers or academic information:
 - **Model costs**: Only the final response token usage is counted
 - **Query generation**: Internal query generation is not counted against user quota
 
+:::tip Token Usage
+When web search is enabled, the `prompt_tokens` in the response will be higher than a regular request because the search results are injected into the system message. In the example above, the prompt tokens increased from ~13 (without search) to ~1265 (with search results injected).
+:::
+
 ## Error Handling
 
-When web search fails, the system automatically falls back to non-search mode and continues using the base model to respond. You can check the search status via the `X-Web-Search-Status` header.
+When web search fails, the system automatically falls back to non-search mode and continues using the base model to respond. You can check the search status via the `X-Web-Search-Status` header:
+
+- `success`: Web search completed successfully
+- `failed`: Web search failed, fell back to non-search mode
+- `no_results`: Web search returned no results, fell back to non-search mode
 
 ## Best Practices
 
@@ -175,6 +242,7 @@ When web search fails, the system automatically falls back to non-search mode an
 2. **Appropriate result count**: For general queries, 3-5 results are usually sufficient
 3. **Choose appropriate content length**:
    - `short`: Quick summaries
-   - `medium`: Balance between detail and speed
+   - `medium`: Balance between detail and speed (default)
    - `full`: Use when complete context is needed
 4. **Check sources**: Use `web_sources` in the response to verify information sources
+5. **Monitor headers**: Check `X-Web-Search-Status` to confirm search was successful
