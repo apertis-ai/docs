@@ -15,8 +15,8 @@ Web search is only available for non-free models. Free models (e.g., `gpt-4o-min
 Simply append `:web` to any model ID:
 
 ```bash
-curl https://api.stima.tech/v1/chat/completions \
-  -H "Authorization: Bearer $STIMA_API_KEY" \
+curl https://api.apertis.ai/v1/chat/completions \
+  -H "Authorization: Bearer $APERTIS_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini:web",
