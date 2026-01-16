@@ -201,11 +201,11 @@ const config = {
               },
               {
                 label: 'LinkedIn',
-                href: 'https://www.linkedin.com/company/stima-ai/',
+                href: 'https://www.linkedin.com/company/apertis-ai',
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/Apertis',
+                href: 'https://github.com/apertis-ai',
               },
             ],
           },
