@@ -44,27 +44,6 @@ Quota is calculated based on token usage with model-specific multipliers:
 Quota Used = Prompt Tokens + (Completion Tokens × Completion Multiplier)
 ```
 
-**Completion Multipliers:**
-- Standard models: 1.0x
-- GPT-3.5 series: 1.33x
-- GPT-4 series: 2.0x
-
-### Model Multipliers
-
-Different models consume quota at different rates:
-
-| Model Category | Multiplier | Example |
-|----------------|------------|---------|
-| GPT-3.5 Turbo | 1x | 1,000 tokens = 1,000 quota |
-| GPT-4o | 5x | 1,000 tokens = 5,000 quota |
-| GPT-4 Turbo | 10x | 1,000 tokens = 10,000 quota |
-| Claude 3.5 Sonnet | 3x | 1,000 tokens = 3,000 quota |
-| Claude 3 Opus | 15x | 1,000 tokens = 15,000 quota |
-
-:::tip Quota Optimization
-Choose the right model for your task. Simpler tasks with GPT-3.5 consume less quota than using GPT-4.
-:::
-
 ## PAYG (Pay-As-You-Go) Fallback
 
 ### What is PAYG Fallback?
@@ -176,16 +155,6 @@ After cancellation, your subscription API key will stop working at the end of th
 - **Testing phase**: Evaluating the platform
 - **Low volume**: Occasional API calls
 - **No commitment**: Flexibility over savings
-
-## Payment Methods
-
-### Supported Payment Methods
-
-| Method | Availability | Notes |
-|--------|--------------|-------|
-| **Credit/Debit Card** | Global | Visa, Mastercard, AMEX via Stripe |
-| **Newebpay** | Taiwan | Local Taiwan payment gateway |
-| **Cryptocurrency** | Global | Bitcoin, ETH, USDT via NOWPayments |
 
 ### Auto Top-up
 
