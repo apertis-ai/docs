@@ -4,7 +4,7 @@ API keys are used to authenticate requests to the Apertis API. This guide explai
 
 ## Obtaining Your API Key
 
-1. **Sign up or log in** to your account at [Apertis Dashboard](https://api.apertis.ai)
+1. **Sign up or log in** to your account at [Apertis](https://apertis.ai/login)
 2. Navigate to **API Keys** section in the dashboard
 3. Click **Create New Key** to generate a new API key
 4. Copy and securely store your API key - it will only be shown once
@@ -226,16 +226,6 @@ Revoking a key is immediate and cannot be undone. Any applications using that ke
 | `403 Forbidden` | Key doesn't have access to model | Check model restrictions on your key |
 | `429 Too Many Requests` | Rate limit exceeded | Reduce request frequency or upgrade plan |
 | `402 Payment Required` | Quota exhausted | Add more quota or enable PAYG fallback |
-
-### Checking Key Status
-
-Use the `/api/models` endpoint to verify the API is accessible:
-
-```bash
-curl https://api.apertis.ai/api/models
-```
-
-A successful response confirms the API is available. To verify your API key specifically, make a test request to the chat completions endpoint.
 
 ## Related Topics
 
