@@ -467,3 +467,72 @@ html {
 .footer__link-item:hover {
   color: var(--ifm-color-primary-light);
 }
+
+/* ==========================================================================
+   Mobile Responsive Fixes
+   ========================================================================== */
+
+/* Fix 1: Sidebar z-index for mobile overlay */
+@media (max-width: 996px) {
+  /* Ensure sidebar appears above all content when opened */
+  .navbar-sidebar {
+    z-index: 1000 !important;
+  }
+
+  .navbar-sidebar__backdrop {
+    z-index: 999 !important;
+  }
+
+  /* Ensure sidebar content is visible */
+  .navbar-sidebar__brand,
+  .navbar-sidebar__items {
+    z-index: 1001 !important;
+  }
+}
+
+/* Fix 2: Responsive table with horizontal scroll */
+/* Wrap tables in a scrollable container */
+.markdown table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+@media (max-width: 996px) {
+  /* Create a scrollable wrapper for tables on mobile */
+  .markdown > table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Ensure table cells don't wrap */
+  .markdown table td,
+  .markdown table th {
+    white-space: nowrap;
+  }
+
+  /* Add scroll indicator hint */
+  .markdown table::after {
+    content: '→ Scroll to see more';
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ifm-color-emphasis-600);
+    padding: 0.5rem;
+    font-style: italic;
+  }
+}
+
+/* Alternative: Use horizontal scroll wrapper for better UX */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+.table-wrapper table {
+  min-width: 100%;
+}
