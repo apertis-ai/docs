@@ -47,7 +47,7 @@ import { apertis } from '@apertis/ai-sdk-provider';
 import { generateText } from 'ai';
 
 const { text } = await generateText({
-  model: apertis('gpt-4o'),
+  model: apertis('gpt-5.2'),
   prompt: 'Explain quantum computing in simple terms.',
 });
 
@@ -61,7 +61,7 @@ import { apertis } from '@apertis/ai-sdk-provider';
 import { streamText } from 'ai';
 
 const { textStream } = await streamText({
-  model: apertis('claude-sonnet-4-20250514'),
+  model: apertis('claude-sonnet-4.5'),
   prompt: 'Write a poem about programming.',
 });
 
@@ -78,7 +78,7 @@ import { generateText, tool } from 'ai';
 import { z } from 'zod';
 
 const { text } = await generateText({
-  model: apertis('gpt-4o'),
+  model: apertis('gpt-5.2'),
   tools: {
     weather: tool({
       description: 'Get weather information for a location',
@@ -116,10 +116,10 @@ const { embeddings } = await embedMany({
 Access models from multiple providers through Apertis:
 
 ### Chat Models
-- **OpenAI**: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `o1`, `o1-mini`
-- **Anthropic**: `claude-sonnet-4-20250514`, `claude-opus-4-20250514`, `claude-3-5-sonnet-20241022`
-- **Google**: `gemini-2.0-flash`, `gemini-1.5-pro`, `gemini-1.5-flash`
-- **Others**: `deepseek-chat`, `grok-3`, `glm-4` and 470+ more
+- **OpenAI**: `gpt-5.2`, `gpt-5.2-chat`, `gpt-5.2-pro`
+- **Anthropic**: `claude-opus-4-5-20251101`, `claude-sonnet-4.5`, `claude-haiku-4.5`
+- **Google**: `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-pro`
+- **Others**: `glm-4.7`, `minimax-m2.1` and 470+ more
 
 ### Embedding Models
 - `text-embedding-3-small`
