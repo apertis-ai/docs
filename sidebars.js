@@ -91,6 +91,12 @@ const sidebars = {
           label: 'Framework SDKs',
           collapsed: true,
           items: [
+            {
+              type: 'doc',
+              id: 'installation/apertis-ai-sdk-provider',
+              label: '@apertis/ai-sdk-provider',
+              className: 'sidebar-item--new',
+            },
             'installation/langchain',
             'installation/llamaindex',
           ],
