@@ -36,8 +36,8 @@ client = OpenAI(
 Apertis provides access to 60+ models including:
 
 - **OpenAI**: GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo
-- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus
-- **Google**: Gemini 1.5 Pro, Gemini 1.5 Flash
+- **Anthropic**: Claude Sonnet 4.5, Claude Opus 4.5
+- **Google**: Gemini 3 Pro, Gemini 3 Flash
 - **Open Source**: Llama, Mistral, and more
 
 [View full model list →](../installation/models)
@@ -160,8 +160,8 @@ It depends on the model:
 | Model | Context Length |
 |-------|----------------|
 | GPT-4o | 128K tokens |
-| Claude 3.5 Sonnet | 200K tokens |
-| Gemini 1.5 Pro | 1M tokens |
+| Claude Sonnet 4.5 | 200K tokens |
+| Gemini 3 Pro | 1M tokens |
 
 ### Do you support function calling?
 
@@ -244,9 +244,9 @@ Yes, just change the base URL and API key. No other code changes needed.
 |----------|-------------------|
 | General chat | GPT-4o |
 | Fast & cheap | GPT-4o-mini |
-| Complex reasoning | Claude 3 Opus |
-| Long documents | Claude 3.5 Sonnet |
-| Code generation | GPT-4o or Claude 3.5 Sonnet |
+| Complex reasoning | Claude Opus 4.5 |
+| Long documents | Claude Sonnet 4.5 |
+| Code generation | GPT-4o or Claude Sonnet 4.5 |
 
 ### Are model responses the same as direct providers?
 
@@ -261,7 +261,7 @@ response = client.chat.completions.create(
     model="gpt-4o",
     messages=[...],
     extra_body={
-        "fallback_models": ["claude-3-5-sonnet-20241022", "gemini-1.5-pro"]
+        "fallback_models": ["claude-sonnet-4.5", "gemini-3-pro-preview"]
     }
 )
 ```

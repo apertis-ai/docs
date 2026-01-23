@@ -17,7 +17,7 @@ curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
     -d '{
-        "model": "claude-3-5-sonnet-20241022",
+        "model": "claude-sonnet-4.5",
         "max_tokens": 1024,
         "messages": [
             {"role": "user", "content": "Hello, Claude!"}
@@ -75,7 +75,7 @@ The `thinking` parameter enables Claude's extended thinking capability for more 
 ```python
 # Extended Thinking Example
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=4096,
     thinking={
         "type": "enabled",
@@ -115,7 +115,7 @@ client = anthropic.Anthropic(
 )
 
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is the meaning of life?"}
@@ -136,7 +136,7 @@ const client = new Anthropic({
 });
 
 const message = await client.messages.create({
-  model: 'claude-3-5-sonnet-20241022',
+  model: 'claude-sonnet-4.5',
   max_tokens: 1024,
   messages: [
     { role: 'user', content: 'What is the meaning of life?' }
@@ -150,7 +150,7 @@ console.log(message.content[0].text);
 
 ```python
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     system="You are a helpful assistant that speaks like a pirate.",
     messages=[
@@ -163,7 +163,7 @@ message = client.messages.create(
 
 ```python
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is Python?"},
@@ -177,7 +177,7 @@ message = client.messages.create(
 
 ```python
 with client.messages.stream(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a poem about coding."}]
 ) as stream:
@@ -217,7 +217,7 @@ with open("image.png", "rb") as f:
     image_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[
         {
@@ -252,7 +252,7 @@ with open("document.pdf", "rb") as f:
     pdf_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=4096,
     messages=[
         {
@@ -301,7 +301,7 @@ Currently, PDF (`application/pdf`) is the primary supported document format for 
       "text": "Hello! How can I help you today?"
     }
   ],
-  "model": "claude-3-5-sonnet-20241022",
+  "model": "claude-sonnet-4.5",
   "stop_reason": "end_turn",
   "usage": {
     "input_tokens": 12,
@@ -317,11 +317,8 @@ The Messages API supports Claude models via Anthropic-type channels:
 | Model | Description |
 |-------|-------------|
 | `claude-opus-4-5-20251101` | Claude Opus 4.5 - most capable |
-| `claude-sonnet-4-20250514` | Claude Sonnet 4 - balanced |
-| `claude-3-5-sonnet-20241022` | Claude 3.5 Sonnet - fast and capable |
-| `claude-3-opus-20240229` | Claude 3 Opus |
-| `claude-3-sonnet-20240229` | Claude 3 Sonnet |
-| `claude-3-haiku-20240307` | Claude 3 Haiku - fast and efficient |
+| `claude-sonnet-4.5` | Claude Sonnet 4.5 - balanced |
+| `claude-haiku-4.5` | Claude Haiku 4.5 - fast and efficient |
 
 :::warning Anthropic Channels Only
 This endpoint routes exclusively to Anthropic-type channels. If you need to access non-Claude models, use the [Chat Completions](./chat_completions) endpoint instead.

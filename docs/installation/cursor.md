@@ -61,12 +61,12 @@ Available models include:
 
 | Model | Name to Enter |
 |-------|---------------|
-| Claude 3.5 Sonnet | `claude-3-5-sonnet-20241022` |
-| Claude 3.5 Haiku | `claude-3-5-haiku-20241022` |
+| Claude Sonnet 4.5 | `claude-sonnet-4.5` |
+| Claude Haiku 4.5 | `claude-haiku-4.5` |
 | GPT-4o | `gpt-4o` |
 | GPT-4o mini | `gpt-4o-mini` |
-| Gemini 1.5 Pro | `gemini-1.5-pro-latest` |
-| Gemini 2.0 Flash | `gemini-2.0-flash-exp` |
+| Gemini 3 Pro | `gemini-3-pro-preview` |
+| Gemini 3 Flash | `gemini-3-flash-preview` |
 
 ![image](https://hackmd.io/_uploads/H1g9N9Po0.png)
 

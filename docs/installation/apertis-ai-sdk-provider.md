@@ -118,7 +118,7 @@ Access models from multiple providers through Apertis:
 ### Chat Models
 - **OpenAI**: `gpt-5.2`, `gpt-5.2-chat`, `gpt-5.2-pro`
 - **Anthropic**: `claude-opus-4-5-20251101`, `claude-sonnet-4.5`, `claude-haiku-4.5`
-- **Google**: `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-pro`
+- **Google**: `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-3-pro-preview`
 - **Others**: `glm-4.7`, `minimax-m2.1` and 470+ more
 
 ### Embedding Models

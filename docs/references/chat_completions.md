@@ -36,7 +36,7 @@ curl https://api.apertis.ai/v1/chat/completions \
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `model` | string | ID of the model to use (e.g., `gpt-4o-mini`, `claude-3-5-sonnet-20241022`) |
+| `model` | string | ID of the model to use (e.g., `gpt-4o-mini`, `claude-sonnet-4.5`) |
 | `messages` | array | Array of message objects in the conversation |
 
 ### Optional Parameters
@@ -479,7 +479,7 @@ Use `extra_body` to enable thinking features for Google Gemini models:
 
 ```python
 response = client.chat.completions.create(
-    model="gemini-2.5-pro",
+    model="gemini-3-pro-preview",
     messages=[{"role": "user", "content": "Solve this step by step..."}],
     extra_body={
         "google": {
@@ -640,8 +640,8 @@ The Chat Completions API supports models from multiple providers:
 | Provider | Example Models |
 |----------|---------------|
 | OpenAI | `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo` |
-| Anthropic | `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`, `claude-3-haiku-20240307` |
-| Google | `gemini-1.5-pro`, `gemini-1.5-flash` |
+| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
+| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
 | Meta | `llama-3.1-70b`, `llama-3.1-8b` |
 | And more... | Check the [Models](/references/models) endpoint for full list |
 

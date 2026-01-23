@@ -145,15 +145,15 @@ response = client.chat.completions.create(
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
-# Anthropic Claude 3.5 Sonnet
+# Anthropic Claude Sonnet 4.5
 response = client.chat.completions.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
 # Google Gemini Pro
 response = client.chat.completions.create(
-    model="gemini-1.5-pro",
+    model="gemini-3-pro-preview",
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 ```
@@ -164,9 +164,9 @@ response = client.chat.completions.create(
 |-------|----------|
 | `gpt-4o` | General purpose, balanced |
 | `gpt-4o-mini` | Fast, cost-effective |
-| `claude-3-5-sonnet-20241022` | Long context, analysis |
-| `claude-3-opus-20240229` | Complex reasoning |
-| `gemini-1.5-pro` | Multimodal, long context |
+| `claude-sonnet-4.5` | Long context, analysis |
+| `claude-opus-4-5-20251101` | Complex reasoning |
+| `gemini-3-pro-preview` | Multimodal, long context |
 
 [View all models →](../installation/models)
 

@@ -244,7 +244,7 @@ Choose cost-effective models for your use case:
 | Simple chat | GPT-3.5 Turbo | $ |
 | General tasks | GPT-4o-mini | $ |
 | Complex reasoning | GPT-4o | $$ |
-| Long context | Claude 3.5 Sonnet | $$ |
+| Long context | Claude Sonnet 4.5 | $$ |
 
 ### Prompt Optimization
 

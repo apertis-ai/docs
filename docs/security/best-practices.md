@@ -108,7 +108,7 @@ Limit which models each key can access:
 Production Key:
   ✓ gpt-4o
   ✓ gpt-4o-mini
-  ✗ claude-3-opus (expensive)
+  ✗ claude-opus-4-5-20251101 (expensive)
   ✗ experimental models
 ```
 
@@ -232,7 +232,7 @@ class ChatRequest(BaseModel):
 
     @validator('model')
     def validate_model(cls, v):
-        allowed_models = ['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet-20241022']
+        allowed_models = ['gpt-4o', 'gpt-4o-mini', 'claude-sonnet-4.5']
         if v not in allowed_models:
             raise ValueError(f'Model must be one of {allowed_models}')
         return v

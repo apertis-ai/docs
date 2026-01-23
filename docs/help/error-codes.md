@@ -352,7 +352,7 @@ Include all required parameters in your request.
 |-------|---------------|
 | GPT-3.5 Turbo | 16K tokens |
 | GPT-4o | 128K tokens |
-| Claude 3.5 Sonnet | 200K tokens |
+| Claude Sonnet 4.5 | 200K tokens |
 
 ### `invalid_image`
 

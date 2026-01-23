@@ -1,6 +1,6 @@
 # 使用圖片生成 API
 
-Apertis 提供 Image Generation API 讓開發者可以生成圖片，以下主要以 `GPT-4o Image Generation`、`Gemini 2.0 Flash Expanded Image Generation` 及 `Grok 3 Image Generation`。
+Apertis 提供 Image Generation API 讓開發者可以生成圖片，以下主要以 `GPT-4o Image Generation`、`Gemini 3 Flash Expanded Image Generation` 及 `Grok 3 Image Generation`。
 
 ## 使用方式 (以 Python 為例)
 
@@ -86,7 +86,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
 
 ## 參數說明
 
-- `model`: 模型目前支援`gpt-4o-image`、`gemini-2.0-flash-exp-image`及`grok-3-image`。
+- `model`: 模型目前支援`gpt-4o-image`、`gemini-3-flash-preview-image`及`grok-3-image`。
 - `prompt`: 要生成的圖片描述。
 - `APERTIS_API_KEY`: 您的 API 金鑰。
 - 圖片輸入: 轉換成**base64**格式

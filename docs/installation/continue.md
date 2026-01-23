@@ -30,9 +30,9 @@
 {
 "models": [
   {
-    "model": "claude-3-5-sonnet-20240620",
+    "model": "claude-sonnet-4.5",
     "apiBase": "https://api.apertis.ai/v1",
-    "title": "Claude 3.5",
+    "title": "Claude 4.5",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai",
     "description": "Explain in Traditional Chinese"
@@ -62,17 +62,17 @@
     "description": "Explain in Traditional Chinese"
   },
   {
-    "model": "gemini-1.5-pro-latest",
+    "model": "gemini-3-pro-preview",
     "apiBase": "https://api.apertis.ai/v1",
-    "title": "gemini-1.5-pro-latest",
+    "title": "gemini-3-pro-preview",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai",
     "description": "Explain in Traditional Chinese"
   },
   {
-    "model": "gemini-1.5-flash-latest",
+    "model": "gemini-3-flash-preview",
     "apiBase": "https://api.apertis.ai/v1",
-    "title": "gemini-1.5-flash-latest",
+    "title": "gemini-3-flash-preview",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai",
     "description": "Explain in Traditional Chinese"

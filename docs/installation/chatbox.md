@@ -21,14 +21,14 @@ Chatbox AI 是一個圖形化的聊天介面，其優點為 **使用API Key進�
 
 ![image](https://hackmd.io/_uploads/SyjvocOiR.png)
 
-請根據我們提供之模型填入對應的數值，如要使用**Claude 3.5 Sonnet**，請填
+請根據我們提供之模型填入對應的數值，如要使用**Claude Sonnet 4.5**，請填
 
 * **API模式** : OPENAI API兼容
-* **名稱** : 任意(方便辨識是Claude 3.5 Sonnet即可)
+* **名稱** : 任意(方便辨識是Claude Sonnet 4.5即可)
 * **API域名** : `https://api.apertis.ai`
 * **API路徑** : 無須變動
 * **API金鑰** : 你的API Key
-* **模型** : `claude-3-5-sonnet-20240620`
+* **模型** : `claude-sonnet-4.5`
 
 ![image](https://hackmd.io/_uploads/SkLh2qOoR.png)
 

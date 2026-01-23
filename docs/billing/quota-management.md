@@ -118,8 +118,8 @@ Match model capabilities to your needs:
 |------|-------------------|------------|
 | Simple Q&A | GPT-3.5 Turbo | $ |
 | Code generation | GPT-4o | $$ |
-| Complex reasoning | Claude 3 Opus | $$$ |
-| Long documents | Claude 3.5 Sonnet | $$ |
+| Complex reasoning | Claude Opus 4.5 | $$$ |
+| Long documents | Claude Sonnet 4.5 | $$ |
 
 ### 2. Optimize Prompts
 

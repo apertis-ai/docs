@@ -333,8 +333,8 @@ This means you can use **any model** with the Responses API - the conversion is 
 | Provider | Example Models | Native Support |
 |----------|---------------|----------------|
 | OpenAI | `gpt-4o`, `gpt-4o-mini` | Via fallback |
-| Anthropic | `claude-sonnet-4-20250514`, `claude-opus-4` | Via fallback |
-| Google | `gemini-2.5-pro`, `gemini-2.5-flash` | Via fallback |
+| Anthropic | `claude-sonnet-4.5`, `claude-opus-4` | Via fallback |
+| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` | Via fallback |
 | Meta | `llama-3.1-70b`, `llama-3.1-8b` | Via fallback |
 | xAI | `grok-3`, `grok-3-reasoning` | Via fallback |
 

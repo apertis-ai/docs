@@ -25,9 +25,9 @@ This endpoint does **not** require authentication and is publicly accessible.
   "data": [
     "gpt-4o",
     "gpt-4o-mini",
-    "claude-sonnet-4-20250514",
-    "gemini-2.5-pro",
-    "deepseek-r1",
+    "claude-sonnet-4.5",
+    "gemini-3-pro-preview",
+    "deepseek-r1-0528",
     "gpt-image-1.5",
     ...
   ]
@@ -76,9 +76,9 @@ The response includes models from various providers and categories:
 | Category | Examples |
 |----------|----------|
 | OpenAI | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o3-mini` |
-| Anthropic | `claude-sonnet-4-20250514`, `claude-opus-4-1-20250805` |
-| Google | `gemini-2.5-pro`, `gemini-2.5-flash` |
-| DeepSeek | `deepseek-r1`, `deepseek-v3`, `deepseek-chat` |
+| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
+| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
+| DeepSeek | `deepseek-r1-0528`, `deepseek-v3.2` |
 | xAI | `grok-3`, `grok-3-reasoning`, `grok-4` |
 | Open Source | `llama-3.1-70b`, `mistral-large`, `qwen3-235b` |
 | Embedding | `text-embedding-3-small`, `jina-embeddings-v3` |
@@ -86,7 +86,7 @@ The response includes models from various providers and categories:
 | Audio | `whisper-1`, `tts-1` |
 
 :::tip
-Free-tier models are indicated with a `:free` suffix (e.g., `gemini-2.5-flash:free`, `deepseek-r1:free`).
+Free-tier models are indicated with a `:free` suffix (e.g., `gemini-3-flash-preview:free`, `deepseek-r1-0528:free`).
 :::
 
 ### Endpoint Compatibility
@@ -123,9 +123,9 @@ Attempting to use responses-only models with `/v1/chat/completions` or `/v1/mess
 
 These models support `/v1/responses` natively (no conversion needed):
 
-- **o1 Series**: `o1`, `o1-preview`, `o1-mini`, `o1-2024-12-17`
-- **o3 Series**: `o3`, `o3-mini`, `o3-2025-04-16`
-- **o4 Series**: `o4-mini`, `o4-mini-2025-04-16`
+- **o1 Series**: `o1`, `o1-pro`, `o1-2024-12-17`
+- **o3 Series**: `o3`, `o3-pro`, `o3-2025-04-16`
+- **o4 Series**: `o4-mini`, `o4-mini-high`, `o4-mini-2025-04-16`
 - **GPT-5 Series**: `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*`
 
 ---

@@ -115,13 +115,13 @@ Apertis provides access to models not available directly from OpenAI:
 ```python
 # Use Claude models
 response = client.chat.completions.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
 # Use Gemini models
 response = client.chat.completions.create(
-    model="gemini-1.5-pro",
+    model="gemini-3-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -139,7 +139,7 @@ import anthropic
 client = anthropic.Anthropic(api_key="sk-ant-xxx")
 
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -157,7 +157,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -179,7 +179,7 @@ response = client.chat.completions.create(
 **Anthropic format:**
 ```python
 message = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     system="You are a helpful assistant.",
     messages=[{"role": "user", "content": "Hello!"}]
 )
@@ -188,7 +188,7 @@ message = client.messages.create(
 **Apertis format:**
 ```python
 response = client.chat.completions.create(
-    model="claude-3-5-sonnet-20241022",
+    model="claude-sonnet-4.5",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello!"}
@@ -262,7 +262,7 @@ import vertexai
 from vertexai.generative_models import GenerativeModel
 
 vertexai.init(project="your-project", location="us-central1")
-model = GenerativeModel("gemini-1.5-pro")
+model = GenerativeModel("gemini-3-pro-preview")
 
 response = model.generate_content("Hello!")
 ```
@@ -277,7 +277,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gemini-1.5-pro",
+    model="gemini-3-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -289,7 +289,7 @@ response = client.chat.completions.create(
 import google.generativeai as genai
 
 genai.configure(api_key="google-api-key")
-model = genai.GenerativeModel("gemini-1.5-pro")
+model = genai.GenerativeModel("gemini-3-pro-preview")
 
 response = model.generate_content("Hello!")
 text = response.text
@@ -305,7 +305,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gemini-1.5-pro",
+    model="gemini-3-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 text = response.choices[0].message.content

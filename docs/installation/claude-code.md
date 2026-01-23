@@ -231,9 +231,9 @@ You can also customize which models are used for each tier (opus, sonnet, haiku)
     "ANTHROPIC_AUTH_TOKEN": "your_apertis_api_key",
     "ANTHROPIC_API_KEY": "",
     "API_TIMEOUT_MS": "3000000",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-20250514",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-20250514",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-3-5-haiku-20241022"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4.5"
   }
 }
 ```

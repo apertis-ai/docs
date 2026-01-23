@@ -8,11 +8,11 @@ sidebar_position: 3
 
 ### 推薦模型
 * 【**知識查詢、文章生成、日常需求**】: **OpenAI GPT-4o**，模型代號 `gpt-4o`。
-* 【**程式開發**】 : **Anthropic Claude 3.5 Sonnet**，模型代號 `claude-3-5-sonnet-20241022`, `claude-3-5-sonnet-20240620`。
-* 【**翻譯需求 (網頁內容、字幕、論文)**】 : **Google Gemini 1.5 Flash**，模型代號 `gpt-4o-mini`, `gemini-1.5-flash-latest`。
+* 【**程式開發**】 : **Anthropic Claude Sonnet 4.5**，模型代號 `claude-sonnet-4.5`。
+* 【**翻譯需求 (網頁內容、字幕、論文)**】 : **Google Gemini 3 Flash**，模型代號 `gpt-4o-mini`, `gemini-3-flash-preview`。
 
 <!-- ### 模型命名規則:
-**模型名稱-子版本**，如`claude-3-5-sonnet-20240620`、`gpt-4-turbo-2024-04-09`、`gemini-1.5-flash-latest`、`gpt-4o-mini-2024-07-18`... -->
+**模型名稱-子版本**，如`claude-sonnet-4.5`、`gpt-4-turbo-2024-04-09`、`gemini-3-flash-preview`、`gpt-4o-mini-2024-07-18`... -->
 
 ### 模型命名規則
 
@@ -52,8 +52,8 @@ export const RedText = ({children}) => (
 
 ### **Anthropic**
 **應用場域**：**Claude** 是目前最強的**程式開發助理**，其能透過 Retrieval Augmented Generation (RAG) 理解您的程式並提供協助。搭配 Cursor 進行 Codebase 的 RAG，將能通過分析整段程式以解決問題，並提供開發提示，進而提升開發效率。
-**Claude 推薦的模型**為 `claude-opus-4-5-20251101`, `claude-sonnet-4-20250514`, `claude-3-5-sonnet-20241022`。
+**Claude 推薦的模型**為 `claude-opus-4-5-20251101`, `claude-sonnet-4.5`, `claude-haiku-4.5`。
 
 ### **Google**
 **應用場域**：Gemini 的模型能力較為通用，其最大的特點為以較低的價格提供優質的服務。其應用場域包含**翻譯網頁內容、大量 PDF（如論文、專利）**。
-**Gemini 推薦的模型** 為 `gemini-1.5-flash-latest`, `gemini-1.5-flash-002`。
+**Gemini 推薦的模型** 為 `gemini-3-pro-preview`, `gemini-3-flash-preview`。

@@ -57,7 +57,7 @@ curl https://api.apertis.ai/v1/messages \
   -H "x-api-key: sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "claude-3-5-sonnet-20241022",
+    "model": "claude-sonnet-4.5",
     "max_tokens": 1024,
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
@@ -122,10 +122,10 @@ You can restrict which models an API key can access:
 - **All Models**: Access to all available models (default)
 - **Specific Models**: Whitelist only certain models
 
-Example: Restrict a key to only use `gpt-4o` and `claude-3-5-sonnet`:
+Example: Restrict a key to only use `gpt-4o` and `claude-sonnet-4.5`:
 
 ```
-Model Whitelist: gpt-4o, claude-3-5-sonnet-20241022
+Model Whitelist: gpt-4o, claude-sonnet-4.5
 ```
 
 ### IP Whitelisting (Subnet Restrictions)

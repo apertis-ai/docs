@@ -24,7 +24,7 @@ Apertis 提供強大的備用模型（Fallback Models）機制，當主要模型
   "messages": [
     {"role": "user", "content": "Hello, how are you?"}
   ],
-  "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+  "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
   "fallback_timeout": 25000,
   "fallback_enabled": true
 }
@@ -40,7 +40,7 @@ Apertis 提供強大的備用模型（Fallback Models）機制，當主要模型
 - **類型**: 字串陣列
 - **說明**: 備用模型清單，按優先順序排列
 - **限制**: 最多 5 個備用模型
-- **範例**: `["gpt-3.5-turbo", "claude-3-haiku-20240307", "gemini-pro"]`
+- **範例**: `["gpt-3.5-turbo", "claude-haiku-4.5", "gemini-pro"]`
 
 ### `fallback_timeout`
 - **類型**: 整數
@@ -130,7 +130,7 @@ payload = {
     "messages": [
         {"role": "user", "content": "請幫我寫一個 Python 函數"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+    "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
     "fallback_timeout": 20000,
     "fallback_enabled": True
 }
@@ -166,7 +166,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
     "messages": [
       {"role": "user", "content": "Hello, how are you?"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+    "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
     "fallback_timeout": 25000,
     "fallback_enabled": true
   }' \
