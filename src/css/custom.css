@@ -472,23 +472,34 @@ html {
    Mobile Responsive Fixes
    ========================================================================== */
 
-/* Fix 1: Sidebar z-index for mobile overlay */
+/*
+ * Fix: Mobile sidebar brand (header) was expanding due to flex-grow: 1,
+ * causing a large empty space at the top and pushing content down.
+ * Solution: Ensure proper flex layout with brand fixed and items filling space.
+ */
+
 @media (max-width: 996px) {
-  /* Ensure sidebar appears above all content when opened */
+  /* Sidebar container: full viewport height with flex column */
   .navbar-sidebar {
-    z-index: 100000 !important;
-    background-color: var(--ifm-navbar-background-color);
-    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
-  .navbar-sidebar__backdrop {
-    z-index: 99999 !important;
+  /* Brand/Header: Prevent flex growth - this is the key fix */
+  .navbar-sidebar__brand {
+    flex: 0 0 auto !important;
   }
 
-  /* Ensure sidebar content is visible */
-  .navbar-sidebar__brand,
+  /* Items/Content: Fill remaining space */
   .navbar-sidebar__items {
-    z-index: 100001 !important;
+    flex: 1 1 auto !important;
+    min-height: 0; /* Allow flex item to shrink below content size */
+  }
+
+  /* Backdrop z-index for proper layering */
+  .navbar-sidebar__backdrop {
+    z-index: 999;
   }
 }
 
