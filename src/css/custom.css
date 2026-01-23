@@ -480,10 +480,12 @@ html {
 
 @media (max-width: 996px) {
   /* Sidebar container: full viewport height with flex column */
+  /* z-index 1000 to be ABOVE backdrop (999) */
   .navbar-sidebar {
     height: 100vh !important;
     display: flex !important;
     flex-direction: column !important;
+    z-index: 1000 !important;
   }
 
   /* Brand/Header: Prevent flex growth - this is the key fix */
@@ -498,6 +500,7 @@ html {
   }
 
   /* Backdrop: Full viewport overlay for click-to-close */
+  /* z-index 999 to be BELOW sidebar (1000) but above main content */
   .navbar-sidebar__backdrop {
     position: fixed !important;
     top: 0 !important;
