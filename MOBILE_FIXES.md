@@ -12,15 +12,15 @@
 **文件位置**：`src/css/custom.css` (第 473-488 行)
 
 **修復方式**：
-- 在 mobile viewport (≤996px) 上設置正確的 z-index 層級
-- `.navbar-sidebar`: z-index 1000（主要 sidebar 容器）
-- `.navbar-sidebar__backdrop`: z-index 999（背景遮罩）
-- `.navbar-sidebar__brand`, `.navbar-sidebar__items`: z-index 1001（內容層）
+- 在 mobile viewport (≤996px) 上大幅提升 z-index 層級
+- `.navbar-sidebar`: z-index 100000（主要 sidebar 容器），並添加背景色防止透明穿透
+- `.navbar-sidebar__backdrop`: z-index 99999（背景遮罩）
+- `.navbar-sidebar__brand`, `.navbar-sidebar__items`: z-index 100001（內容層）
 
 **效果**：
-- Sidebar 現在會正確顯示在所有內容上方
-- 背景遮罩正確覆蓋頁面內容
-- Sidebar 內容清晰可見
+- Sidebar 確保顯示在所有層級（包括 glassmorphism navbar）之上
+- 背景不透明，內容清晰可見
+- 解決了 sidebar 內容被覆蓋或看不見的問題
 
 ### 2. Table 橫向滾動修復
 

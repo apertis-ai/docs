@@ -476,17 +476,19 @@ html {
 @media (max-width: 996px) {
   /* Ensure sidebar appears above all content when opened */
   .navbar-sidebar {
-    z-index: 1000 !important;
+    z-index: 100000 !important;
+    background-color: var(--ifm-navbar-background-color);
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
   }
 
   .navbar-sidebar__backdrop {
-    z-index: 999 !important;
+    z-index: 99999 !important;
   }
 
   /* Ensure sidebar content is visible */
   .navbar-sidebar__brand,
   .navbar-sidebar__items {
-    z-index: 1001 !important;
+    z-index: 100001 !important;
   }
 }
 
