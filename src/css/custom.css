@@ -497,9 +497,15 @@ html {
     min-height: 0; /* Allow flex item to shrink below content size */
   }
 
-  /* Backdrop z-index for proper layering */
+  /* Backdrop: Full viewport overlay for click-to-close */
   .navbar-sidebar__backdrop {
-    z-index: 999;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999 !important;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 }
 
