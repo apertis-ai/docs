@@ -242,15 +242,25 @@ code:not(pre code) {
    PHASE 4: Sidebar Enhancement - Gemini Style Filled Selection
    ========================================================================== */
 
-/* Modern sidebar styling */
+/* Modern sidebar styling - Gemini ultra-compact */
 .menu {
-  padding: 1rem 0;
+  padding: 0.5rem 0;
+}
+
+.menu__list {
+  margin: 0;
+  padding-left: 0.75rem;
+}
+
+.menu__list-item {
+  margin: 1px 0;
 }
 
 .menu__link {
   border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
+  line-height: 1.4;
   transition: background-color 0.15s ease, color 0.15s ease;
   border-left: none;
 }
@@ -306,67 +316,11 @@ code:not(pre code) {
   color: #ffffff;
 }
 
-/* Sidebar category icons */
-.sidebar-category--getting-started > .menu__list-item-collapsible > a::before {
-  content: '🚀';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--auth > .menu__list-item-collapsible > a::before {
-  content: '🔐';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--billing > .menu__list-item-collapsible > a::before {
-  content: '💳';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--integrations > .menu__list-item-collapsible > a::before {
-  content: '🔌';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--api-capabilities > .menu__list-item-collapsible > a::before {
-  content: '⚡';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--config > .menu__list-item-collapsible > a::before {
-  content: '⚙️';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--api-reference > .menu__list-item-collapsible > a::before {
-  content: '📖';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--security > .menu__list-item-collapsible > a::before {
-  content: '🛡️';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--help > .menu__list-item-collapsible > a::before {
-  content: '❓';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--resources > .menu__list-item-collapsible > a::before {
-  content: '📚';
-  margin-right: 0.5rem;
-}
-
 /* NEW badge for sidebar items */
 .sidebar-item--new > a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.sidebar-item--new > a::before {
-  content: '🔍';
-  margin-right: 0.25rem;
 }
 
 .sidebar-item--new > a::after {
