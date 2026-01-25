@@ -33,24 +33,32 @@
 }
 
 [data-theme='dark'] {
-  /* Dark mode - OpenRouter-inspired */
-  --ifm-color-primary: #60a5fa;
-  --ifm-color-primary-dark: #3b82f6;
-  --ifm-color-primary-darker: #2563eb;
-  --ifm-color-primary-darkest: #1d4ed8;
-  --ifm-color-primary-light: #93c5fd;
-  --ifm-color-primary-lighter: #bfdbfe;
-  --ifm-color-primary-lightest: #dbeafe;
+  /* Gemini-inspired pure black theme */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
 
-  /* Background colors */
-  --ifm-background-color: #0f172a;
-  --ifm-background-surface-color: #1e293b;
-  --ifm-navbar-background-color: #000000;
-  --ifm-footer-background-color: #000000;
+  /* Pure black backgrounds */
+  --ifm-background-color: #060606;
+  --ifm-background-surface-color: #0a0a0a;
+  --ifm-navbar-background-color: #060606;
+  --ifm-footer-background-color: #060606;
+
+  /* Text colors */
+  --ifm-font-color-base: #C0C2C7;
+  --ifm-heading-color: #ffffff;
 
   /* Code blocks */
-  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.15);
-  --ifm-code-background: #1e293b;
+  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.15);
+  --ifm-code-background: #151515;
+
+  /* Borders */
+  --ifm-toc-border-color: #1a1a1a;
+  --ifm-color-emphasis-300: #353841;
 }
 
 /* Typography refinements */
