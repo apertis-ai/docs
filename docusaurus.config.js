@@ -28,7 +28,7 @@ const config = {
 
   stylesheets: [
     {
-      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
       type: 'text/css',
     },
   ],
@@ -214,7 +214,8 @@ const config = {
       },
       prism: {
         theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
+        darkTheme: require('./src/prism-theme-gemini'),
+        additionalLanguages: ['bash', 'json', 'python', 'typescript'],
       },
     }),
 };

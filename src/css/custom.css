@@ -4,11 +4,23 @@
  */
 
 /* ==========================================================================
+   Font Definitions
+   ========================================================================== */
+
+@font-face {
+  font-family: 'LINE Seed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/LINESeedTW_TTF_Rg.ttf') format('truetype');
+}
+
+/* ==========================================================================
    PHASE 2: Color Palette and Typography
    ========================================================================== */
 
 :root {
-  /* Light mode - refined professional blue palette */
+  /* Light mode - clean white theme */
   --ifm-color-primary: #2563eb;
   --ifm-color-primary-dark: #1d4ed8;
   --ifm-color-primary-darker: #1e40af;
@@ -17,10 +29,15 @@
   --ifm-color-primary-lighter: #60a5fa;
   --ifm-color-primary-lightest: #93c5fd;
 
-  /* Typography */
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ifm-code-font-size: 0.9rem;
+  /* Light mode backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f5f5f5;
+
+  /* Typography - Gemini style */
+  --ifm-font-family-base: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --ifm-code-font-size: 0.875rem;
 
   /* Spacing */
   --ifm-spacing-horizontal: 1.5rem;
@@ -28,44 +45,63 @@
 
   /* Code blocks */
   --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
-  --ifm-code-background: #f8fafc;
+  --ifm-code-background: #f5f5f5;
   --ifm-code-border-radius: 0.5rem;
 }
 
 [data-theme='dark'] {
-  /* Dark mode - OpenRouter-inspired */
-  --ifm-color-primary: #60a5fa;
-  --ifm-color-primary-dark: #3b82f6;
-  --ifm-color-primary-darker: #2563eb;
-  --ifm-color-primary-darkest: #1d4ed8;
-  --ifm-color-primary-light: #93c5fd;
-  --ifm-color-primary-lighter: #bfdbfe;
-  --ifm-color-primary-lightest: #dbeafe;
+  /* Gemini-inspired pure black theme */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
 
-  /* Background colors */
-  --ifm-background-color: #0f172a;
-  --ifm-background-surface-color: #1e293b;
-  --ifm-navbar-background-color: #000000;
-  --ifm-footer-background-color: #000000;
+  /* Pure black backgrounds */
+  --ifm-background-color: #060606;
+  --ifm-background-surface-color: #0a0a0a;
+  --ifm-navbar-background-color: #060606;
+  --ifm-footer-background-color: #060606;
+
+  /* Text colors */
+  --ifm-font-color-base: #C0C2C7;
+  --ifm-heading-color: #ffffff;
 
   /* Code blocks */
-  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.15);
-  --ifm-code-background: #1e293b;
+  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.15);
+  --ifm-code-background: #151515;
+
+  /* Borders */
+  --ifm-toc-border-color: #1a1a1a;
+  --ifm-color-emphasis-300: #353841;
 }
 
-/* Typography refinements */
+/* Typography refinements - Gemini style */
 h1 {
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 2.625rem;
   letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 h2 {
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 1.75rem;
   letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.4;
 }
 
 .markdown p {
   line-height: 1.75;
+  font-size: 1rem;
 }
 
 /* ==========================================================================
@@ -108,13 +144,14 @@ h2 {
   border-left: 3px solid #ef4444;
 }
 
-/* Copy button styling */
+/* Copy button styling - Enhanced visibility */
 .theme-code-block button[class*='copyButton'] {
-  background: transparent;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
   opacity: 0;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  padding: 6px;
 }
 
 .theme-code-block:hover button[class*='copyButton'] {
@@ -122,12 +159,47 @@ h2 {
 }
 
 .theme-code-block button[class*='copyButton']:hover {
-  background: var(--ifm-color-emphasis-200);
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.theme-code-block button[class*='copyButton']:active {
+  background: rgba(37, 99, 235, 0.3);
+}
+
+/* Light mode copy button */
+[data-theme='light'] .theme-code-block button[class*='copyButton'] {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .theme-code-block button[class*='copyButton']:hover {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
 /* Code block title/language label */
 .theme-code-block .prism-code {
   padding: 1rem;
+}
+
+/* ==========================================================================
+   Inline Code Styling - Gemini Style
+   ========================================================================== */
+
+/* Inline code - dark background style */
+code:not(pre code) {
+  background-color: #1a1a1a;
+  color: #e1dfdf;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+[data-theme='light'] code:not(pre code) {
+  background-color: #e5e5e5;
+  color: #1a1a1a;
 }
 
 /* ==========================================================================
@@ -184,92 +256,81 @@ h2 {
 }
 
 /* ==========================================================================
-   PHASE 4: Sidebar Enhancement
+   PHASE 4: Sidebar Enhancement - Gemini Style Filled Selection
    ========================================================================== */
 
-/* Modern sidebar styling */
+/* Modern sidebar styling - Gemini ultra-compact */
 .menu {
-  padding: 1rem 0;
+  padding: 0.5rem 0;
+}
+
+.menu__list {
+  margin: 0;
+  padding-left: 0.75rem;
+}
+
+.menu__list-item {
+  margin: 1px 0;
 }
 
 .menu__link {
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
+  line-height: 1.4;
   transition: background-color 0.15s ease, color 0.15s ease;
+  border-left: none;
 }
 
 .menu__link:hover {
-  background-color: var(--ifm-color-emphasis-100);
+  background-color: rgba(37, 99, 235, 0.1);
 }
 
-.menu__link--active {
-  background-color: var(--ifm-color-primary-lightest);
-  font-weight: 600;
+[data-theme='dark'] .menu__link:hover {
+  background-color: rgba(37, 99, 235, 0.15);
 }
 
-[data-theme='dark'] .menu__link--active {
-  background-color: rgba(96, 165, 250, 0.15);
+/* Active link - Gemini style filled */
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Remove default left border indicator */
+.menu__link--active:not(.menu__link--sublist)::before {
+  display: none;
 }
 
 /* Category styling */
 .menu__list-item-collapsible {
-  border-radius: 0.5rem;
+  border-radius: 6px;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme='dark'] .menu__list-item-collapsible:hover {
+  background-color: rgba(37, 99, 235, 0.1);
 }
 
 .menu__caret {
   transition: transform 0.2s ease;
 }
 
-/* Sidebar category icons */
-.sidebar-category--getting-started > .menu__list-item-collapsible > a::before {
-  content: '🚀';
-  margin-right: 0.5rem;
+/* Category labels */
+.theme-doc-sidebar-item-category > .menu__list-item-collapsible > .menu__link {
+  font-weight: 500;
 }
 
-.sidebar-category--auth > .menu__list-item-collapsible > a::before {
-  content: '🔐';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--billing > .menu__list-item-collapsible > a::before {
-  content: '💳';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--integrations > .menu__list-item-collapsible > a::before {
-  content: '🔌';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--api-capabilities > .menu__list-item-collapsible > a::before {
-  content: '⚡';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--config > .menu__list-item-collapsible > a::before {
-  content: '⚙️';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--api-reference > .menu__list-item-collapsible > a::before {
-  content: '📖';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--security > .menu__list-item-collapsible > a::before {
-  content: '🛡️';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--help > .menu__list-item-collapsible > a::before {
-  content: '❓';
-  margin-right: 0.5rem;
-}
-
-.sidebar-category--resources > .menu__list-item-collapsible > a::before {
-  content: '📚';
-  margin-right: 0.5rem;
+[data-theme='dark'] .theme-doc-sidebar-item-category > .menu__list-item-collapsible > .menu__link {
+  color: #ffffff;
 }
 
 /* NEW badge for sidebar items */
@@ -277,11 +338,6 @@ h2 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.sidebar-item--new > a::before {
-  content: '🔍';
-  margin-right: 0.25rem;
 }
 
 .sidebar-item--new > a::after {
@@ -310,86 +366,69 @@ h2 {
 }
 
 /* ==========================================================================
-   PHASE 5: Navbar Enhancement
+   PHASE 5: Navbar Enhancement - Gemini Style
    ========================================================================== */
 
-/* Modern navbar with glassmorphism */
 .navbar {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  height: 60px;
+  box-shadow: none;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
   backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 [data-theme='dark'] .navbar {
-  background-color: rgba(0, 0, 0, 0.95);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background-color: rgba(6, 6, 6, 0.95);
+  border-bottom-color: #1a1a1a;
 }
 
 .navbar__title {
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .navbar__link {
   font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 0.5rem;
+  font-weight: 400;
+  border-radius: 6px;
   padding: 0.5rem 0.75rem;
   transition: background-color 0.15s ease;
 }
 
 .navbar__link:hover {
-  background-color: var(--ifm-color-emphasis-100);
+  background-color: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme='dark'] .navbar__link:hover {
+  background-color: rgba(37, 99, 235, 0.15);
 }
 
 .navbar__link--active {
-  font-weight: 600;
-}
-
-/* Animated underline for navbar items */
-.navbar__item {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.navbar__item::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: var(--ifm-color-primary);
-  transform: scaleX(0);
-  transition: transform 0.2s ease-in-out;
-}
-
-.navbar__item:hover::after {
-  transform: scaleX(1);
-}
-
-.navbar__link--active::after {
-  transform: scaleX(0);
-  background-color: var(--ifm-color-primary);
-}
-
-.navbar__link--active:hover::after {
-  transform: scaleX(1);
+  font-weight: 500;
 }
 
 /* ==========================================================================
-   Search Enhancement
+   Search Box - Gemini Style
    ========================================================================== */
 
 .navbar__search-input {
-  border-radius: 0.5rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: #17181C;
+  border: 1px solid #353841;
+  border-radius: 8px;
   padding: 0.5rem 1rem;
+  color: #C0C2C7;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+[data-theme='light'] .navbar__search-input {
+  background-color: #f5f5f5;
+  border-color: #e5e5e5;
+  color: #1a1a1a;
+}
+
 .navbar__search-input:focus {
-  border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
   outline: none;
 }
 
@@ -398,6 +437,84 @@ h2 {
   background-color: rgba(37, 99, 235, 0.2);
   padding: 0 2px;
   border-radius: 2px;
+}
+
+/* ==========================================================================
+   Table of Contents (TOC) - Gemini Style with Left Border Indicator
+   ========================================================================== */
+
+.table-of-contents__link {
+  color: #8E8E8E;
+  font-size: 0.8125rem;
+  padding: 0.25rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.table-of-contents__link:hover {
+  color: #C0C2C7;
+}
+
+[data-theme='light'] .table-of-contents__link {
+  color: #6b7280;
+}
+
+[data-theme='light'] .table-of-contents__link:hover {
+  color: #374151;
+}
+
+/* Active TOC link with blue left border */
+.table-of-contents__link--active {
+  color: #2563eb !important;
+  border-left-color: #2563eb;
+  font-weight: 500;
+}
+
+[data-theme='light'] .table-of-contents__link--active {
+  color: #2563eb !important;
+  border-left-color: #2563eb;
+}
+
+/* ==========================================================================
+   Buttons - Gemini Style
+   ========================================================================== */
+
+.button--primary {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.button--primary:hover {
+  background-color: #1d4ed8;
+}
+
+.button--secondary {
+  background-color: #17181C;
+  color: #C0C2C7;
+  border: 1px solid #353841;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+[data-theme='light'] .button--secondary {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+  border-color: #e5e5e5;
+}
+
+.button--secondary:hover {
+  background-color: #1e1f23;
+}
+
+[data-theme='light'] .button--secondary:hover {
+  background-color: #e5e5e5;
 }
 
 /* ==========================================================================

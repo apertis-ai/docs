@@ -1,0 +1,69 @@
+.terminalWrapper {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid #353841;
+}
+
+.terminalHeader {
+  background-color: #1a1a1a;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+:global([data-theme='light']) .terminalHeader {
+  background-color: #e5e5e5;
+  border-bottom: 1px solid #d1d5db;
+}
+
+:global([data-theme='light']) .terminalWrapper {
+  border-color: #d1d5db;
+}
+
+.terminalButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.terminalButton {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* macOS-style colored buttons */
+.terminalButton[data-color='red'] {
+  background-color: #ff5f56;
+}
+
+.terminalButton[data-color='yellow'] {
+  background-color: #ffbd2e;
+}
+
+.terminalButton[data-color='green'] {
+  background-color: #27c93f;
+}
+
+.terminalTitle {
+  color: #8E8E8E;
+  font-size: 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:global([data-theme='light']) .terminalTitle {
+  color: #6b7280;
+}
+
+/* Override default code block styles inside terminal */
+.terminalWrapper :global([class*='codeBlockContainer']) {
+  border-radius: 0;
+  border: none;
+  margin: 0;
+}
+
+.terminalWrapper :global(pre) {
+  border-radius: 0;
+  margin: 0;
+}
