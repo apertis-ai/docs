@@ -21,3 +21,6 @@ yarn-error.log*
 
 # Project documentation for AI assistants
 CLAUDE.md
+
+# Git worktrees
+.worktrees/
