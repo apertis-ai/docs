@@ -216,7 +216,7 @@ h3 {
 }
 
 /* ==========================================================================
-   PHASE 4: Sidebar Enhancement
+   PHASE 4: Sidebar Enhancement - Gemini Style Filled Selection
    ========================================================================== */
 
 /* Modern sidebar styling */
@@ -225,32 +225,62 @@ h3 {
 }
 
 .menu__link {
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   transition: background-color 0.15s ease, color 0.15s ease;
+  border-left: none;
 }
 
 .menu__link:hover {
-  background-color: var(--ifm-color-emphasis-100);
+  background-color: rgba(37, 99, 235, 0.1);
 }
 
-.menu__link--active {
-  background-color: var(--ifm-color-primary-lightest);
-  font-weight: 600;
+[data-theme='dark'] .menu__link:hover {
+  background-color: rgba(37, 99, 235, 0.15);
 }
 
-[data-theme='dark'] .menu__link--active {
-  background-color: rgba(96, 165, 250, 0.15);
+/* Active link - Gemini style filled */
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Remove default left border indicator */
+.menu__link--active:not(.menu__link--sublist)::before {
+  display: none;
 }
 
 /* Category styling */
 .menu__list-item-collapsible {
-  border-radius: 0.5rem;
+  border-radius: 6px;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme='dark'] .menu__list-item-collapsible:hover {
+  background-color: rgba(37, 99, 235, 0.1);
 }
 
 .menu__caret {
   transition: transform 0.2s ease;
+}
+
+/* Category labels */
+.theme-doc-sidebar-item-category > .menu__list-item-collapsible > .menu__link {
+  font-weight: 500;
+}
+
+[data-theme='dark'] .theme-doc-sidebar-item-category > .menu__list-item-collapsible > .menu__link {
+  color: #ffffff;
 }
 
 /* Sidebar category icons */
