@@ -4,6 +4,18 @@
  */
 
 /* ==========================================================================
+   Font Definitions
+   ========================================================================== */
+
+@font-face {
+  font-family: 'LINE Seed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/LINESeedTW_TTF_Rg.ttf') format('truetype');
+}
+
+/* ==========================================================================
    PHASE 2: Color Palette and Typography
    ========================================================================== */
 
@@ -17,10 +29,11 @@
   --ifm-color-primary-lighter: #60a5fa;
   --ifm-color-primary-lightest: #93c5fd;
 
-  /* Typography */
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ifm-code-font-size: 0.9rem;
+  /* Typography - Gemini style */
+  --ifm-font-family-base: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --ifm-code-font-size: 0.875rem;
 
   /* Spacing */
   --ifm-spacing-horizontal: 1.5rem;
@@ -61,19 +74,30 @@
   --ifm-color-emphasis-300: #353841;
 }
 
-/* Typography refinements */
+/* Typography refinements - Gemini style */
 h1 {
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 2.625rem;
   letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 h2 {
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 1.75rem;
   letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.4;
 }
 
 .markdown p {
   line-height: 1.75;
+  font-size: 1rem;
 }
 
 /* ==========================================================================
