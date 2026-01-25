@@ -433,19 +433,27 @@ code:not(pre code) {
 }
 
 /* ==========================================================================
-   Search Enhancement
+   Search Box - Gemini Style
    ========================================================================== */
 
 .navbar__search-input {
-  border-radius: 0.5rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: #17181C;
+  border: 1px solid #353841;
+  border-radius: 8px;
   padding: 0.5rem 1rem;
+  color: #C0C2C7;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+[data-theme='light'] .navbar__search-input {
+  background-color: #f5f5f5;
+  border-color: #e5e5e5;
+  color: #1a1a1a;
+}
+
 .navbar__search-input:focus {
-  border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
   outline: none;
 }
 
@@ -454,6 +462,46 @@ code:not(pre code) {
   background-color: rgba(37, 99, 235, 0.2);
   padding: 0 2px;
   border-radius: 2px;
+}
+
+/* ==========================================================================
+   Buttons - Gemini Style
+   ========================================================================== */
+
+.button--primary {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.button--primary:hover {
+  background-color: #1d4ed8;
+}
+
+.button--secondary {
+  background-color: #17181C;
+  color: #C0C2C7;
+  border: 1px solid #353841;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+[data-theme='light'] .button--secondary {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+  border-color: #e5e5e5;
+}
+
+.button--secondary:hover {
+  background-color: #1e1f23;
+}
+
+[data-theme='light'] .button--secondary:hover {
+  background-color: #e5e5e5;
 }
 
 /* ==========================================================================
