@@ -20,7 +20,7 @@
    ========================================================================== */
 
 :root {
-  /* Light mode - refined professional blue palette */
+  /* Light mode - clean white theme */
   --ifm-color-primary: #2563eb;
   --ifm-color-primary-dark: #1d4ed8;
   --ifm-color-primary-darker: #1e40af;
@@ -28,6 +28,10 @@
   --ifm-color-primary-light: #3b82f6;
   --ifm-color-primary-lighter: #60a5fa;
   --ifm-color-primary-lightest: #93c5fd;
+
+  /* Light mode backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f5f5f5;
 
   /* Typography - Gemini style */
   --ifm-font-family-base: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
@@ -41,7 +45,7 @@
 
   /* Code blocks */
   --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
-  --ifm-code-background: #f8fafc;
+  --ifm-code-background: #f5f5f5;
   --ifm-code-border-radius: 0.5rem;
 }
 
