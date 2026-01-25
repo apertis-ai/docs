@@ -423,6 +423,44 @@ code:not(pre code) {
 }
 
 /* ==========================================================================
+   Table of Contents (TOC) - Gemini Style with Left Border Indicator
+   ========================================================================== */
+
+.table-of-contents__link {
+  color: #8E8E8E;
+  font-size: 0.8125rem;
+  padding: 0.25rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.table-of-contents__link:hover {
+  color: #C0C2C7;
+}
+
+[data-theme='light'] .table-of-contents__link {
+  color: #6b7280;
+}
+
+[data-theme='light'] .table-of-contents__link:hover {
+  color: #374151;
+}
+
+/* Active TOC link with blue left border */
+.table-of-contents__link--active {
+  color: #2563eb !important;
+  border-left-color: #2563eb;
+  font-weight: 500;
+}
+
+[data-theme='light'] .table-of-contents__link--active {
+  color: #2563eb !important;
+  border-left-color: #2563eb;
+}
+
+/* ==========================================================================
    Buttons - Gemini Style
    ========================================================================== */
 
