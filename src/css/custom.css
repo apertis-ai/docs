@@ -547,15 +547,52 @@ table {
   border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
 th {
   background-color: var(--ifm-color-emphasis-100);
   font-weight: 600;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-800);
 }
 
+td {
+  font-size: 0.875rem;
+}
+
+/* Zebra striping for better readability */
+tr:nth-child(even) td {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+/* Remove bottom border from last row */
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Dark mode table */
 [data-theme='dark'] th {
-  background-color: var(--ifm-color-emphasis-200);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--ifm-color-emphasis-700);
+}
+
+[data-theme='dark'] tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme='dark'] th,
+[data-theme='dark'] td {
+  border-bottom-color: var(--ifm-color-emphasis-300);
 }
 
 /* Smooth scrolling */
