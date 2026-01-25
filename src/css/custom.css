@@ -163,6 +163,25 @@ h3 {
 }
 
 /* ==========================================================================
+   Inline Code Styling - Gemini Style
+   ========================================================================== */
+
+/* Inline code - dark background style */
+code:not(pre code) {
+  background-color: #1a1a1a;
+  color: #e1dfdf;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+[data-theme='light'] code:not(pre code) {
+  background-color: #e5e5e5;
+  color: #1a1a1a;
+}
+
+/* ==========================================================================
    PHASE 3: Admonition / Callout Styling
    ========================================================================== */
 
