@@ -1,6 +1,6 @@
 # Immersive Translation
 
-This is a **bilingual translation extension**. Unlike traditional **Google Translate** which directly overlays translations on the original text, requiring you to revert the translation to view the original text, Immersive Translation **inserts translations below the original text** for bilingual parallel reading. When translations are confusing, you can directly reference the original text. Additionally, Immersive Translation **supports current popular large language models** such as `GPT-4o`, `Gemini 1.5 Flash`, etc., significantly improving translation accuracy.
+This is a **bilingual translation extension**. Unlike traditional **Google Translate** which directly overlays translations on the original text, requiring you to revert the translation to view the original text, Immersive Translation **inserts translations below the original text** for bilingual parallel reading. When translations are confusing, you can directly reference the original text. Additionally, Immersive Translation **supports current popular large language models** such as `GPT-4.1`, `Gemini 3 Flash`, etc., significantly improving translation accuracy.
 
 Besides webpage translation, Immersive Translation officially provides features like: **full PDF translation**, **real-time YouTube subtitle translation**, and **EPUB e-book translation**. Below, we'll detail how to install and use the models provided by **Apertis**.
 
@@ -24,7 +24,7 @@ Please log in to your account in the basic settings, choosing any login method. 
 In the service provider selection below, choose 【Custom API Key】 and click 【Show More Options】
 
 - **APIKEY**: Enter your Apertis Key
-- **Model**: Choose one from gpt-3.5-turbo(recommended), gpt-4-turbo, gpt-4o
+- **Model**: Choose one from gpt-4.1-mini (recommended), gpt-4.1-nano
 - **Custom API URL**: `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/SkNYXNdo0.png)
@@ -45,7 +45,7 @@ In the same interface, but with changes to the model section.
 
 ![](https://hackmd.io/_uploads/B1PfrNOsR.png)
 
-Enter `gemini-1.5-flash-latest, gemini-1.5-pro-latest, claude-3-5-sonnet-20240620` in the box and save.
+Enter `gemini-3-flash-preview, glm-4.7-flash, claude-haiku-4.5` in the box and save.
 
 ![](https://hackmd.io/_uploads/rJmIr4_iA.png)
 
