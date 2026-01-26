@@ -307,6 +307,6 @@ response = client.images.edit(
 
 ## Related Topics
 
-- [Chat Completions](./chat-completions) - Text generation with chat models
+- [Chat Completions](/api/text-generation/chat-completions) - Text generation with chat models
 - [Audio](/api/audio-video/audio) - Speech-to-text and text-to-speech
 - [Models](/api/utilities/models) - List available models

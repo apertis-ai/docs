@@ -455,7 +455,7 @@ For current model pricing, please visit the [Models page](https://apertis.ai/mod
 
 ## Related Topics
 
-- [Chat Completions](./chat-completions) - Text generation API
-- [Embeddings](./embeddings-api) - Text embeddings API
+- [Chat Completions](/api/text-generation/chat-completions) - Text generation API
+- [Embeddings](/api/embeddings/embeddings-api) - Text embeddings API
 - [Rate Limits](/billing/rate-limits) - Request limits
 - [Error Codes](/help/error-codes) - Error reference
