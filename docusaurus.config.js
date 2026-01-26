@@ -81,6 +81,22 @@ const config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'api',
+        path: 'docs-api',
+        routeBasePath: 'api',
+        sidebarPath: './sidebarsApi.js',
+        editUrl: 'https://github.com/apertis-ai/docs/tree/main/',
+        remarkPlugins: [
+          [require('@docusaurus/remark-plugin-npm2yarn'), { sync: true }],
+        ],
+      },
+    ],
+  ],
+
   themes: [
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
@@ -90,10 +106,11 @@ const config = {
         highlightSearchTermsOnTargetPage: true,
         explicitSearchResultPath: true,
         docsRouteBasePath: "/",
+        docsPluginIdForPreferredVersion: "default",
         indexDocs: true,
         // indexBlog: true,
         indexPages: true,
-        docsDir: "docs",
+        docsDir: ["docs", "docs-api"],
         // blogDir: "blog",
         removeDefaultStopWordFilter: true,
         removeDefaultStemmer: true,
@@ -117,27 +134,15 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'usage',
+            docId: 'intro',
             position: 'left',
-            label: 'Use Cases',
+            label: 'Docs',
           },
           {
-            type: 'doc',
-            docId: 'installation/chatbox',
+            to: '/api',
             position: 'left',
-            label: 'Features',
-          },
-          {
-            type: 'doc',
-            docId: 'stimachat',
-            position: 'left',
-            label: 'Chat System',
-          },
-          {
-            type: 'doc',
-            docId: 'opensource',
-            position: 'left',
-            label: 'Open Source Models',
+            label: 'API Reference',
+            activeBaseRegex: '/api/',
           },
           {
             href: 'https://api.apertis.ai',
