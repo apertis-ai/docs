@@ -17,7 +17,7 @@ curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4o-mini",
+        "model": "gpt-4.1-mini",
         "messages": [
             {"role": "user", "content": "Hello!"}
         ]
@@ -36,7 +36,7 @@ curl https://api.apertis.ai/v1/chat/completions \
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `model` | string | ID of the model to use (e.g., `gpt-4o-mini`, `claude-sonnet-4.5`) |
+| `model` | string | ID of the model to use (e.g., `gpt-4.1-mini`, `claude-sonnet-4.5`) |
 | `messages` | array | Array of message objects in the conversation |
 
 ### Optional Parameters
@@ -77,9 +77,9 @@ These additional parameters are supported for upstream provider compatibility:
 ### Web Search Options
 
 The `web_search_options` parameter enables web search for supported models:
-- `gpt-5-search-api` - GPT-5 with web search capability
-- `gpt-4o-search-preview` - GPT-4o with web search
-- `gpt-4o-mini-search-preview` - GPT-4o Mini with web search
+- `gpt-5.2-search-api` - GPT-5 with web search capability
+- `gpt-4.1-search-preview` - GPT-4o with web search
+- `gpt-4.1-mini-search-preview` - GPT-4o Mini with web search
 
 :::warning Web Search Models Only
 The `web_search_options` parameter only works with the models listed above. Using it with other models will have no effect.
@@ -133,7 +133,7 @@ When specifying domains in filters, omit the HTTP/HTTPS prefix. Use `openai.com`
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-5-search-api",
+    model="gpt-5.2-search-api",
     web_search_options={
         "search_context_size": "medium",
         "user_location": {
@@ -188,7 +188,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[
         {"role": "user", "content": "What is the meaning of life?"}
     ]
@@ -208,7 +208,7 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: 'gpt-4o-mini',
+  model: 'gpt-4.1-mini',
   messages: [
     { role: 'user', content: 'What is the meaning of life?' }
   ]
@@ -221,7 +221,7 @@ console.log(response.choices[0].message.content);
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Tell me about the weather."}
@@ -233,7 +233,7 @@ response = client.chat.completions.create(
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[
         {"role": "user", "content": "What is Python?"},
         {"role": "assistant", "content": "Python is a high-level programming language..."},
@@ -246,7 +246,7 @@ response = client.chat.completions.create(
 
 ```python
 stream = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[{"role": "user", "content": "Write a poem about coding."}],
     stream=True
 )
@@ -260,7 +260,7 @@ for chunk in stream:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[{"role": "user", "content": "Count 1 to 5"}],
     max_tokens=100,
     temperature=0.7,
@@ -299,7 +299,7 @@ tools = [
 ]
 
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[{"role": "user", "content": "What's the weather in Tokyo?"}],
     tools=tools,
     tool_choice="auto"
@@ -312,7 +312,7 @@ Send images for analysis using multimodal models like GPT-4o or Claude:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[
         {
             "role": "user",
@@ -387,7 +387,7 @@ with open("image.png", "rb") as f:
     image_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[
         {
             "role": "user",
@@ -410,7 +410,7 @@ response = client.chat.completions.create(
 
 ### Audio Input
 
-Audio models (like `gpt-4o-audio-preview`) support audio input and output via the Chat Completions endpoint:
+Audio models (like `gpt-4.1-audio-preview`) support audio input and output via the Chat Completions endpoint:
 
 ```python
 import base64
@@ -426,7 +426,7 @@ with open("audio.wav", "rb") as f:
     audio_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 response = client.chat.completions.create(
-    model="gpt-4o-audio-preview",
+    model="gpt-4.1-audio-preview",
     modalities=["text", "audio"],  # Enable audio output
     audio={
         "voice": "alloy",  # alloy, ash, ballad, coral, echo, sage, shimmer, verse
@@ -470,7 +470,7 @@ response = client.chat.completions.create(
 | `input_audio.format` | string | Audio format: `wav`, `mp3`, `flac`, `opus`, `pcm16` |
 
 :::info Audio Models
-Audio input/output is only supported by audio-capable models such as `gpt-4o-audio-preview`. Check the model's capabilities before using audio features.
+Audio input/output is only supported by audio-capable models such as `gpt-4.1-audio-preview`. Check the model's capabilities before using audio features.
 :::
 
 ### Extended Thinking (Google Gemini)
@@ -551,7 +551,7 @@ response2 = client.chat.completions.create(
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     messages=[{"role": "user", "content": "Tell me a joke"}],
     seed=42,  # Same seed = reproducible output
     temperature=0.7
@@ -565,7 +565,7 @@ response = client.chat.completions.create(
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1704067200,
-  "model": "gpt-4o-mini-2024-07-18",
+  "model": "gpt-4.1-mini-2024-07-18",
   "system_fingerprint": "fp_abc123",
   "choices": [
     {
@@ -618,13 +618,13 @@ response = client.chat.completions.create(
 When `stream: true`, responses are sent as Server-Sent Events (SSE):
 
 ```
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4.1-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4.1-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"!"},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4.1-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{"content":"!"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4o-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":9,"completion_tokens":3,"total_tokens":12}}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1704067200,"model":"gpt-4.1-mini","system_fingerprint":"fp_abc123","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":9,"completion_tokens":3,"total_tokens":12}}
 
 data: [DONE]
 ```
@@ -639,7 +639,7 @@ The Chat Completions API supports models from multiple providers:
 
 | Provider | Example Models |
 |----------|---------------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo` |
+| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1`, `gpt-5.2` |
 | Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
 | Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
 | Meta | `llama-3.1-70b`, `llama-3.1-8b` |

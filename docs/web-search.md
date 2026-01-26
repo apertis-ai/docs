@@ -7,7 +7,7 @@ sidebar_position: 4
 Enable real-time web search for any model by adding the `:web` suffix to the model name. The system automatically searches for relevant information and integrates it into the response.
 
 :::warning Note
-Web search is only available for non-free models. Free models (e.g., `gpt-4o-mini:free`) do not support the `:web` suffix and will return an error.
+Web search is only available for non-free models. Free models (e.g., `gpt-4.1-mini:free`) do not support the `:web` suffix and will return an error.
 :::
 
 ## Quick Start
@@ -19,7 +19,7 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer $APERTIS_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o-mini:web",
+    "model": "gpt-4.1-mini:web",
     "messages": [
       {"role": "user", "content": "What is the stock price of Apple today?"}
     ],
@@ -33,7 +33,7 @@ All non-free models support the `:web` suffix:
 
 | Provider | Example Models |
 |----------|----------------|
-| OpenAI | `gpt-4o:web`, `gpt-4o-mini:web`, `o1-preview:web` |
+| OpenAI | `gpt-4.1:web`, `gpt-4.1-mini:web`, `o1-preview:web` |
 | Anthropic | `claude-sonnet-4.5:web`, `claude-opus-4-5-20251101:web` |
 | Google | `gemini-3-pro-preview:web`, `gemini-3-flash-preview:web` |
 | Others | Any available non-free model can use `:web` |
@@ -51,7 +51,7 @@ In addition to standard Chat Completions parameters, you can use these web searc
 
 ```json
 {
-  "model": "gpt-4o-mini:web",
+  "model": "gpt-4.1-mini:web",
   "messages": [
     {"role": "user", "content": "What is the stock price of Apple today?"}
   ],
@@ -67,7 +67,7 @@ The response includes a `web_sources` array listing all referenced sources:
 
 ```json
 {
-  "model": "gpt-4o-mini",
+  "model": "gpt-4.1-mini",
   "system_fingerprint": "fp_f97eff32c5",
   "choices": [
     {
@@ -123,7 +123,7 @@ When using streaming mode with `"stream": true`, a search indicator appears firs
 
 ```json
 {
-  "model": "gpt-4o-mini:web",
+  "model": "gpt-4.1-mini:web",
   "messages": [
     {"role": "user", "content": "What is the weather in Tokyo today?"}
   ],
@@ -137,15 +137,15 @@ When using streaming mode with `"stream": true`, a search indicator appears firs
 ```
 data: {"id":"web-search","object":"chat.completion.chunk","created":1768287477,"model":"","choices":[{"index":0,"delta":{"role":"assistant","content":"🔍 Web searching...\n\n"}}]}
 
-data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4.1-mini","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
 
-data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":"The"}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4.1-mini","choices":[{"index":0,"delta":{"content":"The"}}]}
 
-data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" weather"}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4.1-mini","choices":[{"index":0,"delta":{"content":" weather"}}]}
 
-data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" in"}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4.1-mini","choices":[{"index":0,"delta":{"content":" in"}}]}
 
-data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4o-mini","choices":[{"index":0,"delta":{"content":" Tokyo"}}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1768287475,"model":"gpt-4.1-mini","choices":[{"index":0,"delta":{"content":" Tokyo"}}]}
 
 ...
 
@@ -182,7 +182,7 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer $APERTIS_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o-mini:web",
+    "model": "gpt-4.1-mini:web",
     "messages": [
       {"role": "user", "content": "What is the latest news about AI?"}
     ],

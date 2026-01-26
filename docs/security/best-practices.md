@@ -106,8 +106,8 @@ Limit which models each key can access:
 
 ```
 Production Key:
-  ✓ gpt-4o
-  ✓ gpt-4o-mini
+  ✓ gpt-4.1
+  ✓ gpt-4.1-mini
   ✗ claude-opus-4-5-20251101 (expensive)
   ✗ experimental models
 ```
@@ -183,7 +183,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4.1',
       messages: [{ role: 'user', content: message }]
     });
 
@@ -220,7 +220,7 @@ from pydantic import BaseModel, validator
 
 class ChatRequest(BaseModel):
     message: str
-    model: str = "gpt-4o"
+    model: str = "gpt-4.1"
 
     @validator('message')
     def validate_message(cls, v):
@@ -232,7 +232,7 @@ class ChatRequest(BaseModel):
 
     @validator('model')
     def validate_model(cls, v):
-        allowed_models = ['gpt-4o', 'gpt-4o-mini', 'claude-sonnet-4.5']
+        allowed_models = ['gpt-4.1', 'gpt-4.1-mini', 'claude-sonnet-4.5']
         if v not in allowed_models:
             raise ValueError(f'Model must be one of {allowed_models}')
         return v
@@ -247,7 +247,7 @@ Never send sensitive data to the API unnecessarily:
 ```python
 # ❌ WRONG - Sending real PII
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{
         "role": "user",
         "content": f"Summarize this customer record: {customer_data}"
@@ -258,7 +258,7 @@ response = client.chat.completions.create(
 # ✅ CORRECT - Anonymize or use placeholders
 anonymized_data = anonymize(customer_data)
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{
         "role": "user",
         "content": f"Summarize this record: {anonymized_data}"

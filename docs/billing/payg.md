@@ -282,7 +282,7 @@ Limit response length to control costs:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[...],
     max_tokens=500  # Limit output length
 )

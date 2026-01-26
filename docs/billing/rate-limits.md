@@ -103,7 +103,7 @@ def make_request_with_retry(messages, max_retries=5):
     for attempt in range(max_retries):
         try:
             return client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4.1",
                 messages=messages
             )
         except RateLimitError:
@@ -130,7 +130,7 @@ async function makeRequestWithRetry(messages, maxRetries = 5) {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await client.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'gpt-4.1',
         messages
       });
     } catch (error) {
@@ -196,7 +196,7 @@ Streaming doesn't reduce rate limits but improves perceived performance:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Write a long story"}],
     stream=True
 )
@@ -223,7 +223,7 @@ def cached_completion(messages_hash, model):
 
 # Create hash of messages for cache key
 messages_hash = hashlib.md5(str(messages).encode()).hexdigest()
-response = cached_completion(messages_hash, "gpt-4o")
+response = cached_completion(messages_hash, "gpt-4.1")
 ```
 
 ### 5. Distribute Across Multiple Keys

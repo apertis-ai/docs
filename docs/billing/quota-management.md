@@ -174,7 +174,7 @@ def get_cached_response(prompt_hash, model):
 
 # Create hash for caching
 prompt_hash = hashlib.md5(prompt.encode()).hexdigest()
-response = get_cached_response(prompt_hash, "gpt-4o")
+response = get_cached_response(prompt_hash, "gpt-4.1")
 ```
 
 ### 5. Set Quota Limits

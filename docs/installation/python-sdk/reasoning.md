@@ -40,7 +40,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4.5",
         messages=[
             {"role": "user", "content": "Analyze the pros and cons of microservices vs monolithic architecture for a startup."}
         ],
@@ -149,7 +149,7 @@ def mystery(arr):
 '''
 
     response = client.chat.completions.create(
-        model="o1-mini",
+        model="o4-mini",
         messages=[
             {
                 "role": "user",
@@ -267,7 +267,7 @@ if __name__ == "__main__":
 | Model | Description |
 |-------|-------------|
 | `o1` | Full reasoning capabilities |
-| `o1-mini` | Faster, more cost-effective |
+| `o4-mini` | Faster, more cost-effective |
 | `o3-mini` | Latest generation reasoning |
 
 ### DeepSeek Reasoning Models
@@ -280,7 +280,7 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `claude-sonnet-4-20250514` | Extended thinking via `thinking` parameter |
+| `claude-sonnet-4.5` | Extended thinking via `thinking` parameter |
 | `claude-opus-4-5-20251101` | Extended thinking via `thinking` parameter |
 
 [View all models →](/references/models)

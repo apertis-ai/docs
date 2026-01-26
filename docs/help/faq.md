@@ -144,7 +144,7 @@ Yes! Enable streaming with `stream=True`:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Hello"}],
     stream=True
 )
@@ -169,7 +169,7 @@ Yes, function calling is supported for compatible models:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "What's the weather?"}],
     tools=[{
         "type": "function",
@@ -187,7 +187,7 @@ Yes, for models that support it:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{
         "role": "user",
         "content": [
@@ -216,7 +216,7 @@ Yes:
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4.1",
     openai_api_key="sk-your-key",
     openai_api_base="https://api.apertis.ai/v1"
 )
@@ -258,7 +258,7 @@ Fallback automatically switches to an alternative model if your primary model fa
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[...],
     extra_body={
         "fallback_models": ["claude-sonnet-4.5", "gemini-3-pro-preview"]

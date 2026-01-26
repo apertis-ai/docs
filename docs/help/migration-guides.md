@@ -86,7 +86,7 @@ client = OpenAI(
 
 # Test with a simple request
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
@@ -99,10 +99,10 @@ Most OpenAI models are available with the same names:
 
 | OpenAI Model | Apertis Model | Notes |
 |--------------|---------------|-------|
-| gpt-4o | gpt-4o | ✓ Same |
-| gpt-4o-mini | gpt-4o-mini | ✓ Same |
-| gpt-4-turbo | gpt-4-turbo | ✓ Same |
-| gpt-3.5-turbo | gpt-3.5-turbo | ✓ Same |
+| gpt-4.1 | gpt-4.1 | ✓ Same |
+| gpt-4.1-mini | gpt-4.1-mini | ✓ Same |
+| gpt-4.1 | gpt-4.1 | ✓ Same |
+| gpt-5.2 | gpt-5.2 | ✓ Same |
 | text-embedding-3-small | text-embedding-3-small | ✓ Same |
 | whisper-1 | whisper-1 | ✓ Same |
 | tts-1 | tts-1 | ✓ Same |
@@ -238,7 +238,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4o",  # Actual model name
+    model="gpt-4.1",  # Actual model name
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -322,7 +322,7 @@ If you're using LiteLLM, you can switch to Apertis:
 from litellm import completion
 
 response = completion(
-    model="gpt-4",
+    model="gpt-5.2",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -337,7 +337,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -372,11 +372,11 @@ client = OpenAI(
 from langchain_openai import ChatOpenAI
 
 # Before
-llm = ChatOpenAI(model="gpt-4")
+llm = ChatOpenAI(model="gpt-5.2")
 
 # After
 llm = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4.1",
     openai_api_key="sk-apertis-key",
     openai_api_base="https://api.apertis.ai/v1"
 )
@@ -388,11 +388,11 @@ llm = ChatOpenAI(
 from llama_index.llms.openai import OpenAI
 
 # Before
-llm = OpenAI(model="gpt-4")
+llm = OpenAI(model="gpt-5.2")
 
 # After
 llm = OpenAI(
-    model="gpt-4o",
+    model="gpt-4.1",
     api_key="sk-apertis-key",
     api_base="https://api.apertis.ai/v1"
 )

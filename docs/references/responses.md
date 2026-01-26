@@ -17,7 +17,7 @@ curl https://api.apertis.ai/v1/responses \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4o",
+        "model": "gpt-4.1",
         "input": "What is the capital of France?"
     }'
 ```
@@ -91,7 +91,7 @@ The `text` parameter configures text output:
 **String Input** (simple query):
 ```json
 {
-  "model": "gpt-4o",
+  "model": "gpt-4.1",
   "input": "What is the capital of France?"
 }
 ```
@@ -99,7 +99,7 @@ The `text` parameter configures text output:
 **Array Input** (conversation):
 ```json
 {
-  "model": "gpt-4o",
+  "model": "gpt-4.1",
   "input": [
     {"role": "user", "content": "Hello!"},
     {"role": "assistant", "content": "Hi there!"},
@@ -121,7 +121,7 @@ client = OpenAI(
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="Explain quantum computing in simple terms."
 )
 
@@ -139,7 +139,7 @@ const client = new OpenAI({
 });
 
 const response = await client.responses.create({
-  model: 'gpt-4o',
+  model: 'gpt-4.1',
   input: 'Explain quantum computing in simple terms.'
 });
 
@@ -152,7 +152,7 @@ Use the `tools` parameter to enable web search:
 
 ```python
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="What are the latest news about AI?",
     tools=[{"type": "web_search_preview"}]
 )
@@ -175,7 +175,7 @@ response = client.responses.create(
 
 ```python
 stream = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="Write a short story about a robot.",
     stream=True
 )
@@ -189,7 +189,7 @@ for event in stream:
 
 ```python
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input=[
         {"role": "user", "content": "What is Python?"},
         {"role": "assistant", "content": "Python is a high-level programming language..."},
@@ -204,7 +204,7 @@ Use `instructions` to provide high-level guidance for model behavior:
 
 ```python
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     instructions="You are a helpful coding assistant. Always provide code examples.",
     input="How do I read a file in Python?"
 )
@@ -217,14 +217,14 @@ Use `store` and `previous_response_id` for multi-turn conversations with state:
 ```python
 # First request - store the response
 response1 = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="My name is Alice.",
     store=True
 )
 
 # Follow-up request - reference the previous response
 response2 = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="What's my name?",
     previous_response_id=response1.id
 )
@@ -251,7 +251,7 @@ tools = [
 ]
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     input="What's the weather in Tokyo?",
     tools=tools,
     tool_choice="auto"
@@ -265,7 +265,7 @@ response = client.responses.create(
   "id": "resp_abc123",
   "object": "response",
   "created_at": 1699000000,
-  "model": "gpt-4o",
+  "model": "gpt-4.1",
   "output": [
     {
       "type": "message",
@@ -296,7 +296,7 @@ These models natively support the Responses API format on upstream providers:
 
 | Model Series | Examples |
 |-------------|----------|
-| **o1 Series** | `o1`, `o1-preview`, `o1-mini`, `o1-2024-12-17` |
+| **o1 Series** | `o1`, `o1-preview`, `o4-mini`, `o1-2024-12-17` |
 | **o3 Series** | `o3`, `o3-mini`, `o3-2025-04-16` |
 | **o4 Series** | `o4-mini`, `o4-mini-2025-04-16` |
 | **GPT-5 Series** | `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*` |
@@ -332,7 +332,7 @@ This means you can use **any model** with the Responses API - the conversion is 
 
 | Provider | Example Models | Native Support |
 |----------|---------------|----------------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini` | Via fallback |
+| OpenAI | `gpt-4.1`, `gpt-4.1-mini` | Via fallback |
 | Anthropic | `claude-sonnet-4.5`, `claude-opus-4` | Via fallback |
 | Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` | Via fallback |
 | Meta | `llama-3.1-70b`, `llama-3.1-8b` | Via fallback |

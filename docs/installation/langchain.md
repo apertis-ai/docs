@@ -17,7 +17,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 CONFIG = {
     "api_key": "APERTIS_API_KEY",
     "base_url": "https://api.apertis.ai/v1",
-    "model": "gpt-4o-mini",
+    "model": "gpt-4.1-mini",
     "temperature": 0.7,
     "request_timeout": 30,
 }

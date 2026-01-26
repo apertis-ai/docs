@@ -9,7 +9,7 @@ import json
 
 conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
-   "model": "gpt-4o",
+   "model": "gpt-4.1",
    "messages": [
       {
          "role": "system",

@@ -23,7 +23,7 @@
 在下方的選擇一個服務提供者中選擇【自訂API Key】，並點擊【展開更多選項】
 
 - **APIKEY** : 輸入您的Apertis Key
-- **模型** : gpt-3.5-turbo(建議)、gpt-4-turbo、gpt-4o 擇一
+- **模型** : gpt-5.2(建議)、gpt-4.1、gpt-4.1 擇一
 - **自訂API位址** : `https://api.apertis.ai`
 
 ![](https://hackmd.io/_uploads/SkNYXNdo0.png)

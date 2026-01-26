@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {
                 "role": "user",
@@ -66,7 +66,7 @@ def main():
     media_type = media_types.get(suffix, "jpeg")
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {
                 "role": "user",
@@ -98,7 +98,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {
                 "role": "user",
@@ -133,7 +133,7 @@ def main():
 
     # High detail for complex images
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {
                 "role": "user",
@@ -175,7 +175,7 @@ def main():
 
     for question in questions:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {
                     "role": "user",
@@ -202,7 +202,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {
                 "role": "user",
@@ -236,9 +236,9 @@ Vision capabilities are available on:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo` |
-| Anthropic | `claude-sonnet-4-20250514`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
-| Google | `gemini-2.5-pro`, `gemini-2.5-flash` |
+| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1` |
+| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
+| Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 
 [View all models →](/references/models)
 

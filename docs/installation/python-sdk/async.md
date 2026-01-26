@@ -20,7 +20,7 @@ async def main():
     client = AsyncApertis()
 
     response = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "user", "content": "Hello, async world!"}
         ]
@@ -41,7 +41,7 @@ from apertis import AsyncApertis
 async def ask_question(client: AsyncApertis, question: str) -> str:
     """Send a single question and return the response."""
     response = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "user", "content": question}
         ]
@@ -80,7 +80,7 @@ async def main():
     client = AsyncApertis()
 
     stream = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "user", "content": "Write a haiku about programming."}
         ],
@@ -111,7 +111,7 @@ async def process_item(
     """Process a single item with rate limiting."""
     async with semaphore:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {"role": "user", "content": f"Summarize: {item}"}
             ]
@@ -150,7 +150,7 @@ from apertis import AsyncApertis
 async def main():
     async with AsyncApertis() as client:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {"role": "user", "content": "Hello!"}
             ]
@@ -213,7 +213,7 @@ async def safe_request(client: AsyncApertis, prompt: str) -> str | None:
     """Make a request with error handling."""
     try:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {"role": "user", "content": prompt}
             ]
@@ -269,7 +269,7 @@ async def request_with_retry(
     for attempt in range(max_retries):
         try:
             response = await client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4.1-mini",
                 messages=[
                     {"role": "user", "content": prompt}
                 ]
@@ -326,7 +326,7 @@ async def consumer(
             break
 
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {"role": "user", "content": f"Process: {item}"}
             ]

@@ -196,7 +196,7 @@ client = OpenAI(
 
 # Quota is tracked against your subscription
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```

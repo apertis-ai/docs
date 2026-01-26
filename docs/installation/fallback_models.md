@@ -20,11 +20,11 @@ Apertis 提供強大的備用模型（Fallback Models）機制，當主要模型
 
 ```json
 {
-  "model": "gpt-4",
+  "model": "gpt-5.2",
   "messages": [
     {"role": "user", "content": "Hello, how are you?"}
   ],
-  "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
+  "fallback_models": ["gpt-5.2", "claude-haiku-4.5"],
   "fallback_timeout": 25000,
   "fallback_enabled": true
 }
@@ -40,7 +40,7 @@ Apertis 提供強大的備用模型（Fallback Models）機制，當主要模型
 - **類型**: 字串陣列
 - **說明**: 備用模型清單，按優先順序排列
 - **限制**: 最多 5 個備用模型
-- **範例**: `["gpt-3.5-turbo", "claude-haiku-4.5", "gemini-pro"]`
+- **範例**: `["gpt-5.2", "claude-haiku-4.5", "gemini-pro"]`
 
 ### `fallback_timeout`
 - **類型**: 整數
@@ -91,13 +91,13 @@ client = openai.OpenAI(
 
 # 使用備用模型的聊天請求
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[
         {"role": "user", "content": "Hello, how are you?"}
     ],
     # Fallback 配置
     extra_body={
-        "fallback_models": ["gpt-5", "gpt-4o-mini"],
+        "fallback_models": ["gpt-5.2", "gpt-4.1-mini"],
         "fallback_timeout": 25000,  # 25 秒超時
         "fallback_enabled": True
     }
@@ -126,11 +126,11 @@ headers = {
 }
 
 payload = {
-    "model": "gpt-4",
+    "model": "gpt-5.2",
     "messages": [
         {"role": "user", "content": "請幫我寫一個 Python 函數"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
+    "fallback_models": ["gpt-5.2", "claude-haiku-4.5"],
     "fallback_timeout": 20000,
     "fallback_enabled": True
 }
@@ -162,11 +162,11 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d '{
-    "model": "gpt-4",
+    "model": "gpt-5.2",
     "messages": [
       {"role": "user", "content": "Hello, how are you?"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-haiku-4.5"],
+    "fallback_models": ["gpt-5.2", "claude-haiku-4.5"],
     "fallback_timeout": 25000,
     "fallback_enabled": true
   }' \
@@ -183,11 +183,11 @@ curl -X POST "https://api.apertis.ai/tech/chat/completions" \
   -H "Content-Type: application/json" \
   -D headers.txt \
   -d '{
-    "model": "gpt-4",
+    "model": "gpt-5.2",
     "messages": [
       {"role": "user", "content": "測試 fallback 機制"}
     ],
-    "fallback_models": ["gpt-3.5-turbo"],
+    "fallback_models": ["gpt-5.2"],
     "fallback_timeout": 15000,
     "fallback_enabled": true
   }'
@@ -205,7 +205,7 @@ grep -i "x-fallback" headers.txt
 |------------|------|-------|
 | `X-Fallback-Used` | 是否使用了備用模型 | `true` / `false` |
 | `X-Fallback-From` | 原始請求的模型名稱 | `gpt-4` |
-| `X-Actual-Model` | 實際使用的模型名稱 | `gpt-3.5-turbo` |
+| `X-Actual-Model` | 實際使用的模型名稱 | `gpt-5.2` |
 | `X-Fallback-Reason` | 觸發備用模型的原因 | `primary_model_failed` |
 
 ## 配置優先級

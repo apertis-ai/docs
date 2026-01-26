@@ -38,7 +38,7 @@
     "description": "Explain in Traditional Chinese"
   },
   {
-    "model": "gpt-4o",
+    "model": "gpt-4.1",
     "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-4o",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
@@ -46,7 +46,7 @@
     "description": "Explain in Traditional Chinese"
   },
   {
-    "model": "gpt-4-turbo",
+    "model": "gpt-4.1",
     "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-4-Turbo",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
@@ -54,7 +54,7 @@
     "description": "Explain in Traditional Chinese"
   },
   {
-    "model": "gpt-3.5-turbo",
+    "model": "gpt-5.2",
     "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-3.5-Turbo",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
@@ -91,7 +91,7 @@
   "provider": "free-trial"
 },
 "tabAutocompleteModel": {
-    "model": "gpt-4o",
+    "model": "gpt-4.1",
     "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-4o",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",

@@ -23,8 +23,8 @@ This endpoint does **not** require authentication and is publicly accessible.
 ```json
 {
   "data": [
-    "gpt-4o",
-    "gpt-4o-mini",
+    "gpt-4.1",
+    "gpt-4.1-mini",
     "claude-sonnet-4.5",
     "gemini-3-pro-preview",
     "deepseek-r1-0528",
@@ -75,7 +75,7 @@ The response includes models from various providers and categories:
 
 | Category | Examples |
 |----------|----------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o3-mini` |
+| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `o1-preview`, `o3-mini` |
 | Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
 | Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
 | DeepSeek | `deepseek-r1-0528`, `deepseek-v3.2` |
@@ -152,7 +152,7 @@ curl https://api.apertis.ai/v1/models \
   "object": "list",
   "data": [
     {
-      "id": "gpt-4o",
+      "id": "gpt-4.1",
       "object": "model",
       "created": 1626777600,
       "owned_by": "openai",
@@ -183,7 +183,7 @@ GET /v1/models/{model}
 Retrieve information about a specific model.
 
 ```bash
-curl https://api.apertis.ai/v1/models/gpt-4o \
+curl https://api.apertis.ai/v1/models/gpt-4.1 \
   -H "Authorization: Bearer <APERTIS_API_KEY>"
 ```
 
@@ -204,7 +204,7 @@ for model in models.data[:10]:
     print(f"{model.id} - owned by {model.owned_by}")
 
 # Get specific model
-model = client.models.retrieve("gpt-4o")
+model = client.models.retrieve("gpt-4.1")
 print(f"Model: {model.id}")
 ```
 
@@ -224,6 +224,6 @@ for (const model of models.data.slice(0, 10)) {
 }
 
 // Get specific model
-const model = await client.models.retrieve('gpt-4o');
+const model = await client.models.retrieve('gpt-4.1');
 console.log(`Model: ${model.id}`);
 ```

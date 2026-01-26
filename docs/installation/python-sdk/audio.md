@@ -168,7 +168,7 @@ def main():
         audio_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
     response = client.chat.completions.create(
-        model="gpt-4o-audio-preview",
+        model="gpt-4.1-audio-preview",
         messages=[
             {
                 "role": "user",

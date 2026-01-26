@@ -156,7 +156,7 @@ def main():
     context = "\n".join([documents[r.index] for r in response.results])
 
     chat_response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "system", "content": f"Answer based on this context:\n{context}"},
             {"role": "user", "content": query}

@@ -86,7 +86,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
 
 ## 參數說明
 
-- `model`: 模型目前支援`gpt-4o-image`、`gemini-3-flash-preview-image`及`grok-3-image`。
+- `model`: 模型目前支援`gpt-4.1-image`、`gemini-3-flash-preview-image`及`grok-3-image`。
 - `prompt`: 要生成的圖片描述。
 - `APERTIS_API_KEY`: 您的 API 金鑰。
 - 圖片輸入: 轉換成**base64**格式

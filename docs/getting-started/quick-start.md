@@ -30,7 +30,7 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-your-api-key" \
   -d '{
-    "model": "gpt-4o",
+    "model": "gpt-4.1",
     "messages": [
       {"role": "user", "content": "Hello! What can you do?"}
     ]
@@ -56,7 +56,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[
         {"role": "user", "content": "Hello! What can you do?"}
     ]
@@ -85,7 +85,7 @@ const client = new OpenAI({
 
 async function main() {
   const response = await client.chat.completions.create({
-    model: 'gpt-4o',
+    model: 'gpt-4.1',
     messages: [
       { role: 'user', content: 'Hello! What can you do?' }
     ]
@@ -106,7 +106,7 @@ A successful response looks like this:
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1703894400,
-  "model": "gpt-4o",
+  "model": "gpt-4.1",
   "choices": [
     {
       "index": 0,
@@ -141,7 +141,7 @@ Apertis provides access to 60+ AI models. Try different ones:
 ```python
 # OpenAI GPT-4o
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
@@ -162,8 +162,8 @@ response = client.chat.completions.create(
 
 | Model | Best For |
 |-------|----------|
-| `gpt-4o` | General purpose, balanced |
-| `gpt-4o-mini` | Fast, cost-effective |
+| `gpt-4.1` | General purpose, balanced |
+| `gpt-4.1-mini` | Fast, cost-effective |
 | `claude-sonnet-4.5` | Long context, analysis |
 | `claude-opus-4-5-20251101` | Complex reasoning |
 | `gemini-3-pro-preview` | Multimodal, long context |
@@ -176,7 +176,7 @@ For real-time responses, enable streaming:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{"role": "user", "content": "Write a short poem"}],
     stream=True  # Enable streaming
 )
@@ -199,7 +199,7 @@ messages = [
 ]
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=messages
 )
 ```
@@ -208,7 +208,7 @@ response = client.chat.completions.create(
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{
         "role": "user",
         "content": "Write a Python function to calculate fibonacci numbers"
@@ -220,7 +220,7 @@ response = client.chat.completions.create(
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-4.1",
     messages=[{
         "role": "user",
         "content": [
@@ -276,7 +276,7 @@ client = OpenAI(
 
 try:
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[{"role": "user", "content": "Hello!"}]
     )
     print(response.choices[0].message.content)

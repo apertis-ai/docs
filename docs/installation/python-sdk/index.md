@@ -56,7 +56,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "user", "content": "Hello! What can you help me with?"}
         ]
@@ -74,9 +74,9 @@ Access models from multiple providers through a single API:
 
 | Provider | Example Models |
 |----------|----------------|
-| OpenAI | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` |
-| Anthropic | `claude-sonnet-4-20250514`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
-| Google | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.0-flash` |
+| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `o1`, `o3-mini` |
+| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
+| Google | `gemini-3-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
 | DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
 | xAI | `grok-3`, `grok-3-fast` |
 | And 470+ more... | [View all models](/references/models) |

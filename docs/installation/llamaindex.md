@@ -11,7 +11,7 @@ pip install llama-index
 from llama_index.llms.openai import OpenAI
 
 llm = OpenAI(
-    model="gpt-4o",
+    model="gpt-4.1",
     api_key="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # 請填入您的 API Key
     api_base="https://api.apertis.ai/v1")
 ret=llm.complete("Donald Trump is ")

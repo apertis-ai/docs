@@ -46,8 +46,8 @@ Click the Cline icon in the sidebar, then select the settings button in the top 
 |-------|---------------|
 | Claude Sonnet 4.5 | `claude-sonnet-4.5` |
 | Claude Haiku 4.5 | `claude-haiku-4.5` |
-| GPT-4o | `gpt-4o` |
-| GPT-4o mini | `gpt-4o-mini` |
+| GPT-4o | `gpt-4.1` |
+| GPT-4o mini | `gpt-4.1-mini` |
 | Gemini 3 Flash | `gemini-3-flash-preview` |
 
 ### Optional Settings
