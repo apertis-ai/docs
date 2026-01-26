@@ -4,11 +4,15 @@
 
 Apertis includes a powerful Prompt Cache feature that significantly improves system performance, reduces processing time for repeated requests, and lowers API costs. When the same prompt is requested multiple times, the system returns results directly from the cache without calling the upstream AI model again.
 
+:::tip Free Feature
+Prompt Cache is completely **free** for all Apertis users. Cache hits do not consume any credits or quota from your account.
+:::
+
 ## Key Features
 
 ### Core Benefits
 - **Performance Boost**: Cache hits reduce response time from seconds to milliseconds
-- **Cost Savings**: Reduces API calls to upstream AI providers, lowering usage costs
+- **Zero Cost**: Cache hits are completely free — no credits or quota consumed
 - **Exact Matching**: Supports exact-match cache responses
 - **Automatic Management**: Built-in TTL (Time To Live) mechanism automatically cleans expired cache
 
