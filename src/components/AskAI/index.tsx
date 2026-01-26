@@ -17,6 +17,9 @@ export default function AskAI() {
   const [isOpen, setIsOpen] = useState(false)
   const [sessionId, setSessionId] = useState('')
 
+  const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
+  const shortcutLabel = isMac ? '⌘K' : 'Ctrl+K'
+
   useEffect(() => {
     setSessionId(getSessionId())
   }, [])
@@ -39,7 +42,7 @@ export default function AskAI() {
         className={styles.floatingButton}
         onClick={() => setIsOpen(true)}
         aria-label="Ask AI"
-        title="Ask AI (⌘K)"
+        title={`Ask AI (${shortcutLabel})`}
       >
         <svg
           className={styles.buttonIcon}
@@ -60,7 +63,7 @@ export default function AskAI() {
       </button>
 
       {isOpen && sessionId && (
-        <ChatModal sessionId={sessionId} onClose={() => setIsOpen(false)} />
+        <ChatModal sessionId={sessionId} onClose={() => setIsOpen(false)} shortcutLabel={shortcutLabel} />
       )}
     </>
   )

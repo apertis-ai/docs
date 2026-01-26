@@ -262,16 +262,12 @@
   .floatingButton {
     bottom: 16px;
     right: 16px;
-    padding: 10px 16px;
+    padding: 12px;
+    border-radius: 50%;
   }
 
   .buttonText {
     display: none;
-  }
-
-  .floatingButton {
-    padding: 12px;
-    border-radius: 50%;
   }
 
   .overlay {

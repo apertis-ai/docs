@@ -9,9 +9,10 @@ interface Message {
 interface Props {
   sessionId: string
   onClose: () => void
+  shortcutLabel: string
 }
 
-export default function ChatModal({ sessionId, onClose }: Props) {
+export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -58,9 +59,14 @@ export default function ChatModal({ sessionId, onClose }: Props) {
         throw new Error('Request failed')
       }
 
-      const reader = res.body!.getReader()
+      if (!res.body) {
+        throw new Error('Response body is null')
+      }
+
+      const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let assistantMessage = ''
+      let buffer = ''
 
       setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
@@ -68,8 +74,9 @@ export default function ChatModal({ sessionId, onClose }: Props) {
         const { done, value } = await reader.read()
         if (done) break
 
-        const chunk = decoder.decode(value)
-        const lines = chunk.split('\n')
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || '' // Keep incomplete line in buffer
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -114,10 +121,16 @@ export default function ChatModal({ sessionId, onClose }: Props) {
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+      <div
+        className={styles.modal}
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="askai-modal-title"
+      >
         <div className={styles.header}>
-          <h3 className={styles.title}>Ask AI Assistant</h3>
-          <span className={styles.shortcut}>⌘K</span>
+          <h3 id="askai-modal-title" className={styles.title}>Ask AI Assistant</h3>
+          <span className={styles.shortcut}>{shortcutLabel}</span>
           <button className={styles.closeButton} onClick={onClose} aria-label="Close">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
