@@ -8,9 +8,14 @@ on:
       - 'docs-api/**'
   workflow_dispatch:
 
+concurrency:
+  group: index-docs-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   index-docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
