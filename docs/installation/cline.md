@@ -1,98 +1,20 @@
-# Cline
+# Cline (prev. Claude Dev)
 
-Cline (previously Claude Dev) is a powerful VS Code extension that lets you use AI models directly in your editor for code generation, file operations, and more.
+### Installing Cline
 
-## Features
+- Install the `Cline` extension from the VSCode marketplace: [**Cline (prev. Claude Dev)**](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
 
-- **Code Generation**: Generate code from natural language descriptions
-- **File Operations**: Create, edit, and manage files
-- **Code Refactoring**: Improve and optimize existing code
-- **Logic Explanation**: Understand complex code logic
-- **Debugging**: Identify and fix issues in your code
+### Using Apertis
 
-## Installation
+1. Open the Cline extension settings by clicking the gear icon in the top-right corner and selecting `Settings`.
+2. Set the **API Provider** field to `OpenAI Compatible`.
+3. Enter `https://api.apertis.ai/v1` in the **Base URL** field.
+4. Input your **API Key** in the **API Key** field.
 
-### Step 1: Install Extension
+---
 
-1. Open VS Code
-2. Click the Extensions icon on the left sidebar
-3. Search for "Cline"
-4. Select [**Cline (prev. Claude Dev)**](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
-5. Click **Install** and trust the developer when prompted
-
-### Step 2: Open Settings
-
-Click the Cline icon in the sidebar, then select the settings button in the top right corner.
-
-## Configure Apertis API
-
-### API Provider Setup
-
-1. Select **"Use your own API Key"** option
-2. Configure the following settings:
-
-| Setting | Value |
-|---------|-------|
-| API Provider | OpenAI Compatible |
-| Base URL | `https://api.apertis.ai/v1` |
-| API Key | Your Apertis API key |
-| Model | Select from model list below |
+*Example configuration (using `Anthropic Claude 3.5 Sonnet 20240620`):*
 
 ![image](https://raw.githubusercontent.com/Apertis-AI/documentation/refs/heads/main/static/img/cline.png)
 
-### Available Models
-
-| Model | Name to Enter |
-|-------|---------------|
-| Claude Sonnet 4.5 | `claude-sonnet-4.5` |
-| Claude Haiku 4.5 | `claude-haiku-4.5` |
-| GPT-4o | `gpt-4.1` |
-| GPT-4o mini | `gpt-4.1-mini` |
-| Gemini 3 Flash | `gemini-3-flash-preview` |
-
-### Optional Settings
-
-You can adjust additional parameters based on your needs:
-
-- **Temperature**: Controls randomness (0.0 - 1.0)
-- **Context Window**: Maximum tokens for context
-
-## Capabilities
-
-Once configured, Cline can assist with:
-
-- **File Creation**: Create new files and directories
-- **Code Editing**: Modify existing code files
-- **Code Generation**: Generate code from descriptions
-- **Refactoring**: Improve code structure and quality
-- **Debugging**: Identify and explain bugs
-- **Logic Explanation**: Understand complex algorithms
-
-## MCP Integration
-
-Cline supports Model Context Protocol (MCP) servers for enhanced functionality:
-
-- **Vision Server**: Analyze images and visual content
-- **Web Search Server**: Search the web for information
-- **Web Reader Server**: Extract content from web pages
-
-## Troubleshooting
-
-### Connection Issues
-
-- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
-- Ensure the Base URL is `https://api.apertis.ai/v1`
-- Check that the model name matches the [Model List](https://apertis.ai/models) exactly
-
-### Extension Not Working
-
-- Restart VS Code after configuration changes
-- Check the Output panel for error messages
-- Ensure you selected "OpenAI Compatible" as the provider
-
-## Related Resources
-
-- [Model List](https://apertis.ai/models)
-- [API Keys Management](https://apertis.ai/token)
-- [Roo Code Extension](/installation/roocode) - Alternative VS Code AI assistant
-- [Kilo Code Extension](/installation/kilo-code) - Another VS Code AI coding tool
+**Once configured, you are ready to start using the API!**

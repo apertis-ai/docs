@@ -1,8 +1,8 @@
-# 使用 Embedding API
+# Embedding API
 
-Apertis 提供 Embedding API 讓開發者可以將文字轉換為向量，並且可以透過向量搜尋的方式找到相似的文字。
+Apertis provides the Embedding API for developers to convert text into vectors and find similar text through vector search.
 
-## OpenAI Embedding Model 使用方式 (以 Python 為例)
+## Usage (Example in Python)
 
 ```python
 import http.client
@@ -23,13 +23,13 @@ data = res.read()
 print(data.decode("utf-8"))
 ```
 
-### 參數說明
+## Parameters
 
-- `model`: 模型目前支援 **OpenAI** 的 `text-embedding-3-large`, `text-embedding-3-small`, `text-embedding-ada-002` 以及 **Jina AI** 的 `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en`。
-- `input`: 要轉換的文字
-- `APERTIS_API_KEY`: 您的 API 金鑰
+- `model`: The model to use, currently supports `text-embedding-3-large`, `text-embedding-3-small`, `text-embedding-ada-002` from **OpenAI** and `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en` from **Jina AI**.
+- `input`: The text to convert
+- `APERTIS_API_KEY`: Your API key
 
-## Jina AI Embedding Model 使用方式 (以 Python 為例)
+## Jina AI Embedding Model Usage (Example in Python)
 
 ```bash
 curl -X POST "https://api.apertis.ai/v1/embeddings" \
@@ -42,9 +42,10 @@ curl -X POST "https://api.apertis.ai/v1/embeddings" \
   }'
 
 ```
-### 參數說明
 
-- `model`: 模型目前支援 **Jina AI** 的 `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en`, `jina-embeddings-v2-base-de`, `jina-clip-v1`, `jina-embeddings-v2-base-es`, `jina-colbert-v1-en`。
-- `input`: 要轉換的文字
-- `task`: 任務目前支援`jina-embeddings-v3` 的 `retrieval.query`, `retrieval.passage`, `separation`, `classification`, `text-matching` 以及 `none`。與 Jina AI 官網提供的任務選項相同。
-- `APERTIS_API_KEY`: 您的 API 金鑰
+### Parameters
+
+- `model`: The model to use, currently supports `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en`, `jina-embeddings-v2-base-de`, `jina-clip-v1`, `jina-embeddings-v2-base-es`, `jina-colbert-v1-en` from **Jina AI**.
+- `input`: The text to convert
+- `task`: The task to use, currently supports `retrieval.query`, `retrieval.passage`, `separation`, `classification`, `text-matching` and `none` from **Jina AI** with model `jina-embeddings-v3`.
+- `APERTIS_API_KEY`: Your API key

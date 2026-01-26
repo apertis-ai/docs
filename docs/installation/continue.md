@@ -1,124 +1,138 @@
 # Continue Dev
 
-[**Continue Dev**](https://www.continue.dev/) 是一款為 **VSCode**, **Cursor IDE** 開發的擴充套件，功能在於簡化用戶與 ChatGPT 等大型語言模型的互動過程。允許使用者輕鬆將程式碼片段導入大型語言模型，以利用大型語言模型進行輔助開發。
+[**Continue Dev**](https://www.continue.dev/) is an extension designed for **VSCode** and **Cursor IDE** that simplifies interactions with large language models such as ChatGPT. It allows users to effortlessly integrate code snippets into these models for development assistance.
 
-### 介紹
+### Introduction
 
-與 **Cursor IDE** 相比，兩者皆展現出以 **程式為本的語言模型交互能力**，並提供 **自動改寫功能**。然而，Cursor 因其更加注重 Codebase RAG（檢索增強生成）並於自動完成（Autocomplete）的精確度上大幅領先。
+Compared to **Cursor IDE**, both tools showcase **code-centric interaction capabilities with language models** and provide **automatic code rewriting** features. However, Cursor IDE excels in Codebase RAG (Retrieval-Augmented Generation) and offers significantly higher precision in autocompletion.
 
-然而，Continue 在快速查詢大型語言模型和除錯方面仍然表現出色。作為一款輕量級的擴充軟件，Continue Dev 提供了另一種使用選擇。無論需要即時解答、尋求程式優化建議，抑或是當 Cursor IDE 發生故障時，Continue Dev 都能提供不錯的協助。
+On the other hand, Continue Dev shines in quick queries and debugging tasks. As a lightweight extension, it provides an alternative option for immediate support. Whether seeking instant answers, optimization suggestions, or backup when Cursor IDE encounters issues, Continue Dev proves to be a reliable tool.
 
-### 安裝
+### Installation
 
-本文主要針對 VSCode 安裝進行教學。首先，於左側選單找到【擴充軟體】的圖示，並搜尋**Continue**。
+This guide focuses on the installation process for VSCode. Begin by navigating to the **Extensions** menu on the left-hand panel and searching for **Continue**.
 
-![](https://hackmd.io/_uploads/HJ_E-najC.jpg)
+![](../static/img/continue_1.jpg)
 
-安裝完後將出現以下畫面，但目前左邊的對話框尚未有功能，因需要額外設定 `config.json`。
+After installation, the following interface will appear. However, the chat panel on the left will not function until the `config.json` file is configured.
 
-![](https://hackmd.io/_uploads/SyRkfh6j0.jpg)
+![](../static/img/continue_2.jpg)
 
-### 添加 `config.json`
+### Adding `config.json`
 
-找到左下方的齒輪圖案，點擊後將會跳轉至`config.json`檔案。
+Click the gear icon in the bottom-left corner to access the `config.json` file.
 
-![](https://hackmd.io/_uploads/HkxMqpYM3A.png)
+![](../static/img/continue_3.png)
 
-複製下方`json`檔並貼入`config.json`中。**apiKey** 數值必需換成您的 **API Key**。
+Copy the JSON configuration below and paste it into the `config.json` file. Replace the **API Key** with your **API Key**.
 
 ```json
 {
-"models": [
-  {
-    "model": "claude-sonnet-4.5",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "Claude 4.5",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
+  "models": [
+    {
+      "model": "claude-3-5-sonnet-20241022",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "Claude 3.5",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "claude-3-5-haiku-20241022",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "Claude 3.5",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "claude-3-5-sonnet-20240620",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "Claude 3.5",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "gpt-4o",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "GPT-4o",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "gpt-4-turbo",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "GPT-4-Turbo",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "gpt-3.5-turbo",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "GPT-3.5-Turbo",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "gemini-1.5-pro-latest",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "gemini-1.5-pro-latest",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    },
+    {
+      "model": "gemini-1.5-flash-latest",
+      "apiBase": "https://api.apertis.ai/v1",
+      "title": "gemini-1.5-flash-latest",
+      "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
+      "provider": "openai",
+      "description": "Explain in details"
+    }
+  ],
+  "customCommands": [
+    {
+      "name": "test",
+      "prompt": "{{{ input }}}\n\nWrite a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file.",
+      "description": "Write unit tests for highlighted code"
+    }
+  ],
+  "allowAnonymousTelemetry": true,
+  "embeddingsProvider": {
+    "provider": "free-trial"
   },
-  {
-    "model": "gpt-4.1",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "GPT-4o",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
-  },
-  {
-    "model": "gpt-4.1",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "GPT-4-Turbo",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
-  },
-  {
-    "model": "gpt-5.2",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "GPT-3.5-Turbo",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
-  },
-  {
-    "model": "gemini-3-pro-preview",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "gemini-3-pro-preview",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
-  },
-  {
-    "model": "gemini-3-flash-preview",
-    "apiBase": "https://api.apertis.ai/v1",
-    "title": "gemini-3-flash-preview",
-    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
-    "provider": "openai",
-    "description": "Explain in Traditional Chinese"
-  }
-
-],
-"customCommands": [
-  {
-    "name": "test",
-    "prompt": "{{{ input }}}\n\nWrite a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file.",
-    "description": "Write unit tests for highlighted code"
-  }
-],
-"allowAnonymousTelemetry": true,
-"embeddingsProvider": {
-  "provider": "free-trial"
-},
-"tabAutocompleteModel": {
-    "model": "gpt-4.1",
+  "tabAutocompleteModel": {
+    "model": "gpt-4o",
     "apiBase": "https://api.apertis.ai/v1",
     "title": "GPT-4o",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai"
   },
-"tabAutocompleteOptions": {
+  "tabAutocompleteOptions": {
     "useCopyBuffer": false,
     "maxPromptTokens": 400,
     "prefixPercentage": 0.5
   },
-"reranker": {
-  "name": "free-trial"
+  "reranker": {
+    "name": "free-trial"
+  }
 }
-}
-
 ```
 
-### 開始使用
+### Start Using
 
-**詢問程式問題**
+**Ask Code (Chat Mode)**
 
-- 選取一段程式碼後【Ctrl + L】
+- 選取一段程式碼後【Ctrl + L】 / [Cmd + L]
 
-![](https://hackmd.io/_uploads/r1zYS2TiR.png)
+![](../static/img/continue_4.png)
 
-**改寫程式**
+**Rewrite Code (Edit Mode)**
 
-- 選取一段程式碼後【Ctrl + I】
+- 選取一段程式碼後【Ctrl + I】 / [Cmd + I]
 
-![](https://hackmd.io/_uploads/HJozI3aoR.png)
+![](../static/img/continue_5.png)

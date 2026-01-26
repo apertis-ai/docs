@@ -1,8 +1,0 @@
-{
-    "label": "Installation and Applications",
-    "position": 3,
-    "link": {
-        "type": "generated-index",
-        "description": "Prompt Cache, Chatbox AI, Cursor IDE, Immersive Translation, Continue Dev, Cline, LangChain, LlamaIndex"
-    }
-} 

@@ -1,37 +1,36 @@
 # bolt.diy (prev. oTToDev)
 
-bolt.diy 是一個讓開發者能夠輕鬆整合 Apertis 到自己專案的解決方案。透過提供完整的 API 端點和相容性支援，開發者可以快速將大型語言模型的功能導入至各種應用程式中。
+bolt.diy is a solution that enables developers to easily integrate Apertis into their projects. By providing comprehensive API endpoints and compatibility support, developers can quickly incorporate large language model capabilities into various applications.
 
-## 特點
+## Features
 
-- **OpenAI 相容 API**: 完全相容於 OpenAI 的 API 格式，讓您可以輕鬆將現有的 OpenAI 專案轉換為使用 Apertis
-- **多樣化的程式語言支援**: 支援 Python、Node.js、Java 等多種程式語言的開發
-- **彈性的模型選擇**: 可以根據需求選擇不同的模型，包括 GPT、Claude、Gemini 等系列
-- **簡單的整合流程**: 只需修改 API 端點和金鑰即可完成整合
+- **OpenAI Compatible API**: Fully compatible with OpenAI's API format, allowing you to easily convert existing OpenAI projects to use Apertis
+- **Multi-language Support**: Supports development in multiple programming languages including Python, Node.js, Java, and more
+- **Flexible Model Selection**: Choose from various models based on your needs, including GPT, Claude, Gemini series
+- **Simple Integration Process**: Integration requires only modifying the API endpoint and key
 
-## 基本設定
+## Basic Configuration
 
-### API 端點
+### API Endpoint
 
 - **[https://api.apertis.ai](https://api.apertis.ai)**
 
-### API 金鑰設定
+### API Key Setup
 
-1. 請先至 [Apertis](https://apertis.ai/token) 註冊並取得您的 API 金鑰
-2. API 金鑰格式為 `sk-` 開頭的字串
-3. 請妥善保管您的 API 金鑰，不要外流或公開分享
+1. Register and obtain your API key at [Apertis](https://apertis.ai/token)
+2. API keys start with `sk-`
+3. Please keep your API key secure and do not share it publicly
 
-## 安裝範例
-- 在 bolt.diy 的設定頁面中選取 `Provider`, 並選取 `OpenAILike` 的 API 模式
-- 在 `Base URL` 處輸入 `https://api.apertis.ai`
+## Installation Example
+- Select `Provider` in the bolt.diy settings page, and choose `OpenAILike` API mode
+- Enter `https://api.apertis.ai` in the `Base URL` field
 ![image](../static/img/bolt_1.png)
 
-- 在 `API Key` 處輸入您的 API 金鑰
+- Enter your API key in the `API Key` field
 ![image](../static/img/bolt_2.png)
 
-- 完整輸入後，會看到如下畫面
+- After completing the input, you will see the following screen
 ![image](../static/img/bolt_3.png)
 
-稍待片刻，即可在模型列表中看到 Apertis 的所有模型！
-選取欲用的模型，即可開始使用
-
+Wait for a moment, and you will see all Apertis models in the model list!
+Select your desired model to start using it

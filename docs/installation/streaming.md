@@ -1,6 +1,6 @@
-# Streaming 輸出
+# Streaming Output
 
-## 以 Python 為例
+## Python Example
 
 ```python
 from openai import OpenAI
@@ -20,8 +20,7 @@ for chunk in stream:
         print(chunk.choices[0].delta.content, end="")
 ```
 
-## 參數說明
-
-- `<MODEL>`: 要使用的模型，詳見 [模型列表](https://apertis.ai/models)。
-- `stream`: 是否開啟流式輸出，目前僅支援 `True`。
-- `APERTIS_API_KEY`: 您的 API 金鑰
+## Parameters
+- `<MODEL>`: The model to use, see [Model List](https://apertis.ai/models).
+- `stream`: Whether to enable streaming output, currently only supports `True`.
+- `APERTIS_API_KEY`: Your API key.

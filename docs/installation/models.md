@@ -2,10 +2,10 @@
 sidebar_position: 2
 ---
 
-# 模型
+# Models  
 
-透過 Apertis 使用所有市面上主流的模型，包括 OpenAI、Google、Anthropic、Meta、Microsoft、Mistral、Alibaba、NVIDIA、xAI、Amazon、DeepSeek、Perplexity、Allen AI 等公司推出的模型。
+Access **400+** models through [**Apertis**](https://apertis.ai), including those from OpenAI, Google, Anthropic, Meta, Microsoft, Mistral, Alibaba, NVIDIA, xAI, Amazon, DeepSeek, Perplexity, Allen AI, and 30+ providers.
 
-Apertis AI 旨在提供用戶以 **單一API** 呼叫所有市面上主流的模型，並且提供用戶更便宜、更快速、更穩定的服務。
+We aim to provide users with a unified API gateway to access all mainstream models while offering a more affordable, faster, and more stable service.
 
-透過我們的 [**模型專區**](https://apertis.ai/models) 探索所有模型。 
+Explore all models through our [**Model Section**](https://apertis.ai/models).

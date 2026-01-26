@@ -1,19 +1,19 @@
 # LlamaIndex
-### 安裝 LlamaIndex
+### Installing LlamaIndex
 ```bash
 pip install llama-index
 ```
-### 使用 Apertis
+### Using Apertis
 
-請至 [**Apertis Key**](https://apertis.ai/token) 取得您的 API Key
+Please obtain your API Key from [**Apertis Key**](https://apertis.ai/token)
 
 ```python
 from llama_index.llms.openai import OpenAI
 
 llm = OpenAI(
-    model="gpt-4.1",
-    api_key="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # 請填入您的 API Key
+    model="gpt-4o",
+    api_key="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # Please replace with your API Key
     api_base="https://api.apertis.ai/v1")
 ret=llm.complete("Donald Trump is ")
 print(ret)
-```
+``` 

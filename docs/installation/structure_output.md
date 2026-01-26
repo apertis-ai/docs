@@ -1,15 +1,15 @@
-# 結構化輸出
+# Structured Output
 
-透過 Apertis 的結構化輸出功能，開發者可以將 API 的回應轉換為特定的 JSON 格式，這對於需要特定資料結構的應用場景非常有用。
+Through Apertis's structured output feature, developers can convert API responses into specific JSON formats, which is particularly useful for application scenarios requiring specific data structures.
 
-## 使用方式 (以 Python 為例)
+## Use Example 
 ```
 import http.client
 import json
 
 conn = http.client.HTTPSConnection("api.apertis.ai")
 payload = json.dumps({
-   "model": "gpt-4.1",
+   "model": "gpt-4o",
    "messages": [
       {
          "role": "system",
@@ -71,7 +71,6 @@ data = res.read()
 print(data.decode("utf-8"))
 ```
 
-## 參數說明
-
-- `model`: 請見[模型列表](https://apertis.ai/models)。
-- `APERTIS_API_KEY`: 您的 API 金鑰。
+## Parameter
+- `model`: See [Model List](https://apertis.ai/models).
+- `APERTIS_API_KEY`: Your Apertis [API Key](https://apertis.ai/token).

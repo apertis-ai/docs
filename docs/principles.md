@@ -1,26 +1,26 @@
-# 為什麼選擇 Apertis？
+# Why Choose Apertis?
 
-## 🚀 效能與成本的完美平衡
-- **智能價格優化**：在眾多供應商中為您尋找最優惠的價格
-- **極致效能表現**：確保最低延遲和最高吞吐量
-- **靈活優先級設定**：讓您自由決定如何平衡這些因素
+## 🚀 Perfect Balance of Performance and Cost
+- **Smart Price Optimization**: Find the most competitive prices across multiple providers
+- **Ultimate Performance**: Ensure minimal latency and maximum throughput
+- **Flexible Priority Settings**: Freedom to balance these factors according to your needs
 
-## 💡 無縫整合體驗
-- **OpenAI 相容 API**：無需修改程式碼即可切換不同模型或供應商
-- **用戶自主選擇**：支援讓終端用戶自行選擇並支付所需模型
+## 💡 Seamless Integration Experience
+- **OpenAI Compatible API**: Switch between models or providers without code modifications
+- **User Autonomy**: Enable end-users to choose and pay for their preferred models
 
-## 🔍 領先市場洞察
-- **搶先體驗新模型**：第一時間接觸最新 AI 模型
-- **實時使用分析**：掌握不同模型在各種場景的實際應用數據
+## 🔍 Leading Market Insights
+- **Early Model Access**: Be the first to experience the latest AI models
+- **Real-time Usage Analytics**: Track actual application data across different models and scenarios
 
-## 💳 簡化的計費體系
-- **統一帳單管理**：無論使用多少供應商，都能享受簡單透明的計費方式
-- **清晰的成本掌控**：輕鬆追蹤和管理您的 AI 支出
+## 💳 Simplified Billing System
+- **Unified Billing Management**: Simple and transparent billing regardless of provider count
+- **Clear Cost Control**: Easily track and manage your AI expenditure
 
-## 🛡️ 企業級可靠性
-- **智能故障轉移**：當供應商服務中斷時，自動切換確保服務持續
-- **進階路由機制**：智能分配確保請求始終得到處理
+## 🛡️ Enterprise-Grade Reliability
+- **Smart Failover**: Automatic switching ensures service continuity during provider outages
+- **Advanced Routing**: Intelligent request distribution for consistent processing
 
-## ⚡ 更高的使用限制
-- **優化的處理能力**：與供應商直接合作，提供更高的請求限制
-- **增強的吞吐量**：確保您的應用程式能夠處理更大的負載
+## ⚡ Enhanced Usage Limits
+- **Optimized Processing Capacity**: Direct provider partnerships for higher request limits
+- **Increased Throughput**: Ensure your applications can handle larger workloads

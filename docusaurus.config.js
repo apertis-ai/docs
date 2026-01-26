@@ -115,39 +115,33 @@ const config = {
           href: 'https://docs.apertis.ai',
         },
         items: [
-          // {
-          //   type: 'docSidebar',
-          //   sidebarId: 'tutorialSidebar',
-          //   position: 'left',
-          //   label: '所有文件',
-          // },
           {
             type: 'doc',
             docId: 'usage',
             position: 'left',
-            label: '使用場景',
+            label: 'Use Cases',
           },
           {
             type: 'doc',
             docId: 'installation/chatbox',
             position: 'left',
-            label: '功能',
+            label: 'Features',
           },
           {
             type: 'doc',
             docId: 'stimachat',
             position: 'left',
-            label: 'Chat 對話系統',
+            label: 'Chat System',
           },
           {
             type: 'doc',
             docId: 'opensource',
             position: 'left',
-            label: '開源模型',
+            label: 'Open Source Models',
           },
           {
             href: 'https://api.apertis.ai',
-            label: 'Apertis 官網',
+            label: 'Apertis Website',
             position: 'right',
           },
         ],
@@ -156,10 +150,10 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: '服務',
+            title: 'Services',
             items: [
               {
-                label: 'Apertis 官網',
+                label: 'Apertis Website',
                 href: 'https://api.apertis.ai',
               },
               {
@@ -175,13 +169,13 @@ const config = {
                 href: 'https://playground.apertis.ai',
               },
               {
-                label: '服務狀態',
+                label: 'Status',
                 href: 'https://status.stima.tech',
               }
             ],
           },
           {
-            title: '聯繫我們',
+            title: 'Contact Us',
             items: [
               {
                 label: 'Email',

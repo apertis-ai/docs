@@ -1,11 +1,11 @@
-# 透過 OpenAI SDK 呼叫 Apertis
+# Call Apertis via OpenAI SDK
 
 ### Python
 
-Apertis 為 **OpenAI Compatible APIs**，故使用 `Python` 中的 `openai` SDK，並修改 `model` 以及 `base_url` 變數即可呼叫所有 Apertis AI 提供之模型。
+Apertis provides **OpenAI Compatible APIs**, so you can use the `OpenAI` package in `Python` and modify the `model` variable to call all supported models.
 
 ```python
-key = "<APERTIS_API_KEY>" # 請換成您的 API Key
+key = '<APERTIS_API_KEY>' # Please replace with your API Key
 from openai import OpenAI
 
 client = OpenAI(
@@ -14,7 +14,7 @@ client = OpenAI(
 )
 
 chat_completion = client.chat.completions.create(
-    model="<MODEL_ALIAS>", # 請修改 model 變數以呼叫不同模型
+    model="<MODEL_ALIAS>", # Modify the model variable to call different models
     messages=[
         {"role": "user", "content": "Hello world"}
     ]
@@ -59,15 +59,15 @@ callOpenAI('Hello world').then(reply => console.log(reply));
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: '<APERTIS_API_KEY>', // 請確保在環境變數中設定了您的 Apertis 金鑰
-  baseURL: 'https://api.apertis.ai/v1', // 替換為 Apertis 端點
+  apiKey: '<APERTIS_API_KEY>', // Please ensure that the Apertis key is set in the environment variables
+  baseURL: 'https://api.apertis.ai/v1', // Replace with Apertis endpoint
 });
 
 
 async function getChatCompletion(prompt: string): Promise<void> {
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: '<MODEL_ALIAS>', // 或其他您想使用的模型
+      model: '<MODEL_ALIAS>', // Replace with the model you want to use
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 150,
       temperature: 0.7,
@@ -79,15 +79,14 @@ async function getChatCompletion(prompt: string): Promise<void> {
   }
 }
 
-// 使用範例
+// Example usage
 getChatCompletion('Hello world');
 ```
 
-
 ### cURL
 
-使用 `cURL` 呼叫 Apertis，僅需修改 `api_key` 和 `model` 變數即可呼叫所有支援模型。  
-請將 `<APERTIS_API_KEY>`, `model`數值修改成您的 **API Key** 及 **模型別名**。
+To use `cURL` to call Apertis, you only need to modify the `api_key` and `model` variables to call all supported models.  
+Please replace `<APERTIS_API_KEY>` and `model` values with your **API Key** and **model alias**.
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
@@ -98,9 +97,9 @@ curl https://api.apertis.ai/v1/chat/completions \
         "messages": [
             {
                 "role": "system",
-                "content": "You are a test assistant."
+                "content": "Hello World!"
             }
         ]
     }'
 
-```
+``` 

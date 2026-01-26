@@ -1,32 +1,34 @@
-# Chat 聊天對話系統
+# Web Chat Service 
 
-**[Chat](https://chat.apertis.ai)** 是一款由 本公司 (Apertis AI) 研發之先進對話系統，採用 **雙向多輪對話** 模式，支援 **100+ 大型語言模型** 的交流。
+**[Chat](https://chat.apertis.ai)** is an advanced conversation system developed by Apertis AI, featuring a **bidirectional multi-turn dialogue** mode and supporting interactions with **100+ large language models**.
 
-## 特色
+## Features
 
-- **雙向多輪對話**：Chat 允許用戶進行雙向多輪對話，不僅可以回答問題，還可以進行主動提問。
-- **多語言支援**：Chat 支援多種語言的交流，包括中文、英文、日文、韓文等。
-- **先進的對話技術**：Chat 採用先進的對話技術，包括 **語義理解**、**情感分析**、**意圖識別** 等技術，可以更好地理解用戶的意圖和情感。
+- **Bidirectional Multi-Turn Dialogue**: Chat allows users to engage in bidirectional multi-turn conversations, not only answering questions but also proactively asking them.
+- **Multilingual Support**: Chat supports communication in multiple languages, including Chinese, English, Japanese, Korean, and more.
+- **Advanced conversation Technology**: Chat leverages cutting-edge conversation technologies, including **semantic understanding**, **sentiment analysis**, and **intent recognition**, to better understand user intent and emotions.
 
-## 使用方法
+## How to Use
 
-### 開啟對話介面
+### Access the Conversation Interface
 
-當您登入並創建好 API Key 之後，每個 Key 後面都會有一個藍色的【Chat 對話服務】按鈕。點擊該按鈕，即可使用該 API Key 進行聊天。
+Once you log in and create an API Key, each key will have a blue **[Chat Service]** button next to it. Click this button to use the corresponding API Key for chatting.
 
-![](static/img/stimachat_0.png)
+![](./static/img/stimachat_1.png)
 
-點進去後系統會自動套用 API Key 與 API 端點。
+After entering, the system will automatically apply the API Key and endpoint.
 
-![](static/img/stimachat_1.png)
+![](./static/img/stimachat_2.png)
 
-### 開始聊天
+### Start Chatting
 
-進入介面後點即下方的【開新對話】。
+Once in the interface, click the **[New Chat]** button at the bottom.
 
-並於下方機器人圖標中選擇欲使用模型。
+![](./static/img/stimachat_3.png)
 
-![](static/img/stimachat_2.png)
+Then, select the AI model by clicking on the robot icon at the bottom.
+
+![](./static/img/stimachat_4.png)
 
 
-即可開始使用。
+You can now begin using the system.

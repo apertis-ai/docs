@@ -1,38 +1,34 @@
 # Chatbox AI
 
-Chatbox AI 是一個圖形化的聊天介面，其優點為 **使用API Key進行UI介面聊天**。透過 OpenAI, Claude 官網使用對話介面，**被迫付訂閱費用甚至有流量限制**。抑或是購買 API Key 則會需要使用程式語言去呼叫，且需額外開發圖形化介面，並不人性化。因此，**Chatbox AI** 讓使用者可以完全依照過往的使用方式**透過 Apertis 與 60+ 種模型**進行聊天，可以**一鍵切換不同模型**，方便根據任務選擇合適的模型。
+Chatbox AI is a graphical chat interface designed for **interacting with APIs via API Keys in a user-friendly UI**. Unlike using OpenAI or Claude's official interfaces, which often require **subscription fees or impose usage limits**, or purchasing an API Key that demands programming knowledge to create a custom interface, Chatbox AI eliminates these barriers. It allows users to seamlessly interact with **Apertis and over 60 models** through a familiar interface, enabling **one-click switching between different models**, making it easy to select the best model for specific tasks.
 
-### 下載與安裝
+### Download and Installation
 
-前往 **[Chatbox AI官網](https://chatboxai.app/zh-TW)**，根據電腦系統選擇下載版本，Chatbox AI 亦提供手機版本 (Android, iOS)。
+Visit the **[Chatbox AI Official Website](https://chatboxai.app/zh-TW)** to download the appropriate version for your computer system. Chatbox AI also offers mobile versions for Android and iOS.
 
+![image](../static/img/chatbox_0.png)
 ![image](../static/img/chatbox_1.png)
+
+### Setting Up API Key
+
+Click the settings icon in the bottom-left corner to access the **Model Configuration** screen. Under **Model Providers**, select `Add Custom Provider`. Then, choose `OpenAI API Compatible` in the `API Mode` dropdown. Since we provide models in OpenAI API-compatible formats, you can directly use this option.
+
+Enter your API Key in the **API Key** field and set **API Base URL** to `https://api.apertis.ai`. Select the model you wish to use. Adjust additional parameters like `temperature` and `Top P` if needed, then click Save to start using the model.
+
 ![image](../static/img/chatbox_2.png)
 
 
-### 設定 API Key
+For example, to use **Claude 3.5 Sonnet**, input the following settings:
 
-點擊左下角的設定，將會看到【模型設置的畫面】，於【模型提供方】選擇 `添加自定義提供方`管道，再者，於 `API 模式`選擇 `OpenAI API 兼容`，因為我們提供 OpenAI API 的模型呼叫格式，所以可以直接選擇。
+- **API Mode**: OpenAI API Compatible
+- **Name**: Any name (e.g., "Claude 3.5 Sonnet" for easy identification)
+- **API Base URL**: `https://api.apertis.ai`
+- **API Path**: No changes needed
+- **API Key**: Your API Key
+- **Model**: `claude-3-5-sonnet-20240620`
 
-請在【API金鑰】處輸入您的 API Key，並於【API域名】輸入`https://api.apertis.ai`，並選擇您欲使用的模型。選擇完之後可以微調一些數值(如 `temperature`, `Top P` 等)，並按下儲存即可開始使用模型。
+![image](../static/img/chatbox_3.png)
 
-![image](https://hackmd.io/_uploads/S1JVicdoR.png)
+Click Save, then select the model you just configured to begin using it.
 
-
-![image](https://hackmd.io/_uploads/SyjvocOiR.png)
-
-請根據我們提供之模型填入對應的數值，如要使用**Claude Sonnet 4.5**，請填
-
-* **API模式** : OPENAI API兼容
-* **名稱** : 任意(方便辨識是Claude Sonnet 4.5即可)
-* **API域名** : `https://api.apertis.ai`
-* **API路徑** : 無須變動
-* **API金鑰** : 你的API Key
-* **模型** : `claude-sonnet-4.5`
-
-![image](https://hackmd.io/_uploads/SkLh2qOoR.png)
-
-
-按下儲存後，選擇您剛剛設置的模型，即可開始使用。
-
-![image](https://hackmd.io/_uploads/HJeAh9_i0.png)
+![image](../static/img/chatbox_4.png)

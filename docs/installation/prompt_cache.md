@@ -1,48 +1,45 @@
-# Prompt Cache 
+# Prompt Cache
 
-## 概述
+## Overview
 
-Apertis 包含一個強大的提示快取（Prompt Cache）功能，可以顯著提升系統效能，減少重複請求的處理時間，並降低 API 成本。當相同的提示（prompt）被多次請求時，系統會直接從快取中返回結果，而無需重新呼叫上游 AI 模型。
+Apertis includes a powerful Prompt Cache feature that significantly improves system performance, reduces processing time for repeated requests, and lowers API costs. When the same prompt is requested multiple times, the system returns results directly from the cache without calling the upstream AI model again.
 
-## 功能特點
+## Key Features
 
-### 核心優勢
-- **效能提升**: 快取命中可將響應時間從秒級降至毫秒級
-- **成本節省**: 減少對上游 AI 提供商的 API 呼叫，降低使用成本
-- **精準匹配**: 支援精確匹配的快取響應
-- **自動管理**: 內建 TTL（Time To Live）機制自動清理過期快取
+### Core Benefits
+- **Performance Boost**: Cache hits reduce response time from seconds to milliseconds
+- **Cost Savings**: Reduces API calls to upstream AI providers, lowering usage costs
+- **Exact Matching**: Supports exact-match cache responses
+- **Automatic Management**: Built-in TTL (Time To Live) mechanism automatically cleans expired cache
 
-### 技術架構
-- **快取策略**: LRU（Least Recently Used）淘汰策略
-- **容錯機制**: 快取失效時自動降級到正常請求流程
+### Technical Architecture
+- **Cache Strategy**: LRU (Least Recently Used) eviction policy
+- **Concurrency Safe**: Supports cache operations in high-concurrency environments
+- **Fault Tolerance**: Automatically falls back to normal request flow when cache fails
 
+## Cache Strategy
 
-## 使用方式
+### Cache Key Generation
 
+The system generates unique cache keys using:
+- Model name
+- Prompt content
+- System message
+- Temperature parameter
+- Other relevant parameters
 
-## 快取策略
+### Cache Hit Conditions
 
-### 快取鍵生成
+A cache hit requires:
+1. Exact same prompt content
+2. Same model and parameter settings
+3. Cache item not expired
+4. Cache size within limits
 
-系統使用以下資訊生成唯一的快取鍵：
-- 模型名稱
-- 提示內容（prompt）
-- 系統訊息（system message）
-- 溫度參數（temperature）
-- 其他相關參數
+### Cache Invalidation
 
-### 快取命中條件
-
-快取命中需要滿足以下條件：
-1. 完全相同的提示內容
-2. 相同的模型和參數設定
-3. 快取項目未過期
-4. 快取大小未超過限制
-
-### 快取失效機制
-
-快取會在以下情況失效：
-- 超過 TTL 的時間
-- Redis 儲存空間不足
-- 手動清除快取
-- 系統重啟（如果未持久化）
+Cache invalidates when:
+- Exceeds TTL setting
+- Redis storage space insufficient
+- Manual cache clearing
+- System restart (if not persisted)

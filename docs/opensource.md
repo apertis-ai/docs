@@ -1,25 +1,25 @@
-# 開源大型語言模型
+# Open-Source Models
 
-## 開源模型服務
+## Open-Source Model Services
 
-在 Apertis AI，我們專注於提供多種領先的開源大型語言模型服務，這些模型來自全球技術領先公司所提出，並經過我們精心調整和優化，以滿足不同客戶的需求。
+At Apertis AI, we specialize in offering a variety of cutting-edge open-source large language model services. These models, developed by globally leading technology companies, are carefully fine-tuned and optimized by our team to meet the unique requirements of diverse clients.
 
-### Llama 模型
+### Llama Models
 
-由 Meta（前Facebook）提出的 Llama 系列模型是目前市場上最先進的開源語言模型之一。這些模型具有強大的自然語言處理能力，能夠理解和生成高質量的文本內容，適用於多種應用場景，如文本分析、自動摘要、語言翻譯等。我們的專業團隊對Llama-3.2, Llama-3.1 系列模型進行了優化，以確保其在各種業務環境中的高效運行。
+The Llama series, developed by Meta (formerly Facebook), is one of the most advanced open-source language models available on the market. These models possess robust natural language processing capabilities, capable of understanding and generating high-quality textual content. They are applicable to a wide range of scenarios, including text analysis, automatic summarization, and language translation. Our expert team has optimized the Llama-3.2 and Llama-3.1 models to ensure efficient performance across various business environments.
 
-### Gemma 模型
+### Gemma Models
 
-Google 提供的 Gemma 模型也是一款領先的開源語言模型，具有卓越的語言理解和生成能力。Gemma 模型在大規模數據集上進行了訓練，能夠處理複雜的語言任務，如對話系統、內容生成和信息檢索。Apertis AI 致力於將這一強大的工具引入各種業務場景，幫助客戶實現 AI 導入服務。
+The Gemma models, developed by Google, are also leading open-source language models with exceptional language understanding and generation capabilities. Trained on large-scale datasets, the Gemma models excel in handling complex language tasks, such as conversational systems, content generation, and information retrieval. Apertis AI is committed to integrating this powerful tool into diverse business scenarios, enabling clients to implement AI-driven solutions.
 
-### Qwen 模型
+### Qwen Models
 
-由阿里巴巴提出的 Qwen 系列模型是目前市場上最先進的開源語言模型之一。這些模型具有強大的自然語言處理能力，能夠理解和生成高質量的文本內容，適用於多種應用場景，如文本分析、自動摘要、語言翻譯等。我們的專業團隊對Qwen-2.5, Qwen-2.0 系列模型進行了優化，以確保其在各種業務環境中的高效運行。
+The Qwen series, introduced by Alibaba, is among the most advanced open-source language models on the market. These models exhibit strong natural language processing capabilities, enabling them to understand and generate high-quality textual content. They are ideal for applications such as text analysis, automatic summarization, and language translation. Our professional team has optimized the Qwen-2.5 and Qwen-2.0 models to ensure their efficient operation in a variety of business environments.
 
-### Mistral 模型
+### Mistral Models
 
-Mistral 模型是由Mistral AI公司提出的，是一款高性能的開源語言模型。Mistral 模型在多種語言任務上表現出色，包括語言理解、文本生成和語言翻譯。Apertis AI 致力於將這一強大的工具引入各種業務場景，幫助客戶實現 AI 導入服務。
+Developed by Mistral AI, the Mistral models are high-performance open-source language models. These models excel in multiple language tasks, including language understanding, text generation, and language translation. Apertis AI is dedicated to introducing this powerful tool into various business scenarios to help clients achieve AI-powered solutions.
 
-## 模型列表
+## Model List
 
-欲了解我們提供的完整模型列表，請見：[**Apertis AI 模型列表**](https://apertis.ai/models)
+For a comprehensive list of models we offer, please visit: [**Apertis Model List**](https://apertis.ai/models)

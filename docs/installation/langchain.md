@@ -1,14 +1,14 @@
 # LangChain
 
-### 安裝 LangChain
+### Installing LangChain
 ```bash
 pip install langchain
 pip install langchain-openai
 ```
 
-### 使用 Apertis 範例
+### Apertis Usage Example
 
-請至 [**Apertis Key**](https://apertis.ai/token) 取得您的 API Key
+Please obtain your API Key from [**Apertis Key**](https://apertis.ai/token)
 
 ```python
 from langchain_openai import ChatOpenAI
@@ -17,7 +17,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 CONFIG = {
     "api_key": "APERTIS_API_KEY",
     "base_url": "https://api.apertis.ai/v1",
-    "model": "gpt-4.1-mini",
+    "model": "gpt-4o-mini",
     "temperature": 0.7,
     "request_timeout": 30,
 }
@@ -66,5 +66,4 @@ if __name__ == "__main__":
     fast_response = ask("1+1=?", model="grok-4-fast")
     print(f"\nResponse: {fast_response}")
 
-
-```
+``` 

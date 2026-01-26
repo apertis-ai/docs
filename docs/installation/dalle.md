@@ -1,6 +1,6 @@
-# 使用 GPT-Image-1 和 Dall-E 3 
+# Using GPT-Image-1 and Dall-E 3
 
-## 以 Python 為例
+## Python Example
 
 ```python
 import requests
@@ -25,8 +25,9 @@ response = requests.request("POST", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-## 參數說明
+## Parameters
 
-- `<MODEL>`: 要使用的模型，目前支援 `gpt-image-1`, `dall-e-3`。
-- `size`: 圖片大小，目前僅支援 `1024x1024`, `1792x1024`, `1024x1792`。
-- `APERTIS_API_KEY`: 您的 API 金鑰
+- `model`: The model to use, currently supports `dall-e-3`
+- `size`: The size of the image, currently supports `1024x1024`, `1792x1024`, `1024x1792`
+- `APERTIS_API_KEY`: Your API key
+
