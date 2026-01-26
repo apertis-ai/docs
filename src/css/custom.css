@@ -187,19 +187,19 @@ h3 {
    Inline Code Styling - Gemini Style
    ========================================================================== */
 
-/* Inline code - dark background style */
+/* Inline code - Standard markdown style */
 code:not(pre code) {
-  background-color: #1a1a1a;
-  color: #e1dfdf;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
+  background-color: rgba(175, 184, 193, 0.2);
+  color: #c9302c;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-size: 0.875em;
   font-family: var(--ifm-font-family-monospace);
 }
 
-[data-theme='light'] code:not(pre code) {
-  background-color: #e5e5e5;
-  color: #1a1a1a;
+[data-theme='dark'] code:not(pre code) {
+  background-color: rgba(110, 118, 129, 0.4);
+  color: #f47067;
 }
 
 /* ==========================================================================
