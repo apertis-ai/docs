@@ -4,13 +4,13 @@ Get up and running with the Apertis API in under 5 minutes. This guide walks you
 
 ## Prerequisites
 
-- An Apertis account ([Sign up here](https://api.apertis.ai))
-- An API key ([Get your key](https://api.apertis.ai))
+- An Apertis account ([Sign up here](https://apertis.ai/login))
+- An API key ([Get your key](https://apertis.ai/token))
 - Basic knowledge of HTTP requests or a programming language
 
 ## Step 1: Get Your API Key
 
-1. Log in to [Apertis Dashboard](https://api.apertis.ai)
+1. Log in to [Apertis Dashboard](https://apertis.ai/login)
 2. Navigate to **API Keys**
 3. Click **Create New Key**
 4. Copy your key (format: `sk-xxxxxxxx`)
