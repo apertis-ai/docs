@@ -1,0 +1,45 @@
+.copyMarkdownWrapper {
+  margin-bottom: 1rem;
+}
+
+.copyMarkdownButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copyMarkdownButton:hover {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-color-emphasis-900);
+}
+
+.copyMarkdownButton:active {
+  transform: scale(0.98);
+}
+
+.copyMarkdownButton svg {
+  flex-shrink: 0;
+}
+
+/* Dark mode */
+[data-theme='dark'] .copyMarkdownButton {
+  color: var(--ifm-color-emphasis-600);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .copyMarkdownButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-color-emphasis-800);
+}
