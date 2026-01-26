@@ -1,3 +1,5 @@
+/// <reference types="@cloudflare/workers-types" />
+
 import { createClient } from '@supabase/supabase-js'
 
 interface Env {
@@ -7,6 +9,16 @@ interface Env {
   APERTIS_API_KEY: string
   APERTIS_BASE_URL: string
   APERTIS_MODEL: string
+}
+
+interface JinaEmbeddingResponse {
+  data: Array<{ embedding: number[] }>
+}
+
+interface DocumentSearchResult {
+  title: string
+  url_path: string
+  content: string
 }
 
 // Simple in-memory rate limiting (resets on cold start)
@@ -41,6 +53,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   if (!question || typeof question !== 'string') {
     return new Response(
       JSON.stringify({ error: 'Missing or invalid question' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  if (question.length > 2000) {
+    return new Response(
+      JSON.stringify({ error: 'Question too long (max 2000 characters)' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     )
   }
@@ -82,7 +101,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       throw new Error(`Jina API error: ${embeddingRes.status}`)
     }
 
-    const embeddingData = await embeddingRes.json()
+    const embeddingData: JinaEmbeddingResponse = await embeddingRes.json()
     const queryEmbedding = embeddingData.data[0].embedding
 
     // 2. Search Supabase
@@ -98,7 +117,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 3. Build context and prompt
     const docContext = docs && docs.length > 0
-      ? docs.map((d: any) => `## ${d.title}\nSource: ${d.url_path}\n\n${d.content}`).join('\n\n---\n\n')
+      ? docs.map((d: DocumentSearchResult) => `## ${d.title}\nSource: ${d.url_path}\n\n${d.content}`).join('\n\n---\n\n')
       : 'No relevant documentation found.'
 
     const systemPrompt = `You are the Apertis AI Documentation Assistant. Answer user questions based on the documentation content provided below.
@@ -135,20 +154,26 @@ ${docContext}`
     }
 
     // 5. Transform and forward SSE stream
+    if (!chatRes.body) {
+      throw new Error('No response body from Apertis API')
+    }
+
     const { readable, writable } = new TransformStream()
     const writer = writable.getWriter()
     const encoder = new TextEncoder()
-    const reader = chatRes.body!.getReader()
+    const reader = chatRes.body.getReader()
     const decoder = new TextDecoder()
 
     ;(async () => {
       try {
+        let buffer = ''
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
 
-          const chunk = decoder.decode(value)
-          const lines = chunk.split('\n')
+          buffer += decoder.decode(value, { stream: true })
+          const lines = buffer.split('\n')
+          buffer = lines.pop() || '' // Keep incomplete line in buffer
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
