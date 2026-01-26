@@ -45,12 +45,12 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 | Method | Availability | Processing |
 |--------|--------------|------------|
 | Credit/Debit Card | Global | Instant |
-| Newebpay | Taiwan | Instant |
-| Cryptocurrency | Global | 10-30 minutes |
+
+All payments are securely processed through **Stripe**.
 
 ### Top-Up Process
 
-1. Log in to [Dashboard](https://api.apertis.ai)
+1. Log in to [Dashboard](https://apertis.ai/login)
 2. Go to **Billing** → **Add Funds**
 3. Select amount
 4. Choose payment method
@@ -61,8 +61,6 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 | Method | Minimum |
 |--------|---------|
 | Credit Card | $5 |
-| Newebpay | NT$150 |
-| Crypto | $10 |
 
 ## PAYG Pricing
 

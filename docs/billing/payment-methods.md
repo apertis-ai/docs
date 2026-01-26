@@ -7,8 +7,8 @@ Apertis supports multiple payment methods to accommodate users worldwide. This g
 | Method | Availability | Currencies | Processing Time |
 |--------|--------------|------------|-----------------|
 | Credit/Debit Card | Global | USD | Instant |
-| Newebpay | Taiwan | TWD | Instant |
-| Cryptocurrency | Global | BTC, ETH, USDT, etc. | 10-30 minutes |
+
+All payments are securely processed through **Stripe**.
 
 ## Credit & Debit Cards
 
@@ -73,85 +73,6 @@ If your card is declined:
 | Incorrect details | Verify card information |
 | Bank block | Contact your bank to allow the transaction |
 | International block | Enable international transactions |
-
-## Newebpay (Taiwan)
-
-### Overview
-
-Newebpay (藍新金流) is available for users in Taiwan, supporting local payment methods.
-
-### Supported Payment Types
-
-- Credit cards (local and international)
-- ATM transfer
-- Convenience store payment
-
-### How to Pay with Newebpay
-
-1. Go to **Billing** → **Add Funds**
-2. Select amount
-3. Choose **Newebpay**
-4. Select payment type
-5. Complete payment through Newebpay interface
-
-### Exchange Rate
-
-Prices are converted from USD to TWD at current exchange rates. The final TWD amount is displayed before payment confirmation.
-
-### Processing Time
-
-| Payment Type | Processing |
-|--------------|------------|
-| Credit card | Instant |
-| ATM transfer | 1-2 hours |
-| Convenience store | 1-24 hours |
-
-## Cryptocurrency
-
-### Overview
-
-Pay with cryptocurrency via NOWPayments for privacy and global accessibility.
-
-### Supported Cryptocurrencies
-
-- Bitcoin (BTC)
-- Ethereum (ETH)
-- Tether (USDT)
-- USD Coin (USDC)
-- And 100+ other cryptocurrencies
-
-### How to Pay with Crypto
-
-1. Go to **Billing** → **Add Funds**
-2. Select amount (minimum $10)
-3. Choose **Cryptocurrency**
-4. Select your preferred coin
-5. Send payment to the provided address
-6. Wait for blockchain confirmation
-
-### Processing Time
-
-| Cryptocurrency | Typical Confirmation |
-|----------------|---------------------|
-| Bitcoin | 10-60 minutes (1-6 confirmations) |
-| Ethereum | 5-15 minutes |
-| USDT (TRC20) | 1-5 minutes |
-| USDT (ERC20) | 5-15 minutes |
-
-### Important Notes
-
-- Send exact amount to avoid delays
-- Payments are non-refundable once confirmed
-- Use correct network (e.g., ERC20 vs TRC20 for USDT)
-- Include transaction fee in your sending amount
-
-### Crypto Payment Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Payment not detected | Wait for blockchain confirmations |
-| Wrong amount sent | Contact support with transaction hash |
-| Wrong network used | Funds may be lost, contact support |
 
 ## Auto Top-Up
 
@@ -279,26 +200,9 @@ Processing time: 5-10 business days
 
 ## Regional Payment Options
 
-### United States
-- All major credit/debit cards
-- Cryptocurrency
-
-### Europe
-- All major credit/debit cards
-- Cryptocurrency
-
-### Taiwan
-- Credit/debit cards
-- Newebpay (local gateway)
-- Cryptocurrency
-
-### Asia Pacific
-- International credit cards
-- Cryptocurrency
-
-### Other Regions
-- International credit cards (Visa/Mastercard)
-- Cryptocurrency
+### Global
+- All major credit/debit cards (Visa, Mastercard, American Express, JCB, UnionPay)
+- Processed securely through Stripe
 
 ## Enterprise Payment Options
 
@@ -338,7 +242,7 @@ Yes, subscription plans offer monthly, quarterly, and yearly billing cycles. Ann
 
 ### Is my payment information secure?
 
-Yes. All payments are processed by PCI-compliant payment processors (Stripe, Newebpay, NOWPayments). We never store full card numbers.
+Yes. All payments are processed by Stripe, a PCI DSS Level 1 certified payment processor. We never store full card numbers.
 
 ### Can I get a paid receipt?
 
