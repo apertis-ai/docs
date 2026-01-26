@@ -196,7 +196,7 @@ All chat models support streaming:
 | DeepSeek | `deepseek-chat` |
 | xAI | `grok-3`, `grok-3-fast` |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

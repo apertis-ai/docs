@@ -286,7 +286,7 @@ Tool calling is supported by:
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 | DeepSeek | `deepseek-chat` |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

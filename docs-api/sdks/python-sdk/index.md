@@ -79,7 +79,7 @@ Access models from multiple providers through a single API:
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
 | DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
 | xAI | `grok-3`, `grok-3-fast` |
-| And 470+ more... | [View all models](/references/models) |
+| And 470+ more... | [View all models](/api/utilities/models) |
 
 ## Feature Documentation
 

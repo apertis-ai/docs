@@ -220,7 +220,7 @@ if __name__ == "__main__":
 | `text-embedding-3-large` | 3072 | Higher quality, supports dimension reduction |
 | `text-embedding-ada-002` | 1536 | Legacy model |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

@@ -283,7 +283,7 @@ if __name__ == "__main__":
 | `claude-sonnet-4.5` | Extended thinking via `thinking` parameter |
 | `claude-opus-4-5-20251101` | Extended thinking via `thinking` parameter |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

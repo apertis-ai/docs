@@ -955,6 +955,6 @@ while (true) {
 
 ## Related Topics
 
-- [Images API](./images) - Image generation
-- [Chat Completions](./chat_completions) - Text generation
-- [Models](./models) - List available models
+- [Images API](/api/vision/images-api) - Image generation
+- [Chat Completions](./chat-completions) - Text generation
+- [Models](/api/utilities/models) - List available models

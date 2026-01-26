@@ -354,6 +354,6 @@ This means you can use **any model** with the Responses API - the conversion is 
 
 ## Related Topics
 
-- [Chat Completions](./chat_completions) - Traditional chat completion format
+- [Chat Completions](./chat-completions) - Traditional chat completion format
 - [Messages API](./messages) - Anthropic-compatible format
-- [Models](./models) - List available models
+- [Models](/api/utilities/models) - List available models

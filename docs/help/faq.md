@@ -266,7 +266,7 @@ response = client.chat.completions.create(
 )
 ```
 
-[Learn more about fallback →](../installation/fallback_models)
+[Learn more about fallback →](/api/utilities/fallback-models)
 
 ### Is there a model playground?
 

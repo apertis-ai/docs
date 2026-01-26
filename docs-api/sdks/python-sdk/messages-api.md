@@ -297,7 +297,7 @@ The Messages API supports all Claude models:
 | `claude-sonnet-4.5` | Balanced performance and cost |
 | `claude-haiku-4-5-20250501` | Fastest, most cost-effective |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

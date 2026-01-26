@@ -216,6 +216,6 @@ The `BAAI/bge-reranker-v2-m3` model is a state-of-the-art multilingual reranker 
 
 ## Related Topics
 
-- [Embeddings API](/references/embeddings) - Generate text embeddings for semantic search
-- [Chat Completions API](/references/chat_completions) - Text generation with context
-- [Models](/references/models) - List available models
+- [Embeddings API](/api/embeddings/embeddings-api) - Generate text embeddings for semantic search
+- [Chat Completions API](/api/text-generation/chat-completions) - Text generation with context
+- [Models](/api/utilities/models) - List available models

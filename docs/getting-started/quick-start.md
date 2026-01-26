@@ -295,7 +295,7 @@ Now that you've made your first API call, explore more:
 - [API Keys](../authentication/api-keys) - Manage and secure your keys
 - [Models](../installation/models) - Browse all available models
 - [Subscription Plans](../billing/subscription-plans) - Choose the right plan
-- [Streaming](../installation/streaming) - Real-time response streaming
+- [Streaming](/api/text-generation/streaming) - Real-time response streaming
 - [Integrations](../installation/cline) - Use with Cursor, Cline, and more
 
 ## Quick Reference

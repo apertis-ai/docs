@@ -265,7 +265,7 @@ Web search is available on:
 | Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101` |
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

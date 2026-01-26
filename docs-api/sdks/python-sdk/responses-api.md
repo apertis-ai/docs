@@ -296,7 +296,7 @@ The Responses API supports:
 | OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `o1`, `o4-mini`, `o3-mini` |
 | Others | Models with Responses API compatibility |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

@@ -267,7 +267,7 @@ if __name__ == "__main__":
 | `rerank-multilingual-v3.0` | Multilingual support |
 | `rerank-english-v2.0` | Legacy English model |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 

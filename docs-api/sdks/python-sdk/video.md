@@ -295,7 +295,7 @@ Video analysis is available on:
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
 | OpenAI | `gpt-4.1` (limited video support) |
 
-[View all models →](/references/models)
+[View all models →](/api/utilities/models)
 
 ## API Reference
 
