@@ -125,6 +125,7 @@ const sidebars = {
             },
             'installation/langchain',
             'installation/llamaindex',
+            'installation/litellm',
           ],
         },
         {
