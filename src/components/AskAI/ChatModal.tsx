@@ -39,6 +39,8 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
     setMessages(prev => [...prev, { role: 'user', content: question }])
     setIsLoading(true)
     setIsWaitingFirstToken(true)
+    // Add empty assistant message immediately to show LoadingSkeleton
+    setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
     try {
       const res = await fetch('/api/ask', {
@@ -48,13 +50,14 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
       })
 
       if (res.status === 429) {
-        setMessages(prev => [
-          ...prev,
-          {
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[newMessages.length - 1] = {
             role: 'assistant',
             content: 'You have reached the query limit for this session. Please refresh the page to continue.',
-          },
-        ])
+          }
+          return newMessages
+        })
         setIsLoading(false)
         setIsWaitingFirstToken(false)
         return
@@ -72,8 +75,6 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
       const decoder = new TextDecoder()
       let assistantMessage = ''
       let buffer = ''
-
-      setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
       while (true) {
         const { done, value } = await reader.read()
@@ -110,13 +111,14 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
         }
       }
     } catch (error) {
-      setMessages(prev => [
-        ...prev,
-        {
+      setMessages(prev => {
+        const newMessages = [...prev]
+        newMessages[newMessages.length - 1] = {
           role: 'assistant',
           content: 'Sorry, an error occurred. Please try again.',
-        },
-      ])
+        }
+        return newMessages
+      })
     } finally {
       setIsLoading(false)
       setIsWaitingFirstToken(false)
