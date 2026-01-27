@@ -27,6 +27,13 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
   const inputRef = useRef<HTMLInputElement>(null)
   const turnstileRef = useRef<{ reset: () => void } | null>(null)
 
+  const handleClearChat = () => {
+    if (messages.length === 0) return
+    if (window.confirm('Clear all messages? This cannot be undone.')) {
+      setMessages([])
+    }
+  }
+
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
@@ -153,10 +160,23 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
         aria-labelledby="askai-modal-title"
       >
         <div className={styles.header}>
+          <img src="https://apertis.ai/logo.png" alt="" className={styles.logo} />
           <h3 id="askai-modal-title" className={styles.title}>Ask AI Assistant</h3>
           <span className={styles.shortcut}>{shortcutLabel}</span>
-          <button className={styles.closeButton} onClick={onClose} aria-label="Close">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <button
+            className={styles.headerButton}
+            onClick={handleClearChat}
+            disabled={messages.length === 0}
+            aria-label="Clear chat"
+            title="Clear chat"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+          </button>
+          <button className={styles.headerButton} onClick={onClose} aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -202,21 +222,29 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
         </div>
 
         <form className={styles.inputForm} onSubmit={handleSubmit}>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="Ask a question..."
-            disabled={isLoading}
-          />
-          <button type="submit" disabled={isLoading || !input.trim() || !turnstileToken}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="22" y1="2" x2="11" y2="13" />
-              <polygon points="22 2 15 22 11 13 2 9 22 2" />
-            </svg>
-          </button>
+          <div className={styles.inputWrapper}>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Ask a question..."
+              disabled={isLoading}
+            />
+            <button type="submit" disabled={isLoading || !input.trim() || !turnstileToken}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </div>
         </form>
+        <footer className={styles.footer}>
+          <span>Powered by </span>
+          <a href="https://apertis.ai" target="_blank" rel="noopener noreferrer">
+            Apertis
+          </a>
+        </footer>
         <Turnstile
           ref={turnstileRef}
           siteKey={TURNSTILE_SITE_KEY}

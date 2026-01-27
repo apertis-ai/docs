@@ -68,6 +68,13 @@
   gap: 12px;
 }
 
+.logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
 .title {
   margin: 0;
   font-size: 16px;
@@ -84,7 +91,7 @@
   font-family: monospace;
 }
 
-.closeButton {
+.headerButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,9 +105,14 @@
   transition: all 0.15s ease;
 }
 
-.closeButton:hover {
+.headerButton:hover:not(:disabled) {
   background: var(--ifm-color-emphasis-100);
   color: var(--ifm-color-emphasis-900);
+}
+
+.headerButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Messages Container */
@@ -201,28 +213,40 @@
 
 /* Input Form */
 .inputForm {
-  display: flex;
-  gap: 12px;
   padding: 16px 20px;
   border-top: 1px solid var(--ifm-color-emphasis-200);
   background: var(--ifm-background-surface-color);
-  border-radius: 0 0 16px 16px;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 24px;
+  background: var(--ifm-background-color);
+  transition: all 0.2s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+[data-theme='dark'] .inputWrapper:focus-within {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
 
 .inputForm input {
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 12px;
+  padding-right: 50px;
+  border: none;
+  border-radius: 24px;
   font-size: 14px;
-  background: var(--ifm-background-color);
+  background: transparent;
   color: var(--ifm-color-emphasis-900);
   outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.inputForm input:focus {
-  border-color: var(--ifm-color-primary);
 }
 
 .inputForm input::placeholder {
@@ -235,15 +259,17 @@
 }
 
 .inputForm button {
+  position: absolute;
+  right: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: var(--ifm-color-primary);
   color: white;
-  border-radius: 12px;
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -255,6 +281,24 @@
 .inputForm button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+  padding: 8px 20px 12px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.footer a {
+  color: var(--ifm-color-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 /* Loading Skeleton with Breathing Glow */
@@ -336,6 +380,10 @@
   .modal {
     max-height: 90vh;
     border-radius: 16px 16px 0 0;
+  }
+
+  .footer {
+    border-radius: 0 0 0 0;
   }
 
   .messagesContainer {
