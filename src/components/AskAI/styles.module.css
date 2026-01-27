@@ -7,7 +7,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  background: var(--ifm-color-primary);
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: white;
   border: none;
   border-radius: 50px;
@@ -17,16 +17,52 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
   z-index: 100;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Glass reflection overlay */
+.floatingButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transition: left 0.4s ease;
+}
+
+.floatingButton:hover::before {
+  left: 100%;
 }
 
 .floatingButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  background: var(--ifm-color-primary-dark);
+  box-shadow: 0 4px 16px rgba(52, 152, 219, 0.4);
+  background: linear-gradient(135deg, #3fa0e8 0%, #2e8ac7 100%);
+}
+
+[data-theme='dark'] .floatingButton {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+}
+
+[data-theme='dark'] .floatingButton:hover {
+  background: linear-gradient(135deg, #7ab8fc 0%, #4f8ffa 100%);
+  box-shadow: 0 4px 16px rgba(96, 165, 250, 0.4);
 }
 
 .buttonIcon {
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
 }
 
 .buttonText {
@@ -366,6 +402,10 @@
     right: 16px;
     padding: 12px;
     border-radius: 50%;
+  }
+
+  .floatingButton::before {
+    display: none;
   }
 
   .buttonText {
