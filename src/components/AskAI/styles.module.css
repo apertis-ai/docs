@@ -18,7 +18,6 @@
   transition: all 0.2s ease;
   z-index: 100;
   overflow: hidden;
-  position: relative;
 }
 
 /* Glass reflection overlay */
