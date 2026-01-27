@@ -76,8 +76,8 @@
 
 .buttonIcon {
   flex-shrink: 0;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   position: relative;
   z-index: 2;
