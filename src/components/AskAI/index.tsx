@@ -44,6 +44,7 @@ export default function AskAI() {
         aria-label="Ask AI"
         title={`Ask AI (${shortcutLabel})`}
       >
+        <span className={styles.glassOverlay} />
         <img
           src="https://apertis.ai/logo.png"
           alt=""
