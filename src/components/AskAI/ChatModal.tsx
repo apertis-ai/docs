@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from './styles.module.css'
+import LoadingSkeleton from './LoadingSkeleton'
+import MarkdownContent from './MarkdownContent'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -16,6 +18,7 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isWaitingFirstToken, setIsWaitingFirstToken] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -35,6 +38,7 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
     setInput('')
     setMessages(prev => [...prev, { role: 'user', content: question }])
     setIsLoading(true)
+    setIsWaitingFirstToken(true)
 
     try {
       const res = await fetch('/api/ask', {
@@ -52,6 +56,7 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
           },
         ])
         setIsLoading(false)
+        setIsWaitingFirstToken(false)
         return
       }
 
@@ -85,6 +90,9 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
             try {
               const parsed = JSON.parse(data)
               if (parsed.content) {
+                if (isWaitingFirstToken) {
+                  setIsWaitingFirstToken(false)
+                }
                 assistantMessage += parsed.content
                 setMessages(prev => {
                   const newMessages = [...prev]
@@ -111,12 +119,17 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
       ])
     } finally {
       setIsLoading(false)
+      setIsWaitingFirstToken(false)
     }
   }
 
   const handleSuggestion = (text: string) => {
     setInput(text)
     inputRef.current?.focus()
+  }
+
+  const isLastMessageLoading = (index: number) => {
+    return isWaitingFirstToken && index === messages.length - 1
   }
 
   return (
@@ -157,11 +170,20 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
             </div>
           )}
           {messages.map((msg, i) => (
-            <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
+            <div
+              key={i}
+              className={`${styles.message} ${styles[msg.role]} ${isLastMessageLoading(i) ? styles.loadingMessage : ''}`}
+            >
               <div className={styles.messageContent}>
-                {msg.content || (isLoading && i === messages.length - 1 && (
-                  <span className={styles.typing}>...</span>
-                ))}
+                {msg.role === 'assistant' ? (
+                  isLastMessageLoading(i) ? (
+                    <LoadingSkeleton />
+                  ) : (
+                    <MarkdownContent content={msg.content} />
+                  )
+                ) : (
+                  msg.content
+                )}
               </div>
             </div>
           ))}
