@@ -24,3 +24,6 @@ CLAUDE.md
 
 # Git worktrees
 .worktrees/
+
+# Scripts (internal tooling)
+scripts/
