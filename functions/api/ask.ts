@@ -98,7 +98,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     })
 
     if (!embeddingRes.ok) {
-      throw new Error(`Jina API error: ${embeddingRes.status}`)
+      const errText = await embeddingRes.text()
+      return new Response(
+        JSON.stringify({ error: `Jina API error: ${embeddingRes.status}`, details: errText }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     const embeddingData: JinaEmbeddingResponse = await embeddingRes.json()
@@ -112,7 +116,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       })
 
     if (error) {
-      throw new Error(`Supabase search error: ${error.message}`)
+      return new Response(
+        JSON.stringify({ error: `Supabase search error: ${error.message}`, code: error.code }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     // 3. Build context and prompt
@@ -150,7 +157,11 @@ ${docContext}`
     })
 
     if (!chatRes.ok) {
-      throw new Error(`Apertis API error: ${chatRes.status}`)
+      const errText = await chatRes.text()
+      return new Response(
+        JSON.stringify({ error: `Apertis API error: ${chatRes.status}`, details: errText }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     // 5. Transform and forward SSE stream
