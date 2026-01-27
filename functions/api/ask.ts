@@ -9,6 +9,12 @@ interface Env {
   APERTIS_API_KEY: string
   APERTIS_BASE_URL: string
   APERTIS_MODEL: string
+  TURNSTILE_SECRET_KEY: string
+}
+
+interface TurnstileResponse {
+  success: boolean
+  'error-codes'?: string[]
 }
 
 interface JinaEmbeddingResponse {
@@ -38,7 +44,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
 
-  let body: { question?: string; sessionId?: string }
+  let body: { question?: string; sessionId?: string; turnstileToken?: string }
   try {
     body = await request.json()
   } catch {
@@ -48,7 +54,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     )
   }
 
-  const { question, sessionId } = body
+  const { question, sessionId, turnstileToken } = body
 
   if (!question || typeof question !== 'string') {
     return new Response(
@@ -68,6 +74,32 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     return new Response(
       JSON.stringify({ error: 'Missing or invalid sessionId' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Verify Turnstile token
+  if (!turnstileToken || typeof turnstileToken !== 'string') {
+    return new Response(
+      JSON.stringify({ error: 'Missing Turnstile token' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      secret: env.TURNSTILE_SECRET_KEY,
+      response: turnstileToken,
+      remoteip: request.headers.get('CF-Connecting-IP') || undefined,
+    }),
+  })
+
+  const turnstileData: TurnstileResponse = await turnstileRes.json()
+  if (!turnstileData.success) {
+    return new Response(
+      JSON.stringify({ error: 'Turnstile verification failed', codes: turnstileData['error-codes'] }),
+      { status: 403, headers: { 'Content-Type': 'application/json' } }
     )
   }
 

@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { Turnstile } from '@marsidev/react-turnstile'
 import styles from './styles.module.css'
 import LoadingSkeleton from './LoadingSkeleton'
 import MarkdownContent from './MarkdownContent'
+
+const TURNSTILE_SITE_KEY = '0x4AAAAAACS2SzpYBFytHb_E'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -19,8 +22,10 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isWaitingFirstToken, setIsWaitingFirstToken] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const turnstileRef = useRef<{ reset: () => void } | null>(null)
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -32,10 +37,12 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading || !turnstileToken) return
 
     const question = input.trim()
+    const token = turnstileToken
     setInput('')
+    setTurnstileToken(null) // Clear token (single use)
     setMessages(prev => [...prev, { role: 'user', content: question }])
     setIsLoading(true)
     setIsWaitingFirstToken(true)
@@ -46,7 +53,7 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
       const res = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, sessionId }),
+        body: JSON.stringify({ question, sessionId, turnstileToken: token }),
       })
 
       if (res.status === 429) {
@@ -122,6 +129,8 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
     } finally {
       setIsLoading(false)
       setIsWaitingFirstToken(false)
+      // Reset Turnstile for next submission
+      turnstileRef.current?.reset()
     }
   }
 
@@ -201,13 +210,20 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
             placeholder="Ask a question..."
             disabled={isLoading}
           />
-          <button type="submit" disabled={isLoading || !input.trim()}>
+          <button type="submit" disabled={isLoading || !input.trim() || !turnstileToken}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
           </button>
         </form>
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={TURNSTILE_SITE_KEY}
+          onSuccess={setTurnstileToken}
+          onExpire={() => setTurnstileToken(null)}
+          options={{ size: 'invisible' }}
+        />
       </div>
     </div>
   )
