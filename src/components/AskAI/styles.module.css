@@ -257,6 +257,64 @@
   cursor: not-allowed;
 }
 
+/* Loading Skeleton with Breathing Glow */
+.loadingMessage .messageContent {
+  border: 1px solid var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+  animation: breathe 1.5s ease-in-out infinite;
+}
+
+[data-theme='dark'] .loadingMessage .messageContent {
+  --ai-glow-color: rgba(96, 165, 250, 0.5);
+}
+
+@keyframes breathe {
+  0%, 100% {
+    box-shadow: 0 0 8px var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+  }
+  50% {
+    box-shadow: 0 0 20px var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+  }
+}
+
+.loadingSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.skeletonLine {
+  height: 14px;
+  background: linear-gradient(
+    90deg,
+    var(--ifm-color-emphasis-200) 25%,
+    var(--ifm-color-emphasis-100) 50%,
+    var(--ifm-color-emphasis-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+[data-theme='dark'] .skeletonLine {
+  background: linear-gradient(
+    90deg,
+    #374151 25%,
+    #4b5563 50%,
+    #374151 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 /* Mobile Responsive */
 @media (max-width: 640px) {
   .floatingButton {
