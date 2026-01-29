@@ -547,7 +547,7 @@ table {
   border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
-  width: 100%;
+  max-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -668,9 +668,10 @@ html {
 
 /* Fix 2: Responsive table with horizontal scroll */
 /* Wrap tables in a scrollable container */
-.markdown table {
-  display: block;
-  width: 100%;
+.theme-doc-markdown table {
+  display: table !important;
+  width: auto !important;
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
