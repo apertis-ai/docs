@@ -125,7 +125,7 @@ const config = {
       // image: 'img/docusaurus-social-card.jpg',
       image: 'img/logo.png',
       navbar: {
-        title: 'Apertis Documentation',
+        title: 'Apertis Docs',
         logo: {
           alt: 'Logo',
           src: 'img/logo.png',
@@ -145,9 +145,15 @@ const config = {
             activeBaseRegex: '/api/',
           },
           {
-            href: 'https://api.apertis.ai',
-            label: 'Apertis Website',
+            href: 'https://apertis.ai/changelog',
+            label: 'Release Notes',
+            position: 'left',
+          },
+          {
+            href: 'https://apertis.ai/login',
+            label: 'Log in',
             position: 'right',
+            className: 'navbar-login-button',
           },
         ],
       },

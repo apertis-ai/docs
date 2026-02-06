@@ -372,14 +372,15 @@ code:not(pre code) {
 .navbar {
   height: 60px;
   box-shadow: none;
-  border-bottom: 1px solid var(--ifm-color-emphasis-300);
-  backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #f0f0f0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.92);
 }
 
 [data-theme='dark'] .navbar {
-  background-color: rgba(6, 6, 6, 0.95);
-  border-bottom-color: #1a1a1a;
+  background-color: rgba(6, 6, 6, 0.92);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .navbar__title {
@@ -407,6 +408,38 @@ code:not(pre code) {
   font-weight: 500;
 }
 
+/* Navbar Log in Button — Transparent with hover border */
+.navbar-login-button {
+  background: transparent !important;
+  color: #475569 !important;
+  border-radius: 8px !important;
+  padding: 6px 16px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  border: 1px solid transparent !important;
+}
+
+.navbar-login-button:hover {
+  background: transparent !important;
+  color: #0f172a !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none !important;
+}
+
+[data-theme='dark'] .navbar-login-button {
+  color: #94a3b8 !important;
+  background: transparent !important;
+}
+
+[data-theme='dark'] .navbar-login-button:hover {
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
 /* ==========================================================================
    Search Box - Gemini Style
    ========================================================================== */
@@ -415,7 +448,7 @@ code:not(pre code) {
   background-color: #17181C;
   border: 1px solid #353841;
   border-radius: 8px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 1.75rem;
   color: #C0C2C7;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }

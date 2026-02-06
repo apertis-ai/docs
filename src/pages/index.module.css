@@ -1,23 +1,257 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
+/* ==========================================================================
+   Landing Page — Clean, Professional
+   ========================================================================== */
 
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+.landing {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+
+.hero {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 80px 0 48px;
+}
+
+.heroTitle {
+  position: relative;
+  z-index: 1;
+  font-size: 48px;
+  font-weight: 700;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+[data-theme='dark'] .heroTitle {
+  color: #f1f5f9;
+}
+
+.heroSub {
+  position: relative;
+  z-index: 1;
+  font-size: 18px;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+  color: #64748b;
+  margin: 0 0 32px;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+[data-theme='dark'] .heroSub {
+  color: #94a3b8;
+}
+
+.heroSearch {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid #3498db;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  color: #94a3b8;
+  font-size: 14px;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme='dark'] .heroSearch {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+}
+
+.heroSearch:hover {
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18), 0 4px 16px rgba(52, 152, 219, 0.08);
+}
+
+[data-theme='dark'] .heroSearch:hover {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2), 0 4px 16px rgba(96, 165, 250, 0.08);
+}
+
+.heroSearch svg {
+  flex-shrink: 0;
+  opacity: 0.4;
+}
+
+.heroSearch span {
+  flex: 1;
+  text-align: left;
+}
+
+.heroKbd {
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  color: #64748b;
+}
+
+[data-theme='dark'] .heroKbd {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   Feature Cards Grid
+   ========================================================================== */
+
+.features {
+  padding: 0 0 80px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
   overflow: hidden;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+[data-theme='dark'] .featuresGrid {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
-.buttons {
+/* --- Base Card --- */
+.featureCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  background: #ffffff;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.15s ease;
+}
+
+[data-theme='dark'] .featureCard {
+  background: #060606;
+}
+
+.featureCard:hover {
+  text-decoration: none;
+  color: inherit;
+  background: #f8fafc;
+}
+
+[data-theme='dark'] .featureCard:hover {
+  background: #0f0f0f;
+}
+
+/* --- Color-tinted hover per variant --- */
+.card_blue:hover { background: rgba(59, 130, 246, 0.04); }
+.card_purple:hover { background: rgba(139, 92, 246, 0.04); }
+.card_green:hover { background: rgba(16, 185, 129, 0.04); }
+.card_orange:hover { background: rgba(245, 158, 11, 0.04); }
+.card_pink:hover { background: rgba(236, 72, 153, 0.04); }
+.card_cyan:hover { background: rgba(6, 182, 212, 0.04); }
+
+[data-theme='dark'] .card_blue:hover { background: rgba(59, 130, 246, 0.06); }
+[data-theme='dark'] .card_purple:hover { background: rgba(139, 92, 246, 0.06); }
+[data-theme='dark'] .card_green:hover { background: rgba(16, 185, 129, 0.06); }
+[data-theme='dark'] .card_orange:hover { background: rgba(245, 158, 11, 0.06); }
+[data-theme='dark'] .card_pink:hover { background: rgba(236, 72, 153, 0.06); }
+[data-theme='dark'] .card_cyan:hover { background: rgba(6, 182, 212, 0.06); }
+
+/* --- Icons --- */
+.featureIcon {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+}
+
+.icon_blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.icon_purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.icon_green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.icon_orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.icon_pink { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
+.icon_cyan { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+
+[data-theme='dark'] .icon_blue { background: rgba(59, 130, 246, 0.12); color: #60a5fa; }
+[data-theme='dark'] .icon_purple { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+[data-theme='dark'] .icon_green { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+[data-theme='dark'] .icon_orange { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+[data-theme='dark'] .icon_pink { background: rgba(236, 72, 153, 0.12); color: #f472b6; }
+[data-theme='dark'] .icon_cyan { background: rgba(6, 182, 212, 0.12); color: #22d3ee; }
+
+.featureTitle {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0 0 6px;
+  color: #0f172a;
+}
+
+[data-theme='dark'] .featureTitle {
+  color: #f1f5f9;
+}
+
+.featureDesc {
+  font-size: 14px;
+  font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+[data-theme='dark'] .featureDesc {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 48px 0 32px;
+  }
+
+  .heroTitle {
+    font-size: 36px;
+  }
+
+  .heroSub {
+    font-size: 16px;
+  }
+
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
 }
