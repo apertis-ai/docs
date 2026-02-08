@@ -192,18 +192,6 @@ You can set a default model using the `ANTHROPIC_MODEL` environment variable:
 }
 ```
 
-:::info Subscription Plan Users
-If you are using a **subscription plan**, add the `code:` prefix to the model ID:
-
-```json
-{
-  "env": {
-    "ANTHROPIC_MODEL": "code:claude-opus-4-5-20251101"
-  }
-}
-```
-:::
-
 ### Selecting Models in Claude Code
 
 After configuration, you can view and select your custom model inside Claude Code:
@@ -309,7 +297,7 @@ For complex tasks with large codebases:
 | `ANTHROPIC_BASE_URL` | Custom API endpoint URL (`https://api.apertis.ai`) |
 | `ANTHROPIC_AUTH_TOKEN` | Your Apertis API key |
 | `ANTHROPIC_API_KEY` | Must be explicitly empty (`""`) |
-| `ANTHROPIC_MODEL` | Default model ID (use `code:` prefix for subscription plans) |
+| `ANTHROPIC_MODEL` | Default model ID |
 | `API_TIMEOUT_MS` | API request timeout in milliseconds (`3000000`) |
 | `ANTHROPIC_DEFAULT_OPUS_MODEL` | Default model for opus tier |
 | `ANTHROPIC_DEFAULT_SONNET_MODEL` | Default model for sonnet tier |
