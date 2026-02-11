@@ -9,7 +9,7 @@ Apertis offers flexible subscription plans designed to meet different usage need
 | Feature | Lite | Pro | Max |
 |---------|------|-----|-----|
 | Monthly Quota | Basic | Standard | Premium |
-| Model Access | All models | All models | All models |
+| Model Access | Lite + Free models | Pro + Lite + Free models | All models |
 | Priority Support | - | Email | Priority |
 | PAYG Fallback | Optional | Optional | Optional |
 | Billing Cycles | Monthly, Quarterly, Yearly | Monthly, Quarterly, Yearly | Monthly, Quarterly, Yearly |
@@ -196,10 +196,23 @@ client = OpenAI(
 
 # Quota is tracked against your subscription
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="claude-sonnet-4.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
+
+### Viewing Available Models
+
+Use your subscription token to query which models are available in your plan:
+
+```python
+# List all models in your plan
+models = client.models.list()
+for model in models:
+    print(model.id)
+```
+
+The `/v1/models` endpoint returns only models included in your current plan, along with extra fields like `multiplier` (quota cost) and `tier` (model origin). See [Models API](/docs-api/utilities/models) for details.
 
 ## FAQ
 
