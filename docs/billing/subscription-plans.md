@@ -106,12 +106,16 @@ If a payment fails:
 
 ### Viewing Subscription Status
 
-Access your subscription details in the dashboard:
+Access your subscription details via **Settings** → **Subscription** tab ([direct link](https://apertis.ai/setting?tab=subscription)):
 
 - Current plan and billing cycle
 - Quota usage (used / limit)
 - Next billing date
 - Payment history
+
+:::tip
+After subscribing, the navbar **Subscribe** button changes to **My Plan** — click it to jump directly to your subscription settings. You can also find **My Plan** in the user dropdown menu.
+:::
 
 ### Changing Plans
 
@@ -130,7 +134,7 @@ You can upgrade or downgrade your plan at any time:
 
 To cancel your subscription:
 
-1. Go to **Billing** → **Subscription**
+1. Go to **Settings** → **Subscription** tab (or click **My Plan** in the navbar)
 2. Click **Cancel Subscription**
 3. Choose cancellation timing:
    - **Immediate**: Ends now (no refund for remaining period)
@@ -183,6 +187,14 @@ Each subscription comes with a dedicated API token:
 - **Auto-sync**: Quota automatically synced with subscription
 - **Cycle Reset**: Token quota resets with billing cycle
 - **Separate from Regular Tokens**: Managed independently
+
+### Finding Your Subscription Token
+
+After subscribing, find your dedicated API key in **Settings** → **API Keys** tab ([direct link](https://apertis.ai/setting?tab=apikeys)):
+
+1. Click **My Plan** in the navbar (or go to **Settings**)
+2. Switch to the **API Keys** tab
+3. Your subscription key (`sk-sub-...`) is listed with integration guides
 
 ### Using Your Subscription Token
 

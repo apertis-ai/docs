@@ -4,10 +4,20 @@ API keys are used to authenticate requests to the Apertis API. This guide explai
 
 ## Obtaining Your API Key
 
+### Standard API Key (PAYG)
+
 1. **Sign up or log in** to your account at [Apertis](https://apertis.ai/login)
-2. Navigate to **API Keys** section in the dashboard
+2. Navigate to [**API Keys**](https://apertis.ai/token)
 3. Click **Create New Key** to generate a new API key
 4. Copy and securely store your API key - it will only be shown once
+
+### Subscription API Key
+
+If you have an active subscription, a dedicated API key is automatically created for you:
+
+1. Click **My Plan** in the navbar (or go to [**Settings**](https://apertis.ai/setting?tab=apikeys))
+2. Switch to the **API Keys** tab
+3. Your subscription key (`sk-sub-...`) is listed with integration guides and ready to use
 
 :::warning Important
 Your API key is displayed only once upon creation. Store it securely immediately. If you lose your key, you'll need to create a new one.

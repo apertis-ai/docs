@@ -11,9 +11,13 @@ Get up and running with the Apertis API in under 5 minutes. This guide walks you
 ## Step 1: Get Your API Key
 
 1. Log in to [Apertis Dashboard](https://apertis.ai/login)
-2. Navigate to **API Keys**
+2. Navigate to [**API Keys**](https://apertis.ai/token)
 3. Click **Create New Key**
 4. Copy your key (format: `sk-xxxxxxxx`)
+
+:::tip Subscription users
+If you have an active subscription, a dedicated key (`sk-sub-...`) is already created for you. Find it in **Settings** → **API Keys** tab (click **My Plan** in the navbar).
+:::
 
 :::warning
 Save your API key securely. It's only shown once!
