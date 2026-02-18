@@ -10,6 +10,7 @@ create table if not exists documents (
   file_path text not null unique,
   title text not null,
   url_path text not null,
+  content_hash text,
   updated_at timestamp with time zone default now()
 );
 
@@ -28,10 +29,11 @@ create index if not exists document_chunks_embedding_idx
   on document_chunks
   using hnsw (embedding vector_cosine_ops);
 
--- 5. Create search function
+-- 5. Create search function (with similarity threshold)
 create or replace function search_docs(
   query_embedding extensions.vector(1024),
-  match_count int default 5
+  match_count int default 5,
+  similarity_threshold float default 0.3
 )
 returns table (
   id bigint,
@@ -54,6 +56,7 @@ begin
     1 - (dc.embedding <=> query_embedding) as similarity
   from document_chunks dc
   join documents d on d.id = dc.document_id
+  where 1 - (dc.embedding <=> query_embedding) > similarity_threshold
   order by dc.embedding <=> query_embedding
   limit match_count;
 end;

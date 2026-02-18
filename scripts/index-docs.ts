@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { glob } from 'glob'
 import matter from 'gray-matter'
 import { readFileSync } from 'fs'
+import { createHash } from 'crypto'
 
 const SUPABASE_URL = process.env.SUPABASE_URL
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY
@@ -18,21 +19,91 @@ interface JinaEmbeddingResponse {
   data: Array<{ embedding: number[] }>
 }
 
-function chunkText(text: string, maxChars = 1500): string[] {
-  const paragraphs = text.split(/\n\n+/)
+interface Section {
+  heading: string | null
+  content: string
+}
+
+/**
+ * Split markdown into sections by H2/H3 headings.
+ * Each section includes its heading and all content until the next heading.
+ */
+function splitBySections(markdown: string): Section[] {
+  const lines = markdown.split('\n')
+  const sections: Section[] = []
+  let currentHeading: string | null = null
+  let currentLines: string[] = []
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^#{2,3}\s+(.+)$/)
+    if (headingMatch) {
+      // Save previous section
+      if (currentLines.length > 0) {
+        sections.push({ heading: currentHeading, content: currentLines.join('\n').trim() })
+      }
+      currentHeading = headingMatch[1]
+      currentLines = []
+    } else {
+      currentLines.push(line)
+    }
+  }
+  // Save last section
+  if (currentLines.length > 0) {
+    sections.push({ heading: currentHeading, content: currentLines.join('\n').trim() })
+  }
+
+  return sections.filter(s => s.content.length > 0)
+}
+
+/**
+ * Chunk a section's content by paragraph boundaries, respecting maxChars.
+ * Returns chunks with the document/section context prefix prepended.
+ */
+function chunkSection(
+  section: Section,
+  docTitle: string,
+  maxChars = 1500
+): string[] {
+  const prefix = section.heading
+    ? `${docTitle} > ${section.heading}\n\n`
+    : `${docTitle}\n\n`
+
+  const paragraphs = section.content.split(/\n\n+/)
   const chunks: string[] = []
   let current = ''
 
   for (const para of paragraphs) {
     if ((current + para).length > maxChars && current) {
-      chunks.push(current.trim())
+      chunks.push(prefix + current.trim())
       current = para
     } else {
-      current += '\n\n' + para
+      current += (current ? '\n\n' : '') + para
     }
   }
-  if (current.trim()) chunks.push(current.trim())
+  if (current.trim()) chunks.push(prefix + current.trim())
   return chunks
+}
+
+/**
+ * Process a markdown body into context-enriched chunks.
+ * #1: Keeps code blocks (no stripping)
+ * #2: Splits by H2/H3 headings first, then by size
+ * #3: Prepends doc title > section heading as metadata prefix
+ */
+function createChunks(body: string, docTitle: string): string[] {
+  const sections = splitBySections(body)
+  const allChunks: string[] = []
+
+  for (const section of sections) {
+    const sectionChunks = chunkSection(section, docTitle)
+    allChunks.push(...sectionChunks)
+  }
+
+  return allChunks
+}
+
+function sha256(content: string): string {
+  return createHash('sha256').update(content).digest('hex')
 }
 
 async function getEmbeddings(texts: string[]): Promise<number[][]> {
@@ -63,12 +134,13 @@ function extractH1(markdown: string): string | null {
   return match ? match[1] : null
 }
 
-function removeCodeBlocks(text: string): string {
-  return text.replace(/```[\s\S]*?```/g, '[code block]')
-}
-
 async function indexDocs() {
   console.log('Starting documentation indexing...')
+
+  const forceReindex = process.argv.includes('--force')
+  if (forceReindex) {
+    console.log('⚡ Force re-index mode: skipping content hash checks')
+  }
 
   const files = await glob(['docs/**/*.md', 'docs-api/**/*.md'], {
     ignore: ['docs/plans/**']
@@ -77,25 +149,43 @@ async function indexDocs() {
   console.log(`Found ${files.length} markdown files`)
 
   let totalChunks = 0
+  let skippedFiles = 0
 
   for (const filePath of files) {
     try {
       const content = readFileSync(filePath, 'utf-8')
+      const contentHash = sha256(content)
       const { data: frontmatter, content: body } = matter(content)
 
+      const docTitle = frontmatter.title || extractH1(body) || filePath
       const urlPath = '/' + filePath
         .replace(/^docs-api\//, 'api/')
         .replace(/^docs\//, '')
         .replace(/\.md$/, '')
         .replace(/\/index$/, '')
 
-      // Upsert document
+      // Check if content has changed (#10: incremental indexing)
+      if (!forceReindex) {
+        const { data: existing } = await supabase
+          .from('documents')
+          .select('content_hash')
+          .eq('file_path', filePath)
+          .single()
+
+        if (existing?.content_hash === contentHash) {
+          skippedFiles++
+          continue
+        }
+      }
+
+      // Upsert document with content hash
       const { data: doc, error: docError } = await supabase
         .from('documents')
         .upsert({
           file_path: filePath,
-          title: frontmatter.title || extractH1(body) || filePath,
-          url_path: urlPath
+          title: docTitle,
+          url_path: urlPath,
+          content_hash: contentHash,
         })
         .select()
         .single()
@@ -105,9 +195,8 @@ async function indexDocs() {
         continue
       }
 
-      // Clean and chunk the content
-      const cleanedBody = removeCodeBlocks(body)
-      const chunks = chunkText(cleanedBody)
+      // Create heading-aware, metadata-enriched chunks (#1, #2, #3)
+      const chunks = createChunks(body, docTitle)
 
       if (chunks.length === 0) {
         console.log(`⏭️  Skipped: ${filePath} (no content)`)
@@ -153,7 +242,7 @@ async function indexDocs() {
     }
   }
 
-  console.log(`\n✅ Indexing complete! Total: ${files.length} files, ${totalChunks} chunks`)
+  console.log(`\n✅ Indexing complete! ${files.length} files, ${totalChunks} chunks indexed, ${skippedFiles} unchanged files skipped`)
 }
 
 indexDocs().catch(console.error)

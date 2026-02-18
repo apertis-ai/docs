@@ -25,6 +25,7 @@ interface DocumentSearchResult {
   title: string
   url_path: string
   content: string
+  similarity: number
 }
 
 // Simple in-memory rate limiting (resets on cold start)
@@ -156,16 +157,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 3. Build context and prompt
     const docContext = docs && docs.length > 0
-      ? docs.map((d: DocumentSearchResult) => `## ${d.title}\nSource: ${d.url_path}\n\n${d.content}`).join('\n\n---\n\n')
+      ? docs.map((d: DocumentSearchResult) => `## ${d.title} (relevance: ${(d.similarity * 100).toFixed(0)}%)\nSource: ${d.url_path}\n\n${d.content}`).join('\n\n---\n\n')
       : 'No relevant documentation found.'
 
-    const systemPrompt = `You are the Apertis AI Documentation Assistant. Answer user questions based on the documentation content provided below.
+    const systemPrompt = `You are the Apertis AI Documentation Assistant. Answer user questions based strictly on the documentation content provided below.
 
 Guidelines:
-- If the information is not found in the documentation, honestly state that you're not sure
-- Provide relevant documentation links when applicable (format: [title](/path))
-- Be concise and clear
-- Use code examples when helpful
+- Answer based ONLY on the provided documentation. Do not make up information.
+- If the documentation does not contain the answer, say: "I couldn't find this in the Apertis documentation. You can browse the full docs at [docs.apertis.ai](https://docs.apertis.ai) or contact support at hi@apertis.ai."
+- Always cite your sources using markdown links: [Page Title](/url-path)
+- Include code examples from the documentation when relevant — use the exact code snippets provided, do not invent new ones.
+- Be concise. Lead with the direct answer, then provide supporting details.
+- When multiple documentation sections are relevant, prioritize the ones listed first (they have higher relevance scores).
 
 ## Relevant Documentation:
 
