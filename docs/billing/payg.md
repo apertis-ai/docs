@@ -81,12 +81,16 @@ Subscription users can enable PAYG as a fallback when subscription quota is exha
 ```
 Request → Check Subscription Quota
               ↓
-         Quota Available? → Yes → Use Subscription Quota
+         Quota Available? → Yes → Deduct Model Rate from Quota (per-request)
               ↓ No
-         PAYG Enabled? → Yes → Use Account Balance
+         PAYG Enabled? → Yes → Charge Entire Request per Token (from balance)
               ↓ No
          Return 402 Error
 ```
+
+:::note
+When PAYG fallback activates, the **entire request** is billed using PAYG per-token pricing. There is no partial split between subscription quota and PAYG — it's one or the other.
+:::
 
 ### Enabling PAYG Fallback
 
@@ -106,17 +110,16 @@ Set a maximum PAYG spending per billing cycle:
 | $50/cycle | Max $50 PAYG per month |
 | $0 | PAYG disabled (same as off) |
 
-### Hybrid Billing
+### Billing Mode Switch
 
-When a request spans both subscription quota and PAYG:
+Subscription and PAYG use different billing models:
 
-```
-Example: 100 quota remaining, request needs 150
+| Billing Mode | How It Charges |
+|-------------|----------------|
+| **Subscription** | Fixed quota per request (model rate × 1) |
+| **PAYG** | Per token (input tokens × input rate + output tokens × output rate) |
 
-Subscription pays: 100 (remaining quota)
-PAYG pays: 50 (overflow)
-Total request: 150 ✓
-```
+When your subscription quota runs out and PAYG is enabled, the next request is charged entirely through PAYG per-token pricing. There is no partial split between the two billing modes.
 
 ## Auto Top-Up
 

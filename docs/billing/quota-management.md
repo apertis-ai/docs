@@ -43,27 +43,35 @@ Your account balance for Pay-As-You-Go (PAYG) usage:
 
 ## Quota Calculation
 
-### Token-Based Billing
+### Subscription Quota — Per-Request Billing
 
-Quota consumption is calculated per request:
+Subscription plans use a **per-request** billing model. Each API request consumes a fixed amount of quota based on the model's multiplier rate:
 
 ```
-Quota = (Prompt Tokens + Completion Tokens × Multiplier) × Model Rate
+Quota Consumed per Request = Model Rate (fixed multiplier)
 ```
 
-### Completion Multipliers
+This is independent of token usage — a short response and a long response cost the same quota for the same model. Different plans offer different rates for the same model.
 
-Output tokens typically cost more than input tokens:
+For example, using Claude Sonnet 4.6:
 
-| Model Category | Completion Multiplier |
-|----------------|----------------------|
-| Most models | 1.0x |
-| GPT-3.5 series | 1.33x |
-| GPT-4 series | 2.0x |
+| Plan | Rate | Quota per Request |
+|------|------|-------------------|
+| Lite | 2.9x | 2.9 quota |
+| Pro | 2.1x | 2.1 quota |
+| Max | 0.88x | 0.88 quota |
+
+### PAYG — Per-Token Billing
+
+PAYG (Pay-As-You-Go) uses a **per-token** billing model. Each request is charged based on actual token consumption:
+
+```
+Cost = (Input Tokens × Input Rate) + (Output Tokens × Output Rate)
+```
 
 ### Model Pricing
 
-Different models have different costs per token. For current model pricing, please visit the [Models page](https://apertis.ai/models).
+For current model rates and pricing, visit the [Subscribe page](https://apertis.ai/subscribe) or the [Models page](https://apertis.ai/models).
 
 ## Monitoring Quota Usage
 
@@ -212,7 +220,7 @@ Configure alerts to be notified when quota is low:
 When quota is exhausted:
 
 1. **API Key Quota**: Requests return `402 Payment Required`
-2. **Subscription Quota**: Falls back to PAYG (if enabled)
+2. **Subscription Quota**: Falls back to PAYG per-token billing (if enabled), otherwise returns `402`
 3. **Account Balance**: All requests fail with `402`
 
 ### Error Response
