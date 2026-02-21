@@ -44,7 +44,7 @@ Every API request consumes a **fixed amount of quota** based on the model's **mu
 Quota Consumed per Request = Model Rate (fixed multiplier)
 ```
 
-For example, if you're on the Pro plan and use Claude Sonnet 4.6 (rate: 2.1x), each request deducts **2.1 quota** from your monthly allowance — whether the response is 10 tokens or 10,000 tokens.
+Each request deducts the model's rate from your monthly allowance — whether the response is 10 tokens or 10,000 tokens. Higher-tier plans offer lower rates, giving you more usage per quota.
 
 :::tip
 This is different from PAYG (Pay-As-You-Go), which charges per token. Subscription billing is simpler: one request = one fixed quota deduction.
@@ -64,21 +64,9 @@ The following models are included in **all plans** and consume **no quota**:
 
 ### Model Rates by Plan
 
-Each model has a different rate depending on your plan. Higher-tier plans offer lower rates, giving you more usage per quota:
+Each model has a different rate depending on your plan. Higher-tier plans offer lower rates, giving you more usage per quota. For the full model list and up-to-date rates, see the [Subscribe page](https://apertis.ai/subscribe).
 
-| Model | Lite Rate | Pro Rate | Max Rate |
-|-------|-----------|----------|----------|
-| GLM 4.7 Flash | 0.01x | 0.01x | 0.01x |
-| GPT-5.1 Codex (Mini) | 0.25x | 0.18x | 0.07x |
-| MiniMax M2.5 | 0.58x | 0.42x | 0.17x |
-| Kimi K2.5 | 0.79x | 0.57x | 0.23x |
-| Claude Haiku 4.5 | 0.98x | 0.47x | 0.29x |
-| GLM 5 | 1.1x | 0.84x | 0.35x |
-| GPT-5.3-Codex | 1.2x | 0.87x | 0.36x |
-| Claude Sonnet 4.6 | 2.9x | 2.1x | 0.88x |
-| Claude Opus 4.6 | 4.9x | 3.5x | 1.4x |
-
-For the full model list and up-to-date rates, see the [Subscribe page](https://apertis.ai/subscribe).
+You can also query the current rates programmatically using the [Models API](/docs-api/utilities/models) with your subscription key — the response includes a `multiplier` field for each model.
 
 :::tip Coding Tools
 When using coding tools such as Claude Code, Roo Code, Cline, Kilo Code, OpenCode, Crush, or Goose, add the `code:` prefix to Claude model IDs (e.g., `code:claude-opus-4-6`). This routes requests through optimized coding channels. The same subscription quota and rates apply. See the [Claude Code guide](/docs/installation/claude-code#coding-model-ids) for details.
@@ -92,17 +80,8 @@ You can estimate how many requests you get per month by dividing your plan's quo
 Estimated Uses = Monthly Quota ÷ Model Rate
 ```
 
-For example, on the **Pro plan** (900 quotas/month):
-
-| Model | Rate | Est. Uses/Month |
-|-------|------|-----------------|
-| GLM 4.7 Flash | 0.01x | 90,000 |
-| Claude Haiku 4.5 | 0.47x | ~1,914 |
-| Claude Sonnet 4.6 | 2.1x | ~428 |
-| Claude Opus 4.6 | 3.5x | ~257 |
-
 :::note
-These are estimates assuming you use only one model. In practice, most users mix models — using cheaper models for simple tasks and premium models for complex ones.
+In practice, most users mix models — using cheaper models for simple tasks and premium models for complex ones.
 :::
 
 ## PAYG (Pay-As-You-Go) Fallback
