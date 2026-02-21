@@ -51,15 +51,7 @@ Subscription plans use a **per-request** billing model. Each API request consume
 Quota Consumed per Request = Model Rate (fixed multiplier)
 ```
 
-This is independent of token usage — a short response and a long response cost the same quota for the same model. Different plans offer different rates for the same model.
-
-For example, using Claude Sonnet 4.6:
-
-| Plan | Rate | Quota per Request |
-|------|------|-------------------|
-| Lite | 2.9x | 2.9 quota |
-| Pro | 2.1x | 2.1 quota |
-| Max | 0.88x | 0.88 quota |
+This is independent of token usage — a short response and a long response cost the same quota for the same model. Different plans offer different rates for the same model — higher-tier plans have lower multipliers, giving you more requests per quota.
 
 ### PAYG — Per-Token Billing
 
