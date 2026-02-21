@@ -177,6 +177,19 @@ Anthropic base URL: https://api.apertis.ai
 
 ## Model Configuration
 
+### Coding Model IDs
+
+When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix for Claude model IDs. This routes requests through optimized coding channels:
+
+| Standard Model ID | Coding Model ID |
+|-------------------|-----------------|
+| `claude-opus-4-6` | `code:claude-opus-4-6` |
+| `claude-sonnet-4-20250514` | `code:claude-sonnet-4-20250514` |
+
+:::tip Why `code:` prefix?
+The `code:` prefix routes requests through dedicated coding channels optimized for tool use, extended thinking, and streaming — features essential for coding assistants. Always use `code:` prefixed model IDs with Claude Code and other coding tools.
+:::
+
 ### Setting a Default Model
 
 You can set a default model using the `ANTHROPIC_MODEL` environment variable:
@@ -187,7 +200,7 @@ You can set a default model using the `ANTHROPIC_MODEL` environment variable:
     "ANTHROPIC_BASE_URL": "https://api.apertis.ai",
     "ANTHROPIC_AUTH_TOKEN": "your_apertis_api_key",
     "ANTHROPIC_API_KEY": "",
-    "ANTHROPIC_MODEL": "claude-opus-4-5-20251101"
+    "ANTHROPIC_MODEL": "code:claude-opus-4-6"
   }
 }
 ```
@@ -219,9 +232,9 @@ You can also customize which models are used for each tier (opus, sonnet, haiku)
     "ANTHROPIC_AUTH_TOKEN": "your_apertis_api_key",
     "ANTHROPIC_API_KEY": "",
     "API_TIMEOUT_MS": "3000000",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4.5"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "code:claude-opus-4-6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "code:claude-sonnet-4-20250514",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "code:claude-haiku-4-5-20251001"
   }
 }
 ```
