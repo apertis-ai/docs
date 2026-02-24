@@ -134,8 +134,8 @@
 }
 
 [data-theme='dark'] .featuresGrid {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.04);
 }
 
 /* --- Base Card --- */
@@ -151,7 +151,10 @@
 }
 
 [data-theme='dark'] .featureCard {
-  background: #060606;
+  background: transparent;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .featureCard:hover {
@@ -161,7 +164,7 @@
 }
 
 [data-theme='dark'] .featureCard:hover {
-  background: #0f0f0f;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* --- Color-tinted hover per variant --- */
