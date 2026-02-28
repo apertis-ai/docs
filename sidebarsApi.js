@@ -24,6 +24,7 @@ const sidebars = {
         'text-generation/streaming',
         'text-generation/structured-output',
         'text-generation/prompt-cache',
+        'text-generation/context-compression',
       ],
     },
 
