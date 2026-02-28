@@ -14,7 +14,7 @@ When enabled, Apertis analyzes the conversation before forwarding it to the targ
 1. **Token threshold check** — Compression only triggers when the conversation exceeds a configurable token threshold
 2. **Message segmentation** — Messages are split into system prompts, compressible history, and recent turns (which are always preserved)
 3. **Cost-effectiveness check** — Compression is skipped if the cost of running the compression model exceeds the estimated savings
-4. **Summarization** — Older messages are summarized by a lightweight model (e.g., `gpt-4o-mini` or `claude-3-5-haiku-latest`)
+4. **Summarization** — Older messages are summarized by a lightweight model (e.g., `gpt-4.1-mini`, `claude-haiku-4.5`, or `gemini-3-flash-preview`)
 5. **Injection** — The summary replaces the older messages, and recent turns are preserved verbatim
 
 :::info Transparent to Your Application
@@ -80,7 +80,7 @@ message = client.messages.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4o-mini"
+            "model": "gpt-4.1-mini"
         }
     }
 )
@@ -102,7 +102,7 @@ curl https://api.apertis.ai/v1/chat/completions \
     "compression": {
       "enabled": true,
       "strategy": "on",
-      "model": "gpt-4o-mini"
+      "model": "gpt-4.1-mini"
     }
   }'
 ```
@@ -162,10 +162,11 @@ This sets default compression behavior for all requests made with that key, with
 
 When `model` is set to `"auto"` (default), Apertis selects the compression model based on the target model:
 
-- **Claude models** → `claude-3-5-haiku-latest`
-- **All other models** → `gpt-4o-mini`
+- **Claude models** → `claude-haiku-4.5`
+- **Gemini models** → `gemini-3-flash-preview`
+- **All other models** → `gpt-4.1-mini`
 
-You can also specify a specific model (e.g., `"gpt-4o-mini"`, `"claude-3-5-haiku-latest"`).
+You can also specify a specific model (e.g., `"gpt-4.1-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`).
 
 ## Response Headers
 

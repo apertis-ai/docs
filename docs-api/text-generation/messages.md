@@ -353,7 +353,7 @@ message = client.messages.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4o-mini"
+            "model": "gpt-4.1-mini"
         }
     }
 )
@@ -369,7 +369,7 @@ curl https://api.apertis.ai/v1/messages \
     "model": "claude-sonnet-4.5",
     "max_tokens": 1024,
     "messages": [{"role": "user", "content": "Hello!"}],
-    "compression": {"enabled": true, "model": "gpt-4o-mini"}
+    "compression": {"enabled": true, "model": "gpt-4.1-mini"}
   }'
 ```
 

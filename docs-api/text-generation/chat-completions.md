@@ -45,7 +45,7 @@ curl https://api.apertis.ai/v1/chat/completions \
     -d '{
         "model": "gpt-4.1-mini",
         "messages": [{"role": "user", "content": "Hello!"}],
-        "compression": {"enabled": true, "model": "gpt-4o-mini"}
+        "compression": {"enabled": true, "model": "gpt-4.1-mini"}
     }'
 ```
 
