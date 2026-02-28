@@ -79,7 +79,8 @@ message = client.messages.create(
     extra_body={
         "compression": {
             "enabled": True,
-            "strategy": "on"
+            "strategy": "on",
+            "model": "gpt-4o-mini"
         }
     }
 )
@@ -100,7 +101,8 @@ curl https://api.apertis.ai/v1/chat/completions \
     ],
     "compression": {
       "enabled": true,
-      "strategy": "on"
+      "strategy": "on",
+      "model": "gpt-4o-mini"
     }
   }'
 ```
