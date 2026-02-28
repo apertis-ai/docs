@@ -336,8 +336,47 @@ Note: Some advanced OpenAI models (like `gpt-5-pro`, `o1-pro`, `gpt-5-codex-*`) 
 | Streaming | Full SSE support | Full SSE support |
 | Billing | Unified Apertis billing | Anthropic billing |
 
+## Context Compression
+
+The Messages API supports [context compression](./context-compression) to automatically summarize older conversation history and reduce token usage.
+
+### Using the Anthropic SDK
+
+```python
+message = client.messages.create(
+    model="claude-sonnet-4.5",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Hello!"}
+    ],
+    extra_body={
+        "compression": {
+            "enabled": True,
+            "strategy": "on"
+        }
+    }
+)
+```
+
+### Using cURL
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+  -H "x-api-key: <APERTIS_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "compression": {"enabled": true}
+  }'
+```
+
+See [Context Compression](./context-compression) for full documentation including strategies, configuration, and response headers.
+
 ## Related Topics
 
 - [Chat Completions](./chat-completions) - OpenAI-compatible format
 - [Responses API](./responses) - OpenAI Responses format
+- [Context Compression](./context-compression) - Reduce token usage for long conversations
 - [Models](/api/utilities/models) - List available models
