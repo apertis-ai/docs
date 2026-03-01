@@ -144,29 +144,31 @@ This sets default compression behavior for all requests made with that key, with
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `enabled` | boolean | `false` | Enable or disable compression |
-| `strategy` | string | `"on"` | Compression strategy (see below) |
-| `threshold` | integer | `8000` | Minimum token count to trigger compression |
-| `keep_turns` | integer | Per strategy | Number of recent conversation turns to preserve |
-| `model` | string | `"auto"` | Model to use for summarization |
+| `enabled` | boolean | `false` | Enable or disable compression for this request |
+| `strategy` | string | `"on"` | Compression strategy — controls how aggressively older messages are summarized (see **Strategies** below) |
+| `threshold` | integer | `8000` | Minimum total token count before compression activates. Conversations shorter than this threshold are sent to the model as-is, without any compression |
+| `keep_turns` | integer | Per strategy | Number of most recent conversation turns to keep uncompressed. Older turns beyond this count are summarized into a condensed context. Set to `0` to use the strategy default |
+| `model` | string | `"auto"` | Model used to generate conversation summaries. Use `"auto"` to let Apertis select a cost-efficient model, or specify a model ID from your available models |
 
 ### Strategies
 
 | Strategy | Keep Turns | Description |
 |----------|-----------|-------------|
-| `on` | 6 | Balanced — good default for most use cases |
-| `conservative` | 8 | Preserves more recent context, compresses less aggressively |
-| `aggressive` | 3 | Maximum compression, keeps fewer recent turns |
+| `on` | 6 | **Balanced** — good default for most use cases. Keeps 6 recent turns uncompressed, summarizes older history |
+| `conservative` | 8 | **Preserves more context** — keeps 8 recent turns, compresses less aggressively. Best when recent conversation details matter |
+| `aggressive` | 3 | **Maximum token savings** — keeps only 3 recent turns, summarizes everything else. Best for very long conversations where cost reduction is the priority |
 
 ### Auto Model Selection
 
-When `model` is set to `"auto"` (default), Apertis selects the compression model based on the target model:
+When `model` is set to `"auto"` (default), Apertis automatically selects a cost-efficient compression model based on the target model you are calling:
 
 - **Claude models** → `claude-haiku-4.5`
 - **Gemini models** → `gemini-3-flash-preview`
-- **All other models** → `gpt-4.1-mini`
+- **All other models** (OpenAI, etc.) → `gpt-4.1-mini`
 
-You can also specify a specific model (e.g., `"gpt-4.1-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`).
+The auto-selection avoids using the same model for both compression and the target request (e.g., if you call `claude-haiku-4.5`, compression falls back to `gpt-4.1-mini` instead).
+
+You can also specify any available model explicitly (e.g., `"gpt-4.1-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`). You can browse available models on the dashboard's Model Detail page or select from the dropdown in the API Key Compression tab.
 
 ## Response Headers
 
