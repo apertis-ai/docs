@@ -122,6 +122,39 @@ if __name__ == "__main__":
     main()
 ```
 
+## Context Compression
+
+Reduce token usage for long conversations by enabling [context compression](/api/text-generation/context-compression):
+
+```python
+from apertis import Apertis
+
+def main():
+    client = Apertis()
+
+    response = client.chat.completions.create(
+        model="gpt-4.1",
+        messages=[
+            {"role": "user", "content": "Explain distributed systems"},
+            {"role": "assistant", "content": "Distributed systems are..."},
+            # ... many turns of conversation history ...
+            {"role": "user", "content": "Summarize the key points"}
+        ],
+        extra_body={
+            "compression": {
+                "enabled": True,
+                "strategy": "on",
+                "model": "gpt-4.1-mini"
+            }
+        }
+    )
+
+    print(response.choices[0].message.content)
+
+if __name__ == "__main__":
+    main()
+```
+
 ## Supported Models
 
 All chat-capable models are supported, including:

@@ -3,6 +3,7 @@
 ```
 POST /v1/chat/completions
 POST /v1/messages
+POST /v1/responses
 ```
 
 Context compression automatically summarizes older conversation history to reduce token usage and cost, while preserving recent context. This is especially useful for long-running conversations where token counts grow significantly.
@@ -107,9 +108,86 @@ curl https://api.apertis.ai/v1/chat/completions \
   }'
 ```
 
+#### OpenAI SDK — Responses API (Python)
+
+Compression also works with the `/v1/responses` endpoint. The `input` field (string or array of messages) is automatically converted for compression.
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.responses.create(
+    model="o4-mini",
+    input=[
+        {"role": "user", "content": "Explain distributed systems"},
+        {"role": "assistant", "content": "Distributed systems are..."},
+        # ... long conversation history ...
+        {"role": "user", "content": "Summarize the key points"}
+    ],
+    extra_body={
+        "compression": {
+            "enabled": True,
+            "strategy": "aggressive",
+            "model": "gpt-4.1-mini"
+        }
+    }
+)
+
+print(response.output[0].content[0].text)
+```
+
+#### cURL — Responses API
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "o4-mini",
+    "input": [
+      {"role": "user", "content": "Hello!"}
+    ],
+    "compression": {
+      "enabled": true,
+      "strategy": "on",
+      "model": "gpt-4.1-mini"
+    }
+  }'
+```
+
+#### Node.js / TypeScript
+
+```typescript
+const response = await fetch('https://api.apertis.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: 'gpt-4.1-mini',
+    messages: [
+      { role: 'user', content: 'Hello!' }
+    ],
+    compression: {
+      enabled: true,
+      strategy: 'on',
+      model: 'gpt-4.1-mini'
+    }
+  })
+});
+
+const data = await response.json();
+console.log(data.choices[0].message.content);
+```
+
 ### Method 2: Request Headers
 
-Add compression headers to individual requests. Useful for cURL or custom HTTP clients.
+Add compression headers to individual requests. Useful for cURL or custom HTTP clients. Works with all supported endpoints.
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
@@ -122,6 +200,20 @@ curl https://api.apertis.ai/v1/chat/completions \
   -d '{
     "model": "gpt-4.1-mini",
     "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+The same headers work with `/v1/responses`:
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "X-Context-Compression: aggressive" \
+  -H "X-Compression-Model: gpt-4.1-mini" \
+  -d '{
+    "model": "o4-mini",
+    "input": [{"role": "user", "content": "Hello!"}]
   }'
 ```
 
@@ -232,7 +324,7 @@ It is less effective for:
 |----------|-----------|
 | `/v1/chat/completions` | Yes |
 | `/v1/messages` | Yes |
-| `/v1/responses` | No |
+| `/v1/responses` | Yes |
 | `/v1/images/generations` | No |
 | `/v1/audio/*` | No |
 | `/v1/embeddings` | No |
