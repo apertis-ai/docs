@@ -352,8 +352,34 @@ This means you can use **any model** with the Responses API - the conversion is 
 | Tool call limits | `max_tool_calls`, `parallel_tool_calls` | Not available |
 | Truncation | `truncation` parameter | Not available |
 
+## Context Compression
+
+The Responses API supports [context compression](./context-compression) to automatically reduce token usage for long conversations. Enable it via the request body or HTTP headers:
+
+```python
+response = client.responses.create(
+    model="o4-mini",
+    input=[
+        {"role": "user", "content": "Explain distributed systems"},
+        {"role": "assistant", "content": "Distributed systems are..."},
+        # ... long conversation history ...
+        {"role": "user", "content": "Summarize the key points"}
+    ],
+    extra_body={
+        "compression": {
+            "enabled": True,
+            "strategy": "on",
+            "model": "gpt-4.1-mini"
+        }
+    }
+)
+```
+
+See [Context Compression](./context-compression) for full configuration options and strategies.
+
 ## Related Topics
 
 - [Chat Completions](./chat-completions) - Traditional chat completion format
 - [Messages API](./messages) - Anthropic-compatible format
+- [Context Compression](./context-compression) - Reduce token usage for long conversations
 - [Models](/api/utilities/models) - List available models

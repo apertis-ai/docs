@@ -70,6 +70,28 @@ llm = Apertis(model="claude-sonnet-4.5")
 llm = Apertis(model="gemini-3-flash-preview")
 ```
 
+## Context Compression
+
+Enable [context compression](/api/text-generation/context-compression) via extra headers to reduce token usage for long conversations:
+
+```python
+from llama_index.llms.openai_like import OpenAILike
+
+llm = OpenAILike(
+    model="gpt-4.1",
+    api_key="APERTIS_API_KEY",
+    api_base="https://api.apertis.ai/v1",
+    additional_kwargs={
+        "extra_headers": {
+            "X-Context-Compression": "on",
+            "X-Compression-Model": "gpt-4.1-mini",
+        }
+    },
+)
+
+response = llm.complete("Summarize the key points from our discussion")
+```
+
 ## Supported Models
 
 | Provider | Model ID |

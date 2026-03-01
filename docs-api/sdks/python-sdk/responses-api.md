@@ -287,6 +287,39 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+## Context Compression
+
+Reduce token usage for long conversations by enabling [context compression](/api/text-generation/context-compression). Apertis compresses older conversation history using a lightweight model before forwarding to the target model.
+
+```python
+from apertis import Apertis
+
+def main():
+    client = Apertis()
+
+    response = client.responses.create(
+        model="o4-mini",
+        input=[
+            {"role": "user", "content": "Explain distributed systems"},
+            {"role": "assistant", "content": "Distributed systems are..."},
+            # ... many turns of conversation history ...
+            {"role": "user", "content": "Summarize the key points"}
+        ],
+        extra_body={
+            "compression": {
+                "enabled": True,
+                "strategy": "on",        # "on", "conservative", "aggressive"
+                "model": "gpt-4.1-mini"  # or "auto" for automatic selection
+            }
+        }
+    )
+
+    print(response.output_text)
+
+if __name__ == "__main__":
+    main()
+```
+
 ## Supported Models
 
 The Responses API supports:

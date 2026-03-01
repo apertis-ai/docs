@@ -17,7 +17,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 CONFIG = {
     "api_key": "APERTIS_API_KEY",
     "base_url": "https://api.apertis.ai/v1",
-    "model": "gpt-4o-mini",
+    "model": "gpt-4.1-mini",
     "temperature": 0.7,
     "request_timeout": 30,
 }
@@ -66,4 +66,24 @@ if __name__ == "__main__":
     fast_response = ask("1+1=?", model="grok-4-fast")
     print(f"\nResponse: {fast_response}")
 
+```
+
+## Context Compression
+
+Enable [context compression](/api/text-generation/context-compression) via extra headers to reduce token usage for long conversations:
+
+```python
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(
+    model="gpt-4.1",
+    api_key="APERTIS_API_KEY",
+    base_url="https://api.apertis.ai/v1",
+    default_headers={
+        "X-Context-Compression": "on",
+        "X-Compression-Model": "gpt-4.1-mini",
+    },
+)
+
+response = llm.invoke(long_conversation_messages)
 ``` 

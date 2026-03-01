@@ -126,6 +126,33 @@ Access models from multiple providers through Apertis:
 - `text-embedding-3-large`
 - `text-embedding-ada-002`
 
+## Context Compression
+
+Enable [context compression](/api/text-generation/context-compression) via custom headers to reduce token usage for long conversations:
+
+```typescript
+import { createApertis } from '@apertis/ai-sdk-provider';
+import { generateText } from 'ai';
+
+const apertis = createApertis({
+  apiKey: process.env.APERTIS_API_KEY,
+  headers: {
+    'X-Context-Compression': 'on',
+    'X-Compression-Model': 'gpt-4.1-mini',
+  },
+});
+
+const { text } = await generateText({
+  model: apertis('gpt-4.1'),
+  messages: [
+    { role: 'user', content: 'Explain distributed systems' },
+    { role: 'assistant', content: 'Distributed systems are...' },
+    // ... long conversation history ...
+    { role: 'user', content: 'Summarize the key points' },
+  ],
+});
+```
+
 ## Advanced Configuration
 
 ```typescript

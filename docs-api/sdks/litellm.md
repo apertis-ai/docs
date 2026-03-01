@@ -111,6 +111,28 @@ model_list:
 litellm --config config.yaml
 ```
 
+## Context Compression
+
+Enable [context compression](/api/text-generation/context-compression) via extra headers to reduce token usage for long conversations:
+
+```python
+from litellm import completion
+
+response = completion(
+    model="apertis/gpt-4.1",
+    messages=[
+        {"role": "user", "content": "Explain distributed systems"},
+        {"role": "assistant", "content": "Distributed systems are..."},
+        # ... long conversation history ...
+        {"role": "user", "content": "Summarize the key points"},
+    ],
+    extra_headers={
+        "X-Context-Compression": "on",
+        "X-Compression-Model": "gpt-4.1-mini",
+    },
+)
+```
+
 ## Supported Parameters
 
 All standard OpenAI-compatible parameters are supported:
