@@ -60,10 +60,10 @@
   --ifm-color-primary-lightest: #99f6e4;
 
   /* Dark backgrounds - aligned with apertis-ui */
-  --ifm-background-color: #0f1419;
-  --ifm-background-surface-color: #1a202c;
-  --ifm-navbar-background-color: #0f1419;
-  --ifm-footer-background-color: #0f1419;
+  --ifm-background-color: #121212;
+  --ifm-background-surface-color: #1c1c1c;
+  --ifm-navbar-background-color: #121212;
+  --ifm-footer-background-color: #121212;
 
   /* Text colors */
   --ifm-font-color-base: #C0C2C7;
@@ -74,8 +74,8 @@
   --ifm-code-background: #151515;
 
   /* Borders */
-  --ifm-toc-border-color: #1a1a1a;
-  --ifm-color-emphasis-300: #353841;
+  --ifm-toc-border-color: #2e2e2e;
+  --ifm-color-emphasis-300: #2e2e2e;
 }
 
 /* Typography refinements - Apertis style */
@@ -379,8 +379,8 @@ code:not(pre code) {
 }
 
 [data-theme='dark'] .navbar {
-  background-color: rgba(15, 20, 25, 0.92);
-  border-bottom-color: rgba(107, 114, 128, 0.5);
+  background-color: rgba(18, 18, 18, 0.95);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .navbar__title {
@@ -633,26 +633,47 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Footer improvements */
+/* Footer improvements — Apertis style */
 .footer {
-  padding-top: 3rem;
-  padding-bottom: 2rem;
+  padding-top: 2em;
+  padding-bottom: 4em;
+  border-top: 1px solid #e5e7eb;
+}
+
+[data-theme='dark'] .footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 .footer__title {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  color: #6b7280;
+  margin-bottom: 2em;
+}
+
+[data-theme='dark'] .footer__title {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .footer__link-item {
-  transition: color 0.15s ease;
+  font-size: 0.95em;
+  line-height: 3;
+  transition: color 0.2s ease;
 }
 
 .footer__link-item:hover {
-  color: var(--ifm-color-primary-light);
+  color: var(--ifm-color-primary);
+}
+
+.footer__copyright {
+  font-size: 0.85em;
+  color: #6b7280;
+}
+
+[data-theme='dark'] .footer__copyright {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ==========================================================================
