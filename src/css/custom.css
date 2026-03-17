@@ -20,14 +20,14 @@
    ========================================================================== */
 
 :root {
-  /* Light mode - clean white theme */
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  /* Light mode - Apertis Teal theme */
+  --ifm-color-primary: #0d9488;
+  --ifm-color-primary-dark: #0f766e;
+  --ifm-color-primary-darker: #115e59;
+  --ifm-color-primary-darkest: #134e4a;
+  --ifm-color-primary-light: #14b8a6;
+  --ifm-color-primary-lighter: #2dd4bf;
+  --ifm-color-primary-lightest: #5eead4;
 
   /* Light mode backgrounds */
   --ifm-background-color: #ffffff;
@@ -44,33 +44,33 @@
   --ifm-paragraph-margin-bottom: 1.25rem;
 
   /* Code blocks */
-  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(13, 148, 136, 0.1);
   --ifm-code-background: #f5f5f5;
   --ifm-code-border-radius: 0.5rem;
 }
 
 [data-theme='dark'] {
-  /* Gemini-inspired pure black theme */
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  /* Apertis dark theme - Teal */
+  --ifm-color-primary: #14b8a6;
+  --ifm-color-primary-dark: #0d9488;
+  --ifm-color-primary-darker: #0f766e;
+  --ifm-color-primary-darkest: #115e59;
+  --ifm-color-primary-light: #2dd4bf;
+  --ifm-color-primary-lighter: #5eead4;
+  --ifm-color-primary-lightest: #99f6e4;
 
-  /* Pure black backgrounds */
-  --ifm-background-color: #060606;
-  --ifm-background-surface-color: #0a0a0a;
-  --ifm-navbar-background-color: #060606;
-  --ifm-footer-background-color: #060606;
+  /* Dark backgrounds - aligned with apertis-ui */
+  --ifm-background-color: #0f1419;
+  --ifm-background-surface-color: #1a202c;
+  --ifm-navbar-background-color: #0f1419;
+  --ifm-footer-background-color: #0f1419;
 
   /* Text colors */
   --ifm-font-color-base: #C0C2C7;
   --ifm-heading-color: #ffffff;
 
   /* Code blocks */
-  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.15);
+  --docusaurus-highlighted-code-line-bg: rgba(13, 148, 136, 0.15);
   --ifm-code-background: #151515;
 
   /* Borders */
@@ -78,16 +78,16 @@
   --ifm-color-emphasis-300: #353841;
 }
 
-/* Typography refinements - Gemini style */
+/* Typography refinements - Apertis style */
 h1 {
-  font-weight: 500;
-  font-size: 2.625rem;
+  font-weight: 700;
+  font-size: 2.25rem;
   letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
 h2 {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.75rem;
   letter-spacing: -0.015em;
   line-height: 1.3;
@@ -95,7 +95,7 @@ h2 {
 
 h3 {
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   line-height: 1.4;
 }
 
@@ -124,7 +124,7 @@ h3 {
 
 /* Line highlighting */
 .theme-code-block-highlighted-line {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(13, 148, 136, 0.1);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
@@ -132,7 +132,7 @@ h3 {
 }
 
 [data-theme='dark'] .theme-code-block-highlighted-line {
-  background-color: rgba(96, 165, 250, 0.15);
+  background-color: rgba(20, 184, 166, 0.15);
 }
 
 /* Error line highlighting */
@@ -159,12 +159,12 @@ h3 {
 }
 
 .theme-code-block button[class*='copyButton']:hover {
-  background: rgba(37, 99, 235, 0.2);
-  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(13, 148, 136, 0.2);
+  border-color: rgba(13, 148, 136, 0.4);
 }
 
 .theme-code-block button[class*='copyButton']:active {
-  background: rgba(37, 99, 235, 0.3);
+  background: rgba(13, 148, 136, 0.3);
 }
 
 /* Light mode copy button */
@@ -174,8 +174,8 @@ h3 {
 }
 
 [data-theme='light'] .theme-code-block button[class*='copyButton']:hover {
-  background: rgba(37, 99, 235, 0.1);
-  border-color: rgba(37, 99, 235, 0.3);
+  background: rgba(13, 148, 136, 0.1);
+  border-color: rgba(13, 148, 136, 0.3);
 }
 
 /* Code block title/language label */
@@ -283,22 +283,22 @@ code:not(pre code) {
 }
 
 .menu__link:hover {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(13, 148, 136, 0.1);
 }
 
 [data-theme='dark'] .menu__link:hover {
-  background-color: rgba(37, 99, 235, 0.15);
+  background-color: rgba(13, 148, 136, 0.15);
 }
 
-/* Active link - Gemini style filled */
+/* Active link - Apertis style filled */
 .menu__link--active:not(.menu__link--sublist) {
-  background-color: #2563eb !important;
+  background-color: #0d9488 !important;
   color: #ffffff !important;
   font-weight: 500;
 }
 
 [data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
-  background-color: #2563eb !important;
+  background-color: #0d9488 !important;
   color: #ffffff !important;
 }
 
@@ -313,11 +313,11 @@ code:not(pre code) {
 }
 
 .menu__list-item-collapsible:hover {
-  background-color: rgba(37, 99, 235, 0.08);
+  background-color: rgba(13, 148, 136, 0.08);
 }
 
 [data-theme='dark'] .menu__list-item-collapsible:hover {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(13, 148, 136, 0.1);
 }
 
 .menu__caret {
@@ -379,8 +379,8 @@ code:not(pre code) {
 }
 
 [data-theme='dark'] .navbar {
-  background-color: rgba(6, 6, 6, 0.92);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(15, 20, 25, 0.92);
+  border-bottom-color: rgba(107, 114, 128, 0.5);
 }
 
 .navbar__title {
@@ -397,11 +397,11 @@ code:not(pre code) {
 }
 
 .navbar__link:hover {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(13, 148, 136, 0.1);
 }
 
 [data-theme='dark'] .navbar__link:hover {
-  background-color: rgba(37, 99, 235, 0.15);
+  background-color: rgba(13, 148, 136, 0.15);
 }
 
 .navbar__link--active {
@@ -460,14 +460,14 @@ code:not(pre code) {
 }
 
 .navbar__search-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
   outline: none;
 }
 
 /* Search results highlight */
 .search-result-match {
-  background-color: rgba(37, 99, 235, 0.2);
+  background-color: rgba(13, 148, 136, 0.2);
   padding: 0 2px;
   border-radius: 2px;
 }
@@ -498,16 +498,16 @@ code:not(pre code) {
   color: #374151;
 }
 
-/* Active TOC link with blue left border */
+/* Active TOC link with green left border */
 .table-of-contents__link--active {
-  color: #2563eb !important;
-  border-left-color: #2563eb;
+  color: #0d9488 !important;
+  border-left-color: #0d9488;
   font-weight: 500;
 }
 
 [data-theme='light'] .table-of-contents__link--active {
-  color: #2563eb !important;
-  border-left-color: #2563eb;
+  color: #0d9488 !important;
+  border-left-color: #0d9488;
 }
 
 /* ==========================================================================
@@ -515,7 +515,7 @@ code:not(pre code) {
    ========================================================================== */
 
 .button--primary {
-  background-color: #2563eb;
+  background-color: #0d9488;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -525,7 +525,7 @@ code:not(pre code) {
 }
 
 .button--primary:hover {
-  background-color: #1d4ed8;
+  background-color: #0f766e;
 }
 
 .button--secondary {
@@ -577,7 +577,7 @@ code:not(pre code) {
 
 /* Table improvements */
 table {
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
   max-width: 100%;
