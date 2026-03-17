@@ -1,0 +1,299 @@
+---
+sidebar_label: Claude Code
+---
+
+# <img src="/img/claude-code.svg" width="36" style={{display: 'inline-block', verticalAlign: 'middle', marginRight: 8}} /> Claude Code
+
+Claude Code is an agentic terminal tool that understands codebases and accelerates development by automating routine tasks, analyzing complex code, and managing git workflows through natural language commands.
+
+## Prerequisites
+
+- Node.js 18 or newer installed on your system (for npm installation)
+- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+
+## Installation
+
+### Native Installer (Recommended)
+
+**macOS / Linux / WSL:**
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**Windows PowerShell:**
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+### npm Installation
+
+Alternatively, install via npm with Node.js 18+:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+## Configuration
+
+Configure Claude Code to connect to Apertis API using the switch script below. You only need to modify **two values**: your API key and your preferred default model.
+
+### Setup
+
+Create a file named `ccswitch.sh` in your home directory (or any location you prefer):
+
+```bash
+#!/usr/bin/env bash
+
+# ─── User Configuration ────────────────────────────────────────
+# Replace the values below with your own credentials and preferences.
+
+APERTIS_BASE_URL="https://api.apertis.ai"
+APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/token
+DEFAULT_MODEL="code:claude-opus-4-6"            # ← Default model when using --apertis
+
+# ─── Script Logic (no changes needed below) ────────────────────
+
+usage() {
+  cat <<EOF
+Usage:
+  ccs --apertis          Switch to Apertis API (uses DEFAULT_MODEL)
+  ccs --cc               Revert to default Anthropic endpoint
+  ccs --model <model-id> Switch to Apertis with a specific model
+EOF
+}
+
+export_apertis() {
+  local model="$1"
+
+  export ANTHROPIC_BASE_URL="$APERTIS_BASE_URL"
+  export ANTHROPIC_AUTH_TOKEN="$APERTIS_AUTH_TOKEN"
+  export ANTHROPIC_MODEL="$model"
+
+  echo "✅ Apertis enabled"
+  echo "   MODEL=$ANTHROPIC_MODEL"
+}
+
+unset_all() {
+  unset ANTHROPIC_BASE_URL
+  unset ANTHROPIC_AUTH_TOKEN
+  unset ANTHROPIC_MODEL
+
+  echo "🧹 Anthropic env unset — reverted to defaults"
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  return 1
+fi
+
+case "$1" in
+  --apertis)
+    export_apertis "$DEFAULT_MODEL"
+    ;;
+  --cc)
+    unset_all
+    ;;
+  --model)
+    if [[ -z "$2" ]]; then
+      echo "❌ Missing model id"
+      usage
+      return 1
+    fi
+    export_apertis "$2"
+    ;;
+  *)
+    usage
+    return 1
+    ;;
+esac
+```
+
+### Activate the Script
+
+Add the following alias to your shell profile (`~/.bashrc` or `~/.zshrc`):
+
+```bash
+alias ccs="source ~/ccswitch.sh"
+```
+
+Then reload your shell:
+
+```bash
+source ~/.zshrc  # or source ~/.bashrc
+```
+
+:::warning Source, not Execute
+This script **must** be sourced (via `source` or the `ccs` alias), not executed directly (`bash ccswitch.sh`). Direct execution runs in a subprocess, and the exported environment variables will not persist in your current terminal session.
+:::
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `ccs --apertis` | Switch to Apertis API using the `DEFAULT_MODEL` defined in the script |
+| `ccs --cc` | Unset all Apertis environment variables, reverting to the default Anthropic endpoint |
+| `ccs --model <model-id>` | Switch to Apertis API with a specific model ID |
+
+### Configuration Variables
+
+Edit the top of `ccswitch.sh` to match your credentials:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `APERTIS_BASE_URL` | Apertis API endpoint. Typically no change needed. | `https://api.apertis.ai` |
+| `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/token). | `sk-xxxx...` |
+| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-6` |
+
+### Available Model IDs
+
+When using `ccs --model`, pass the model ID directly. **Only Claude models require the `code:` prefix**; all other models use their standard ID as-is.
+
+**Claude Models** (require `code:` prefix, except Haiku):
+
+| Model ID | Description |
+|----------|-------------|
+| `code:claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
+| `code:claude-opus-4-6-thinking` | Claude Opus 4.6 with extended thinking |
+| `code:claude-opus-4-6` | Claude Opus 4.6 — most capable |
+| `code:claude-opus-4-5-20251101-thinking` | Claude Opus 4.5 with extended thinking |
+| `code:claude-opus-4-5-20251101` | Claude Opus 4.5 |
+| `claude-haiku-4.5-thinking` | Claude Haiku 4.5 with extended thinking |
+| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
+| `code:claude-opus-4-1-20250805-thinking` | Claude Opus 4.1 with extended thinking |
+| `code:claude-opus-4-1-20250805` | Claude Opus 4.1 |
+
+For more Claude models, see the [Claude Models page](https://apertis.ai/models).
+
+**Other Models** (no prefix needed):
+
+```bash
+ccs --model gpt-5.4
+ccs --model gemini-3.1-pro-preview
+# and more...
+```
+
+For the full list of available model IDs, check the [Model List](https://apertis.ai/models).
+
+### Example Usage
+
+```bash
+# Switch to Apertis with the default model
+ccs --apertis
+# ✅ Apertis enabled
+#    MODEL=code:claude-opus-4-6
+
+# Switch to a specific model
+ccs --model code:claude-sonnet-4-6
+# ✅ Apertis enabled
+#    MODEL=code:claude-sonnet-4-6
+
+# Revert to default Anthropic endpoint
+ccs --cc
+# 🧹 Anthropic env unset — reverted to defaults
+```
+
+## Launch and Verify
+
+Navigate to your project directory and start Claude Code:
+
+```bash
+cd your-project-directory
+claude
+```
+
+Grant file access permissions when prompted.
+
+### Verify Connection
+
+Run the status command inside Claude Code to verify your configuration:
+
+```
+/status
+```
+
+You should see output similar to:
+
+```
+Auth token: ANTHROPIC_AUTH_TOKEN
+Anthropic base URL: https://api.apertis.ai
+```
+
+## Model Configuration
+
+### Coding Model IDs
+
+When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix for Claude model IDs. This routes requests through optimized coding channels:
+
+| Standard Model ID | Coding Model ID |
+|-------------------|-----------------|
+| `claude-opus-4-6` | `code:claude-opus-4-6` |
+| `claude-sonnet-4-20250514` | `code:claude-sonnet-4-20250514` |
+
+:::tip Why `code:` prefix?
+The `code:` prefix routes requests through dedicated coding channels optimized for tool use, extended thinking, and streaming — features essential for coding assistants. Always use `code:` prefixed model IDs with Claude Code and other coding tools.
+:::
+
+### Selecting Models in Claude Code
+
+You can also switch models directly inside Claude Code using the `/model` command:
+
+```
+/model
+```
+
+Your configured model ID will appear in the list. Select it to start using a different model.
+
+For the latest available models, check the [Model List](https://apertis.ai/models).
+
+## Troubleshooting
+
+### Configuration Not Taking Effect
+
+- **Close all Claude Code windows** and open a new terminal
+- Run `ccs --apertis` again to re-export environment variables
+- Then run `claude` to start with new settings
+
+### Verify Configuration
+
+Inside Claude Code, run `/status` to verify the API endpoint:
+
+```
+Auth token: ANTHROPIC_AUTH_TOKEN
+Anthropic base URL: https://api.apertis.ai
+```
+
+### Connection Issues
+
+If you encounter connection errors:
+
+1. Verify your API key is correct at [Apertis Dashboard](https://apertis.ai/token)
+2. Ensure `APERTIS_BASE_URL` in `ccswitch.sh` is `https://api.apertis.ai`
+3. Check your network connection and firewall settings
+
+### Tool Use Failures
+
+If Claude Code fails to execute file operations or commands:
+
+- Ensure your selected model supports tool use capabilities
+- All Claude models available through Apertis support tool use
+- Check that you have granted the necessary file access permissions
+
+## Features
+
+Claude Code provides powerful capabilities including:
+
+- **Code Understanding**: Analyzes your entire codebase context
+- **Automated Refactoring**: Helps refactor and improve code quality
+- **Git Workflow**: Manages commits, branches, and pull requests
+- **Bug Fixing**: Identifies and helps fix issues in your code
+- **Documentation**: Generates documentation and comments
+- **Testing**: Helps write and run tests
+
+## Related Resources
+
+- [Apertis API Documentation](https://docs.apertis.ai)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
+- [Claude Code Official Documentation](https://docs.anthropic.com/en/docs/claude-code/configuration)

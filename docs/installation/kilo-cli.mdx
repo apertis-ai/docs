@@ -1,0 +1,208 @@
+---
+sidebar_label: Kilo CLI
+---
+
+# <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" width="36" height="36" style={{display: 'inline-block', verticalAlign: 'middle', marginRight: 8}}><path d="M0 0v24h24V0H0zm22.222 22.222H1.778V1.778h20.444v20.444zm-7.555-4.964h2.222v1.778h-2.794L12.89 17.83v-2.794h1.778v2.222zm4 0h-1.778v-2.222h-2.222v-1.778h2.793l1.207 1.207v2.793zm-7.556-2.591H9.333v-1.778h1.778v1.778zm-5.778-1.778h1.778v4h4v1.778H6.54L5.333 17.46V12.89zm13.334-3.556v1.778h-5.778V9.333h1.987V7.111h-1.987V5.333h2.558l1.206 1.207v2.793h2.014zm-11.556-2h2.222l1.778 1.778v2H9.333v-2H7.111v2H5.333V5.333h1.778v2zm4 0H9.333v-2h1.778v2z"/></svg> Kilo CLI
+
+Kilo CLI is the terminal-based AI coding agent from Kilo Code, providing agentic coding capabilities directly in your terminal with multi-model support, MCP integration, and customizable agent workflows.
+
+## Prerequisites
+
+- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+
+## Installation
+
+```bash
+curl -fsSL https://kilo.ai/install | bash
+```
+
+## Configuration
+
+Create or edit the configuration file at `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "$schema": "https://kilo.ai/config.json",
+  "model": "apertis/claude-sonnet-4-6",
+  "small_model": "apertis/claude-haiku-4-5",
+  "theme": "catppuccin",
+  "autoupdate": true,
+  "share": "manual",
+  "snapshot": true,
+  "logLevel": "INFO",
+  "provider": {
+    "apertis": {
+      "options": {
+        "apiKey": "your_apertis_api_key",
+        "baseURL": "https://api.apertis.ai/v1"
+      },
+      "models": {
+        "claude-opus-4-6-thinking": {
+          "id": "claude-opus-4-6-thinking",
+          "name": "Claude Opus 4.6 Thinking (via Apertis)"
+        },
+        "claude-opus-4-6": {
+          "id": "claude-opus-4-6",
+          "name": "Claude Opus 4.6 (via Apertis)"
+        },
+        "claude-sonnet-4-6": {
+          "id": "claude-sonnet-4-6",
+          "name": "Claude Sonnet 4.6 (via Apertis)"
+        },
+        "claude-haiku-4-5": {
+          "id": "claude-haiku-4-5",
+          "name": "Claude Haiku 4.5 (via Apertis)"
+        },
+        "gemini-3.1-pro-preview": {
+          "id": "gemini-3.1-pro-preview",
+          "name": "Gemini 3.1 Pro Preview (via Apertis)"
+        }
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "model": "apertis/claude-sonnet-4-6",
+      "temperature": 0.7,
+      "maxSteps": 50,
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "npm": "allow",
+          "git": "allow",
+          "go": "allow",
+          "make": "allow",
+          "*": "ask"
+        },
+        "webfetch": "allow"
+      }
+    },
+    "plan": {
+      "model": "apertis/claude-opus-4-6-thinking",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
+      }
+    }
+  },
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp@latest"],
+      "enabled": true
+    }
+  },
+  "instructions": ["./AGENTS.md", "./CLAUDE.md"],
+  "keybinds": {
+    "leader": "ctrl+k",
+    "session_new": "ctrl+n",
+    "agent_cycle": "tab"
+  },
+  "lsp": {
+    "typescript": {
+      "command": ["typescript-language-server", "--stdio"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+    }
+  }
+}
+```
+
+Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/token).
+
+### Configuration Fields
+
+| Field | Description |
+|-------|-------------|
+| `model` | Default model for general use. Format: `apertis/<model-id>`. |
+| `small_model` | Lightweight model for quick tasks. Format: `apertis/<model-id>`. |
+| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/token). |
+| `provider.apertis.options.baseURL` | Apertis API endpoint. Typically no change needed. |
+| `provider.apertis.models` | Available models to register. Add or remove as needed. |
+| `agent.build` | Agent config for implementation tasks (model, permissions, max steps). |
+| `agent.plan` | Agent config for planning tasks (typically a thinking model). |
+| `mcp` | MCP server integrations (e.g., Context7, Supabase, Cloudflare). |
+| `instructions` | Instruction files to load (e.g., `AGENTS.md`, `CLAUDE.md`). |
+| `keybinds` | Custom keyboard shortcuts. |
+| `lsp` | Language server configurations for code intelligence. |
+
+### Available Model IDs
+
+| Model ID | Description |
+|----------|-------------|
+| `claude-opus-4-6-thinking` | Claude Opus 4.6 with extended thinking |
+| `claude-opus-4-6` | Claude Opus 4.6 — most capable |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
+| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest |
+| `gemini-3.1-pro-preview` | Gemini 3.1 Pro Preview |
+
+For the full list of available models, check the [Model List](https://apertis.ai/models).
+
+### Agent Modes
+
+Kilo CLI supports multiple agent modes with different model and permission configurations:
+
+| Agent | Purpose | Recommended Model |
+|-------|---------|-------------------|
+| `build` | Implementation, coding, file editing | `apertis/claude-sonnet-4-6` |
+| `plan` | Architecture planning, read-only analysis | `apertis/claude-opus-4-6-thinking` |
+
+### MCP Server Examples
+
+Add MCP servers to extend Kilo CLI's capabilities:
+
+```json
+{
+  "mcp": {
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=your_project_ref"
+    },
+    "cloudflare-observability": {
+      "type": "local",
+      "command": ["npx", "mcp-remote", "https://observability.mcp.cloudflare.com/mcp"],
+      "enabled": true
+    },
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp@latest"],
+      "enabled": true
+    }
+  }
+}
+```
+
+## Launch
+
+```bash
+kilo
+```
+
+## Keybinds
+
+| Keybind | Action |
+|---------|--------|
+| `ctrl+k` | Leader key |
+| `ctrl+n` | New session |
+| `tab` | Cycle between agents |
+
+## Troubleshooting
+
+### Connection Issues
+
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
+- Ensure `baseURL` in config is `https://api.apertis.ai/v1`
+- Check your network connection and firewall settings
+
+### Config Not Loading
+
+- Verify the config file is at `~/.config/opencode/opencode.json`
+- Validate JSON syntax (no trailing commas, correct quotes)
+- Restart Kilo CLI after config changes
+
+## Related Resources
+
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
+- [Kilo Code Extension](/installation/kilo-code) - VS Code extension version
+- [OpenCode](/installation/opencode) - Alternative terminal AI coding tool
+- [Claude Code](/installation/claude-code) - Anthropic's terminal AI coding tool

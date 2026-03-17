@@ -1,0 +1,179 @@
+---
+sidebar_label: OpenCode
+---
+
+# <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" width="36" height="36" style={{display: 'inline-block', verticalAlign: 'middle', marginRight: 8}}><path d="M16 6H8v12h8V6zm4 16H4V2h16v20z"/></svg> OpenCode
+
+OpenCode is an AI coding agent that provides both CLI and IDE integration capabilities for AI-powered development tasks.
+
+## Features
+
+- **CLI Access**: Run AI coding tasks directly from terminal
+- **IDE Integration**: Works with VS Code, Cursor, and compatible editors
+- **GitHub Integration**: Interact with issues and PRs via comments
+- **Conversation Sharing**: Share coding sessions with others
+- **MCP Support**: Enhanced functionality through MCP servers
+
+## Installation
+
+### Method 1: Install Script (Recommended)
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+### Method 2: NPM
+
+```bash
+npm install -g opencode-ai
+```
+
+## Configuration for Apertis API
+
+Create or edit the configuration file at `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "apertis": {
+      "name": "Apertis AI",
+      "options": {
+        "baseURL": "https://api.apertis.ai/v1",
+        "apiKey": "your_apertis_api_key"
+      },
+      "models": {
+        "claude-opus-4-6-thinking": {
+          "name": "Claude Opus 4.6 (Thinking)"
+        },
+        "claude-opus-4-6": {
+          "name": "Claude Opus 4.6"
+        },
+        "claude-sonnet-4-6": {
+          "name": "Claude Sonnet 4.6"
+        },
+        "claude-haiku-4.5": {
+          "name": "Claude Haiku 4.5"
+        },
+        "gemini-3.1-pro-preview": {
+          "name": "Gemini 3.1 Pro Preview"
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "name": "Gemini 3.1 Flash Lite Preview"
+        }
+      }
+    }
+  },
+  "model": "apertis/claude-opus-4-6"
+}
+```
+
+Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/token).
+
+:::tip No `code:` prefix needed
+Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude model IDs. Use the standard model ID directly (e.g., `claude-opus-4-6` instead of `code:claude-opus-4-6`).
+:::
+
+### Configuration Fields
+
+| Field | Description |
+|-------|-------------|
+| `provider.apertis.options.baseURL` | Apertis API endpoint. Typically no change needed. |
+| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/token). |
+| `provider.apertis.models` | Available models to use. Add or remove as needed. |
+| `model` | Default model on launch. Format: `apertis/<model-id>`. |
+
+### Available Model IDs
+
+| Model ID | Description |
+|----------|-------------|
+| `claude-opus-4-6-thinking` | Claude Opus 4.6 with extended thinking |
+| `claude-opus-4-6` | Claude Opus 4.6 — most capable |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
+| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest |
+| `gemini-3.1-pro-preview` | Gemini 3.1 Pro Preview |
+| `gemini-3.1-flash-lite-preview` | Gemini 3.1 Flash Lite Preview |
+
+For the full list of available models, check the [Model List](https://apertis.ai/models).
+
+### Launch OpenCode
+
+```bash
+opencode
+```
+
+Use the `/models` command within OpenCode to switch models.
+
+## IDE Integration
+
+OpenCode works with VS Code, Cursor, and compatible terminals.
+
+### Keyboard Shortcuts
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Quick Launch | `Cmd+Esc` | `Ctrl+Esc` |
+| New Session | `Cmd+Shift+Esc` | `Ctrl+Shift+Esc` |
+| File References | `Cmd+Option+K` | `Alt+Ctrl+K` |
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `/models` | Select AI model |
+| `/share` | Create public conversation link |
+| `/unshare` | Remove public access |
+| `/help` | Show available commands |
+
+## GitHub Integration
+
+Interact with OpenCode directly in GitHub issues and pull requests.
+
+### Setup
+
+Run this command in your GitHub repository:
+
+```bash
+opencode github install
+```
+
+### Usage
+
+Comment with `/opencode` or `/oc` in GitHub issues/PRs to:
+
+- **Explain Issues**: Get AI explanations for bug reports
+- **Fix Bugs**: Generate fixes for reported issues
+- **Implement Features**: Create code for feature requests
+- **Review PRs**: Get AI-powered code reviews
+
+## MCP Server Support
+
+OpenCode supports Model Context Protocol servers:
+
+- **Vision Server**: Analyze images and screenshots
+- **Web Search Server**: Search the web for information
+- **Web Reader Server**: Extract content from web pages
+
+## Troubleshooting
+
+### Connection Issues
+
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
+- Ensure the Base URL is set correctly
+- Check environment variables are exported
+
+### Authentication Problems
+
+Reset authentication and reconfigure:
+
+```bash
+opencode auth logout
+opencode auth login
+```
+
+## Related Resources
+
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/token)
+- [Claude Code](/installation/claude-code) - Alternative terminal AI coding tool
+- [OpenCode Documentation](https://opencode.ai/docs)
