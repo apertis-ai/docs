@@ -30,10 +30,29 @@ When using a standard API key with no active subscription:
   "object": "billing_credits",
   "is_subscriber": false,
   "payg": {
-    "remaining_usd": 5.0,
-    "used_usd": 2.0,
-    "total_usd": 7.0,
-    "is_unlimited": false
+    "account_credits": 5.0,
+    "token_used": 2.0,
+    "token_total": 7.0,
+    "token_remaining": 5.0,
+    "token_is_unlimited": false
+  }
+}
+```
+
+### Response (PAYG with Unlimited Token)
+
+When the API key has unlimited quota, token-level fields show `"unlimited"` while `account_credits` still reflects the actual account balance:
+
+```json
+{
+  "object": "billing_credits",
+  "is_subscriber": false,
+  "payg": {
+    "account_credits": 500.0,
+    "token_used": 87.61,
+    "token_total": "unlimited",
+    "token_remaining": "unlimited",
+    "token_is_unlimited": true
   }
 }
 ```
@@ -47,17 +66,18 @@ When the account has an active subscription plan:
   "object": "billing_credits",
   "is_subscriber": true,
   "payg": {
-    "remaining_usd": 0.95,
-    "used_usd": 0.05,
-    "total_usd": 1.0,
-    "is_unlimited": false
+    "account_credits": 9.98,
+    "token_used": 0.05,
+    "token_total": 1.0,
+    "token_remaining": 0.95,
+    "token_is_unlimited": false
   },
   "subscription": {
     "plan_type": "lite",
     "status": "active",
     "cycle_quota_limit": 600,
-    "cycle_quota_used": 3,
-    "cycle_quota_remaining": 597,
+    "cycle_quota_used": 10,
+    "cycle_quota_remaining": 590,
     "cycle_start": "2026-03-16T10:02:35Z",
     "cycle_end": "2026-04-16T10:02:35Z",
     "payg_fallback_enabled": false
@@ -74,10 +94,11 @@ When the subscription has PAYG overage enabled:
   "object": "billing_credits",
   "is_subscriber": true,
   "payg": {
-    "remaining_usd": 3.0,
-    "used_usd": 0.5,
-    "total_usd": 3.5,
-    "is_unlimited": false
+    "account_credits": 3.0,
+    "token_used": 0.5,
+    "token_total": 3.5,
+    "token_remaining": 3.0,
+    "token_is_unlimited": false
   },
   "subscription": {
     "plan_type": "max",
@@ -105,16 +126,22 @@ When the subscription has PAYG overage enabled:
 | `payg` | object | PAYG credit balance (always present) |
 | `subscription` | object | Subscription quota details (only present when subscribed) |
 
-#### `payg` Object
+#### `payg` Object — Account Level
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `remaining_usd` | number \| null | Remaining credits in USD. `null` when `is_unlimited` is true |
-| `used_usd` | number | Total credits consumed in USD |
-| `total_usd` | number \| null | Total credits (remaining + used) in USD. `null` when unlimited |
-| `is_unlimited` | boolean | Whether the API key has unlimited quota |
-| `monthly_limit_usd` | number | Monthly spending limit in USD (only present if configured) |
-| `monthly_used_usd` | number | Spending in current month in USD (only present if limit configured) |
+| `account_credits` | number | Remaining credits for the entire account in USD |
+
+#### `payg` Object — Token Level
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `token_used` | number | Credits consumed by this token in USD |
+| `token_total` | number \| `"unlimited"` | Total credits allocated to this token (remaining + used). `"unlimited"` when token has no quota limit |
+| `token_remaining` | number \| `"unlimited"` | Remaining credits for this token in USD. `"unlimited"` when token has no quota limit |
+| `token_is_unlimited` | boolean | Whether this token has unlimited quota |
+| `token_monthly_limit_usd` | number | Monthly spending limit for this token in USD (only present if configured) |
+| `token_monthly_used_usd` | number | Spending by this token in current month in USD (only present if limit configured) |
 | `monthly_reset_day` | integer | Day of month when the monthly counter resets (only present if limit configured) |
 
 #### `subscription` Object
@@ -132,9 +159,14 @@ When the subscription has PAYG overage enabled:
 | `payg_spent_usd` | number | PAYG overage spent this cycle in USD (only present when fallback enabled) |
 | `payg_limit_usd` | number | PAYG overage spending limit in USD (only present when fallback enabled and limit set) |
 
-### Token-Level vs User-Level
+### Token-Level vs Account-Level
 
-When using an API key, the `payg` section shows the **specific token's** quota balance by default. All tokens belonging to the same account will see the same `subscription` data.
+The `payg` section separates **account-level** and **token-level** information:
+
+- **`account_credits`**: The total remaining balance for the user account, shared across all tokens.
+- **`token_*` fields**: Quota specific to the API key used in the request. Each token can have its own quota allocation and limits.
+
+When a token is set to unlimited (`token_is_unlimited: true`), `token_remaining` and `token_total` return `"unlimited"` since the token itself has no cap — but `account_credits` still shows the real account balance.
 
 ### Python Example
 
@@ -147,14 +179,18 @@ response = requests.get(
 )
 credits = response.json()
 
+payg = credits["payg"]
+print(f"Account Balance: ${payg['account_credits']:.2f} USD")
+
+if payg["token_is_unlimited"]:
+    print("Token: unlimited")
+else:
+    print(f"Token: ${payg['token_remaining']:.2f} / ${payg['token_total']:.2f} USD")
+
 if credits["is_subscriber"]:
     sub = credits["subscription"]
     print(f"Plan: {sub['plan_type']}")
     print(f"Quota: {sub['cycle_quota_used']}/{sub['cycle_quota_limit']} used")
-    print(f"Remaining: {sub['cycle_quota_remaining']}")
-else:
-    payg = credits["payg"]
-    print(f"Balance: ${payg['remaining_usd']:.2f} USD")
 ```
 
 ### Node.js Example
@@ -166,10 +202,17 @@ const response = await fetch(
 );
 const credits = await response.json();
 
+const { payg } = credits;
+console.log(`Account: $${payg.account_credits.toFixed(2)}`);
+
+if (payg.token_is_unlimited) {
+  console.log('Token: unlimited');
+} else {
+  console.log(`Token: $${payg.token_remaining.toFixed(2)} / $${payg.token_total.toFixed(2)}`);
+}
+
 if (credits.is_subscriber) {
   const { plan_type, cycle_quota_used, cycle_quota_limit } = credits.subscription;
   console.log(`${plan_type}: ${cycle_quota_used}/${cycle_quota_limit} quota used`);
-} else {
-  console.log(`Balance: $${credits.payg.remaining_usd.toFixed(2)}`);
 }
 ```
