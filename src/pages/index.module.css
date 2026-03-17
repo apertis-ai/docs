@@ -25,7 +25,7 @@
 .heroTitle {
   position: relative;
   z-index: 1;
-  font-size: 48px;
+  font-size: 3.75rem;
   font-weight: 700;
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
   letter-spacing: -0.025em;
@@ -62,12 +62,12 @@
   padding: 12px 20px;
   width: 100%;
   max-width: 480px;
-  border: 1px solid #3498db;
+  border: 1px solid #0d9488;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
   color: #94a3b8;
   font-size: 14px;
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
@@ -77,16 +77,16 @@
 
 [data-theme='dark'] .heroSearch {
   background: rgba(255, 255, 255, 0.04);
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
 }
 
 .heroSearch:hover {
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18), 0 4px 16px rgba(52, 152, 219, 0.08);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18), 0 4px 16px rgba(13, 148, 136, 0.08);
 }
 
 [data-theme='dark'] .heroSearch:hover {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2), 0 4px 16px rgba(96, 165, 250, 0.08);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2), 0 4px 16px rgba(20, 184, 166, 0.08);
 }
 
 .heroSearch svg {
@@ -129,13 +129,13 @@
   gap: 1px;
   background: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 16px;
+  border-radius: 24px;
   overflow: hidden;
 }
 
 [data-theme='dark'] .featuresGrid {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.04);
+  background: rgba(107, 114, 128, 0.2);
+  border-color: rgba(107, 114, 128, 0.3);
 }
 
 /* --- Base Card --- */
@@ -143,18 +143,18 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 28px 24px;
+  padding: 32px;
   background: #ffffff;
   text-decoration: none;
   color: inherit;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 [data-theme='dark'] .featureCard {
-  background: transparent;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(31, 41, 55, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(107, 114, 128, 0.5);
 }
 
 .featureCard:hover {
@@ -164,7 +164,7 @@
 }
 
 [data-theme='dark'] .featureCard:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(75, 85, 99, 0.5);
 }
 
 /* --- Color-tinted hover per variant --- */
@@ -175,22 +175,22 @@
 .card_pink:hover { background: rgba(236, 72, 153, 0.04); }
 .card_cyan:hover { background: rgba(6, 182, 212, 0.04); }
 
-[data-theme='dark'] .card_blue:hover { background: rgba(59, 130, 246, 0.06); }
-[data-theme='dark'] .card_purple:hover { background: rgba(139, 92, 246, 0.06); }
-[data-theme='dark'] .card_green:hover { background: rgba(16, 185, 129, 0.06); }
-[data-theme='dark'] .card_orange:hover { background: rgba(245, 158, 11, 0.06); }
-[data-theme='dark'] .card_pink:hover { background: rgba(236, 72, 153, 0.06); }
-[data-theme='dark'] .card_cyan:hover { background: rgba(6, 182, 212, 0.06); }
+[data-theme='dark'] .card_blue:hover { background: rgba(59, 130, 246, 0.1); }
+[data-theme='dark'] .card_purple:hover { background: rgba(139, 92, 246, 0.1); }
+[data-theme='dark'] .card_green:hover { background: rgba(16, 185, 129, 0.1); }
+[data-theme='dark'] .card_orange:hover { background: rgba(245, 158, 11, 0.1); }
+[data-theme='dark'] .card_pink:hover { background: rgba(236, 72, 153, 0.1); }
+[data-theme='dark'] .card_cyan:hover { background: rgba(6, 182, 212, 0.1); }
 
 /* --- Icons --- */
 .featureIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   margin-bottom: 16px;
-  border-radius: 10px;
+  border-radius: 50%;
 }
 
 .icon_blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
@@ -241,7 +241,7 @@
   }
 
   .heroTitle {
-    font-size: 36px;
+    font-size: 2.25rem;
   }
 
   .heroSub {

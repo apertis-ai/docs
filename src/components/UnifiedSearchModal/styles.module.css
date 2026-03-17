@@ -29,7 +29,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 52px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #10b981, #3b82f6);
+  background: linear-gradient(90deg, #0d9488, #8b5cf6, #ec4899, #f59e0b, #14b8a6, #0d9488);
   background-size: 300% 100%;
   animation: shimmerBorder 3s linear infinite;
   z-index: -1;
@@ -55,14 +55,14 @@
 }
 
 .floatingButton:hover {
-  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 24px rgba(13, 148, 136, 0.35);
   transform: scale(1.03);
   animation: none;
 }
 
 @keyframes pulseAttention {
   0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-  50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 20px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 20px rgba(13, 148, 136, 0.2); }
 }
 
 [data-theme='dark'] .floatingButton {
@@ -75,7 +75,7 @@
 }
 
 [data-theme='dark'] .floatingButton:hover {
-  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+  box-shadow: 0 4px 20px rgba(20, 184, 166, 0.3);
 }
 
 .buttonIcon {
@@ -143,13 +143,13 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 15px 35px rgba(52, 152, 219, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 35px rgba(13, 148, 136, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme='dark'] .modal {
   background: rgba(32, 32, 36, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(13, 148, 136, 0.15);
 }
 
 @keyframes modalIn {
@@ -215,13 +215,13 @@
 }
 
 .tab:hover:not(.tabActive) {
-  background: rgba(52, 152, 219, 0.1);
+  background: rgba(13, 148, 136, 0.1);
   color: var(--ifm-color-primary);
 }
 
 [data-theme='dark'] .tab:hover:not(.tabActive) {
-  background: rgba(96, 165, 250, 0.12);
-  color: #60a5fa;
+  background: rgba(20, 184, 166, 0.12);
+  color: #14b8a6;
 }
 
 .tabActive {
@@ -285,11 +285,11 @@
 
 .searchInput:focus {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 [data-theme='dark'] .searchInput:focus {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
 .searchInput::placeholder {
@@ -354,7 +354,7 @@
 }
 
 .searchResultSelected {
-  border-left: 2px solid #3498db;
+  border-left: 2px solid #0d9488;
   padding-left: 10px;
 }
 
@@ -364,7 +364,7 @@
 }
 
 [data-theme='dark'] .searchResultSelected {
-  border-left-color: #60a5fa;
+  border-left-color: #14b8a6;
 }
 
 .searchResultIcon {
@@ -385,14 +385,14 @@
 }
 
 .searchResultTitle mark {
-  background: rgba(37, 99, 235, 0.2);
+  background: rgba(13, 148, 136, 0.2);
   color: inherit;
   padding: 0 2px;
   border-radius: 2px;
 }
 
 [data-theme='dark'] .searchResultTitle mark {
-  background: rgba(96, 165, 250, 0.3);
+  background: rgba(20, 184, 166, 0.3);
 }
 
 .searchResultBreadcrumb {
@@ -451,13 +451,13 @@
   transform: translateX(-50%);
   width: 200px;
   height: 120px;
-  background: radial-gradient(ellipse, rgba(52, 152, 219, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(13, 148, 136, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
 [data-theme='dark'] .askWelcome::before {
-  background: radial-gradient(ellipse, rgba(96, 165, 250, 0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
 }
 
 .askWelcomeLogo {
@@ -511,17 +511,17 @@
 }
 
 .askSuggestions button:hover {
-  background: rgba(52, 152, 219, 0.08);
+  background: rgba(13, 148, 136, 0.08);
   color: var(--ifm-color-primary);
-  border-color: rgba(52, 152, 219, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(52, 152, 219, 0.1);
+  border-color: rgba(13, 148, 136, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(13, 148, 136, 0.1);
 }
 
 [data-theme='dark'] .askSuggestions button:hover {
-  background: rgba(96, 165, 250, 0.1);
-  color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(96, 165, 250, 0.1);
+  background: rgba(20, 184, 166, 0.1);
+  color: #14b8a6;
+  border-color: rgba(20, 184, 166, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(20, 184, 166, 0.1);
 }
 
 /* Chat Messages */
@@ -549,7 +549,7 @@
 
 /* User bubble — gradient */
 .ask_user .askBubble {
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #0d9488, #0f766e);
   color: #ffffff;
   border-bottom-right-radius: 4px;
 }
@@ -567,17 +567,17 @@
 
 /* Loading state — breathing glow */
 .askLoading .askBubble {
-  border: 1px solid rgba(52, 152, 219, 0.4);
+  border: 1px solid rgba(13, 148, 136, 0.4);
   animation: breathe 1.5s ease-in-out infinite;
 }
 
 [data-theme='dark'] .askLoading .askBubble {
-  border-color: rgba(96, 165, 250, 0.5);
+  border-color: rgba(20, 184, 166, 0.5);
 }
 
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.3); }
+  0%, 100% { box-shadow: 0 0 8px rgba(13, 148, 136, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(13, 148, 136, 0.3); }
 }
 
 /* Skeleton */
@@ -628,11 +628,11 @@
 
 .askInputWrapper:focus-within {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 [data-theme='dark'] .askInputWrapper:focus-within {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
 .askInputWrapper input {
@@ -664,7 +664,7 @@
   width: 32px;
   height: 32px;
   border: none;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #0d9488, #0f766e);
   color: white;
   border-radius: 50%;
   cursor: pointer;
@@ -672,7 +672,7 @@
 }
 
 .askInputWrapper button[type="submit"]:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2980b9, #216094);
+  background: linear-gradient(135deg, #0f766e, #115e59);
 }
 
 .askInputWrapper button[type="submit"]:disabled {

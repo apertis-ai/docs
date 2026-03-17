@@ -28,12 +28,12 @@
   border-radius: 52px;
   background: linear-gradient(
     90deg,
-    #3b82f6,
+    #0d9488,
     #8b5cf6,
     #ec4899,
     #f59e0b,
-    #10b981,
-    #3b82f6
+    #14b8a6,
+    #0d9488
   );
   background-size: 300% 100%;
   animation: shimmerBorder 3s linear infinite;
@@ -57,7 +57,7 @@
 }
 
 .floatingButton:hover {
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 20px rgba(13, 148, 136, 0.3);
   transform: scale(1.02);
 }
 
@@ -71,7 +71,7 @@
 }
 
 [data-theme='dark'] .floatingButton:hover {
-  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+  box-shadow: 0 4px 20px rgba(20, 184, 166, 0.3);
 }
 
 .buttonIcon {
@@ -320,11 +320,11 @@
 
 .inputWrapper:focus-within {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 [data-theme='dark'] .inputWrapper:focus-within {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
 .inputForm input {
@@ -393,20 +393,20 @@
 
 /* Loading Skeleton with Breathing Glow */
 .loadingMessage .messageContent {
-  border: 1px solid var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+  border: 1px solid var(--ai-glow-color, rgba(13, 148, 136, 0.4));
   animation: breathe 1.5s ease-in-out infinite;
 }
 
 [data-theme='dark'] .loadingMessage .messageContent {
-  --ai-glow-color: rgba(96, 165, 250, 0.5);
+  --ai-glow-color: rgba(20, 184, 166, 0.5);
 }
 
 @keyframes breathe {
   0%, 100% {
-    box-shadow: 0 0 8px var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+    box-shadow: 0 0 8px var(--ai-glow-color, rgba(13, 148, 136, 0.4));
   }
   50% {
-    box-shadow: 0 0 20px var(--ai-glow-color, rgba(37, 99, 235, 0.4));
+    box-shadow: 0 0 20px var(--ai-glow-color, rgba(13, 148, 136, 0.4));
   }
 }
 
