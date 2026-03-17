@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Landing Page — Clean, Professional
+   Landing Page — Apertis Supabase-Style
    ========================================================================== */
 
 .landing {
@@ -26,7 +26,7 @@
   position: relative;
   z-index: 1;
   font-size: 3.75rem;
-  font-weight: 700;
+  font-weight: 400;
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
   letter-spacing: -0.025em;
   line-height: 1.1;
@@ -35,7 +35,7 @@
 }
 
 [data-theme='dark'] .heroTitle {
-  color: #f1f5f9;
+  color: #fafafa;
 }
 
 .heroSub {
@@ -45,12 +45,12 @@
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
   color: #64748b;
   margin: 0 0 32px;
-  max-width: 500px;
+  max-width: 600px;
   line-height: 1.6;
 }
 
 [data-theme='dark'] .heroSub {
-  color: #94a3b8;
+  color: #b4b4b4;
 }
 
 .heroSearch {
@@ -63,7 +63,7 @@
   width: 100%;
   max-width: 480px;
   border: 1px solid #0d9488;
-  border-radius: 12px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -116,7 +116,7 @@
 }
 
 /* ==========================================================================
-   Feature Cards Grid
+   Feature Cards Grid — Apertis Bento Style
    ========================================================================== */
 
 .features {
@@ -131,19 +131,23 @@
 
 /* --- Base Card --- */
 .featureCard {
+  --line-art-color: #0d9488;
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 28px 24px;
+  padding: 2rem;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 8px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  transition: border-color 0.2s cubic-bezier(0, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 [data-theme='dark'] .featureCard {
+  --line-art-color: #14b8a6;
   background: transparent;
   border: 1px solid #2e2e2e;
 }
@@ -151,78 +155,112 @@
 .featureCard:hover {
   text-decoration: none;
   color: inherit;
-  background: #f8fafc;
-  transform: scale(0.97) translateY(-1px);
+  border-color: rgba(13, 148, 136, 0.3);
 }
 
 [data-theme='dark'] .featureCard:hover {
-  background: transparent;
   border-color: #3e3e3e;
-  box-shadow: 0 0 60px rgba(13, 148, 136, 0.12);
+  box-shadow: 0 0 30px rgba(13, 148, 136, 0.08);
 }
 
-/* --- Color-tinted hover per variant --- */
-.card_blue:hover { background: rgba(59, 130, 246, 0.04); }
-.card_purple:hover { background: rgba(139, 92, 246, 0.04); }
-.card_green:hover { background: rgba(16, 185, 129, 0.04); }
-.card_orange:hover { background: rgba(245, 158, 11, 0.04); }
-.card_pink:hover { background: rgba(236, 72, 153, 0.04); }
-.card_cyan:hover { background: rgba(6, 182, 212, 0.04); }
+/* --- Badge --- */
+.cardBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #0d9488;
+  background: rgba(13, 148, 136, 0.08);
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  width: fit-content;
+}
 
-[data-theme='dark'] .card_blue:hover { background: rgba(59, 130, 246, 0.08); }
-[data-theme='dark'] .card_purple:hover { background: rgba(139, 92, 246, 0.08); }
-[data-theme='dark'] .card_green:hover { background: rgba(16, 185, 129, 0.08); }
-[data-theme='dark'] .card_orange:hover { background: rgba(245, 158, 11, 0.08); }
-[data-theme='dark'] .card_pink:hover { background: rgba(236, 72, 153, 0.08); }
-[data-theme='dark'] .card_cyan:hover { background: rgba(6, 182, 212, 0.08); }
+[data-theme='dark'] .cardBadge {
+  color: #14b8a6;
+  background: rgba(20, 184, 166, 0.1);
+}
 
-/* --- Icons --- */
-.featureIcon {
+.badgeIcon {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 16px;
-  border-radius: 8px;
+  color: inherit;
 }
 
-.icon_blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-.icon_purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
-.icon_green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-.icon_orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-.icon_pink { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
-.icon_cyan { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+.badgeIcon svg {
+  width: 14px;
+  height: 14px;
+}
 
-[data-theme='dark'] .icon_blue { background: rgba(59, 130, 246, 0.12); color: #60a5fa; }
-[data-theme='dark'] .icon_purple { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
-[data-theme='dark'] .icon_green { background: rgba(16, 185, 129, 0.12); color: #34d399; }
-[data-theme='dark'] .icon_orange { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
-[data-theme='dark'] .icon_pink { background: rgba(236, 72, 153, 0.12); color: #f472b6; }
-[data-theme='dark'] .icon_cyan { background: rgba(6, 182, 212, 0.12); color: #22d3ee; }
-
+/* --- Title & Description --- */
 .featureTitle {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 500;
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
-  margin: 0 0 6px;
+  margin: 0 0 0.5rem;
   color: #0f172a;
+  position: relative;
+  z-index: 1;
 }
 
 [data-theme='dark'] .featureTitle {
-  color: #f1f5f9;
+  color: #fafafa;
 }
 
 .featureDesc {
-  font-size: 14px;
+  font-size: 0.9rem;
   font-family: 'LINE Seed', 'Inter', system-ui, -apple-system, sans-serif;
   color: #64748b;
-  margin: 0;
-  line-height: 1.5;
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
 }
 
 [data-theme='dark'] .featureDesc {
-  color: #94a3b8;
+  color: #b4b4b4;
+}
+
+/* --- CTA Link --- */
+.ctaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0d9488;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+  transition: gap 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+[data-theme='dark'] .ctaLink {
+  color: #14b8a6;
+}
+
+.featureCard:hover .ctaLink {
+  gap: 0.75rem;
+}
+
+/* --- SVG Line Art --- */
+.lineArt {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 55%;
+  height: 70%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.featureCard:hover .lineArt {
+  opacity: 1;
 }
 
 /* ==========================================================================
@@ -240,11 +278,21 @@
 
   .heroSub {
     font-size: 16px;
+    max-width: 400px;
   }
 
   .featuresGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+
+  .featureCard {
+    padding: 1.5rem;
+  }
+
+  .lineArt {
+    width: 45%;
+    height: 60%;
   }
 }
 
@@ -252,5 +300,10 @@
   .featuresGrid {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .lineArt {
+    width: 50%;
+    height: 55%;
   }
 }
