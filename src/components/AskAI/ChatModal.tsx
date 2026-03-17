@@ -186,7 +186,7 @@ export default function ChatModal({ sessionId, onClose, shortcutLabel }: Props) 
         <div className={styles.messagesContainer}>
           {messages.length === 0 && (
             <div className={styles.welcomeMessage}>
-              <p>Hi! Ask me anything about Apertis API.</p>
+              <p>Hi! Ask me anything about Apertis.</p>
               <div className={styles.suggestions}>
                 <button onClick={() => handleSuggestion('How do I get started with Apertis?')}>
                   How do I get started?
