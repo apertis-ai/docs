@@ -21,6 +21,9 @@ Welcome to the Apertis API Reference. This documentation covers all available AP
 - [Audio](/api/audio-video/audio) - Speech-to-text and text-to-speech
 - [Video](/api/audio-video/video) - Video understanding
 
+### Utilities
+- [Billing Credits](/api/utilities/billing-credits) - Check remaining credits and subscription quota
+
 ### SDKs & Libraries
 - [Python SDK](/api/sdks/python-sdk) - Official Python client
 - [AI SDK Provider](/api/sdks/ai-sdk-provider) - Vercel AI SDK integration
