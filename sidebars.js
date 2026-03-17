@@ -66,6 +66,7 @@ const sidebars = {
             'installation/continue',
             'installation/roocode',
             'installation/kilo-code',
+            'installation/kilo-cli',
           ],
         },
         {
