@@ -126,16 +126,7 @@
 .featuresGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-[data-theme='dark'] .featuresGrid {
-  background: #2e2e2e;
-  border-color: #2e2e2e;
+  gap: 16px;
 }
 
 /* --- Base Card --- */
@@ -145,13 +136,15 @@
   flex-direction: column;
   padding: 28px 24px;
   background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), background-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 [data-theme='dark'] .featureCard {
-  background: #1c1c1c;
+  background: transparent;
   border: 1px solid #2e2e2e;
 }
 
@@ -163,7 +156,9 @@
 }
 
 [data-theme='dark'] .featureCard:hover {
-  background: #242424;
+  background: transparent;
+  border-color: #3e3e3e;
+  box-shadow: 0 0 60px rgba(13, 148, 136, 0.12);
 }
 
 /* --- Color-tinted hover per variant --- */
@@ -249,11 +244,13 @@
 
   .featuresGrid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .featuresGrid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
