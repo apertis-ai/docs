@@ -32,14 +32,16 @@ npm install -g opencode-ai
 
 Create or edit the configuration file at `~/.config/opencode/opencode.json`:
 
+### Option 1: Using Apertis SDK (Recommended)
+
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "apertis": {
       "name": "Apertis AI",
+      "npm": "@apertis/ai-sdk-provider",
       "options": {
-        "baseURL": "https://api.apertis.ai/v1",
         "apiKey": "your_apertis_api_key"
       },
       "models": {
@@ -68,6 +70,34 @@ Create or edit the configuration file at `~/.config/opencode/opencode.json`:
 }
 ```
 
+### Option 2: Without SDK (OpenAI-Compatible)
+
+If you prefer not to use the Apertis SDK, you can use the built-in OpenAI-compatible mode by specifying `baseURL`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "apertis": {
+      "name": "Apertis AI",
+      "options": {
+        "baseURL": "https://api.apertis.ai/v1",
+        "apiKey": "your_apertis_api_key"
+      },
+      "models": {
+        "claude-opus-4-6": {
+          "name": "Claude Opus 4.6"
+        },
+        "claude-sonnet-4-6": {
+          "name": "Claude Sonnet 4.6"
+        }
+      }
+    }
+  },
+  "model": "apertis/claude-opus-4-6"
+}
+```
+
 Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/token).
 
 :::tip No `code:` prefix needed
@@ -78,7 +108,8 @@ Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude 
 
 | Field | Description |
 |-------|-------------|
-| `provider.apertis.options.baseURL` | Apertis API endpoint. Typically no change needed. |
+| `provider.apertis.npm` | Apertis SDK package. Use `@apertis/ai-sdk-provider` for automatic setup. |
+| `provider.apertis.options.baseURL` | Apertis API endpoint. Only needed without the SDK. |
 | `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/token). |
 | `provider.apertis.models` | Available models to use. Add or remove as needed. |
 | `model` | Default model on launch. Format: `apertis/<model-id>`. |
