@@ -1,42 +1,44 @@
-import React, { useState, useEffect } from 'react'
-import ChatModal from './ChatModal'
-import styles from './styles.module.css'
+import React, { useState, useEffect } from "react";
+import ChatModal from "./ChatModal";
+import styles from "./styles.module.css";
 
 function getSessionId(): string {
-  if (typeof window === 'undefined') return ''
-  const key = 'askai_session_id'
-  let id = sessionStorage.getItem(key)
+  if (typeof window === "undefined") return "";
+  const key = "askai_session_id";
+  let id = sessionStorage.getItem(key);
   if (!id) {
-    id = typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : Math.random().toString(36).slice(2) + Date.now().toString(36)
-    sessionStorage.setItem(key, id)
+    id =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem(key, id);
   }
-  return id
+  return id;
 }
 
 export default function AskAI() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [sessionId, setSessionId] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const [sessionId, setSessionId] = useState("");
 
-  const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
-  const shortcutLabel = isMac ? '⌘K' : 'Ctrl+K'
+  const isMac =
+    typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
+  const shortcutLabel = isMac ? "⌘K" : "Ctrl+K";
 
   useEffect(() => {
-    setSessionId(getSessionId())
-  }, [])
+    setSessionId(getSessionId());
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        setIsOpen(prev => !prev)
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsOpen((prev) => !prev);
       }
-      if (e.key === 'Escape') setIsOpen(false)
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <>
@@ -47,17 +49,17 @@ export default function AskAI() {
         title={`Ask AI (${shortcutLabel})`}
       >
         <span className={styles.glassOverlay} />
-        <img
-          src="https://apertis.ai/logo.png"
-          alt=""
-          className={styles.buttonIcon}
-        />
+        <img src="/img/logo.svg" alt="" className={styles.buttonIcon} />
         <span className={styles.buttonText}>Ask AI</span>
       </button>
 
       {isOpen && sessionId && (
-        <ChatModal sessionId={sessionId} onClose={() => setIsOpen(false)} shortcutLabel={shortcutLabel} />
+        <ChatModal
+          sessionId={sessionId}
+          onClose={() => setIsOpen(false)}
+          shortcutLabel={shortcutLabel}
+        />
       )}
     </>
-  )
+  );
 }
