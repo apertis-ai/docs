@@ -32,6 +32,7 @@
   /* Light mode backgrounds */
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #f5f5f5;
+  --ifm-footer-background-color: #ffffff;
 
   /* Typography - Gemini style */
   --ifm-font-family-base: 'Inter', 'LINE Seed', system-ui, -apple-system, sans-serif;
