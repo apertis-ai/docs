@@ -768,3 +768,8 @@ html {
 .table-wrapper table {
   min-width: 100%;
 }
+
+/* Dark mode: convert SVG icons in page titles to white */
+[data-theme='dark'] .markdown h1 img[src$=".svg"] {
+  filter: brightness(0) invert(1);
+}

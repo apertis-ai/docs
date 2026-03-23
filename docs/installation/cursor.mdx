@@ -1,38 +1,9 @@
 ---
+title: Cursor IDE
 sidebar_label: Cursor IDE
 ---
 
 # <img src="/img/cursor.svg" width="36" style={{display: 'inline-block', verticalAlign: 'middle', marginRight: 8}} /> Cursor IDE
-
-Cursor IDE is an enhanced AI-powered code editor. As a fork of Visual Studio Code, it brings advanced AI features to a familiar interface. **Cursor IDE** integrates deeply into the development workflow, going beyond mere code suggestions or repetitive task handling. It understands your project, adapts to your coding style, recognizes your project structure, and even learns your team's best practices. Think of it as a **Junior Software Engineer** working alongside you, offering advice, spotting errors, and assisting with code refactoring—all in real-time.
-
-## Cursor IDE Installation
-
-### Download
-
-Visit the **[Cursor IDE Official Website](https://www.cursor.com/)** and click the download button in the top-right corner to get Cursor IDE.
-
-![image](../static/img/cursor_1.jpg)
-
-### Installation
-
-Double-click the installer to launch the setup, where the following screen will appear:
-
-![image](../static/img/cursor_2.png)
-
-- **Language for AI**: Select the language you want AI responses to be translated into. For Traditional Chinese, enter `Traditional Chinese`.
-- **Codebase-wide**: Enable embedding for your entire codebase and integrate RAG (Retrieval-Augmented Generation). This feature allows vector search within your codebase, enhancing AI-assisted code editing or generation.
-- **Add to Command Line**: Select `install cursor` on the right side to enable Cursor in the command line (CMD), improving workflow efficiency.
-
-### Importing VSCode Extensions
-
-If you previously used VSCode and installed extensions (e.g., Jupyter Notebook, Prettier), these can be imported into Cursor IDE without reinstalling. Simply click the **[Use Extensions]** button to complete the import.
-
-![image](../static/img/cursor_3.png)
-
-If you had the `Continue` development assistant installed in VSCode, the system will ask whether to continue using `Continue` or switch to Cursor's AI extension. For a better experience, it is recommended to use Cursor's AI extension.
-
-![image](../static/img/cursor_4.png)
 
 ## Using Apertis Models
 
@@ -40,28 +11,33 @@ If you had the `Continue` development assistant installed in VSCode, the system 
 
 You can integrate **Apertis** into **Cursor** to use its models.
 
-1. Navigate to the **Models** section.
+1. Open Cursor Settings and navigate to the **Models** section from the sidebar.
 
-![image](../static/img/cursor_5.png)
+![Cursor Settings Sidebar](../static/img/cursor_settings_sidebar.png)
 
-In the **OpenAI API Key** field, enter your API Key. Enable the **Override OpenAI Base URL** option and enter the following API URL: `https://api.apertis.ai/v1`. Finally, click the **Verify** button in the top-right corner. If no error messages appear, the setup is successful.
+2. Scroll down to the **API Keys** section. In the **OpenAI API Key** field, enter your Apertis API Key. Enable the **Override OpenAI Base URL** toggle and enter the following URL:
 
-![image](../static/img/cursor_6.png)
+```
+https://api.apertis.ai/v1
+```
 
-2. When configuring the model, select the appropriate model name.
+![API Keys Configuration](../static/img/cursor_api_keys.png)
 
-![image](../static/img/cursor_7.png)
+### Enabling Models
 
-### Choosing a Model
+After configuring the API Key, enable the models you want to use by toggling them on in the Models list. The available models through Apertis include:
 
-Next, refer to the [Model Support List](https://apertis.ai/models) and click the **[Add Model]** button. Enter the model name exactly as provided in the model alias; otherwise, the model will not function. For example:
+- **Sonnet 4.6** — Claude Sonnet 4.6
+- **Opus 4.6** — Claude Opus 4.6
+- **GPT-5.3 Codex** — OpenAI GPT-5.3 Codex
+- **GPT-5.4** — OpenAI GPT-5.4
 
-- To use **Claude 3.5 Sonnet**, enter `cow-3-5-sonnet-20241022`, `cow-3-5-sonnet-20240620`.
-- To use **GPT-4o**, enter `gpt-4o`.
-- To use **Gemini 1.5 Pro**, enter `gemini-1.5-pro-latest`.
+![Models List](../static/img/cursor_models_list.png)
 
-**Important Note**: When using Apertis's Claude models, ensure to replace the default Claude model name with the provided alias. For example, use `cow-3-5-sonnet-20240620` instead of `claude-3-5-sonnet-20240620`.
+For the full list of supported models, refer to the [Model Support List](https://apertis.ai/models).
 
-![image](../static/img/cursor_8.png)
+:::tip Subscription Plans
+If you are using an Apertis **Subscription Plan**, the models included in your plan are pre-configured. You can view and manage your subscription-supported models at [Apertis Settings → Models](https://apertis.ai/setting?tab=models).
+:::
 
-Once added, the new model will appear in the chat interface, indicating it is ready for use.
+Once enabled, the models will be available in the chat and composer interfaces.
