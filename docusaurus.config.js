@@ -158,13 +158,13 @@ const config = {
         ],
       },
       footer: {
-        style: "dark",
+        style: "light",
         links: [
           {
             title: "Services",
             items: [
               {
-                label: "Apertis Website",
+                label: "Apertis",
                 href: "https://api.apertis.ai",
               },
               {
@@ -173,11 +173,7 @@ const config = {
               },
               {
                 label: "Research",
-                href: "https://blog.apertis.ai",
-              },
-              {
-                label: "Playground",
-                href: "https://playground.apertis.ai",
+                href: "https://apertis.ai/research",
               },
               {
                 label: "Status",
