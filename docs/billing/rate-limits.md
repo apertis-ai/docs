@@ -10,6 +10,7 @@ Rate limits are applied at multiple levels to protect the service:
 |-------|-------|----------|-------|
 | **Global API** | 1,500 requests | 3 minutes | Per IP |
 | **API Key** | 3,000 requests | 1 minute | Per Key |
+| **Per-Model** | Varies by plan | 1 minute | Per Key + Per Model |
 | **Web Dashboard** | 120 requests | 3 minutes | Per IP |
 | **Critical Operations** | 20 requests | 20 minutes | Per IP |
 | **Log Queries** | 30 requests | 60 seconds | Per User |
@@ -40,14 +41,32 @@ Each API key has its own rate limit:
 
 This provides higher throughput for applications using a single API key.
 
+### Per-Model Rate Limit
+
+Each API key is also rate-limited **per model**. This prevents a single key from overwhelming any specific model with rapid requests (e.g., automated agent loops).
+
+Model name variants are unified into a single bucket — for example, `claude-opus-4-6`, `code:claude-opus-4-6`, and `anthropic/claude-opus-4.6` all share the same rate limit counter. The `:web` and `:free` suffixes are also normalized.
+
+| Plan | RPM per Model per Key |
+|------|----------------------|
+| **Lite** ($12/mo) | 15 |
+| **Pro** ($25/mo) | 20 |
+| **Max** ($200/mo) | 30 |
+| **PAYG** | 500 |
+
+:::tip
+Requests that are rate-limited return HTTP 429 immediately and **do not consume any quota or credits**. The request never reaches the upstream provider.
+:::
+
 ### Effective Rate Limit
 
-Your effective rate limit is the **lower** of:
-- Global API limit (based on IP)
-- API Key limit (based on key)
+Your effective rate limit is the **lowest** of:
+- Global API limit (per IP)
+- API Key limit (per key)
+- Per-Model limit (per key + per model, based on your plan)
 
 ```
-Effective Limit = min(Global Limit, API Key Limit)
+Effective Limit = min(Global Limit, API Key Limit, Per-Model Limit)
 ```
 
 ## Rate Limit Headers
@@ -73,12 +92,17 @@ X-RateLimit-Reset: 1703894400
 
 ### HTTP 429 Response
 
-When you exceed the rate limit, the API returns:
+When you exceed the rate limit, the API returns HTTP 429 with a `Retry-After` header indicating how many seconds to wait:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 45
+```
 
 ```json
 {
   "error": {
-    "message": "Rate limit exceeded. Please wait before making more requests.",
+    "message": "Rate limit exceeded for model: claude-opus-4-6. Maximum 20 requests per minute per API key. Please wait before retrying.",
     "type": "rate_limit_error",
     "code": "rate_limit_exceeded"
   }
@@ -275,17 +299,17 @@ For file operations:
 10 requests per 60 seconds per IP
 ```
 
-## Rate Limit Exemptions
+## Rate Limits by Plan
 
 ### Subscription Users
 
-Subscription plan users may have higher rate limits:
+Subscription users have per-model RPM limits that vary by plan tier. See the [Per-Model Rate Limit](#per-model-rate-limit) section above for details.
 
-| Plan | Rate Limit Multiplier |
-|------|----------------------|
-| Lite | 1x (standard) |
-| Pro | 1.5x |
-| Max | 2x |
+Global API (1,500/3min) and API Key (3,000/min) limits remain the same across all plans.
+
+### PAYG Users
+
+PAYG users have a generous per-model RPM limit of 500 requests per minute, since usage is billed directly.
 
 ### Enterprise
 
