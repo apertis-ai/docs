@@ -41,3 +41,24 @@ If you are using an Apertis **Subscription Plan**, the models included in your p
 :::
 
 Once enabled, the models will be available in the chat and composer interfaces.
+
+### Model ID Conflicts
+
+Some model IDs (e.g., `gpt-5.4`) may conflict with Cursor's built-in model routing, causing requests to bypass Apertis entirely.
+
+**Solution:** Add the `apertis/` prefix to the model ID.
+
+| Original | Cursor IDE Version |
+|----------|-------------------|
+| `gpt-5.4` | `apertis/gpt-5.4` |
+| `claude-sonnet-4-6` | `apertis/claude-sonnet-4-6` |
+| `code:claude-sonnet-4-6` | `apertis/code:claude-sonnet-4-6` |
+| `gpt-5.4:web` | `apertis/gpt-5.4:web` |
+
+The `apertis/` prefix is automatically stripped at the API layer — billing, logs, and quota are unaffected.
+
+You can find the Cursor-compatible model ID for each model on its detail page at [apertis.ai/models](https://apertis.ai/models).
+
+:::note
+The `apertis/` prefix is only needed when you encounter model conflicts in Cursor IDE. Other tools (Claude Code, Kilo Code, etc.) can use the original model ID directly.
+:::
