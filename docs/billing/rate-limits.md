@@ -45,7 +45,7 @@ This provides higher throughput for applications using a single API key.
 
 Each API key is also rate-limited **per model**. This prevents a single key from overwhelming any specific model with rapid requests (e.g., automated agent loops).
 
-Model name variants are unified into a single bucket — for example, `claude-opus-4-6`, `code:claude-opus-4-6`, and `anthropic/claude-opus-4.6` all share the same rate limit counter. The `:web` and `:free` suffixes are also normalized.
+Model name variants are unified into a single bucket — for example, `claude-opus-4-6` and `code:claude-opus-4-6` share the same rate limit counter. The `:web` and `:free` suffixes are also normalized.
 
 | Plan | RPM per Model per Key |
 |------|----------------------|
