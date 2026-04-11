@@ -46,8 +46,8 @@ You can also pre-configure fallback models in your API Token settings, which wil
 - **Type**: Integer
 - **Unit**: Milliseconds (ms)
 - **Range**: 5,000 - 300,000 milliseconds (5 - 300 seconds)
-- **Default**: 30,000 milliseconds (30 seconds)
-- **Description**: Wait time before switching to the next fallback model
+- **Default**: 15,000 milliseconds (15 seconds)
+- **Description**: Wait time before switching to the next fallback model. Automatically capped by remaining `X-Timeout` budget.
 
 ### `fallback_enabled`
 - **Type**: Boolean
@@ -208,11 +208,41 @@ When using the fallback model mechanism, the API response includes the following
 | `X-Actual-Model` | Actually used model name | `gpt-3.5-turbo` |
 | `X-Fallback-Reason` | Reason for triggering fallback | `primary_model_failed` |
 
+## Timeout Architecture
+
+There are two timeout layers that work together:
+
+| Layer | Controls | Header / Parameter | Default |
+|-------|----------|-------------------|---------|
+| **Total Request Timeout** | Entire request lifecycle (channel retries + model fallback) | `X-Timeout` header | 60s |
+| **Per-Model Fallback Timeout** | How long to wait on each fallback model before trying the next | `fallback_timeout` body param | 15s |
+
+**How they interact:**
+- `X-Timeout` caps the **total** time. If 40 seconds were spent on channel retries, only 20 seconds remain for fallback models.
+- `fallback_timeout` controls per-model patience within the remaining budget. If `fallback_timeout` exceeds the remaining total time, it is automatically reduced.
+- For streaming requests, both timers stop once the upstream starts sending data.
+
+```
+X-Timeout: 60000 (total budget)
+├── Channel retries: 25s used
+└── Fallback models: 35s remaining
+    ├── gpt-3.5-turbo: fallback_timeout=15s → wait up to 15s
+    └── claude-3-haiku: fallback_timeout=15s → wait up to 20s (capped by remaining)
+```
+
+### Subscription Users
+
+Subscription plan users can configure the **Fallback Timeout** in the dashboard:
+
+**Settings → API Keys → Fallback Timeout**
+
+This sets the per-model fallback timeout (5–300 seconds) at the token level, applying to all requests made with that token. Request-level `fallback_timeout` overrides this setting.
+
 ## Configuration Priority
 
 1. **Request Level** - `fallback_*` parameters in API request (highest priority)
-2. **Token Level** - Fallback model configuration in API Token settings
-3. **System Default** - 30 second timeout, fallback disabled
+2. **Token Level** - Fallback model configuration in API Token settings (configurable at **Settings → API Keys**)
+3. **System Default** - 15 second per-attempt timeout, fallback disabled
 
 ## Best Practices
 
