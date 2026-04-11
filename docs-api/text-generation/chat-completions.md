@@ -93,7 +93,7 @@ response = client.chat.completions.create(
 | Minimum | 5,000 ms (5 seconds) |
 | Maximum | 300,000 ms (5 minutes) |
 
-When the timeout is exceeded, the API returns **HTTP 504** with diagnostic headers:
+When the timeout is exceeded, the API returns **HTTP 408** with diagnostic headers:
 
 | Header | Description |
 |--------|-------------|
