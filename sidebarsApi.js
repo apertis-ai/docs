@@ -124,6 +124,7 @@ const sidebars = {
       collapsed: true,
       items: [
         "utilities/models",
+        "utilities/recommend",
         "utilities/fallback-models",
         "utilities/billing-credits",
       ],
