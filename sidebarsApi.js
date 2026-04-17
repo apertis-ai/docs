@@ -113,6 +113,11 @@ const sidebars = {
         "sdks/langchain",
         "sdks/llamaindex",
         "sdks/litellm",
+        {
+          type: "doc",
+          id: "sdks/mcp-server",
+          label: "@apertis/mcp-server",
+        },
       ],
     },
 
