@@ -1,6 +1,6 @@
 # Audio API
 
-The Audio API enables speech-to-text transcription, audio translation, and text-to-speech synthesis. This reference covers all audio-related endpoints.
+The Audio API enables speech-to-text transcription, audio translation, text-to-speech synthesis, and audio-input chat completions. This reference covers all audio-related endpoints.
 
 ## Overview
 
@@ -9,6 +9,13 @@ The Audio API enables speech-to-text transcription, audio translation, and text-
 | `/v1/audio/transcriptions` | Convert audio to text |
 | `/v1/audio/translations` | Translate audio to English text |
 | `/v1/audio/speech` | Convert text to audio |
+| `/v1/chat/completions` | Reason over audio input (`gpt-4o-audio-preview`) |
+
+:::info PAYG token required
+
+Audio endpoints — and any chat completion request that uses an audio modality — require a **Pay-As-You-Go (PAYG) token**. Subscription tokens (`sk-sub_...`) currently receive HTTP 403 with error code `audio_requires_payg`. Subscription quota support for audio is on the roadmap; until then, generate a PAYG key from the dashboard to use audio features.
+
+:::
 
 ## Speech to Text (Transcription)
 
@@ -33,11 +40,21 @@ Content-Type: multipart/form-data
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `file` | file | Yes | Audio file (max 25 MB) |
-| `model` | string | Yes | Model ID: `whisper-1` or `gpt-4.1-mini-transcribe` |
+| `model` | string | Yes | Transcription model — see [Supported Transcription Models](#supported-transcription-models) |
 | `language` | string | No | Language code (ISO 639-1) |
 | `prompt` | string | No | Context or spelling hints |
-| `response_format` | string | No | `json`, `text`, `srt`, `vtt`, `verbose_json` |
+| `response_format` | string | No | `json`, `text`, `srt`, `vtt`, `verbose_json` (whisper-* only) — `gpt-4o-(mini-)transcribe` always returns `json` |
 | `temperature` | number | No | Sampling temperature (0-1, default 0) |
+
+#### Supported Transcription Models
+
+| Model | Best for | Notes |
+|-------|----------|-------|
+| `whisper-1` | General-purpose, multilingual | OpenAI's reliable baseline |
+| `whisper-large-v3` | Higher accuracy than whisper-1 | Routed via OpenRouter |
+| `whisper-large-v3-turbo` | Fastest, lowest cost in the whisper family | Routed via OpenRouter |
+| `gpt-4o-mini-transcribe` | Cheap GPT-4o-grade transcription | Returns `json` only |
+| `gpt-4o-transcribe` | Highest accuracy, especially Chinese / noisy audio | Returns `json` only — **recommended default for CJK content** |
 
 ### Supported Audio Formats
 
@@ -186,7 +203,7 @@ POST /v1/audio/translations
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `file` | file | Yes | Audio file (max 25 MB) |
-| `model` | string | Yes | Model ID (e.g., `whisper-1`) |
+| `model` | string | Yes | `whisper-1`, `whisper-large-v3`, or `whisper-large-v3-turbo` (translation is whisper-only) |
 | `prompt` | string | No | Context hints |
 | `response_format` | string | No | Output format |
 | `temperature` | number | No | Sampling temperature |
@@ -242,11 +259,21 @@ Content-Type: application/json
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `model` | string | Yes | TTS model (e.g., `tts-1`, `tts-1-hd`) |
+| `model` | string | Yes | TTS model — see [Supported TTS Models](#supported-tts-models) |
 | `input` | string | Yes | Text to convert (max 4096 chars) |
 | `voice` | string | Yes | Voice to use |
 | `response_format` | string | No | `mp3`, `opus`, `aac`, `flac`, `wav`, `pcm` |
 | `speed` | number | No | Speed (0.25-4.0, default 1.0) |
+| `instructions` | string | No | Tone / accent / pacing prompt — only honoured by `gpt-4o-mini-tts-2025-12-15` |
+
+#### Supported TTS Models
+
+| Model | Best for | Notes |
+|-------|----------|-------|
+| `tts-1` | Standard quality, low latency | OpenAI baseline |
+| `tts-1-hd` | High quality, slower | OpenAI HD baseline |
+| `gpt-4o-mini-tts-2025-12-15` | Steerable voice (instruction-following) | Use the `instructions` field to set tone, accent, pacing |
+| `gemini-3.1-flash-tts-preview` | Multilingual TTS | Routed via OpenRouter |
 
 ### Available Voices
 
@@ -354,6 +381,81 @@ with client.audio.speech.with_streaming_response.create(
         # Process audio chunks as they arrive
         audio_player.play(chunk)
 ```
+
+## Audio in Chat Completions
+
+`gpt-4o-audio-preview` accepts audio input (and optionally produces audio output) through the standard `/v1/chat/completions` endpoint. This unlocks voice-agent use cases where the model reasons over the audio directly rather than passing through a transcription step.
+
+### Endpoint
+
+```
+POST /v1/chat/completions
+```
+
+### Request
+
+Use the standard chat completions schema with three additional fields:
+
+- `modalities` — array of output modalities, e.g. `["text", "audio"]`
+- `audio` — output audio config: `{"voice": "alloy", "format": "wav"}`
+- A user message whose `content` array includes an `input_audio` block with `{data: <base64>, format: <"wav"|"mp3">}`
+
+### Example
+
+**Python (openai SDK):**
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(api_key="sk-your-payg-api-key", base_url="https://api.apertis.ai/v1")
+
+with open("question.wav", "rb") as f:
+    audio_b64 = base64.b64encode(f.read()).decode()
+
+response = client.chat.completions.create(
+    model="gpt-4o-audio-preview",
+    modalities=["text", "audio"],
+    audio={"voice": "alloy", "format": "wav"},
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What does this recording say, and how should I reply?"},
+                {"type": "input_audio", "input_audio": {"data": audio_b64, "format": "wav"}},
+            ],
+        }
+    ],
+)
+
+print(response.choices[0].message.content)
+# Spoken reply (base64-encoded wav) is on response.choices[0].message.audio
+```
+
+**cURL:**
+```bash
+AUDIO_B64=$(base64 -i question.wav)
+curl https://api.apertis.ai/v1/chat/completions \
+  -H "Authorization: Bearer sk-your-payg-api-key" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"model\": \"gpt-4o-audio-preview\",
+    \"modalities\": [\"text\", \"audio\"],
+    \"audio\": {\"voice\": \"alloy\", \"format\": \"wav\"},
+    \"messages\": [{
+      \"role\": \"user\",
+      \"content\": [
+        {\"type\": \"text\", \"text\": \"Summarise this clip.\"},
+        {\"type\": \"input_audio\", \"input_audio\": {\"data\": \"${AUDIO_B64}\", \"format\": \"wav\"}}
+      ]
+    }]
+  }"
+```
+
+### Notes
+
+- Subscription tokens are blocked at the gateway with HTTP 403 / `audio_requires_payg`. Use a PAYG token.
+- Streaming (`stream: true`) is not yet supported for audio output — request a non-streaming response.
+- Other adaptors that route through OpenAI-format channels (e.g., OpenRouter) inherit the same content-block shape.
 
 ## Supported Languages
 
