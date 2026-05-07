@@ -23,31 +23,30 @@
   }
 
   .consoleButton {
+    display: none;
     flex: 0 0 auto;
-    display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    margin: 0 12px 12px;
-    border-top: none;
-    border-left: 2px solid #0d9488;
-    border-radius: 8px;
-    font-size: 0.875rem;
+    justify-content: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    margin: 8px 12px 12px;
+    border: 1px solid var(--apertis-docs-border);
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 500;
     color: #0d9488;
     text-decoration: none;
     cursor: pointer;
-    background: rgba(13, 148, 136, 0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.2s ease;
+    background: transparent;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   }
 
   .consoleButton:hover {
     background: rgba(13, 148, 136, 0.12);
     color: #0f766e;
+    border-color: #0d9488;
     text-decoration: none;
-    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.1);
   }
 
   .consoleButton svg {
@@ -63,14 +62,14 @@
   /* Dark mode */
   [data-theme='dark'] .consoleButton {
     color: #14b8a6;
-    border-left-color: #14b8a6;
-    background: rgba(20, 184, 166, 0.08);
+    border-color: var(--apertis-docs-border);
+    background: transparent;
   }
 
   [data-theme='dark'] .consoleButton:hover {
-    background: rgba(20, 184, 166, 0.15);
+    background: rgba(20, 184, 166, 0.14);
     color: #5eead4;
-    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.1);
+    border-color: #14b8a6;
   }
 }
 

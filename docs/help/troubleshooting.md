@@ -9,7 +9,8 @@ This guide helps you diagnose and resolve common issues when using the Apertis A
 Verify your API key is working:
 
 ```bash
-curl https://api.apertis.ai/api/models
+curl https://api.apertis.ai/v1/models \
+  -H "Authorization: Bearer sk-your-api-key"
 ```
 
 **Expected Response:**
@@ -25,7 +26,7 @@ curl https://api.apertis.ai/api/models
 
 ### Check API Status
 
-Visit our status page: [status.stima.tech](https://status.stima.tech)
+Visit our status page: [status.apertis.ai](https://status.apertis.ai)
 
 ## Common Issues
 
@@ -201,7 +202,8 @@ If your subscription token (`sk-sub-xxx`) isn't working:
 
 2. **List available models:**
    ```bash
-   curl https://api.apertis.ai/api/models
+   curl https://api.apertis.ai/v1/models \
+     -H "Authorization: Bearer sk-your-api-key"
    ```
 
 3. **Check model availability:**
@@ -380,7 +382,8 @@ httpx_logger.setLevel(logging.DEBUG)
 
 **cURL:**
 ```bash
-curl -v https://api.apertis.ai/api/models
+curl -v https://api.apertis.ai/v1/models \
+  -H "Authorization: Bearer sk-your-api-key"
 ```
 
 ### Request/Response Inspection
@@ -460,7 +463,7 @@ services:
 1. **Check this troubleshooting guide**
 2. **Review [Error Codes](./error-codes)**
 3. **Search our documentation**
-4. **Check [Status Page](https://status.stima.tech)**
+4. **Check [Status Page](https://status.apertis.ai)**
 
 ### Information to Include
 

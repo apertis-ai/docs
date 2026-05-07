@@ -66,10 +66,10 @@ The following models are included in **all plans** and consume **no quota**:
 
 Each model has a different rate depending on your plan. Higher-tier plans offer lower rates, giving you more usage per quota. For the full model list and up-to-date rates, see the [Subscribe page](https://apertis.ai/subscribe).
 
-You can also query the current rates programmatically using the [Models API](/docs-api/utilities/models) with your subscription key — the response includes a `multiplier` field for each model.
+You can also query the current rates programmatically using the [Models API](/api/utilities/models) with your subscription key — the response includes a `multiplier` field for each model.
 
 :::tip Coding Tools
-When using coding tools such as Claude Code, Roo Code, Cline, Kilo Code, OpenCode, Crush, or Goose, add the `code:` prefix to Claude model IDs (e.g., `code:claude-opus-4-6`). This routes requests through optimized coding channels. The same subscription quota and rates apply. See the [Claude Code guide](/docs/installation/claude-code#coding-model-ids) for details.
+When using coding tools such as Claude Code, Roo Code, Cline, Kilo Code, OpenCode, Crush, or Goose, add the `code:` prefix to Claude model IDs (e.g., `code:claude-opus-4-6`). This routes requests through optimized coding channels. The same subscription quota and rates apply. See the [Claude Code guide](/installation/claude-code#coding-model-ids) for details.
 :::
 
 ### Estimated Uses per Month
@@ -264,7 +264,7 @@ for model in models:
     print(model.id)
 ```
 
-The `/v1/models` endpoint returns only models included in your current plan, along with extra fields like `multiplier` (quota cost) and `tier` (model origin). See [Models API](/docs-api/utilities/models) for details.
+The `/v1/models` endpoint returns only models included in your current plan, along with extra fields like `multiplier` (quota cost) and `tier` (model origin). See [Models API](/api/utilities/models) for details.
 
 ## FAQ
 
