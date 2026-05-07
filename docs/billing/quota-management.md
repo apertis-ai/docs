@@ -81,17 +81,25 @@ View your quota status in the dashboard:
 Check quota programmatically:
 
 ```python
-# Get token information (includes quota)
 import requests
 
 response = requests.get(
-    "https://api.apertis.ai/api/user/token",
+    "https://api.apertis.ai/v1/dashboard/billing/credits",
     headers={"Authorization": "Bearer sk-your-api-key"}
 )
 
-token_info = response.json()
-print(f"Remaining quota: {token_info['data']['remain_quota']}")
-print(f"Used quota: {token_info['data']['used_quota']}")
+credits = response.json()
+payg = credits["payg"]
+
+if payg["token_is_unlimited"]:
+    print("Token quota: unlimited")
+else:
+    print(f"Remaining token credits: ${payg['token_remaining']:.2f}")
+    print(f"Used token credits: ${payg['token_used']:.2f}")
+
+if credits["is_subscriber"]:
+    subscription = credits["subscription"]
+    print(f"Cycle quota remaining: {subscription['cycle_quota_remaining']}")
 ```
 
 ### Response Headers

@@ -178,13 +178,13 @@ Check balance programmatically:
 import requests
 
 response = requests.get(
-    "https://api.apertis.ai/api/user/self",
+    "https://api.apertis.ai/v1/dashboard/billing/credits",
     headers={"Authorization": "Bearer sk-your-api-key"}
 )
 
-user_info = response.json()
-balance = user_info['data']['quota']
-print(f"Current balance: ${balance / 500000:.2f}")  # Convert from internal units
+credits = response.json()
+balance = credits["payg"]["account_credits"]
+print(f"Current balance: ${balance:.2f} USD")
 ```
 
 ## Low Balance Handling

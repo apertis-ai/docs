@@ -177,7 +177,7 @@ const config = {
               },
               {
                 label: "Status",
-                href: "https://status.stima.tech",
+                href: "https://status.apertis.ai",
               },
             ],
           },

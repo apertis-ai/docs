@@ -358,7 +358,7 @@ We aim to respond within 24 hours on business days.
 
 ### Is there a status page?
 
-Yes: [status.stima.tech](https://status.stima.tech)
+Yes: [status.apertis.ai](https://status.apertis.ai)
 
 ---
 

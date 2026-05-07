@@ -22,8 +22,9 @@
     "@docusaurus/core": "3.5.2",
     "@docusaurus/preset-classic": "3.5.2",
     "@docusaurus/remark-plugin-npm2yarn": "^3.9.2",
-    "@docusaurus/theme-search-algolia": "^3.7.0",
+    "@docusaurus/theme-search-algolia": "3.5.2",
     "@easyops-cn/docusaurus-search-local": "^0.47.0",
+    "@lobehub/icons": "^1.80.0",
     "@marsidev/react-turnstile": "^1.4.1",
     "@mdx-js/react": "^3.0.0",
     "@supabase/supabase-js": "^2.91.1",
@@ -55,6 +56,9 @@
       "last 3 firefox version",
       "last 5 safari version"
     ]
+  },
+  "overrides": {
+    "webpack": "5.95.0"
   },
   "engines": {
     "node": ">=18.0"
