@@ -1,6 +1,6 @@
 /* ==========================================================================
    Floating Button — "Ask Docs"
-   Apertis UI: pill shape, shimmer border, glassmorphism
+   Apertis UI: quiet utility launcher
    ========================================================================== */
 
 .floatingButton {
@@ -9,73 +9,37 @@
   right: 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #1e293b;
-  border: none;
-  border-radius: 50px;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-color-emphasis-800);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.floatingButton::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 52px;
-  background: linear-gradient(90deg, #0d9488, #8b5cf6, #ec4899, #f59e0b, #14b8a6, #0d9488);
-  background-size: 300% 100%;
-  animation: shimmerBorder 3s linear infinite;
-  z-index: -1;
-}
-
-.floatingButton::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 48px;
-  background: rgba(255, 255, 255, 0.95);
-  z-index: -1;
-  transition: background 0.3s ease;
-}
-
-@keyframes shimmerBorder {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-.floatingButton {
-  animation: pulseAttention 2s ease-in-out 1s 3;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  transition: border-color 80ms ease-out, color 80ms ease-out, box-shadow 80ms ease-out;
+  z-index: 900;
 }
 
 .floatingButton:hover {
-  box-shadow: 0 4px 24px rgba(13, 148, 136, 0.35);
-  transform: scale(1.03);
-  animation: none;
-}
-
-@keyframes pulseAttention {
-  0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-  50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 20px rgba(13, 148, 136, 0.2); }
+  border-color: #0d9488;
+  color: #0d9488;
+  box-shadow: 0 12px 34px rgba(13, 148, 136, 0.14);
 }
 
 [data-theme='dark'] .floatingButton {
-  background: rgba(30, 41, 59, 0.95);
+  background: #18181b;
   color: #f1f5f9;
-}
-
-[data-theme='dark'] .floatingButton::after {
-  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 [data-theme='dark'] .floatingButton:hover {
-  box-shadow: 0 4px 20px rgba(20, 184, 166, 0.3);
+  border-color: #14b8a6;
+  color: #14b8a6;
+  box-shadow: 0 12px 34px rgba(20, 184, 166, 0.16);
 }
 
 .buttonIcon {
@@ -90,29 +54,9 @@
   z-index: 2;
 }
 
-.glassOverlay {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 60%, transparent 100%);
-  transition: left 0.5s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floatingButton:hover .glassOverlay {
-  left: 100%;
-}
-
-[data-theme='dark'] .glassOverlay {
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 60%, transparent 100%);
-}
-
 /* ==========================================================================
    Modal Overlay & Container
-   Apertis UI: glassmorphism, 12px radius, entry animation
+   Search modal
    ========================================================================== */
 
 .overlay {
@@ -124,8 +68,6 @@
   justify-content: center;
   z-index: 1000;
   padding: 80px 20px 20px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 
 .modal {
@@ -134,27 +76,146 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Glassmorphism — Light */
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--ifm-background-color);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 15px 35px rgba(13, 148, 136, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
 }
 
 [data-theme='dark'] .modal {
-  background: rgba(32, 32, 36, 0.85);
+  background: #18181b;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(13, 148, 136, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 @keyframes modalIn {
   from { opacity: 0; transform: translateY(-8px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==========================================================================
+   Ask Docs Panel
+   ========================================================================== */
+
+.askPanelBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: transparent;
+  pointer-events: none;
+}
+
+.askPanel {
+  position: fixed;
+  top: calc(var(--ifm-navbar-height, 52px) + 12px);
+  right: 16px;
+  bottom: 16px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  width: min(420px, calc(100vw - 32px));
+  background: var(--ifm-background-color);
+  color: var(--ifm-color-emphasis-900);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+  animation: panelIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.askPanelExpanded {
+  width: min(720px, calc(100vw - 32px));
+}
+
+[data-theme='dark'] .askPanel {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+}
+
+@keyframes panelIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.askPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 12px 10px 14px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-color);
+}
+
+[data-theme='dark'] .askPanelHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.askPanelIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.askPanelLogo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex: 0 0 28px;
+}
+
+.askPanelTitle {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 18px;
+  color: var(--ifm-color-emphasis-900);
+}
+
+.askPanelSubtitle {
+  max-width: min(220px, 42vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.askPanelActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.panelIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-500);
+  cursor: pointer;
+  transition: background 80ms ease-out, color 80ms ease-out;
+}
+
+.panelIconButton:hover {
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+}
+
+[data-theme='dark'] .panelIconButton:hover {
+  background: rgba(20, 184, 166, 0.12);
+  color: #14b8a6;
 }
 
 /* ==========================================================================
@@ -415,70 +476,81 @@
 
 /* ==========================================================================
    Ask AI Tab
-   Apertis UI: gradient bubbles, glassmorphism, 8px grid
+   Docked assistant body
    ========================================================================== */
 
 .askTab {
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-height: calc(80vh - 52px); /* subtract header */
+  min-height: 0;
+  background: var(--ifm-background-color);
 }
 
 .askMessages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  min-height: 200px;
+  padding: 14px;
+  min-height: 0;
 }
 
 /* Welcome */
 .askWelcome {
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 32px 16px;
-  text-align: center;
+  align-items: flex-start;
+  padding: 10px 0 8px;
+  text-align: left;
 }
 
-/* Glow blob behind logo */
-.askWelcome::before {
-  content: '';
-  position: absolute;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 120px;
-  background: radial-gradient(ellipse, rgba(13, 148, 136, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+.askWelcomeKicker {
+  margin-bottom: 8px;
+  color: #0d9488;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-[data-theme='dark'] .askWelcome::before {
-  background: radial-gradient(ellipse, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
+[data-theme='dark'] .askWelcomeKicker {
+  color: #14b8a6;
 }
 
-.askWelcomeLogo {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  margin-bottom: 16px;
+.askWelcomeTitle {
+  margin: 0 0 8px;
+  color: var(--ifm-color-emphasis-900);
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 650;
 }
 
 .askWelcomeText {
-  font-size: 16px;
-  color: var(--ifm-color-emphasis-800);
-  margin: 0 0 4px;
+  margin: 0 0 14px;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
-.askWelcomeSub {
-  font-size: 14px;
-  color: var(--ifm-color-emphasis-500);
-  margin: 0 0 24px;
+.contextChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  min-height: 30px;
+  margin-bottom: 14px;
+  padding: 6px 9px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 12px;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.contextChip:hover {
+  border-color: #0d9488;
+  color: #0d9488;
+  text-decoration: none;
 }
 
 .askSuggestions {
@@ -486,98 +558,83 @@
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  max-width: 400px;
 }
 
 .askSuggestions button {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  padding: 10px 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: transparent;
   color: var(--ifm-color-emphasis-700);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 80ms ease-out, color 80ms ease-out, background 80ms ease-out;
   text-align: left;
 }
 
 [data-theme='dark'] .askSuggestions button {
-  background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
 .askSuggestions button:hover {
   background: rgba(13, 148, 136, 0.08);
-  color: var(--ifm-color-primary);
-  border-color: rgba(13, 148, 136, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+  border-color: #0d9488;
 }
 
 [data-theme='dark'] .askSuggestions button:hover {
   background: rgba(20, 184, 166, 0.1);
   color: #14b8a6;
-  border-color: rgba(20, 184, 166, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(20, 184, 166, 0.1);
+  border-color: #14b8a6;
 }
 
 /* Chat Messages */
 .askMessage {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   display: flex;
+  flex-direction: column;
 }
 
 .ask_user {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .ask_assistant {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .askBubble {
-  max-width: 80%;
-  padding: 12px 16px;
-  border-radius: 12px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
   font-size: 14px;
   line-height: 1.6;
   word-break: break-word;
 }
 
-/* User bubble — gradient */
 .ask_user .askBubble {
-  background: linear-gradient(135deg, #0d9488, #0f766e);
+  max-width: 88%;
+  background: #0d9488;
   color: #ffffff;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 3px;
 }
 
-/* Assistant bubble — glassmorphism */
 .ask_assistant .askBubble {
-  background: rgba(0, 0, 0, 0.03);
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-200);
   color: var(--ifm-color-emphasis-900);
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 6px;
 }
 
 [data-theme='dark'] .ask_assistant .askBubble {
-  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Loading state — breathing glow */
 .askLoading .askBubble {
   border: 1px solid rgba(13, 148, 136, 0.4);
-  animation: breathe 1.5s ease-in-out infinite;
-}
-
-[data-theme='dark'] .askLoading .askBubble {
-  border-color: rgba(20, 184, 166, 0.5);
-}
-
-@keyframes breathe {
-  0%, 100% { box-shadow: 0 0 8px rgba(13, 148, 136, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(13, 148, 136, 0.3); }
 }
 
 /* Skeleton */
@@ -606,9 +663,108 @@
   100% { background-position: -200% 0; }
 }
 
+.sourceList {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .sourceList {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.sourceListLabel {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.sourcePill {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 12px;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.sourcePill:hover {
+  border-color: #0d9488;
+  color: #0d9488;
+  text-decoration: none;
+}
+
+.answerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-height: 30px;
+  margin-top: 6px;
+  padding-left: 2px;
+}
+
+.answerActions button {
+  height: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 11px;
+  line-height: 28px;
+  cursor: pointer;
+  transition: background 80ms ease-out, color 80ms ease-out;
+}
+
+.answerActions .answerIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  line-height: 1;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.answerActions .answerIconButton svg {
+  flex: 0 0 15px;
+}
+
+.answerFeedbackButton {
+  font-weight: 500;
+}
+
+.answerActions button:hover,
+.answerActionActive {
+  background: rgba(13, 148, 136, 0.1) !important;
+  color: #0d9488 !important;
+}
+
+.answerCopied {
+  background: rgba(13, 148, 136, 0.1) !important;
+  color: #0d9488 !important;
+}
+
+[data-theme='dark'] .answerActions button:hover,
+[data-theme='dark'] .answerActionActive,
+[data-theme='dark'] .answerCopied {
+  background: rgba(20, 184, 166, 0.12) !important;
+  color: #14b8a6 !important;
+}
+
 /* Input Form */
 .askInputForm {
-  padding: 12px 16px 8px;
+  padding: 12px 14px 8px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -620,10 +776,11 @@
   position: relative;
   display: flex;
   align-items: center;
+  min-height: 58px;
   border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 24px;
+  border-radius: 8px;
   background: var(--ifm-background-color);
-  transition: all 0.2s ease;
+  transition: border-color 80ms ease-out, box-shadow 80ms ease-out;
 }
 
 .askInputWrapper:focus-within {
@@ -635,49 +792,109 @@
   box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
-.askInputWrapper input {
+.askInputWrapper textarea {
   flex: 1;
-  padding: 10px 48px 10px 16px;
+  min-height: 58px;
+  max-height: 150px;
+  padding: 11px 56px 11px 12px;
   border: none;
-  border-radius: 24px;
+  border-radius: 8px;
   font-size: 14px;
+  line-height: 20px;
   background: transparent;
   color: var(--ifm-color-emphasis-900);
   outline: none;
+  resize: none;
 }
 
-.askInputWrapper input::placeholder {
+.askInputWrapper textarea::placeholder {
   color: var(--ifm-color-emphasis-500);
 }
 
-.askInputWrapper input:disabled {
+.askInputWrapper textarea:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 .askInputWrapper button[type="submit"] {
   position: absolute;
-  right: 6px;
-  display: flex;
+  top: 50%;
+  right: 8px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
-  background: linear-gradient(135deg, #0d9488, #0f766e);
-  color: white;
-  border-radius: 50%;
+  background: #0d9488;
+  color: #ffffff;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transform: translateY(-50%);
+  transition: background 80ms ease-out, color 80ms ease-out, box-shadow 80ms ease-out;
+}
+
+.askInputWrapper button[type="submit"] svg {
+  width: 15px;
+  height: 15px;
 }
 
 .askInputWrapper button[type="submit"]:hover:not(:disabled) {
-  background: linear-gradient(135deg, #0f766e, #115e59);
+  background: #0f766e;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.14);
 }
 
 .askInputWrapper button[type="submit"]:disabled {
-  opacity: 0.4;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-500);
+  opacity: 1;
   cursor: not-allowed;
+}
+
+[data-theme='dark'] .askInputWrapper button[type="submit"] {
+  background: #14b8a6;
+  color: #06201d;
+}
+
+[data-theme='dark'] .askInputWrapper button[type="submit"]:hover:not(:disabled) {
+  background: #2dd4bf;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.16);
+}
+
+[data-theme='dark'] .askInputWrapper button[type="submit"]:disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.composerContext {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-bottom: 8px;
+  color: var(--ifm-color-emphasis-500);
+  font-size: 11px;
+}
+
+.composerContext a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ifm-color-emphasis-700);
+  text-decoration: none;
+}
+
+.composerContext a:hover {
+  color: #0d9488;
+}
+
+.composerMeta {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 6px;
+  color: var(--ifm-color-emphasis-500);
+  font-size: 11px;
 }
 
 .askClearBtn {
@@ -715,6 +932,14 @@
   text-decoration: underline;
 }
 
+.turnstileContainer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 /* ==========================================================================
    Mobile Responsive
    ========================================================================== */
@@ -723,12 +948,11 @@
   .floatingButton {
     bottom: 16px;
     right: 16px;
-    padding: 12px;
-    border-radius: 50%;
-  }
-
-  .floatingButton::before {
-    display: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 8px;
   }
 
   .buttonText {
@@ -745,7 +969,75 @@
     border-radius: 16px 16px 0 0;
   }
 
-  .askBubble {
-    max-width: 90%;
+  .askPanel {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: min(82vh, 680px);
+    max-height: calc(100vh - 72px);
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -16px 44px rgba(15, 23, 42, 0.18);
+  }
+
+  .askPanelBackdrop {
+    background: rgba(15, 23, 42, 0.24);
+    pointer-events: auto;
+  }
+
+  .askPanelExpanded {
+    width: 100%;
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
+  }
+
+  .askPanelSubtitle {
+    max-width: calc(100vw - 190px);
+  }
+
+  .askPanelHeader {
+    min-height: 54px;
+    padding: 9px 10px 9px 12px;
+  }
+
+  .askMessages {
+    padding: 12px;
+  }
+
+  .askWelcome {
+    padding-top: 6px;
+  }
+
+  .askWelcomeTitle {
+    font-size: 19px;
+  }
+
+  .askSuggestions {
+    gap: 7px;
+  }
+
+  .askSuggestions button {
+    padding: 9px 10px;
+  }
+
+  .askInputForm {
+    padding: 10px 12px 8px;
+  }
+
+  .ask_user .askBubble {
+    max-width: 92%;
+  }
+
+  .composerMeta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .askFooter {
+    padding-bottom: 8px;
   }
 }
