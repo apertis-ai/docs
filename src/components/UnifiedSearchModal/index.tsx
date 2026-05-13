@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback} from 'react'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import SearchTab from './SearchTab'
 import AskAITab from './AskAITab'
+import {PageContext, getCurrentPageContext} from './assistantUtils'
 import styles from './styles.module.css'
 
 function getSessionId(): string {
@@ -18,54 +19,74 @@ function getSessionId(): string {
 }
 
 type TabType = 'search' | 'askdocs'
+type SurfaceType = TabType | null
 
 export default function UnifiedSearchModal() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<TabType>('search')
+  const [activeSurface, setActiveSurface] = useState<SurfaceType>(null)
+  const [isAskExpanded, setIsAskExpanded] = useState(false)
+  const [pageContext, setPageContext] = useState<PageContext | null>(null)
   const [sessionId, setSessionId] = useState('')
   const {siteConfig} = useDocusaurusContext()
 
   const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
   const shortcutLabel = isMac ? '⌘K' : 'Ctrl+K'
+  const isSearchOpen = activeSurface === 'search'
+  const isAskOpen = activeSurface === 'askdocs'
 
   useEffect(() => {
     setSessionId(getSessionId())
   }, [])
 
-  const openModal = useCallback((tab?: TabType) => {
-    setIsOpen(true)
-    if (tab) setActiveTab(tab)
+  const openSearch = useCallback(() => {
+    setActiveSurface('search')
   }, [])
 
-  const closeModal = useCallback(() => {
-    setIsOpen(false)
+  const openAskDocs = useCallback(() => {
+    setPageContext(getCurrentPageContext())
+    setActiveSurface('askdocs')
+  }, [])
+
+  const openSurface = useCallback((tab?: TabType) => {
+    if (tab === 'askdocs') {
+      openAskDocs()
+      return
+    }
+
+    openSearch()
+  }, [openAskDocs, openSearch])
+
+  const closeSurface = useCallback(() => {
+    setActiveSurface(null)
+    setIsAskExpanded(false)
   }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        if (isOpen) {
-          closeModal()
+        if (isSearchOpen) {
+          closeSurface()
         } else {
-          openModal('search')
+          openSearch()
         }
       }
-      if (e.key === 'Escape' && isOpen) {
-        closeModal()
+      if (e.key === 'Escape' && activeSurface) {
+        const target = e.target as HTMLElement | null
+        if (target?.tagName === 'TEXTAREA') return
+        closeSurface()
       }
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, openModal, closeModal])
+  }, [activeSurface, isSearchOpen, openSearch, closeSurface])
 
-  // Expose openModal globally for other components to trigger
+  // Expose search/Ask Docs globally for other components to trigger.
   useEffect(() => {
-    ;(window as any).__openUnifiedSearch = openModal
+    ;(window as any).__openUnifiedSearch = openSurface
     return () => {
       delete (window as any).__openUnifiedSearch
     }
-  }, [openModal])
+  }, [openSurface])
 
   // Intercept navbar search input clicks to open unified modal
   useEffect(() => {
@@ -76,7 +97,7 @@ export default function UnifiedSearchModal() {
       if (target.tagName === 'INPUT') {
         (target as HTMLInputElement).blur()
       }
-      openModal('search')
+      openSearch()
     }
 
     const attachListeners = () => {
@@ -101,69 +122,64 @@ export default function UnifiedSearchModal() {
         input.removeEventListener('focus', handleSearchClick, true)
       })
     }
-  }, [openModal])
+  }, [openSearch])
 
   return (
     <>
-      {/* Floating "Ask Docs" button */}
-      <button
-        className={styles.floatingButton}
-        onClick={() => openModal('askdocs')}
-        aria-label="Ask Docs"
-        title={`Ask Docs (${shortcutLabel})`}
-      >
-        <span className={styles.glassOverlay} />
-        <svg
-          className={styles.buttonIcon}
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      {!activeSurface && (
+        <button
+          className={styles.floatingButton}
+          onClick={openAskDocs}
+          aria-label="Ask Docs"
+          title="Ask Docs"
         >
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-        </svg>
-        <span className={styles.buttonText}>Ask Docs</span>
-      </button>
+          <svg
+            className={styles.buttonIcon}
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+          </svg>
+          <span className={styles.buttonText}>Ask Docs</span>
+        </button>
+      )}
 
-      {/* Modal */}
-      {isOpen && (
-        <div className={styles.overlay} onClick={closeModal}>
+      {/* Search Modal */}
+      {isSearchOpen && (
+        <div className={styles.overlay} onClick={closeSurface}>
           <div
             className={styles.modal}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
+            aria-label="Search documentation"
           >
-            {/* Header with tabs */}
             <div className={styles.header}>
               <div className={styles.headerLeft}>
-                {activeTab === 'search' && (
-                  <svg
-                    className={styles.headerIcon}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                )}
-                {activeTab === 'askdocs' && (
-                  <span className={styles.headerTitle}>Ask AI</span>
-                )}
+                <svg
+                  className={styles.headerIcon}
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
               </div>
               <div className={styles.tabGroup}>
                 <button
-                  className={`${styles.tab} ${activeTab === 'search' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('search')}
+                  className={`${styles.tab} ${styles.tabActive}`}
+                  onClick={openSearch}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="8" />
@@ -172,8 +188,8 @@ export default function UnifiedSearchModal() {
                   Search
                 </button>
                 <button
-                  className={`${styles.tab} ${activeTab === 'askdocs' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('askdocs')}
+                  className={styles.tab}
+                  onClick={openAskDocs}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
@@ -185,21 +201,97 @@ export default function UnifiedSearchModal() {
               </div>
             </div>
 
-            {/* Tab content */}
             <div className={styles.content}>
-              {activeTab === 'search' && (
-                <SearchTab onClose={closeModal} />
-              )}
-              {activeTab === 'askdocs' && sessionId && (
-                <AskAITab
-                  sessionId={sessionId}
-                  onClose={closeModal}
-                  shortcutLabel={shortcutLabel}
-                />
-              )}
+              <SearchTab onClose={closeSurface} />
             </div>
           </div>
         </div>
+      )}
+
+      {/* Ask Docs Panel */}
+      {isAskOpen && sessionId && (
+        <>
+          <div
+            className={styles.askPanelBackdrop}
+            onClick={closeSurface}
+            aria-hidden="true"
+          />
+          <aside
+            className={`${styles.askPanel} ${isAskExpanded ? styles.askPanelExpanded : ''}`}
+            role="dialog"
+            aria-label="Ask Docs"
+            aria-modal="false"
+          >
+            <div className={styles.askPanelHeader}>
+              <div className={styles.askPanelIdentity}>
+                <img src="/img/logo.svg" alt="" className={styles.askPanelLogo} />
+                <div>
+                  <div className={styles.askPanelTitle}>Ask Docs</div>
+                  <div className={styles.askPanelSubtitle}>
+                    {pageContext ? pageContext.title : siteConfig.title}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.askPanelActions}>
+                <button
+                  type="button"
+                  className={styles.panelIconButton}
+                  aria-label="Conversation history is preserved for this session"
+                  title="History preserved for this session"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 12a9 9 0 1 0 3-6.7" />
+                    <path d="M3 3v6h6" />
+                    <path d="M12 7v5l3 2" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className={styles.panelIconButton}
+                  onClick={() => setIsAskExpanded((expanded) => !expanded)}
+                  aria-label={isAskExpanded ? 'Collapse Ask Docs panel' : 'Expand Ask Docs panel'}
+                  title={isAskExpanded ? 'Collapse panel' : 'Expand panel'}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    {isAskExpanded ? (
+                      <>
+                        <path d="M8 3v5H3" />
+                        <path d="M16 3v5h5" />
+                        <path d="M8 21v-5H3" />
+                        <path d="M16 21v-5h5" />
+                      </>
+                    ) : (
+                      <>
+                        <path d="M3 8V3h5" />
+                        <path d="M21 8V3h-5" />
+                        <path d="M3 16v5h5" />
+                        <path d="M21 16v5h-5" />
+                      </>
+                    )}
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className={styles.panelIconButton}
+                  onClick={closeSurface}
+                  aria-label="Close Ask Docs"
+                  title="Close"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <AskAITab
+              sessionId={sessionId}
+              shortcutLabel={shortcutLabel}
+              pageContext={pageContext}
+            />
+          </aside>
+        </>
       )}
     </>
   )

@@ -28,15 +28,51 @@ interface DocumentSearchResult {
   similarity: number
 }
 
+interface PageContext {
+  title?: string
+  href?: string
+}
+
+interface AskRequestBody {
+  question?: string
+  sessionId?: string
+  turnstileToken?: string
+  pageContext?: PageContext | null
+}
+
 // Simple in-memory rate limiting (resets on cold start)
 const sessionQueries = new Map<string, number>()
 const MAX_QUERIES_PER_SESSION = 20
+
+function normalizePageContext(pageContext: unknown): PageContext | null {
+  if (!pageContext || typeof pageContext !== 'object') return null
+
+  const { title, href } = pageContext as PageContext
+  if (typeof title !== 'string' || typeof href !== 'string') return null
+
+  const cleanTitle = title.replace(/\s+/g, ' ').trim().slice(0, 120)
+  const cleanHref = href.trim().slice(0, 240)
+
+  if (!cleanTitle || !cleanHref.startsWith('/') || cleanHref.startsWith('//')) {
+    return null
+  }
+
+  return { title: cleanTitle, href: cleanHref }
+}
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context
 
   // Validate environment
-  if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.JINA_API_KEY || !env.APERTIS_API_KEY) {
+  if (
+    !env.SUPABASE_URL ||
+    !env.SUPABASE_ANON_KEY ||
+    !env.JINA_API_KEY ||
+    !env.APERTIS_API_KEY ||
+    !env.APERTIS_BASE_URL ||
+    !env.APERTIS_MODEL ||
+    !env.TURNSTILE_SECRET_KEY
+  ) {
     return new Response(
       JSON.stringify({ error: 'Server configuration error' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -45,7 +81,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
 
-  let body: { question?: string; sessionId?: string; turnstileToken?: string }
+  let body: AskRequestBody
   try {
     body = await request.json()
   } catch {
@@ -56,6 +92,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   const { question, sessionId, turnstileToken } = body
+  const pageContext = normalizePageContext(body.pageContext)
 
   if (!question || typeof question !== 'string') {
     return new Response(
@@ -116,6 +153,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     // 1. Embed query with Jina
+    const embeddingInput = pageContext
+      ? `${question}\nCurrent docs page: ${pageContext.title} (${pageContext.href})`
+      : question
+
     const embeddingRes = await fetch('https://api.jina.ai/v1/embeddings', {
       method: 'POST',
       headers: {
@@ -124,7 +165,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       },
       body: JSON.stringify({
         model: 'jina-embeddings-v4',
-        input: [question],
+        input: [embeddingInput],
         task: 'retrieval.query',
         dimensions: 1024,
       }),
@@ -160,6 +201,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       ? docs.map((d: DocumentSearchResult) => `## ${d.title} (relevance: ${(d.similarity * 100).toFixed(0)}%)\nSource: ${d.url_path}\n\n${d.content}`).join('\n\n---\n\n')
       : 'No relevant documentation found.'
 
+    const currentPageContext = pageContext
+      ? `\n## Current Page Context:\nThe user opened [${pageContext.title}](${pageContext.href}) when asking this question. If the retrieved documentation includes this page or directly related pages, prioritize that context. Do not cite this page unless it appears in the relevant documentation above.\n`
+      : ''
+
     const systemPrompt = `You are the Apertis AI Documentation Assistant. Answer user questions based strictly on the documentation content provided below.
 
 Guidelines:
@@ -169,6 +214,7 @@ Guidelines:
 - Include code examples from the documentation when relevant — use the exact code snippets provided, do not invent new ones.
 - Be concise. Lead with the direct answer, then provide supporting details.
 - When multiple documentation sections are relevant, prioritize the ones listed first (they have higher relevance scores).
+${currentPageContext}
 
 ## Relevant Documentation:
 

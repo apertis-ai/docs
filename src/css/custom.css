@@ -1186,6 +1186,29 @@ tr:hover td {
     padding: 0 16px;
   }
 
+  .navbar__items:not(.navbar__items--right) .navbar__item,
+  .navbar__items--right,
+  .navbar__search {
+    display: none !important;
+  }
+
+  .navbar__items:not(.navbar__items--right) {
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .navbar__brand {
+    min-width: 0;
+    max-width: calc(100vw - 92px);
+    margin-right: 0;
+  }
+
+  .navbar__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   main[class*='docMainContainer'],
   [class*='docItemCol'],
   [class*='docItemContainer'],
