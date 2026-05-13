@@ -195,7 +195,28 @@ export default function AskAITab({ sessionId, shortcutLabel, pageContext }: Prop
         return;
       }
 
-      if (!res.ok || !res.body) throw new Error("Request failed");
+      if (!res.ok || !res.body) {
+        let detail = `HTTP ${res.status}`;
+        try {
+          const errBody = (await res.clone().json()) as {
+            error?: string;
+            details?: string;
+          };
+          if (errBody?.error) {
+            detail = errBody.details
+              ? `${errBody.error} — ${errBody.details}`
+              : errBody.error;
+          }
+        } catch {
+          try {
+            const text = await res.text();
+            if (text) detail = text.slice(0, 300);
+          } catch {
+            // ignore
+          }
+        }
+        throw new Error(detail);
+      }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -235,12 +256,15 @@ export default function AskAITab({ sessionId, shortcutLabel, pageContext }: Prop
           }
         }
       }
-    } catch {
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
+      // eslint-disable-next-line no-console
+      console.error("[AskDocs] request failed:", err);
       setMessages((prev) => {
         const msgs = [...prev];
         msgs[msgs.length - 1] = {
           role: "assistant",
-          content: "Sorry, an error occurred. Please try again.",
+          content: `Sorry, an error occurred. Please try again.\n\n\`\`\`\n${detail}\n\`\`\``,
         };
         return msgs;
       });
