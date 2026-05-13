@@ -183,10 +183,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const queryEmbedding = embeddingData.data[0].embedding
 
     // 2. Search Supabase
+    // Pass similarity_threshold so PostgREST picks the 3-arg overload deterministically.
     const { data: docs, error } = await supabase
       .rpc('search_docs', {
         query_embedding: queryEmbedding,
         match_count: 5,
+        similarity_threshold: 0.3,
       })
 
     if (error) {
