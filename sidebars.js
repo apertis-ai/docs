@@ -55,7 +55,7 @@ const sidebars = {
         {
           type: 'category',
           label: 'AI Coding Assistants',
-          collapsed: true,
+          collapsed: false,
           items: [
             'installation/claude-code',
             'installation/opencode',
@@ -72,7 +72,7 @@ const sidebars = {
         {
           type: 'category',
           label: 'Client Applications',
-          collapsed: true,
+          collapsed: false,
           items: [
             'installation/chatbox',
             'installation/translate',
@@ -87,7 +87,7 @@ const sidebars = {
       type: 'category',
       label: 'Configuration',
       className: 'sidebar-category--config',
-      collapsed: true,
+      collapsed: false,
       items: [
         'installation/connection',
         'installation/scripts',
@@ -99,7 +99,7 @@ const sidebars = {
       type: 'category',
       label: 'Help & Security',
       className: 'sidebar-category--help',
-      collapsed: true,
+      collapsed: false,
       items: [
         'security/best-practices',
         'help/faq',
@@ -114,7 +114,7 @@ const sidebars = {
       type: 'category',
       label: 'Resources',
       className: 'sidebar-category--resources',
-      collapsed: true,
+      collapsed: false,
       items: [
         'opensource',
         'stimachat',

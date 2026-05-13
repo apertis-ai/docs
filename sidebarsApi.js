@@ -88,7 +88,7 @@ const sidebars = {
         {
           type: "category",
           label: "Python SDK",
-          collapsed: true,
+          collapsed: false,
           items: [
             {
               type: "doc",
@@ -126,7 +126,7 @@ const sidebars = {
       type: "category",
       label: "Utilities",
       className: "sidebar-category--utilities",
-      collapsed: true,
+      collapsed: false,
       items: [
         "utilities/models",
         "utilities/recommend",
