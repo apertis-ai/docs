@@ -1,6 +1,6 @@
 # Apertis MCP Server
 
-`@apertis/mcp-server` is an [MCP](https://modelcontextprotocol.io) server that lets agents (Claude Code, OpenCode, or any MCP-compatible client) manage your Apertis account and query the API gateway at runtime — list models, check quota, create API keys, and ask for task-aware model recommendations.
+`@apertis/mcp-server` is an [MCP](https://modelcontextprotocol.io) server that lets agents (Claude Code, OpenCode, or any MCP-compatible client) manage your Apertis account and query the API gateway at runtime — list models, check quota, create API keys, ask for task-aware model recommendations, and delegate bulk grunt work to a cheap coworker model.
 
 GitHub: [apertis-ai/apertis-mcp](https://github.com/apertis-ai/apertis-mcp) · npm: `@apertis/mcp-server`
 
@@ -52,6 +52,7 @@ Restart your agent and the Apertis tools become available.
 |----------|----------|---------|-------------|
 | `APERTIS_API_KEY` | Yes | — | Your Apertis API key (`sk-...`) |
 | `APERTIS_BASE_URL` | No | `https://api.apertis.ai` | API base URL |
+| `APERTIS_COWORKER_MODEL` | No | `deepseek-v4-flash` | Intern model used by the `delegate` tool |
 
 ## Available Tools
 
@@ -66,6 +67,7 @@ Restart your agent and the Apertis tools become available.
 | `create_api_key` | Create a new API key with optional quota limit |
 | `suggest_model` | Freeform keyword-based model search over the full catalog |
 | `recommend_model` | Curated Apertis pick for a task type with live pricing |
+| `delegate` | Offload bulk grunt work (file reads, boilerplate, summarization) to a cheap coworker model — keeps your Claude usage limit intact |
 
 ## `recommend_model` — Dynamic Model Selection
 
@@ -92,6 +94,43 @@ Agent: [calls recommend_model(task="coding", budget="medium")]
 ```
 
 Use the returned `model` value directly in subsequent API calls.
+
+## `delegate` — Offload Grunt Work to a Cheap Coworker
+
+`delegate` gives your agent a cheap "intern". Claude stays the manager on your
+Anthropic subscription and hands off high-volume, low-judgement work — bulk file
+reads, boilerplate generation, summarization — to a cheap model through the
+Apertis gateway. The coworker reads files itself, so their bulk content **never
+enters your agent's context**, and the work runs on Apertis credit instead of
+your Claude weekly/5-hour limit.
+
+**Input**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `instruction` | Yes | What the intern should do |
+| `file_paths` | No | Local file paths the coworker reads itself; content never enters your context |
+| `content` | No | Inline content to process |
+| `model` | No | Override the intern model (default `deepseek-v4-flash`) |
+
+The coworker calls are ordinary Apertis requests billed against your API key —
+one credit pool, transparent per-call usage in your dashboard. Unreadable file
+paths and gateway errors are surfaced as tool errors, never silently swallowed.
+
+**Example conversation**
+
+```
+You:   Summarize the errors in build.log
+Agent: [calls delegate(instruction="Summarize the errors in <=10 bullets",
+        file_paths=["build.log"])]
+       → returns a concise summary; the full log never enters Claude's context
+```
+
+**Auto-delegation.** To make your agent delegate without being asked each time,
+paste the routing rules from
+[`coworker-rules.md`](https://github.com/apertis-ai/apertis-mcp/blob/main/coworker-rules.md)
+into your project's `CLAUDE.md`. They tell the agent when to delegate (bulk
+reads, boilerplate, summarization) versus do the work itself.
 
 ## Resources
 
