@@ -1,0 +1,95 @@
+---
+title: CLI
+sidebar_label: CLI (@apertis/cli)
+description: Inspect usage and spend, list models, and benchmark real measured cost from your terminal.
+---
+
+# CLI — `@apertis/cli`
+
+[`@apertis/cli`](https://www.npmjs.com/package/@apertis/cli) is a small terminal tool for the Apertis API gateway. See your usage and spend, list 500+ models, and **benchmark latency, throughput, and real measured cost** across models — straight from your terminal.
+
+## Prerequisites
+
+- Node.js 18+
+- An Apertis API key — get one from the [Apertis Dashboard](https://apertis.ai/token)
+
+## Install
+
+```bash npm2yarn
+npm install -g @apertis/cli
+```
+
+Or run it without installing:
+
+```bash
+npx @apertis/cli usage
+```
+
+## Authentication
+
+Provide your key any of these ways (highest precedence first):
+
+```bash
+apertis --key sk-... usage          # 1. per-command flag
+export APERTIS_API_KEY=sk-...       # 2. environment variable
+apertis config set-key sk-...       # 3. saved to ~/.apertis/config.json (chmod 0600)
+```
+
+:::warning Security
+A key passed as a command argument (`--key`, `config set-key`) can be captured by shell history and process listings. On sensitive or shared machines, prefer `APERTIS_API_KEY` or the saved config file. The CLI never prints your full key — it is masked in all output and redacted from error messages.
+:::
+
+## Commands
+
+### `apertis usage`
+
+Your API key's lifetime usage and spend.
+
+```bash
+apertis usage
+apertis usage --json
+```
+
+### `apertis models`
+
+List available models, with optional filters.
+
+```bash
+apertis models
+apertis models --owner openai
+apertis models --search claude
+apertis models --json
+```
+
+### `apertis benchmark <models...>`
+
+Benchmark one or more models head-to-head. Reports client-measured latency (avg / p50), Apertis's **server-side** latency, throughput (tokens/sec), and the **actual measured cost** of the run.
+
+```bash
+apertis benchmark gpt-4o-mini claude-sonnet-4-6
+apertis benchmark gpt-4o-mini -n 5 --prompt "Summarize the theory of relativity."
+apertis benchmark gpt-4o-mini --json
+```
+
+Cost is measured from your key's `used_quota_usd` delta over the run — so it reflects real spend rather than a pricing-table estimate. (Best-effort: concurrent use of the same key during a benchmark can inflate it.)
+
+### `apertis config`
+
+```bash
+apertis config set-key sk-...       # save key (and optionally --base-url)
+apertis config show                 # show saved config (key masked)
+```
+
+## Global flags
+
+| Flag | Description |
+|------|-------------|
+| `-k, --key <key>` | API key (overrides env and config file) |
+| `--base-url <url>` | API base URL (default `https://api.apertis.ai/v1`) |
+| `--json` | Machine-readable JSON output |
+
+## Links
+
+- npm: [`@apertis/cli`](https://www.npmjs.com/package/@apertis/cli)
+- Source: [github.com/apertis-ai/apertis-cli](https://github.com/apertis-ai/apertis-cli)
+- Model list & pricing: [apertis.ai/pricing](https://apertis.ai/pricing)
