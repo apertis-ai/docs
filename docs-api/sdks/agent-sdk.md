@@ -1,10 +1,4 @@
----
-title: Agent SDK
-sidebar_label: Agent SDK (@apertis/agent)
-description: Build multi-step AI agents on Apertis — tool loops, stop conditions, streaming, approval, and measured cost.
----
-
-# Agent SDK — `@apertis/agent`
+# @apertis/agent
 
 [`@apertis/agent`](https://www.npmjs.com/package/@apertis/agent) is a TypeScript agent runtime for the Apertis API. `callModel` runs the whole agent loop for you: send messages → the model calls tools → execute them → feed results back → repeat, until a stop condition fires or the model stops calling tools.
 
@@ -12,22 +6,21 @@ The differentiator: the `maxCost` stop condition halts on **real measured spend*
 
 > Migrating from `@openrouter/agent`? The surface is intentionally close — `callModel`, `tool()`, and the stop conditions map across, so most code ports with a one-import swap.
 
-## Prerequisites
+GitHub: [apertis-ai/apertis-agent](https://github.com/apertis-ai/apertis-agent) · npm: `@apertis/agent`
 
-- Node.js 18+
-- An Apertis API key — get one from the [Apertis Dashboard](https://apertis.ai/token)
+## Installation
 
-## Install
-
-```bash npm2yarn
+```bash
 npm install @apertis/agent zod
 ```
 
-Set your key as an environment variable:
+Set your API key (get one from the [Apertis Dashboard](https://apertis.ai/token)):
 
 ```bash
 export APERTIS_API_KEY=sk-your-key
 ```
+
+Requires Node.js 18+.
 
 ## Quickstart
 
@@ -79,7 +72,7 @@ Also available: `getReasoningStream()`, `getToolCallsStream()`, `getToolStream()
 
 ### How `maxCost` measures cost
 
-`maxCost` reads your key's `used_quota_usd` from the [usage endpoint](/authentication/api-keys) after each step and tracks the delta from a pre-run baseline — so it reflects **actual billed spend**, not a pricing-table estimate. If cost can't be measured for a step, the loop stops conservatively rather than risk overspend.
+`maxCost` reads your key's `used_quota_usd` from the usage endpoint after each step and tracks the delta from a pre-run baseline — so it reflects **actual billed spend**, not a pricing-table estimate. If cost can't be measured for a step, the loop stops conservatively rather than risk overspend.
 
 ## Tool approval (human-in-the-loop)
 
@@ -125,8 +118,12 @@ const callModel = createCallModel({
 
 Key precedence: `opts.apiKey` → `APERTIS_API_KEY` → `createCallModel` config. The SDK masks keys in all output and redacts them from error messages.
 
+## Format converters
+
+`fromChatMessages` / `toChatMessage` (native) and `fromClaudeMessages` / `toClaudeMessage` bridge Anthropic Messages-format history into the chat-completions format the loop uses.
+
 ## Links
 
 - npm: [`@apertis/agent`](https://www.npmjs.com/package/@apertis/agent)
 - Source: [github.com/apertis-ai/apertis-agent](https://github.com/apertis-ai/apertis-agent)
-- Need a Vercel AI SDK provider instead? See [`@apertis/ai-sdk-provider`](https://www.npmjs.com/package/@apertis/ai-sdk-provider).
+- Building with the Vercel AI SDK instead? See [@apertis/ai-sdk-provider](/api/sdks/ai-sdk-provider).

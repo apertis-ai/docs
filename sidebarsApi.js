@@ -86,6 +86,11 @@ const sidebars = {
           label: "@apertis/ai-sdk-provider",
         },
         {
+          type: "doc",
+          id: "sdks/agent-sdk",
+          label: "@apertis/agent",
+        },
+        {
           type: "category",
           label: "Python SDK",
           collapsed: false,
@@ -117,6 +122,11 @@ const sidebars = {
           type: "doc",
           id: "sdks/mcp-server",
           label: "@apertis/mcp-server",
+        },
+        {
+          type: "doc",
+          id: "sdks/cli",
+          label: "@apertis/cli",
         },
       ],
     },
