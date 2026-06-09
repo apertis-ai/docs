@@ -1,21 +1,12 @@
----
-title: CLI
-sidebar_label: CLI (@apertis/cli)
-description: Inspect usage and spend, list models, and benchmark real measured cost from your terminal.
----
-
-# CLI — `@apertis/cli`
+# @apertis/cli
 
 [`@apertis/cli`](https://www.npmjs.com/package/@apertis/cli) is a small terminal tool for the Apertis API gateway. See your usage and spend, list 500+ models, and **benchmark latency, throughput, and real measured cost** across models — straight from your terminal.
 
-## Prerequisites
+GitHub: [apertis-ai/apertis-cli](https://github.com/apertis-ai/apertis-cli) · npm: `@apertis/cli`
 
-- Node.js 18+
-- An Apertis API key — get one from the [Apertis Dashboard](https://apertis.ai/token)
+## Installation
 
-## Install
-
-```bash npm2yarn
+```bash
 npm install -g @apertis/cli
 ```
 
@@ -25,9 +16,11 @@ Or run it without installing:
 npx @apertis/cli usage
 ```
 
+Requires Node.js 18+.
+
 ## Authentication
 
-Provide your key any of these ways (highest precedence first):
+Get an API key from the [Apertis Dashboard](https://apertis.ai/token), then provide it any of these ways (highest precedence first):
 
 ```bash
 apertis --key sk-... usage          # 1. per-command flag
