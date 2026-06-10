@@ -35,9 +35,9 @@ client = OpenAI(
 
 Apertis provides access to 60+ models including:
 
-- **OpenAI**: GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo
-- **Anthropic**: Claude Sonnet 4.5, Claude Opus 4.5
-- **Google**: Gemini 3 Pro, Gemini 3 Flash
+- **OpenAI**: GPT-5.5, GPT-5.4 Mini, GPT-5.4 Nano
+- **Anthropic**: Claude Opus 4.8, Claude Sonnet 4.6, Claude Fable 5
+- **Google**: Gemini 3.1 Pro, Gemini 3.5 Flash
 - **Open Source**: Llama, Mistral, and more
 
 [View full model list →](../installation/models)
@@ -144,7 +144,7 @@ Yes! Enable streaming with `stream=True`:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello"}],
     stream=True
 )
@@ -159,9 +159,9 @@ It depends on the model:
 
 | Model | Context Length |
 |-------|----------------|
-| GPT-4o | 128K tokens |
-| Claude Sonnet 4.5 | 200K tokens |
-| Gemini 3 Pro | 1M tokens |
+| GPT-5.5 | 128K tokens |
+| Claude Sonnet 4.6 | 200K tokens |
+| Gemini 3.1 Pro | 1M tokens |
 
 ### Do you support function calling?
 
@@ -169,7 +169,7 @@ Yes, function calling is supported for compatible models:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "What's the weather?"}],
     tools=[{
         "type": "function",
@@ -187,7 +187,7 @@ Yes, for models that support it:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{
         "role": "user",
         "content": [
@@ -216,7 +216,7 @@ Yes:
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(
-    model="gpt-4.1",
+    model="gpt-5.5",
     openai_api_key="sk-your-key",
     openai_api_base="https://api.apertis.ai/v1"
 )
@@ -242,11 +242,11 @@ Yes, just change the base URL and API key. No other code changes needed.
 
 | Use Case | Recommended Model |
 |----------|-------------------|
-| General chat | GPT-4o |
-| Fast & cheap | GPT-4o-mini |
-| Complex reasoning | Claude Opus 4.5 |
-| Long documents | Claude Sonnet 4.5 |
-| Code generation | GPT-4o or Claude Sonnet 4.5 |
+| General chat | GPT-5.5 |
+| Fast & cheap | GPT-5.4 mini |
+| Complex reasoning | Claude Opus 4.8 |
+| Long documents | Claude Sonnet 4.6 |
+| Code generation | GPT-5.5 or Claude Sonnet 4.6 |
 
 ### Are model responses the same as direct providers?
 
@@ -258,10 +258,10 @@ Fallback automatically switches to an alternative model if your primary model fa
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[...],
     extra_body={
-        "fallback_models": ["claude-sonnet-4.5", "gemini-3-pro-preview"]
+        "fallback_models": ["claude-sonnet-4-6", "gemini-3.1-pro-preview"]
     }
 )
 ```

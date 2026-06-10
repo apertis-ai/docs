@@ -18,7 +18,7 @@ curl https://api.apertis.ai/v1/models \
 {
   "object": "list",
   "data": [
-    {"id": "gpt-4.1", "object": "model", ...},
+    {"id": "gpt-5.5", "object": "model", ...},
     ...
   ]
 }
@@ -193,11 +193,11 @@ If your subscription token (`sk-sub-xxx`) isn't working:
 1. **Check model name spelling:**
    ```python
    # Correct
-   model = "gpt-4.1"
+   model = "gpt-5.5"
 
    # Incorrect
    model = "gpt4o"  # Missing hyphen
-   model = "GPT-4o"  # Case sensitive
+   model = "GPT-5.5"  # Case sensitive
    ```
 
 2. **List available models:**
@@ -227,20 +227,20 @@ Your API key may not have access to the requested model:
 1. **Invalid JSON:**
    ```json
    // Wrong - trailing comma
-   {"model": "gpt-4.1", "messages": [],}
+   {"model": "gpt-5.5", "messages": [],}
 
    // Correct
-   {"model": "gpt-4.1", "messages": []}
+   {"model": "gpt-5.5", "messages": []}
    ```
 
 2. **Missing required fields:**
    ```python
    # Wrong - missing messages
-   client.chat.completions.create(model="gpt-4.1")
+   client.chat.completions.create(model="gpt-5.5")
 
    # Correct
    client.chat.completions.create(
-       model="gpt-4.1",
+       model="gpt-5.5",
        messages=[{"role": "user", "content": "Hello"}]
    )
    ```
@@ -275,7 +275,7 @@ Your API key may not have access to the requested model:
 2. **Use streaming for long responses:**
    ```python
    response = client.chat.completions.create(
-       model="gpt-4.1",
+       model="gpt-5.5",
        messages=[...],
        stream=True  # Enable streaming
    )
@@ -391,7 +391,7 @@ curl -v https://api.apertis.ai/v1/models \
 **Python:**
 ```python
 response = client.chat.completions.with_raw_response.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello"}]
 )
 

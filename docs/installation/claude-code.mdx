@@ -52,7 +52,7 @@ Create a file named `ccswitch.sh` in your home directory (or any location you pr
 
 APERTIS_BASE_URL="https://api.apertis.ai"
 APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/token
-DEFAULT_MODEL="code:claude-opus-4-6"            # ← Default model when using --apertis
+DEFAULT_MODEL="code:claude-opus-4-8"            # ← Default model when using --apertis
 
 # ─── Script Logic (no changes needed below) ────────────────────
 
@@ -145,7 +145,7 @@ Edit the top of `ccswitch.sh` to match your credentials:
 |----------|-------------|---------|
 | `APERTIS_BASE_URL` | Apertis API endpoint. Typically no change needed. | `https://api.apertis.ai` |
 | `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/token). | `sk-xxxx...` |
-| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-6` |
+| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-8` |
 
 ### Available Model IDs
 
@@ -155,15 +155,12 @@ When using `ccs --model`, pass the model ID directly. **Only Claude models requi
 
 | Model ID | Description |
 |----------|-------------|
+| `code:claude-fable-5` | Claude Fable 5 — newest generation |
 | `code:claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
-| `code:claude-opus-4-6-thinking` | Claude Opus 4.6 with extended thinking |
-| `code:claude-opus-4-6` | Claude Opus 4.6 — most capable |
-| `code:claude-opus-4-5-20251101-thinking` | Claude Opus 4.5 with extended thinking |
-| `code:claude-opus-4-5-20251101` | Claude Opus 4.5 |
-| `claude-haiku-4.5-thinking` | Claude Haiku 4.5 with extended thinking |
-| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
-| `code:claude-opus-4-1-20250805-thinking` | Claude Opus 4.1 with extended thinking |
-| `code:claude-opus-4-1-20250805` | Claude Opus 4.1 |
+| `code:claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
+| `code:claude-opus-4-8` | Claude Opus 4.8 — most capable |
+| `claude-haiku-4-5-thinking` | Claude Haiku 4.5 with extended thinking |
+| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
 
 For more Claude models, see the [Claude Models page](https://apertis.ai/models).
 
@@ -183,7 +180,7 @@ For the full list of available model IDs, check the [Model List](https://apertis
 # Switch to Apertis with the default model
 ccs --apertis
 # ✅ Apertis enabled
-#    MODEL=code:claude-opus-4-6
+#    MODEL=code:claude-opus-4-8
 
 # Switch to a specific model
 ccs --model code:claude-sonnet-4-6
@@ -229,7 +226,7 @@ When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix
 
 | Standard Model ID | Coding Model ID |
 |-------------------|-----------------|
-| `claude-opus-4-6` | `code:claude-opus-4-6` |
+| `claude-opus-4-8` | `code:claude-opus-4-8` |
 | `claude-sonnet-4-20250514` | `code:claude-sonnet-4-20250514` |
 
 :::tip Why `code:` prefix?

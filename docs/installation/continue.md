@@ -30,65 +30,65 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
 {
   "models": [
     {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-6",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "Claude 3.5",
+      "title": "Claude Sonnet 4.6",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "Claude 3.5",
+      "title": "Claude Haiku 4.5",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "claude-3-5-sonnet-20240620",
+      "model": "claude-opus-4-8",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "Claude 3.5",
+      "title": "Claude Opus 4.8",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "gpt-4o",
+      "model": "gpt-5.5",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "GPT-4o",
+      "title": "GPT-5.5",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "gpt-4-turbo",
+      "model": "gpt-5.4-mini",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "GPT-4-Turbo",
+      "title": "GPT-5.4 Mini",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "gpt-3.5-turbo",
+      "model": "gpt-5.4-nano",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "GPT-3.5-Turbo",
+      "title": "GPT-5.4 Nano",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "gemini-1.5-pro-latest",
+      "model": "gemini-3.1-pro-preview",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "gemini-1.5-pro-latest",
+      "title": "gemini-3.1-pro-preview",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
     },
     {
-      "model": "gemini-1.5-flash-latest",
+      "model": "gemini-3.5-flash",
       "apiBase": "https://api.apertis.ai/v1",
-      "title": "gemini-1.5-flash-latest",
+      "title": "gemini-3.5-flash",
       "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
       "provider": "openai",
       "description": "Explain in details"
@@ -106,9 +106,9 @@ Copy the JSON configuration below and paste it into the `config.json` file. Repl
     "provider": "free-trial"
   },
   "tabAutocompleteModel": {
-    "model": "gpt-4o",
+    "model": "gpt-5.5",
     "apiBase": "https://api.apertis.ai/v1",
-    "title": "GPT-4o",
+    "title": "GPT-5.5",
     "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxx",
     "provider": "openai"
   },

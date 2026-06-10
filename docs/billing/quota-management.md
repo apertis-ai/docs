@@ -63,7 +63,7 @@ Cost = (Input Tokens × Input Rate) + (Output Tokens × Output Rate)
 
 ### Model Pricing
 
-For current model rates and pricing, visit the [Subscribe page](https://apertis.ai/subscribe) or the [Models page](https://apertis.ai/models).
+For current model rates and pricing, visit the [Subscribe page](https://apertis.ai/subscribe).
 
 ## Monitoring Quota Usage
 
@@ -124,10 +124,10 @@ Match model capabilities to your needs:
 
 | Task | Recommended Model | Cost Level |
 |------|-------------------|------------|
-| Simple Q&A | GPT-3.5 Turbo | $ |
-| Code generation | GPT-4o | $$ |
-| Complex reasoning | Claude Opus 4.5 | $$$ |
-| Long documents | Claude Sonnet 4.5 | $$ |
+| Simple Q&A | GPT-5.4 nano | $ |
+| Code generation | GPT-5.5 | $$ |
+| Complex reasoning | Claude Opus 4.8 | $$$ |
+| Long documents | Claude Sonnet 4.6 | $$ |
 
 ### 2. Optimize Prompts
 
@@ -182,7 +182,7 @@ def get_cached_response(prompt_hash, model):
 
 # Create hash for caching
 prompt_hash = hashlib.md5(prompt.encode()).hexdigest()
-response = get_cached_response(prompt_hash, "gpt-4.1")
+response = get_cached_response(prompt_hash, "gpt-5.5")
 ```
 
 ### 5. Set Quota Limits

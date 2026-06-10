@@ -86,7 +86,7 @@ client = OpenAI(
 
 # Test with a simple request
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
@@ -99,10 +99,9 @@ Most OpenAI models are available with the same names:
 
 | OpenAI Model | Apertis Model | Notes |
 |--------------|---------------|-------|
-| gpt-4.1 | gpt-4.1 | ✓ Same |
-| gpt-4.1-mini | gpt-4.1-mini | ✓ Same |
-| gpt-4.1 | gpt-4.1 | ✓ Same |
-| gpt-5.2 | gpt-5.2 | ✓ Same |
+| gpt-5.5 | gpt-5.5 | ✓ Same |
+| gpt-5.4-mini | gpt-5.4-mini | ✓ Same |
+| gpt-5.4-nano | gpt-5.4-nano | ✓ Same |
 | text-embedding-3-small | text-embedding-3-small | ✓ Same |
 | whisper-1 | whisper-1 | ✓ Same |
 | tts-1 | tts-1 | ✓ Same |
@@ -115,13 +114,13 @@ Apertis provides access to models not available directly from OpenAI:
 ```python
 # Use Claude models
 response = client.chat.completions.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
 # Use Gemini models
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -139,7 +138,7 @@ import anthropic
 client = anthropic.Anthropic(api_key="sk-ant-xxx")
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -157,7 +156,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -179,7 +178,7 @@ response = client.chat.completions.create(
 **Anthropic format:**
 ```python
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     system="You are a helpful assistant.",
     messages=[{"role": "user", "content": "Hello!"}]
 )
@@ -188,7 +187,7 @@ message = client.messages.create(
 **Apertis format:**
 ```python
 response = client.chat.completions.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello!"}
@@ -238,7 +237,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4.1",  # Actual model name
+    model="gpt-5.5",  # Actual model name
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -262,7 +261,7 @@ import vertexai
 from vertexai.generative_models import GenerativeModel
 
 vertexai.init(project="your-project", location="us-central1")
-model = GenerativeModel("gemini-3-pro-preview")
+model = GenerativeModel("gemini-3.1-pro-preview")
 
 response = model.generate_content("Hello!")
 ```
@@ -277,7 +276,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -289,7 +288,7 @@ response = client.chat.completions.create(
 import google.generativeai as genai
 
 genai.configure(api_key="google-api-key")
-model = genai.GenerativeModel("gemini-3-pro-preview")
+model = genai.GenerativeModel("gemini-3.1-pro-preview")
 
 response = model.generate_content("Hello!")
 text = response.text
@@ -305,7 +304,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 text = response.choices[0].message.content
@@ -322,7 +321,7 @@ If you're using LiteLLM, you can switch to Apertis:
 from litellm import completion
 
 response = completion(
-    model="gpt-5.2",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -337,7 +336,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -372,11 +371,11 @@ client = OpenAI(
 from langchain_openai import ChatOpenAI
 
 # Before
-llm = ChatOpenAI(model="gpt-5.2")
+llm = ChatOpenAI(model="gpt-5.5")
 
 # After
 llm = ChatOpenAI(
-    model="gpt-4.1",
+    model="gpt-5.5",
     openai_api_key="sk-apertis-key",
     openai_api_base="https://api.apertis.ai/v1"
 )
@@ -388,11 +387,11 @@ llm = ChatOpenAI(
 from llama_index.llms.openai import OpenAI
 
 # Before
-llm = OpenAI(model="gpt-5.2")
+llm = OpenAI(model="gpt-5.5")
 
 # After
 llm = OpenAI(
-    model="gpt-4.1",
+    model="gpt-5.5",
     api_key="sk-apertis-key",
     api_base="https://api.apertis.ai/v1"
 )
