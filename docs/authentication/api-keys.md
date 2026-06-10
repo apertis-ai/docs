@@ -183,6 +183,52 @@ Organization keys have two views:
 | **Project API Keys** | Keys scoped to organization projects and shared team workloads |
 | **User API Keys**    | Keys tied to individual members for organization usage         |
 
+### Organization API Keys Tab Rules
+
+The organization **API Keys** tab separates shared project keys from member-owned user keys so billing, audit logs, and access control stay clear.
+
+#### Project keys
+
+Project keys are owned by the organization project, not by an individual member. Use project keys for shared workloads such as production backends, staging services, CI jobs, server-side integrations, or applications maintained by a team.
+
+Project key behavior:
+
+- Owners and members with API key management permission can create project keys.
+- Project keys bill to the organization.
+- Project keys can be restricted to a project and permission mode, such as **All**, **Restricted**, or **Read only**.
+- The **Created by** column records who created the key, but the key remains project-owned.
+- Disabling or deleting a project key immediately stops requests that use it.
+- Project keys are the preferred choice for long-running services because they do not depend on one member's personal key lifecycle.
+
+Use a project key when:
+
+- A service is shared by multiple people.
+- The key is deployed to backend infrastructure.
+- Usage should continue even if the original creator changes teams.
+- You need organization-level billing and audit visibility.
+
+#### User keys
+
+User keys are owned by individual organization members. Use user keys for personal development, CLI usage, local testing, notebooks, or workflows where the audit trail should point directly to one member.
+
+User key behavior:
+
+- A user key must be created by the member who owns it.
+- Organization owners cannot create user-owned secrets on behalf of another member.
+- The key's effective access follows the member's organization, project, group, and role permissions.
+- If the member is removed from the organization, the member's organization-scoped user keys are disabled for that organization.
+- Requests made with a user key are attributed to that user in audit and usage review.
+
+Use a user key when:
+
+- One person is experimenting or developing locally.
+- The key should stop working when that person's access is removed.
+- You need user-level attribution instead of a shared service identity.
+
+:::tip
+If an owner needs a key for a shared service, create a **Project API Key**. If a member needs a personal development key, that member should create a **User API Key** from their own account context.
+:::
+
 For organization access rules, see [Organizations, Members, Groups, and Roles](./organizations.md).
 
 ## Best Practices
