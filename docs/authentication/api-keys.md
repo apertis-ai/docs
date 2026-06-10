@@ -55,7 +55,7 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4.1",
+    "model": "gpt-5.5",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
@@ -67,7 +67,7 @@ curl https://api.apertis.ai/v1/messages \
   -H "x-api-key: sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "claude-sonnet-4.5",
+    "model": "claude-sonnet-4-6",
     "max_tokens": 1024,
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
@@ -88,7 +88,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
@@ -106,7 +106,7 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: 'gpt-4.1',
+  model: 'gpt-5.5',
   messages: [{ role: 'user', content: 'Hello!' }]
 });
 
@@ -132,10 +132,10 @@ You can restrict which models an API key can access:
 - **All Models**: Access to all available models (default)
 - **Specific Models**: Whitelist only certain models
 
-Example: Restrict a key to only use `gpt-4.1` and `claude-sonnet-4.5`:
+Example: Restrict a key to only use `gpt-5.5` and `claude-sonnet-4-6`:
 
 ```
-Model Whitelist: gpt-4.1, claude-sonnet-4.5
+Model Whitelist: gpt-5.5, claude-sonnet-4-6
 ```
 
 ### IP Whitelisting (Subnet Restrictions)

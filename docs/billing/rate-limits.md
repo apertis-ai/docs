@@ -45,7 +45,7 @@ This provides higher throughput for applications using a single API key.
 
 Each API key is also rate-limited **per model**. This prevents a single key from overwhelming any specific model with rapid requests (e.g., automated agent loops).
 
-Model name variants are unified into a single bucket — for example, `claude-opus-4-6` and `code:claude-opus-4-6` share the same rate limit counter. The `:web` and `:free` suffixes are also normalized.
+Model name variants are unified into a single bucket — for example, `claude-opus-4-8` and `code:claude-opus-4-8` share the same rate limit counter. The `:web` and `:free` suffixes are also normalized.
 
 | Plan | RPM per Model per Key |
 |------|----------------------|
@@ -102,7 +102,7 @@ Retry-After: 45
 ```json
 {
   "error": {
-    "message": "Rate limit exceeded for model: claude-opus-4-6. Maximum 20 requests per minute per API key. Please wait before retrying.",
+    "message": "Rate limit exceeded for model: claude-opus-4-8. Maximum 20 requests per minute per API key. Please wait before retrying.",
     "type": "rate_limit_error",
     "code": "rate_limit_exceeded"
   }
@@ -127,7 +127,7 @@ def make_request_with_retry(messages, max_retries=5):
     for attempt in range(max_retries):
         try:
             return client.chat.completions.create(
-                model="gpt-4.1",
+                model="gpt-5.5",
                 messages=messages
             )
         except RateLimitError:
@@ -154,7 +154,7 @@ async function makeRequestWithRetry(messages, maxRetries = 5) {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await client.chat.completions.create({
-        model: 'gpt-4.1',
+        model: 'gpt-5.5',
         messages
       });
     } catch (error) {
@@ -220,7 +220,7 @@ Streaming doesn't reduce rate limits but improves perceived performance:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[{"role": "user", "content": "Write a long story"}],
     stream=True
 )
@@ -247,7 +247,7 @@ def cached_completion(messages_hash, model):
 
 # Create hash of messages for cache key
 messages_hash = hashlib.md5(str(messages).encode()).hexdigest()
-response = cached_completion(messages_hash, "gpt-4.1")
+response = cached_completion(messages_hash, "gpt-5.5")
 ```
 
 ### 5. Distribute Across Multiple Keys

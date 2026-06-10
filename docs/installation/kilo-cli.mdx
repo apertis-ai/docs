@@ -38,13 +38,13 @@ Create or edit the configuration file at `~/.config/kilo/opencode.json`:
         "baseURL": "https://api.apertis.ai/v1"
       },
       "models": {
-        "claude-opus-4-6-thinking": {
-          "id": "claude-opus-4-6-thinking",
-          "name": "Claude Opus 4.6 Thinking (via Apertis)"
+        "claude-opus-4-8-thinking": {
+          "id": "claude-opus-4-8-thinking",
+          "name": "Claude Opus 4.8 Thinking (via Apertis)"
         },
-        "claude-opus-4-6": {
-          "id": "claude-opus-4-6",
-          "name": "Claude Opus 4.6 (via Apertis)"
+        "claude-opus-4-8": {
+          "id": "claude-opus-4-8",
+          "name": "Claude Opus 4.8 (via Apertis)"
         },
         "claude-sonnet-4-6": {
           "id": "claude-sonnet-4-6",
@@ -79,7 +79,7 @@ Create or edit the configuration file at `~/.config/kilo/opencode.json`:
       }
     },
     "plan": {
-      "model": "apertis/claude-opus-4-6-thinking",
+      "model": "apertis/claude-opus-4-8-thinking",
       "permission": {
         "edit": "deny",
         "bash": "ask"
@@ -130,8 +130,8 @@ Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard]
 
 | Model ID | Description |
 |----------|-------------|
-| `claude-opus-4-6-thinking` | Claude Opus 4.6 with extended thinking |
-| `claude-opus-4-6` | Claude Opus 4.6 — most capable |
+| `claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
+| `claude-opus-4-8` | Claude Opus 4.8 — most capable |
 | `claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
 | `claude-haiku-4-5` | Claude Haiku 4.5 — fastest |
 | `gemini-3.1-pro-preview` | Gemini 3.1 Pro Preview |
@@ -145,7 +145,7 @@ Kilo CLI supports multiple agent modes with different model and permission confi
 | Agent | Purpose | Recommended Model |
 |-------|---------|-------------------|
 | `build` | Implementation, coding, file editing | `apertis/claude-sonnet-4-6` |
-| `plan` | Architecture planning, read-only analysis | `apertis/claude-opus-4-6-thinking` |
+| `plan` | Architecture planning, read-only analysis | `apertis/claude-opus-4-8-thinking` |
 
 ### MCP Server Examples
 

@@ -351,8 +351,8 @@ Include all required parameters in your request.
 | Model | Context Limit |
 |-------|---------------|
 | GPT-3.5 Turbo | 16K tokens |
-| GPT-4o | 128K tokens |
-| Claude Sonnet 4.5 | 200K tokens |
+| GPT-5.5 | 128K tokens |
+| Claude Sonnet 4.6 | 200K tokens |
 
 ### `invalid_image`
 
@@ -523,7 +523,7 @@ client = OpenAI(
 
 try:
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[{"role": "user", "content": "Hello"}]
     )
 except AuthenticationError as e:
@@ -549,7 +549,7 @@ const client = new OpenAI({
 
 try {
   const response = await client.chat.completions.create({
-    model: 'gpt-4.1',
+    model: 'gpt-5.5',
     messages: [{ role: 'user', content: 'Hello' }]
   });
 } catch (error) {

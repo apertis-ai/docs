@@ -81,11 +81,11 @@ Press `Ctrl+P` and select "Switch Model" to choose your preferred model.
 
 | Model | Name |
 |-------|------|
-| Claude Sonnet 4.5 | `claude-sonnet-4.5` |
-| Claude Haiku 4.5 | `claude-haiku-4.5` |
-| GPT-4o | `gpt-4.1` |
-| GPT-4o mini | `gpt-4.1-mini` |
-| Gemini 3 Flash | `gemini-3-flash-preview` |
+| Claude Sonnet 4.6 | `claude-sonnet-4-6` |
+| Claude Haiku 4.5 | `claude-haiku-4-5` |
+| GPT-5.5 | `gpt-5.5` |
+| GPT-5.4 mini | `gpt-5.4-mini` |
+| Gemini 3.5 Flash | `gemini-3.5-flash` |
 
 ## Keyboard Shortcuts
 

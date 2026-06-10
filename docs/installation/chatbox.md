@@ -18,14 +18,14 @@ Enter your API Key in the **API Key** field and set **API Base URL** to `https:/
 ![image](../static/img/chatbox_2.png)
 
 
-For example, to use **Claude 3.5 Sonnet**, input the following settings:
+For example, to use **Claude Sonnet 4.6**, input the following settings:
 
 - **API Mode**: OpenAI API Compatible
-- **Name**: Any name (e.g., "Claude 3.5 Sonnet" for easy identification)
+- **Name**: Any name (e.g., "Claude Sonnet 4.6" for easy identification)
 - **API Base URL**: `https://api.apertis.ai`
 - **API Path**: No changes needed
 - **API Key**: Your API Key
-- **Model**: `claude-3-5-sonnet-20240620`
+- **Model**: `claude-sonnet-4-6`
 
 ![image](../static/img/chatbox_3.png)
 

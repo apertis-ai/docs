@@ -242,10 +242,10 @@ Choose cost-effective models for your use case:
 
 | Use Case | Recommended | Cost |
 |----------|-------------|------|
-| Simple chat | GPT-3.5 Turbo | $ |
-| General tasks | GPT-4o-mini | $ |
-| Complex reasoning | GPT-4o | $$ |
-| Long context | Claude Sonnet 4.5 | $$ |
+| Simple chat | GPT-5.4 nano | $ |
+| General tasks | GPT-5.4 mini | $ |
+| Complex reasoning | GPT-5.5 | $$ |
+| Long context | Claude Sonnet 4.6 | $$ |
 
 ### Prompt Optimization
 
@@ -283,7 +283,7 @@ Limit response length to control costs:
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     messages=[...],
     max_tokens=500  # Limit output length
 )
