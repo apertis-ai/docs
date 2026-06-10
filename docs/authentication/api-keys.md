@@ -41,10 +41,10 @@ sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 Apertis supports two authentication methods:
 
-| Method | Header | Example |
-|--------|--------|---------|
+| Method       | Header          | Example                                 |
+| ------------ | --------------- | --------------------------------------- |
 | Bearer Token | `Authorization` | `Authorization: Bearer sk-your-api-key` |
-| API Key | `x-api-key` | `x-api-key: sk-your-api-key` |
+| API Key      | `x-api-key`     | `x-api-key: sk-your-api-key`            |
 
 Both methods work across all endpoints. The `x-api-key` header provides compatibility with Anthropic SDKs.
 
@@ -98,16 +98,16 @@ print(response.choices[0].message.content)
 ### Node.js Example
 
 ```javascript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: 'sk-your-api-key',
-  baseURL: 'https://api.apertis.ai/v1'
+  apiKey: "sk-your-api-key",
+  baseURL: "https://api.apertis.ai/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: 'gpt-5.5',
-  messages: [{ role: 'user', content: 'Hello!' }]
+  model: "gpt-5.5",
+  messages: [{ role: "user", content: "Hello!" }],
 });
 
 console.log(response.choices[0].message.content);
@@ -119,11 +119,11 @@ console.log(response.choices[0].message.content);
 
 Each API key has its own quota allocation:
 
-| Setting | Description |
-|---------|-------------|
+| Setting             | Description                     |
+| ------------------- | ------------------------------- |
 | **Remaining Quota** | Available balance for API calls |
-| **Used Quota** | Total amount consumed |
-| **Unlimited** | Option to set unlimited quota |
+| **Used Quota**      | Total amount consumed           |
+| **Unlimited**       | Option to set unlimited quota   |
 
 ### Model Restrictions
 
@@ -169,20 +169,39 @@ Set an expiration date for temporary or project-specific keys:
 - Quota synced with subscription cycle
 - Automatically reset when billing cycle renews
 
+### Organization API Keys (`sk-org_`)
+
+- Created from an organization, usually scoped to a project
+- Bill to the organization instead of only the individual user
+- Can use permission modes such as **All**, **Restricted**, or **Read only**
+- Are disabled when their owning member is removed from the organization
+
+Organization keys have two views:
+
+| View                 | Use                                                            |
+| -------------------- | -------------------------------------------------------------- |
+| **Project API Keys** | Keys scoped to organization projects and shared team workloads |
+| **User API Keys**    | Keys tied to individual members for organization usage         |
+
+For organization access rules, see [Organizations, Members, Groups, and Roles](./organizations.md).
+
 ## Best Practices
 
 ### Security Guidelines
 
 1. **Never expose your API key in client-side code**
+
    ```javascript
    // DON'T do this in frontend code
    const apiKey = "sk-your-api-key"; // Exposed to users!
    ```
 
 2. **Use environment variables**
+
    ```bash
    export APERTIS_API_KEY="sk-your-api-key"
    ```
+
    ```python
    import os
    api_key = os.environ.get("APERTIS_API_KEY")
@@ -207,12 +226,12 @@ Set an expiration date for temporary or project-specific keys:
 
 You can create multiple API keys for different purposes:
 
-| Use Case | Recommended Settings |
-|----------|---------------------|
-| Development | Low quota, all models, no IP restriction |
-| Production | Higher quota, specific models, IP whitelist |
-| Testing | Limited quota, expiration date set |
-| Third-party Integration | Minimal quota, specific models only |
+| Use Case                | Recommended Settings                        |
+| ----------------------- | ------------------------------------------- |
+| Development             | Low quota, all models, no IP restriction    |
+| Production              | Higher quota, specific models, IP whitelist |
+| Testing                 | Limited quota, expiration date set          |
+| Third-party Integration | Minimal quota, specific models only         |
 
 ## Revoking API Keys
 
@@ -226,16 +245,26 @@ To revoke an API key:
 Revoking a key is immediate and cannot be undone. Any applications using that key will stop working immediately.
 :::
 
+Organization API key rows also provide quick actions:
+
+| Action               | Use                                                    |
+| -------------------- | ------------------------------------------------------ |
+| **Recent Activity**  | Review the selected key's last known activity metadata |
+| **Edit**             | Rename the key or change permission mode               |
+| **Open in Chat**     | Open Apertis Chat from the key row                     |
+| **Disable / Enable** | Temporarily disable or re-enable a key                 |
+| **Delete**           | Revoke the key so requests using it are rejected       |
+
 ## Troubleshooting
 
 ### Common Issues
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `401 Unauthorized` | Invalid or missing API key | Check key is correct and included in header |
-| `403 Forbidden` | Key doesn't have access to model | Check model restrictions on your key |
-| `429 Too Many Requests` | Rate limit exceeded | Reduce request frequency or upgrade plan |
-| `402 Payment Required` | Quota exhausted | Add more quota or enable PAYG fallback |
+| Error                   | Cause                            | Solution                                    |
+| ----------------------- | -------------------------------- | ------------------------------------------- |
+| `401 Unauthorized`      | Invalid or missing API key       | Check key is correct and included in header |
+| `403 Forbidden`         | Key doesn't have access to model | Check model restrictions on your key        |
+| `429 Too Many Requests` | Rate limit exceeded              | Reduce request frequency or upgrade plan    |
+| `402 Payment Required`  | Quota exhausted                  | Add more quota or enable PAYG fallback      |
 
 ## Related Topics
 

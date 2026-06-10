@@ -36,6 +36,7 @@ const sidebars = {
       className: 'sidebar-category--account',
       collapsed: false,
       items: [
+        'authentication/organizations',
         'authentication/api-keys',
         'billing/subscription-plans',
         'billing/quota-management',
@@ -88,10 +89,7 @@ const sidebars = {
       label: 'Configuration',
       className: 'sidebar-category--config',
       collapsed: false,
-      items: [
-        'installation/connection',
-        'installation/scripts',
-      ],
+      items: ['installation/connection', 'installation/scripts'],
     },
 
     // Help & Security
@@ -115,10 +113,7 @@ const sidebars = {
       label: 'Resources',
       className: 'sidebar-category--resources',
       collapsed: false,
-      items: [
-        'opensource',
-        'stimachat',
-      ],
+      items: ['opensource', 'stimachat'],
     },
   ],
 };
