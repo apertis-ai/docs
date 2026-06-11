@@ -1,4 +1,4 @@
-# Organizations, Members, Groups, and Roles
+# Organizations, Members, Projects, Groups, and Roles
 
 Organizations let you manage shared API usage, billing, members, projects, API keys, and access control from one dashboard.
 
@@ -51,6 +51,30 @@ Default limits:
 
 Limits may be adjusted for enterprise customers.
 
+## Projects
+
+Projects are usage and resource scopes inside an organization. Use them to separate environments, products, customers, or internal teams while keeping billing under the same organization.
+
+Every organization has a default project. The default project cannot be archived or removed. Owners and members with project management permission can create additional projects.
+
+Owners can:
+
+- Create projects for shared workloads.
+- Set an optional monthly project cap.
+- Open **Manage project** to manage project API keys, project people, and service accounts.
+- Archive non-default projects.
+
+Project rules:
+
+- Project members must already be organization members.
+- Adding someone to a project does not invite them to the organization.
+- Project-scoped API keys bill to the organization and can be limited to that project.
+- Service accounts belong to a project and are intended for server-side automation.
+- Archiving a project disables API keys scoped to that project.
+- Monthly project caps are an extra spending gate. They do not change which organization balance or payment method is billed.
+
+Large organization project lists are loaded with server-side pagination and search. Search by project name, slug, public project ID, or region to avoid loading every project into the browser.
+
 ## Groups
 
 Groups collect organization members so you can assign access to multiple people at once.
@@ -87,17 +111,39 @@ Role behavior:
 - Editing a custom role changes access for all assigned members and groups immediately.
 - Deleting a custom role removes that role from assigned targets immediately.
 
+## Projects vs. Groups vs. Roles
+
+These controls solve different problems and are designed to be used together.
+
+| Control      | What it is                                      | Use it for                                                          |
+| ------------ | ----------------------------------------------- | ------------------------------------------------------------------- |
+| **Projects** | API usage, key, people, and service scopes      | Separating production, staging, customers, products, or workloads   |
+| **Groups**   | Collections of organization members            | Assigning the same access to multiple people                        |
+| **Roles**    | Reusable permission bundles                     | Defining what a member or group can do                              |
+| **Keys**     | Credentials used by apps, services, and people | Authenticating API requests or organization administration requests |
+
+Effective access is additive:
+
+- Organization role gives baseline access.
+- Direct custom roles add capabilities to one member.
+- Enabled group role assignments add capabilities to every member in that group.
+- Project membership limits access to project-scoped resources.
+- API key permission mode limits what that key can do, even if the creator has broader dashboard access.
+
 ## Recommended Access Flow
 
 Use this sequence for predictable organization access:
 
 1. Invite users to the organization.
 2. Wait for users to accept and appear as members.
-3. Create groups for teams, functions, or environments.
-4. Add members to groups.
-5. Create custom roles when the default Owner and Reader roles are too broad.
-6. Assign roles to members or groups.
-7. Review API keys, admin keys, usage, and audit logs after access changes.
+3. Create projects for workloads or environments.
+4. Add joined members to the projects they need.
+5. Create groups for teams, functions, or environments.
+6. Add members to groups.
+7. Create custom roles when the default Owner and Reader roles are too broad.
+8. Assign roles to members or groups.
+9. Create project keys or service accounts for shared services.
+10. Review API keys, admin keys, usage, and audit logs after access changes.
 
 ## API Keys and Member Removal
 

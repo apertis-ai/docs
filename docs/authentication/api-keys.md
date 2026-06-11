@@ -176,6 +176,14 @@ Set an expiration date for temporary or project-specific keys:
 - Can use permission modes such as **All**, **Restricted**, or **Read only**
 - Are disabled when their owning member is removed from the organization
 
+### Organization Admin Keys (`sk-admin_`)
+
+- Created from an organization by an owner or member with admin-key permission
+- Used for organization administration automation, not normal model inference traffic
+- Can manage supported organization resources through Admin API workflows
+- Can be limited with **All**, **Restricted**, or **Read only** permission modes
+- Should be stored only in trusted server-side infrastructure
+
 Organization keys have two views:
 
 | View                 | Use                                                            |
@@ -199,6 +207,7 @@ Project key behavior:
 - The **Created by** column records who created the key, but the key remains project-owned.
 - Disabling or deleting a project key immediately stops requests that use it.
 - Project keys are the preferred choice for long-running services because they do not depend on one member's personal key lifecycle.
+- Project keys can be reviewed from the organization API Keys tab or from **Manage project** on the project row.
 
 Use a project key when:
 
@@ -206,6 +215,17 @@ Use a project key when:
 - The key is deployed to backend infrastructure.
 - Usage should continue even if the original creator changes teams.
 - You need organization-level billing and audit visibility.
+
+#### Project service accounts
+
+Service accounts are project-owned identities for automation. Use a service account when a backend service, worker, CI job, or integration should own the credential instead of a human member.
+
+Service account behavior:
+
+- A service account belongs to one project.
+- Its keys bill to the organization and are scoped to that project.
+- Deleting the service account disables keys owned by it.
+- The audit trail identifies the service account instead of a personal user key.
 
 #### User keys
 
@@ -229,7 +249,28 @@ Use a user key when:
 If an owner needs a key for a shared service, create a **Project API Key**. If a member needs a personal development key, that member should create a **User API Key** from their own account context.
 :::
 
-For organization access rules, see [Organizations, Members, Groups, and Roles](./organizations.md).
+### Organization Admin Keys Tab Rules
+
+Admin keys are for organization administration automation, such as managing projects, project members, service accounts, project API keys, audit-log access, or other supported Admin API operations.
+
+Admin key behavior:
+
+- Admin keys use the `sk-admin_` prefix.
+- The plaintext secret is shown only once.
+- Read-only admin keys can inspect supported admin resources but cannot write changes.
+- Restricted admin keys should grant only the scopes the automation needs.
+- Revoking an admin key immediately rejects future requests using it.
+- If the creating member is removed from the organization, admin access tied to that membership is revoked.
+
+Use an admin key when:
+
+- A trusted backend needs to automate organization administration.
+- You need CI or internal tooling to manage projects, service accounts, or project API keys.
+- A human owner should not paste their personal session or user key into automation.
+
+Do not use admin keys in browsers, mobile apps, customer devices, or model inference clients.
+
+For organization access rules, see [Organizations, Members, Projects, Groups, and Roles](./organizations.md).
 
 ## Best Practices
 
