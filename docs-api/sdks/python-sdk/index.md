@@ -1,6 +1,6 @@
 # Apertis Python SDK
 
-Official Python SDK for the Apertis AI API, providing a comprehensive interface to access 470+ AI models through a unified, type-safe library.
+Official Python SDK for the Apertis AI API, providing a comprehensive interface to the models available to your Apertis API key through a unified, type-safe library.
 
 ## Features
 
@@ -79,7 +79,7 @@ Access models from multiple providers through a single API:
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
 | DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
 | xAI | `grok-3`, `grok-3-fast` |
-| And 470+ more... | [View all models](/api/utilities/models) |
+| Current catalog | [View models available to your key](/api/utilities/models) |
 
 ## Feature Documentation
 

@@ -1,6 +1,6 @@
 # @apertis/cli
 
-[`@apertis/cli`](https://www.npmjs.com/package/@apertis/cli) is a small terminal tool for the Apertis API gateway. See your usage and spend, list 500+ models, and **benchmark latency, throughput, and real measured cost** across models — straight from your terminal.
+[`@apertis/cli`](https://www.npmjs.com/package/@apertis/cli) is a small terminal tool for the Apertis API gateway. See your usage and spend, inspect the live model catalog, and **benchmark latency, throughput, and real measured cost** across models — straight from your terminal.
 
 GitHub: [apertis-ai/apertis-cli](https://github.com/apertis-ai/apertis-cli) · npm: `@apertis/cli`
 

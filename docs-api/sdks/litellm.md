@@ -64,7 +64,7 @@ for chunk in response:
 
 ## Using Different Models
 
-Access 400+ models through the `apertis/` prefix:
+Use compatible models returned by the Apertis model catalog through the `apertis/` prefix:
 
 ```python
 # OpenAI GPT
