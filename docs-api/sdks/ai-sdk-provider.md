@@ -1,6 +1,6 @@
 # @apertis/ai-sdk-provider
 
-Official [Vercel AI SDK](https://sdk.vercel.ai/) Provider for Apertis, enabling access to 470+ models through a standardized AI SDK interface.
+Official [Vercel AI SDK](https://sdk.vercel.ai/) Provider for Apertis, enabling access to the models available to your Apertis API key through a standardized AI SDK interface.
 
 ## Installation
 
@@ -20,7 +20,8 @@ yarn add @apertis/ai-sdk-provider ai
 
 ## Setup
 
-Get your API Key from [**Apertis Key**](https://apertis.ai/token)
+1. [Create an Apertis account](https://apertis.ai/register?utm_source=stima-docs&utm_medium=documentation&utm_campaign=ai-sdk-provider&utm_content=setup).
+2. Create an API key from [**Apertis Keys**](https://apertis.ai/token).
 
 ### Environment Variable
 
@@ -113,13 +114,14 @@ const { embeddings } = await embedMany({
 
 ## Supported Models
 
-Access models from multiple providers through Apertis:
+Access models from multiple providers through Apertis. Model availability changes over time and can vary by key type, so use [`GET /v1/models`](/api/utilities/models) as the source of truth.
 
 ### Chat Models
-- **OpenAI**: `gpt-5.2`, `gpt-5.2-chat`, `gpt-5.2-pro`
-- **Anthropic**: `claude-opus-4-5-20251101`, `claude-sonnet-4.5`, `claude-haiku-4.5`
-- **Google**: `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-3-pro-preview`
-- **Others**: `glm-4.7`, `minimax-m2.1` and 470+ more
+- **OpenAI**: `gpt-5.2`, `gpt-4.1-mini`
+- **Anthropic**: `claude-sonnet-4.5`, `claude-haiku-4.5`
+- **Google**: `gemini-2.5-flash`
+
+The examples above are illustrative. Query the model catalog before pinning an ID in production.
 
 ### Embedding Models
 - `text-embedding-3-small`

@@ -131,7 +131,7 @@ const features = [
   },
   {
     title: 'Every Model, One API',
-    badge: '470+ models',
+    badge: 'Live model catalog',
     description: 'Access OpenAI, Anthropic, Google, Meta, and more through a single API key.',
     cta: 'Browse models',
     link: '/installation/models',
@@ -247,7 +247,7 @@ export default function Home() {
         <section className={styles.hero}>
           <h1 className={styles.heroTitle}>Build with Apertis</h1>
           <p className={styles.heroSub}>
-            One API key for 470+ models across 30+ providers.
+            One API key for models across leading providers.
             Smart routing, auto-failover, and free prompt caching built in.
           </p>
           <button className={styles.heroSearch} onClick={openSearch}>
