@@ -57,7 +57,7 @@ for r in resp:
 
 ## Using Different Models
 
-Access 400+ models through Apertis:
+Use any compatible model returned by the Apertis model catalog:
 
 ```python
 # OpenAI GPT
