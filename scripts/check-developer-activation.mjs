@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const SOURCE_ROOTS = ['docs', 'docs-api', 'src'];
-const SOURCE_FILES = ['docusaurus.config.js'];
+const SOURCE_FILES = ['docusaurus.config.js', 'sidebars.js', 'sidebarsApi.js'];
 const SOURCE_EXTENSIONS = new Set(['.md', '.mdx', '.js', '.jsx', '.ts', '.tsx']);
 
 function collectFiles(relativePath) {
