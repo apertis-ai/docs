@@ -10,4 +10,4 @@
 - [x] 2.1 Add a deterministic activation-content guard and package script, first proving it detects the current drift.
 - [x] 2.2 Run strict OpenSpec validation, the activation-content guard, the production docs build, and diff/secret checks.
 - [x] 2.3 Verify the built docs homepage and Quick Start on desktop and mobile with the Codex Chrome connector, including CTA destinations, activation steps, responsive layout, and console errors.
-- [ ] 2.4 Inspect the complete latest-base diff and close the required GitHub review round without expanding into Ads, account, deployment, or outreach changes.
+- [x] 2.4 Inspect the complete latest-base diff and close the required GitHub review round without expanding into Ads, account, deployment, or outreach changes.
