@@ -27,7 +27,7 @@ pip install apertis
 
 ## Setup
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ### Environment Variable (Recommended)
 

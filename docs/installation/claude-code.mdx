@@ -10,7 +10,7 @@ Claude Code is an agentic terminal tool that understands codebases and accelerat
 ## Prerequisites
 
 - Node.js 18 or newer installed on your system (for npm installation)
-- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/setting?tab=keys))
 
 ## Installation
 
@@ -51,7 +51,7 @@ Create a file named `ccswitch.sh` in your home directory (or any location you pr
 # Replace the values below with your own credentials and preferences.
 
 APERTIS_BASE_URL="https://api.apertis.ai"
-APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/token
+APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/setting?tab=keys
 DEFAULT_MODEL="code:claude-opus-4-8"            # ← Default model when using --apertis
 
 # ─── Script Logic (no changes needed below) ────────────────────
@@ -144,7 +144,7 @@ Edit the top of `ccswitch.sh` to match your credentials:
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `APERTIS_BASE_URL` | Apertis API endpoint. Typically no change needed. | `https://api.apertis.ai` |
-| `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/token). | `sk-xxxx...` |
+| `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys). | `sk-xxxx...` |
 | `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-8` |
 
 ### Available Model IDs
@@ -266,7 +266,7 @@ Anthropic base URL: https://api.apertis.ai
 
 If you encounter connection errors:
 
-1. Verify your API key is correct at [Apertis Dashboard](https://apertis.ai/token)
+1. Verify your API key is correct at [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 2. Ensure `APERTIS_BASE_URL` in `ccswitch.sh` is `https://api.apertis.ai`
 3. Check your network connection and firewall settings
 
@@ -293,5 +293,5 @@ Claude Code provides powerful capabilities including:
 
 - [Apertis API Documentation](https://docs.apertis.ai)
 - [Model List](https://apertis.ai/models)
-- [API Keys Management](https://apertis.ai/token)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
 - [Claude Code Official Documentation](https://docs.anthropic.com/en/docs/claude-code/configuration)

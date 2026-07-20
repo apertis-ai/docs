@@ -14,7 +14,7 @@ pip install llama-index-llms-apertis llama-index
 from llama_index.llms.apertis import Apertis
 from llama_index.core.llms import ChatMessage
 
-# Configure with your API key from https://apertis.ai/token
+# Configure with your API key from https://apertis.ai/setting?tab=keys
 llm = Apertis(
     api_key="sk-your-api-key",
     model="gpt-5.2",

@@ -8,7 +8,7 @@ Analyze video content using multimodal models, enabling video understanding, sce
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Video Analysis
 

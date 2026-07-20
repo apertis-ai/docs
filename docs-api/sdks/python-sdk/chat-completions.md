@@ -8,7 +8,7 @@ Generate text responses using chat-based models with the familiar OpenAI-compati
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Usage
 

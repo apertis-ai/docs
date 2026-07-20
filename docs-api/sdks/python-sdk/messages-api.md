@@ -8,7 +8,7 @@ Use Anthropic's native message format for interacting with Claude models, provid
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Usage
 

@@ -8,7 +8,7 @@ Generate vector embeddings for text, enabling semantic search, clustering, and r
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Embedding
 

@@ -8,7 +8,7 @@ pip install langchain-openai
 
 ### Apertis Usage Example
 
-Please obtain your API Key from [**Apertis Key**](https://apertis.ai/token)
+Please obtain your API Key from [**Apertis Key**](https://apertis.ai/setting?tab=keys)
 
 ```python
 from langchain_openai import ChatOpenAI

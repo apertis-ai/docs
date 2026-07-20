@@ -14,7 +14,7 @@ GitHub: [apertis-ai/apertis-agent](https://github.com/apertis-ai/apertis-agent) 
 npm install @apertis/agent zod
 ```
 
-Set your API key (get one from the [Apertis Dashboard](https://apertis.ai/token)):
+Set your API key (get one from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys)):
 
 ```bash
 export APERTIS_API_KEY=sk-your-key

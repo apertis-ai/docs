@@ -155,6 +155,12 @@ const config = {
             position: "right",
             className: "navbar-login-button",
           },
+          {
+            href: "https://apertis.ai/register",
+            label: "Create account",
+            position: "right",
+            className: "navbar-signup-button",
+          },
         ],
       },
       footer: {

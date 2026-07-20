@@ -99,7 +99,7 @@ If you prefer not to use the Apertis SDK, you can use the built-in OpenAI-compat
 }
 ```
 
-Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/token).
+Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys).
 
 :::tip No `code:` prefix needed
 Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude model IDs. Use the standard model ID directly (e.g., `claude-opus-4-8` instead of `code:claude-opus-4-8`).
@@ -111,7 +111,7 @@ Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude 
 |-------|-------------|
 | `provider.apertis.npm` | Apertis SDK package. Use `@apertis/ai-sdk-provider` for automatic setup. |
 | `provider.apertis.options.baseURL` | Apertis API endpoint. Only needed without the SDK. |
-| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/token). |
+| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys). |
 | `provider.apertis.models` | Available models to use. Add or remove as needed. |
 | `model` | Default model on launch. Format: `apertis/<model-id>`. |
 
@@ -190,7 +190,7 @@ OpenCode supports Model Context Protocol servers:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 - Ensure the Base URL is set correctly
 - Check environment variables are exported
 
@@ -206,6 +206,6 @@ opencode auth login
 ## Related Resources
 
 - [Model List](https://apertis.ai/models)
-- [API Keys Management](https://apertis.ai/token)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
 - [Claude Code](/installation/claude-code) - Alternative terminal AI coding tool
 - [OpenCode Documentation](https://opencode.ai/docs)
