@@ -441,6 +441,40 @@ code:not(pre code) {
   background: transparent !important;
 }
 
+.navbar-signup-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 14px !important;
+  border: 1px solid #0d9488 !important;
+  border-radius: 6px !important;
+  background: #0d9488 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 20px;
+  text-decoration: none !important;
+  transition: background-color 0.16s ease, border-color 0.16s ease !important;
+}
+
+.navbar-signup-button:hover {
+  border-color: #0f766e !important;
+  background: #0f766e !important;
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .navbar-signup-button {
+  border-color: #14b8a6 !important;
+  background: #14b8a6 !important;
+  color: #062c2a !important;
+}
+
+[data-theme='dark'] .navbar-signup-button:hover {
+  border-color: #2dd4bf !important;
+  background: #2dd4bf !important;
+  color: #062c2a !important;
+}
+
 /* ==========================================================================
    Search Box - Gemini Style
    ========================================================================== */

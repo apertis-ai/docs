@@ -9,7 +9,7 @@ Kilo CLI is the terminal-based AI coding agent from Kilo Code, providing agentic
 
 ## Prerequisites
 
-- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/token))
+- An Apertis API Key (obtain from [Apertis Dashboard](https://apertis.ai/setting?tab=keys))
 
 ## Installation
 
@@ -108,7 +108,7 @@ Create or edit the configuration file at `~/.config/kilo/opencode.json`:
 }
 ```
 
-Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/token).
+Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys).
 
 ### Configuration Fields
 
@@ -116,7 +116,7 @@ Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard]
 |-------|-------------|
 | `model` | Default model for general use. Format: `apertis/<model-id>`. |
 | `small_model` | Lightweight model for quick tasks. Format: `apertis/<model-id>`. |
-| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/token). |
+| `provider.apertis.options.apiKey` | Your API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys). |
 | `provider.apertis.options.baseURL` | Apertis API endpoint. Typically no change needed. |
 | `provider.apertis.models` | Available models to register. Add or remove as needed. |
 | `agent.build` | Agent config for implementation tasks (model, permissions, max steps). |
@@ -190,7 +190,7 @@ kilo
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 - Ensure `baseURL` in config is `https://api.apertis.ai/v1`
 - Check your network connection and firewall settings
 
@@ -203,7 +203,7 @@ kilo
 ## Related Resources
 
 - [Model List](https://apertis.ai/models)
-- [API Keys Management](https://apertis.ai/token)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
 - [Kilo Code Extension](/installation/kilo-code) - VS Code extension version
 - [OpenCode](/installation/opencode) - Alternative terminal AI coding tool
 - [Claude Code](/installation/claude-code) - Anthropic's terminal AI coding tool

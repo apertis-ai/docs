@@ -8,7 +8,7 @@ Analyze images using multimodal models, enabling visual understanding, image des
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Image Analysis
 

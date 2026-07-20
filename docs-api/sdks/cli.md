@@ -20,7 +20,7 @@ Requires Node.js 18+.
 
 ## Authentication
 
-Get an API key from the [Apertis Dashboard](https://apertis.ai/token), then provide it any of these ways (highest precedence first):
+Get an API key from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys), then provide it any of these ways (highest precedence first):
 
 ```bash
 apertis --key sk-... usage          # 1. per-command flag

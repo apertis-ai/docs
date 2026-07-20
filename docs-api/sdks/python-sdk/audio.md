@@ -8,7 +8,7 @@ Process audio input and generate audio output, enabling voice-based applications
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Speech to Text (Transcription)
 

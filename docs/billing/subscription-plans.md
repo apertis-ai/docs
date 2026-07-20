@@ -222,7 +222,7 @@ Each subscription comes with a dedicated API token:
 
 ### Finding Your Subscription Token
 
-After subscribing, find your dedicated API key in **Settings** → **API Keys** tab ([direct link](https://apertis.ai/setting?tab=apikeys)):
+After subscribing, find your dedicated API key in **Settings** → **API Keys** tab ([direct link](https://apertis.ai/setting?tab=keys)):
 
 1. Click **My Plan** in the navbar (or go to **Settings**)
 2. Switch to the **API Keys** tab

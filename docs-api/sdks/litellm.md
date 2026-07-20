@@ -23,7 +23,7 @@ import os
 os.environ["APERTIS_API_KEY"] = "sk-your-api-key"
 ```
 
-Get your API key from [apertis.ai/token](https://apertis.ai/token).
+Get your API key from [Settings → API Keys](https://apertis.ai/setting?tab=keys).
 
 ## Basic Usage
 

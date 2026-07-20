@@ -16,6 +16,7 @@
     "build:en": "docusaurus build --locale en",
     "serve:en": "docusaurus serve --locale en",
     "index-docs": "tsx scripts/index-docs.ts",
+    "test:developer-activation": "node scripts/check-developer-activation.mjs",
     "pages:dev": "wrangler pages dev --compatibility-date=2024-01-01 ./build"
   },
   "dependencies": {

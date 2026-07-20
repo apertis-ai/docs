@@ -8,7 +8,7 @@ Enable AI models to search the web in real-time, providing up-to-date informatio
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Web Search
 
