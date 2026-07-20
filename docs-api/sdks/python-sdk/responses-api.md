@@ -8,7 +8,7 @@ Use OpenAI's Responses API format for enhanced capabilities including built-in t
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Usage
 

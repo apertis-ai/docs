@@ -40,7 +40,7 @@ nix run github:numtide/nix-ai-tools#crush
 
 ### Step 1: Get API Key
 
-Obtain your API key from [Apertis Dashboard](https://apertis.ai/token).
+Obtain your API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys).
 
 ### Step 2: Configure crush.json
 
@@ -113,13 +113,13 @@ Crush supports Model Context Protocol servers:
 
 ### Connection Issues
 
-- Verify your API key at [Apertis Dashboard](https://apertis.ai/token)
+- Verify your API key at [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 - Ensure the Base URL is `https://api.apertis.ai/v1`
 - Check your network connection
 
 ## Related Resources
 
 - [Model List](https://apertis.ai/models)
-- [API Keys Management](https://apertis.ai/token)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
 - [Claude Code](/installation/claude-code) - Alternative terminal AI coding tool
 - [OpenCode](/installation/opencode) - Another CLI AI coding agent

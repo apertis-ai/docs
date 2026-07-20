@@ -8,7 +8,7 @@ Receive responses in real-time as they are generated, enabling responsive user i
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Streaming
 

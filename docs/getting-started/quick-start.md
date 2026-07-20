@@ -4,16 +4,24 @@ Get up and running with the Apertis API in under 5 minutes. This guide walks you
 
 ## Prerequisites
 
-- An Apertis account ([Sign up here](https://apertis.ai/login))
-- An API key ([Get your key](https://apertis.ai/token))
+- An Apertis account ([Create one](https://apertis.ai/register); no card is required to register)
+- Model access through a [Coding Plan](https://apertis.ai/subscribe) or [PAYG balance](https://apertis.ai/setting?tab=credits)
+- An API key from [Settings → API Keys](https://apertis.ai/setting?tab=keys)
 - Basic knowledge of HTTP requests or a programming language
 
-## Step 1: Get Your API Key
+## Step 1: Create Your Account and Choose Access
 
-1. Log in to [Apertis Dashboard](https://apertis.ai/login)
-2. Navigate to [**API Keys**](https://apertis.ai/token)
-3. Click **Create New Key**
-4. Copy your key (format: `sk-xxxxxxxx`)
+1. [Create an Apertis account](https://apertis.ai/register) or [log in](https://apertis.ai/login).
+2. Choose a [Coding Plan](https://apertis.ai/subscribe) or add [PAYG balance](https://apertis.ai/setting?tab=credits) before your first API request.
+3. Use the [Models page](https://apertis.ai/models) to confirm which model IDs are available for your key type.
+
+Creating an account does not require a card. A plan or PAYG balance is still required before a paid model request can succeed.
+
+## Step 2: Create Your API Key
+
+1. Open [**Settings → API Keys**](https://apertis.ai/setting?tab=keys).
+2. Click **Create New Key**.
+3. Copy your key (format: `sk-xxxxxxxx`).
 
 :::tip Subscription users
 If you have an active subscription, a dedicated key (`sk-sub-...`) is already created for you. Find it in **Settings** → **API Keys** tab (click **My Plan** in the navbar).
@@ -23,7 +31,7 @@ If you have an active subscription, a dedicated key (`sk-sub-...`) is already cr
 Save your API key securely. It's only shown once!
 :::
 
-## Step 2: Make Your First Request
+## Step 3: Make Your First Request
 
 Choose your preferred method:
 
@@ -101,7 +109,7 @@ async function main() {
 main();
 ```
 
-## Step 3: Understand the Response
+## Step 4: Verify the Response and Activity Record
 
 A successful response looks like this:
 
@@ -138,9 +146,11 @@ A successful response looks like this:
 | `choices[0].message.content` | The AI's response |
 | `usage` | Token usage for billing |
 
-## Step 4: Try Different Models
+After the request succeeds, open [**Settings → Activity**](https://apertis.ai/setting?tab=activity) and confirm the matching Activity record. The integration is complete only when you have both a successful response and the matching Activity record; account creation by itself is not activation.
 
-Apertis provides access to 60+ AI models. Try different ones:
+## Step 5: Try Different Models
+
+Apertis provides a live model catalog across multiple providers. Availability changes over time and can vary by key type, so check the [Models page](https://apertis.ai/models) or query `GET /v1/models` before pinning an ID in production.
 
 ```python
 # OpenAI GPT-5.5
@@ -174,7 +184,7 @@ response = client.chat.completions.create(
 
 [View all models →](../installation/models)
 
-## Step 5: Enable Streaming
+## Step 6: Enable Streaming
 
 For real-time responses, enable streaming:
 

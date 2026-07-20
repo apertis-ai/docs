@@ -20,8 +20,8 @@ yarn add @apertis/ai-sdk-provider ai
 
 ## Setup
 
-1. [Create an Apertis account](https://apertis.ai/register?utm_source=stima-docs&utm_medium=documentation&utm_campaign=ai-sdk-provider&utm_content=setup).
-2. Create an API key from [**Apertis Keys**](https://apertis.ai/token).
+1. [Create an Apertis account](https://apertis.ai/register).
+2. Create an API key from [**Apertis Keys**](https://apertis.ai/setting?tab=keys).
 
 ### Environment Variable
 

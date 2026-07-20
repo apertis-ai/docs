@@ -8,7 +8,7 @@ Enable chain-of-thought reasoning and extended thinking capabilities for complex
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Reasoning
 

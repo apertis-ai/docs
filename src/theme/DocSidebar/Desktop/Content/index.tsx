@@ -52,7 +52,7 @@ export default function DocSidebarDesktopContent({
         </ul>
       </nav>
       <a
-        href="https://apertis.ai/token"
+        href="https://apertis.ai/setting?tab=keys"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.consoleButton}

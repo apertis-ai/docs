@@ -6,7 +6,7 @@ Quick answers to common questions about the Apertis API.
 
 ### What is Apertis?
 
-Apertis is a unified API platform that provides access to 60+ AI models through a single, OpenAI-compatible interface. Instead of managing multiple API keys and different SDKs, you can use one API to access models from OpenAI, Anthropic, Google, and more.
+Apertis is a unified API platform that provides access to models from OpenAI, Anthropic, Google, and other providers through a single, OpenAI-compatible interface. Instead of managing multiple provider keys and SDKs, you can use one Apertis API key and confirm the models currently available to that key through the live catalog.
 
 ### How is Apertis different from using providers directly?
 
@@ -15,7 +15,7 @@ Apertis is a unified API platform that provides access to 60+ AI models through 
 | API Keys | One per provider | Single unified key |
 | SDK | Different per provider | Standard OpenAI SDK |
 | Billing | Separate per provider | Unified billing |
-| Models | Provider's models only | 60+ models |
+| Models | Provider's models only | Live multi-provider catalog |
 | Fallback | Manual implementation | Built-in |
 
 ### Is Apertis compatible with OpenAI SDK?
@@ -33,14 +33,14 @@ client = OpenAI(
 
 ### What models are available?
 
-Apertis provides access to 60+ models including:
+Apertis provides access to a changing multi-provider catalog that includes:
 
 - **OpenAI**: GPT-5.5, GPT-5.4 Mini, GPT-5.4 Nano
 - **Anthropic**: Claude Opus 4.8, Claude Sonnet 4.6, Claude Fable 5
 - **Google**: Gemini 3.1 Pro, Gemini 3.5 Flash
 - **Open Source**: Llama, Mistral, and more
 
-[View full model list →](../installation/models)
+[View the current model catalog →](https://apertis.ai/models)
 
 ---
 
@@ -48,10 +48,10 @@ Apertis provides access to 60+ models including:
 
 ### How do I get an API key?
 
-1. Sign up at [api.apertis.ai](https://api.apertis.ai)
-2. Go to **API Keys** section
-3. Click **Create New Key**
-4. Copy and securely store your key
+1. [Create an Apertis account](https://apertis.ai/register) or log in.
+2. Choose a [Coding Plan](https://apertis.ai/subscribe) or add [PAYG balance](https://apertis.ai/setting?tab=credits).
+3. Open [**Settings → API Keys**](https://apertis.ai/setting?tab=keys).
+4. Click **Create New Key** and securely store the key.
 
 ### I lost my API key. Can I recover it?
 
