@@ -8,7 +8,7 @@ Reorder documents by relevance to a query, improving search results and retrieva
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Reranking
 

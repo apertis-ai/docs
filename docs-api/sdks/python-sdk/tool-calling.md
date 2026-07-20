@@ -8,7 +8,7 @@ Enable AI models to call functions and interact with external systems, enabling 
 pip install apertis
 ```
 
-Get your API Key from [**Apertis**](https://apertis.ai/token)
+Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Tool Calling
 
