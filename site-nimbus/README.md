@@ -132,3 +132,120 @@ that one missing artifact until #7 generates it.
 - **Duplicate definitions:** outside `site-nimbus/`, `functions/api/ask.ts` and
   `src/components/UnifiedSearchModal/assistantUtils.ts` still declare their own legacy
   `PageContext`. #9 and #10 should import `src/contracts/page.ts` instead.
+
+## Search and Ask Docs (#9)
+
+### Search engine and index
+
+- **Engine:** Pagefind `1.5.2`, pinned exactly as a devDependency. That is the version in the
+  upstream Nimbus lock @ `4bec97a`, and it is MIT licensed.
+- **Why not Nimbus's own search:** the Nimbus `search` option stays `false`. Its built-in run
+  executes `pagefind --site dist` and crawls every HTML file in `dist/`.
+- **Build step:** `src/search/index-build.ts` runs the Pagefind Node API from an
+  `astro:build:done` integration (`searchIndex(manifest.documents)` in `astro.config.ts`).
+- **Index inputs:**
+  - Only manifest entries with `eligibility.publish && eligibility.search` are indexed.
+  - Each entry's built page is read from `dist/<servedPath>index.html` and indexed under
+    `url: servedPath`.
+  - Nothing is crawled, so ineligible pages (the homepage, 404) never enter the index.
+  - The index grows with #7's manifest with no code change.
+- **Indexed region:** the page's `<article>` (`rootSelector`), whose first `<h1>` is the result
+  title.
+  - The build fails if an eligible page is missing or has no `<article>` with an `<h1>`.
+  - **Interface for #8:** DocLayout must keep the document body, including its `<h1>`, inside
+    `<article>`, and keep the shell chrome outside it.
+  - The assistant dialog carries `data-pagefind-ignore="all"`.
+- **Output:** `dist/pagefind/`, with the prebuilt Pagefind UIs and the unused-language wasm
+  removed.
+  - `test:dist` allows exactly the files the client loads.
+  - It checks that the decompressed fragments hold exactly the eligible `servedPath`s, each with
+    content and a title, and no internals, secret names or env values.
+- **Lazy loading:** nothing under `/pagefind/` loads before the dialog first opens. The client then
+  runs `import('/pagefind/pagefind.js')`, which loads a worker, the wasm and index chunks.
+- **Known search limits:** Pagefind keeps a full URL as one word. `/v1/messages` therefore matches
+  a page that shows the path on its own, but not one where it appears only inside
+  `https://api.apertis.ai/v1/messages`.
+- **Queries that work:** identifiers and punctuation such as `ANTHROPIC_BASE_URL`,
+  `chat/completions`, `/v1/messages`, `@apertis/ai-sdk-provider` and `createApertis`. This is
+  proved on a synthetic index in `test/m4-e2e.test.ts`.
+- **Ranking:** Pagefind's defaults, not tuned to `search-queries.json`.
+
+### Dialog and keyboard contract (`src/components/assistant/`)
+
+`AssistantRoot.astro` renders one `<dialog id="apertis-assistant">` that hosts both surfaces, and
+`assistant.ts` drives it.
+
+- **Only listener:** it is the only listener for `apertis-docs:open` (on `window`, with
+  `{surface, query?}`).
+- **Only Cmd/Ctrl+K owner:** the shortcut toggles Search, and switches to Search from Ask Docs.
+- **Search** opens as a modal (`showModal()`):
+  - Focus lands in the combobox input.
+  - The page behind it does not scroll (`html.aa-scroll-lock`).
+  - Focus is contained by the modal dialog.
+  - The first result is selected whenever results change.
+  - ArrowUp/ArrowDown move the selection, clamped at the ends.
+  - Enter opens the selected result.
+  - Escape and a backdrop click close it, and focus returns to the opener.
+- **Ask Docs** is a non-modal panel (`show()`), docked right on desktop and a bottom sheet at
+  ≤ 640 px.
+  - Escape closes it, except while focus is in the composer.
+  - Enter sends; Shift+Enter inserts a newline.
+  - The open state and the conversation persist for the browser session (`sessionStorage`), so the
+    panel reopens on the next page with that page's context.
+- The inactive surface is `hidden`.
+- The shell's triggers (navbar, hero, floating Ask button) belong to #8 and only dispatch the
+  event.
+
+### Ask Docs wire client (`wire.ts`)
+
+- **Request:** `POST /api/ask` (same origin) with exactly `{question, sessionId, turnstileToken,
+  pageContext?}`.
+  - `sessionId` comes from `sessionStorage.askai_session_id`. On plain-HTTP hosts it falls back to
+    `crypto.getRandomValues`.
+  - `pageContext` is `{title, href}`. It is read at send time from `document.title` without
+    `TITLE_SUFFIX` and from the current location, using the contract's `pageContext()`.
+- **Streaming:** `data: {"content"}` frames render incrementally. `data: [DONE]` ends the answer.
+  EOF without `[DONE]` is shown as interrupted. Frames without `content` are ignored.
+- **Errors:**
+  - 429 shows the legacy fixed message.
+  - Any other non-2xx shows `Ask Docs could not answer (HTTP <status>): <error>[: <details>]`.
+  - Network failures are shown in the panel.
+- **Citations:** internal Markdown links render as links and source pills.
+- **Turnstile:**
+  - It uses the legacy site key `0x4AAAAAACS2SzpYBFytHb_E`. That key is hardcoded in the legacy
+    `AskAITab.tsx` and recorded in `ask-wire.json`; it is not in `docusaurus.config.js`
+    `customFields`.
+  - The script (`render=explicit`) loads only when Ask Docs first opens.
+  - The token is one-shot and the widget is reset after each send.
+  - These all show a visible message and keep Send disabled: `error-callback`, script load
+    failure, no response within 30 s, and challenge timeout. `expired-callback` re-verifies.
+- **No canned answers:** there is no simulated answer or hostname branch in the client.
+
+### Baseline defects fixed and their checks
+
+| Defect | Fix | Check |
+| --- | --- | --- |
+| 3: Cmd/Ctrl+K leaves focus on `<body>` | single keydown owner focuses the input | e2e "Cmd/Ctrl+K opens search…"; `measure.mjs search` reports `keyboardFocus: true` |
+| 4: stale page context | context read at send time | e2e "page context is read fresh after navigating…" (`/` → `/api/` → `/api/#overview`) |
+| 6: canned localhost answer | none in the client | `test:dist` "no simulated or canned Ask Docs answer path ships" |
+| 9: page scrolls behind search | scroll lock while Search is open | e2e wheel and PageDown with a tall page, open vs closed |
+| 10: early query stays empty | queries await the index, and the latest one wins | e2e holds `pagefind.js` until after typing |
+| 11: silent Turnstile failure | visible panel message | e2e Turnstile `110200` and offline |
+
+### Browser proof
+
+Run it against a running preview. Playwright is not a dependency; point `PLAYWRIGHT` at its
+`index.mjs`, as for `scripts/nimbus/measure.mjs`.
+
+```sh
+PREVIEW_URL=http://127.0.0.1:8803 PLAYWRIGHT=<path>/playwright/index.mjs node --test test/m4-e2e.test.ts
+```
+
+- Without both variables the suite is skipped and says so. `npm test` stays hermetic.
+- **Contract evidence:** the `/api/ask` and Turnstile stubs.
+- **Local-build evidence:** the one case without `.dev.vars` that reaches the real function and
+  shows its `500 Server configuration error`.
+- The suite fails on any request that leaves the preview origin, other than the stubbed Turnstile
+  script.
+- Real-assistant and real-Turnstile evidence need an isolated environment and an allowed
+  Turnstile hostname. Both are BLOCKED.
