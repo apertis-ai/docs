@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import nimbus, { defineConfig as defineNimbusConfig } from '@cloudflare/nimbus-docs';
+import publication from './converter/integration.ts';
 
 // Static output only; `npm run preview` serves dist/ with the repo-root Pages Functions.
 // React 19 and @astrojs/react are pinned in package.json but not registered: registering
@@ -11,6 +12,8 @@ export default defineConfig({
   publicDir: '../static',
   // Directory pages (`/api/` -> dist/api/index.html); Pages answers `/api` with 308 -> `/api/`.
   build: { format: 'directory' },
+  // Legacy Docusaurus renders straight quotes; keep HTML text equal to the clean Markdown artifacts.
+  markdown: { smartypants: false },
   integrations: [
     nimbus(
       defineNimbusConfig({
@@ -25,5 +28,7 @@ export default defineConfig({
       // not @astrojs/sitemap's sitemap-index.xml.
       { sitemap: false },
     ),
+    // #7: publishes Markdown artifacts and finalizes/validates the manifest after the build.
+    publication(),
   ],
 });
