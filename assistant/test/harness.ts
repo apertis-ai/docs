@@ -238,7 +238,8 @@ export interface Message { role: string; content: string; sources?: Array<{ titl
 
 // The legacy browser client's real submit logic (handleSubmit from AskAITab.tsx at LEGACY_REF), with React
 // state replaced by a plain array. `server` receives the Request the client would send to /api/ask.
-export async function loadLegacyClient(): Promise<(server: (req: Request) => Promise<Response>, question?: string) => Promise<Message[]>> {
+export type LegacyClient = (server: (req: Request) => Promise<Response>, opts?: { question?: string; sessionId?: string }) => Promise<Message[]>
+export async function loadLegacyClient(): Promise<LegacyClient> {
   const { extractDocumentationSources } = await import(writeTmp('assistantUtils.ts', gitShow('src/components/UnifiedSearchModal/assistantUtils.ts')))
   const tsx = gitShow('src/components/UnifiedSearchModal/AskAITab.tsx')
   const start = tsx.indexOf('  const handleSubmit = async (e: React.FormEvent) => {')
@@ -248,12 +249,12 @@ export async function loadLegacyClient(): Promise<(server: (req: Request) => Pro
   const names = ['input', 'isLoading', 'canSendQuestion', 'turnstileToken', 'isLocalPreview', 'isWaitingFirstToken', 'sessionId', 'pageContext', 'setInput', 'setTurnstileToken', 'setMessages', 'setIsLoading', 'setIsWaitingFirstToken', 'turnstileRef', 'getLocalPreviewAnswer', 'extractDocumentationSources', 'fetch', 'console']
   const factory = new Function(...names, `${js}\nreturn handleSubmit`)
 
-  return async (server, question = VALID.question) => {
+  return async (server, { question = VALID.question, sessionId = 'client-session' } = {}) => {
     let messages: Message[] = []
     const noop = () => {}
     const fetch = (url: string, init: RequestInit) => server(new Request(new URL(url, 'https://docs.test'), init))
     const handleSubmit = factory(
-      question, false, true, 'client-token', false, true, 'client-session', { title: 'Quick Start', href: '/getting-started/quick-start' },
+      question, false, true, 'client-token', false, true, sessionId, { title: 'Quick Start', href: '/getting-started/quick-start' },
       noop, noop, (fn: (m: Message[]) => Message[]) => { messages = fn(messages) }, noop, noop, { current: { reset: noop } },
       () => { throw new Error('local preview must not run') }, extractDocumentationSources, fetch, { error: noop },
     )

@@ -20,7 +20,10 @@ const expandBody = (body: unknown) =>
     ? { ...body, question: 'a'.repeat(2001) }
     : body
 
-const targets: Array<[string, PagesModule]> = [['legacy', await loadLegacyHandler()]]
+const targets: Array<[string, PagesModule]> = [
+  ['legacy', await loadLegacyHandler()],
+  ['new', (await import('../../functions/api/ask.ts')) as unknown as PagesModule],
+]
 
 const rejections = trackRejections()
 afterEach(() => rejections.assertNone())
