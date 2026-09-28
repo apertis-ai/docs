@@ -67,5 +67,314 @@
     "timing": "For lcp, tbt and searchOpenMs, run legacy and candidate in the same window on the same machine, alternating per page, and require candidate median <= max(paired legacy median x 1.10, paired legacy median + 50 ms). The recorded timing baseline is informational.",
     "enforcement": "Every page and profile is gated; a single exceedance fails the performance gate. Budgets are not re-derived from candidate results and are never relaxed without a recorded decision on #4."
   },
-  "baseline": null
+  "baseline": {
+    "measuredAt": "2026-09-28T18:07:31.267Z",
+    "raw": "migration/nimbus/baseline/perf-legacy.json",
+    "runs": 5,
+    "gatedBytes": {
+      "mobile": {
+        "/": {
+          "jsGzip": 201597,
+          "cssGzip": 25887,
+          "dataGzip": 240,
+          "searchPayloadGzip": 626895
+        },
+        "/getting-started/quick-start/": {
+          "jsGzip": 243403,
+          "cssGzip": 25887,
+          "dataGzip": 560,
+          "searchPayloadGzip": 626895
+        },
+        "/authentication/api-keys/": {
+          "jsGzip": 245448,
+          "cssGzip": 25887,
+          "dataGzip": 560,
+          "searchPayloadGzip": 626895
+        },
+        "/billing/subscription-plans/": {
+          "jsGzip": 244436,
+          "cssGzip": 25887,
+          "dataGzip": 560,
+          "searchPayloadGzip": 626895
+        },
+        "/installation/claude-code/": {
+          "jsGzip": 243632,
+          "cssGzip": 25887,
+          "dataGzip": 560,
+          "searchPayloadGzip": 626895
+        },
+        "/installation/roocode/": {
+          "jsGzip": 240706,
+          "cssGzip": 25887,
+          "dataGzip": 560,
+          "searchPayloadGzip": 626895
+        },
+        "/api/": {
+          "jsGzip": 240530,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/chat-completions/": {
+          "jsGzip": 241463,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/messages/": {
+          "jsGzip": 243924,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/responses/": {
+          "jsGzip": 244247,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/streaming/": {
+          "jsGzip": 240090,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        },
+        "/api/sdks/ai-sdk-provider/": {
+          "jsGzip": 241622,
+          "cssGzip": 25887,
+          "dataGzip": 540,
+          "searchPayloadGzip": 626895
+        }
+      },
+      "desktop": {
+        "/": {
+          "jsGzip": 201597,
+          "cssGzip": 25887,
+          "dataGzip": 240,
+          "searchPayloadGzip": 626895
+        },
+        "/getting-started/quick-start/": {
+          "jsGzip": 243403,
+          "cssGzip": 25887,
+          "dataGzip": 660,
+          "searchPayloadGzip": 626895
+        },
+        "/authentication/api-keys/": {
+          "jsGzip": 245448,
+          "cssGzip": 25887,
+          "dataGzip": 660,
+          "searchPayloadGzip": 626895
+        },
+        "/billing/subscription-plans/": {
+          "jsGzip": 244436,
+          "cssGzip": 25887,
+          "dataGzip": 660,
+          "searchPayloadGzip": 626895
+        },
+        "/installation/claude-code/": {
+          "jsGzip": 243632,
+          "cssGzip": 25887,
+          "dataGzip": 660,
+          "searchPayloadGzip": 626895
+        },
+        "/installation/roocode/": {
+          "jsGzip": 240706,
+          "cssGzip": 25887,
+          "dataGzip": 660,
+          "searchPayloadGzip": 626895
+        },
+        "/api/": {
+          "jsGzip": 240530,
+          "cssGzip": 25887,
+          "dataGzip": 640,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/chat-completions/": {
+          "jsGzip": 241463,
+          "cssGzip": 25887,
+          "dataGzip": 580,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/messages/": {
+          "jsGzip": 243924,
+          "cssGzip": 25887,
+          "dataGzip": 580,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/responses/": {
+          "jsGzip": 244247,
+          "cssGzip": 25887,
+          "dataGzip": 580,
+          "searchPayloadGzip": 626895
+        },
+        "/api/text-generation/streaming/": {
+          "jsGzip": 240090,
+          "cssGzip": 25887,
+          "dataGzip": 580,
+          "searchPayloadGzip": 626895
+        },
+        "/api/sdks/ai-sdk-provider/": {
+          "jsGzip": 241622,
+          "cssGzip": 25887,
+          "dataGzip": 580,
+          "searchPayloadGzip": 626895
+        }
+      }
+    },
+    "informationalTiming": {
+      "mobile": {
+        "/": {
+          "lcp": 776,
+          "tbt": 134,
+          "searchOpenMs": 132,
+          "keyboardFocus": 1
+        },
+        "/getting-started/quick-start/": {
+          "lcp": 812,
+          "tbt": 167,
+          "searchOpenMs": 132,
+          "keyboardFocus": 1
+        },
+        "/authentication/api-keys/": {
+          "lcp": 808,
+          "tbt": 189,
+          "searchOpenMs": 189,
+          "keyboardFocus": 1
+        },
+        "/billing/subscription-plans/": {
+          "lcp": 840,
+          "tbt": 155,
+          "searchOpenMs": 166,
+          "keyboardFocus": 1
+        },
+        "/installation/claude-code/": {
+          "lcp": 828,
+          "tbt": 161,
+          "searchOpenMs": 128,
+          "keyboardFocus": 1
+        },
+        "/installation/roocode/": {
+          "lcp": 3604,
+          "tbt": 114,
+          "searchOpenMs": 153,
+          "keyboardFocus": 1
+        },
+        "/api/": {
+          "lcp": 756,
+          "tbt": 106,
+          "searchOpenMs": 165,
+          "keyboardFocus": 1
+        },
+        "/api/text-generation/chat-completions/": {
+          "lcp": 3440,
+          "tbt": 132,
+          "searchOpenMs": 97,
+          "keyboardFocus": 1
+        },
+        "/api/text-generation/messages/": {
+          "lcp": 844,
+          "tbt": 171,
+          "searchOpenMs": 150,
+          "keyboardFocus": 1
+        },
+        "/api/text-generation/responses/": {
+          "lcp": 30328,
+          "tbt": 128,
+          "searchOpenMs": 92,
+          "keyboardFocus": 1
+        },
+        "/api/text-generation/streaming/": {
+          "lcp": 2660,
+          "tbt": 113,
+          "searchOpenMs": 251,
+          "keyboardFocus": 1
+        },
+        "/api/sdks/ai-sdk-provider/": {
+          "lcp": 796,
+          "tbt": 121,
+          "searchOpenMs": 213,
+          "keyboardFocus": 1
+        }
+      },
+      "desktop": {
+        "/": {
+          "lcp": 136,
+          "tbt": 0,
+          "searchOpenMs": 36,
+          "keyboardFocus": 0
+        },
+        "/getting-started/quick-start/": {
+          "lcp": 208,
+          "tbt": 4,
+          "searchOpenMs": 68,
+          "keyboardFocus": 0
+        },
+        "/authentication/api-keys/": {
+          "lcp": 244,
+          "tbt": 7,
+          "searchOpenMs": 56,
+          "keyboardFocus": 0
+        },
+        "/billing/subscription-plans/": {
+          "lcp": 188,
+          "tbt": 7,
+          "searchOpenMs": 38,
+          "keyboardFocus": 0
+        },
+        "/installation/claude-code/": {
+          "lcp": 228,
+          "tbt": 4,
+          "searchOpenMs": 54,
+          "keyboardFocus": 0
+        },
+        "/installation/roocode/": {
+          "lcp": 216,
+          "tbt": 0,
+          "searchOpenMs": 47,
+          "keyboardFocus": 0
+        },
+        "/api/": {
+          "lcp": 232,
+          "tbt": 3,
+          "searchOpenMs": 38,
+          "keyboardFocus": 0
+        },
+        "/api/text-generation/chat-completions/": {
+          "lcp": 244,
+          "tbt": 6,
+          "searchOpenMs": 39,
+          "keyboardFocus": 0
+        },
+        "/api/text-generation/messages/": {
+          "lcp": 260,
+          "tbt": 6,
+          "searchOpenMs": 31,
+          "keyboardFocus": 0
+        },
+        "/api/text-generation/responses/": {
+          "lcp": 200,
+          "tbt": 4,
+          "searchOpenMs": 44,
+          "keyboardFocus": 0
+        },
+        "/api/text-generation/streaming/": {
+          "lcp": 364,
+          "tbt": 0,
+          "searchOpenMs": 69,
+          "keyboardFocus": 0
+        },
+        "/api/sdks/ai-sdk-provider/": {
+          "lcp": 192,
+          "tbt": 12,
+          "searchOpenMs": 39,
+          "keyboardFocus": 0
+        }
+      }
+    },
+    "notes": [
+      "Byte metrics were identical in all 5 runs of every page and profile; unreadableResponses was 0 in every sample.",
+      "Timing was recorded on a shared host (1-minute load average 7.7-48.2 across samples); it is informational only and never used as a budget. The timing gate is the paired same-window comparison in budgetRules.timing.",
+      "keyboardFocus is 0 on desktop for every page: baseline defect 3 (Cmd/Ctrl+K leaves focus on <body>). The candidate must reach 1."
+    ]
+  }
 }
