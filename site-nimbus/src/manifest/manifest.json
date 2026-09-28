@@ -1,9 +1,8 @@
 {
-  "_fixture": "M1 fixture derived from migration/nimbus/fixtures/manifest-v1.example.json: only the / and /api/ shells. Hashes are all-zero placeholders and buildId is synthetic; #7 replaces this with the generated manifest. Build-time input only; never publish it.",
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
-  "buildId": "7b6ef85abaaef50de5c8d277629b07a39c9c3065.000000000000",
+  "sourceSha": "d9aefa377ff99dbea3c094504ffbed9f99305a9f",
+  "buildId": "d9aefa377ff99dbea3c094504ffbed9f99305a9f.fd04fb9df489",
   "documents": [
     {
       "id": "page:index",
@@ -18,7 +17,7 @@
         "rag": false
       },
       "markdown": null,
-      "contentSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "contentSha256": "98dd6da5d4d198e4b8a04d881d2f22f34c524f08449a326cb8c5fb88c1902597"
     },
     {
       "id": "api:index",
@@ -34,9 +33,189 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        "sha256": "1f4b813f4ef428cc88173a46bb2e58572fd0566414e7669376f95712c6faf91e"
       },
-      "contentSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "contentSha256": "1f4b813f4ef428cc88173a46bb2e58572fd0566414e7669376f95712c6faf91e"
+    },
+    {
+      "id": "api:sdks/ai-sdk-provider",
+      "sourcePath": "docs-api/sdks/ai-sdk-provider.md",
+      "servedPath": "/api/sdks/ai-sdk-provider/",
+      "canonicalUrl": "https://docs.apertis.ai/api/sdks/ai-sdk-provider",
+      "title": "@apertis/ai-sdk-provider",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/sdks/ai-sdk-provider.md",
+        "sha256": "b087e8eaa84d233b3eb25f3b144e20526d3de63efec3edda8a566003e34407b1"
+      },
+      "contentSha256": "b087e8eaa84d233b3eb25f3b144e20526d3de63efec3edda8a566003e34407b1"
+    },
+    {
+      "id": "api:text-generation/chat-completions",
+      "sourcePath": "docs-api/text-generation/chat-completions.md",
+      "servedPath": "/api/text-generation/chat-completions/",
+      "canonicalUrl": "https://docs.apertis.ai/api/text-generation/chat-completions",
+      "title": "Chat Completion",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/text-generation/chat-completions.md",
+        "sha256": "30f3d60e03aa24ed39dbaf470892a6b3b1ac1f41b82e250f1b8b3a368c2326d8"
+      },
+      "contentSha256": "30f3d60e03aa24ed39dbaf470892a6b3b1ac1f41b82e250f1b8b3a368c2326d8"
+    },
+    {
+      "id": "api:text-generation/messages",
+      "sourcePath": "docs-api/text-generation/messages.md",
+      "servedPath": "/api/text-generation/messages/",
+      "canonicalUrl": "https://docs.apertis.ai/api/text-generation/messages",
+      "title": "Messages API (Native Anthropic)",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/text-generation/messages.md",
+        "sha256": "d93bbebc86d5f1ca6d9330453c0731022a3b1e8c09653f4ae1710beca2d29dfb"
+      },
+      "contentSha256": "d93bbebc86d5f1ca6d9330453c0731022a3b1e8c09653f4ae1710beca2d29dfb"
+    },
+    {
+      "id": "api:text-generation/responses",
+      "sourcePath": "docs-api/text-generation/responses.md",
+      "servedPath": "/api/text-generation/responses/",
+      "canonicalUrl": "https://docs.apertis.ai/api/text-generation/responses",
+      "title": "Responses API",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/text-generation/responses.md",
+        "sha256": "2c56cc0f5ba0d075221654de9cc0095f6b03055ae92aa9e10eb6307c5f759717"
+      },
+      "contentSha256": "2c56cc0f5ba0d075221654de9cc0095f6b03055ae92aa9e10eb6307c5f759717"
+    },
+    {
+      "id": "api:text-generation/streaming",
+      "sourcePath": "docs-api/text-generation/streaming.md",
+      "servedPath": "/api/text-generation/streaming/",
+      "canonicalUrl": "https://docs.apertis.ai/api/text-generation/streaming",
+      "title": "Streaming Output",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/text-generation/streaming.md",
+        "sha256": "4a4aa7d677643992bc5edab68f615ffaebd97d12320d21f7132cab5dc1f8abd7"
+      },
+      "contentSha256": "4a4aa7d677643992bc5edab68f615ffaebd97d12320d21f7132cab5dc1f8abd7"
+    },
+    {
+      "id": "default:authentication/api-keys",
+      "sourcePath": "docs/authentication/api-keys.md",
+      "servedPath": "/authentication/api-keys/",
+      "canonicalUrl": "https://docs.apertis.ai/authentication/api-keys",
+      "title": "API Keys",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/authentication/api-keys.md",
+        "sha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+      },
+      "contentSha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+    },
+    {
+      "id": "default:billing/subscription-plans",
+      "sourcePath": "docs/billing/subscription-plans.md",
+      "servedPath": "/billing/subscription-plans/",
+      "canonicalUrl": "https://docs.apertis.ai/billing/subscription-plans",
+      "title": "Subscription Plans",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/billing/subscription-plans.md",
+        "sha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+      },
+      "contentSha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+    },
+    {
+      "id": "default:getting-started/quick-start",
+      "sourcePath": "docs/getting-started/quick-start.md",
+      "servedPath": "/getting-started/quick-start/",
+      "canonicalUrl": "https://docs.apertis.ai/getting-started/quick-start",
+      "title": "Quick Start",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/getting-started/quick-start.md",
+        "sha256": "24ebe4dcb9dcdd94c2fd44377f804c923d310f20c9b5dadbc503bb2894b9cc6c"
+      },
+      "contentSha256": "24ebe4dcb9dcdd94c2fd44377f804c923d310f20c9b5dadbc503bb2894b9cc6c"
+    },
+    {
+      "id": "default:installation/claude-code",
+      "sourcePath": "docs/installation/claude-code.mdx",
+      "servedPath": "/installation/claude-code/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/claude-code",
+      "title": "Claude Code",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/claude-code.md",
+        "sha256": "aca777fdf8d78ba5a4a6e5710e3b11369278fc6ab9f6dd398b86cd89cc34ed12"
+      },
+      "contentSha256": "aca777fdf8d78ba5a4a6e5710e3b11369278fc6ab9f6dd398b86cd89cc34ed12"
+    },
+    {
+      "id": "default:installation/roocode",
+      "sourcePath": "docs/installation/roocode.mdx",
+      "servedPath": "/installation/roocode/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/roocode",
+      "title": "Roo Code (prev. Roo Cline)",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/roocode.md",
+        "sha256": "8c82785a2c042fc64455851cafea6f8140ca261516c0e8f30c578f180654bb03"
+      },
+      "contentSha256": "8c82785a2c042fc64455851cafea6f8140ca261516c0e8f30c578f180654bb03"
     }
   ]
 }
