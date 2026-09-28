@@ -112,11 +112,26 @@ npm ci && npm run build
 printf '%s\n' TURNSTILE_SECRET_KEY=2x0000000000000000000000000000000AA JINA_API_KEY=fake-jina \
   APERTIS_API_KEY=fake-apertis APERTIS_BASE_URL=https://apertis.invalid/v1 APERTIS_MODEL=fake-model \
   SUPABASE_URL=https://supabase.invalid SUPABASE_ANON_KEY=fake-anon ASK_RETRIEVAL_SOURCE=legacy > .dev.vars
-npx wrangler pages dev build --compatibility-date=2026-01-05 --port 8791 --inspector-port 9791
-# POST /api/ask -> 400s and 403, GET /api/ask -> 404,
-# GET /api/text-generation/chat-completions/ -> static 200
+npx wrangler pages dev build --compatibility-date=2026-01-05 --port 8847 --inspector-port 9847 --ip 127.0.0.1 &
+assistant/pages-probe.sh http://127.0.0.1:8847 configured
+# stop the server, drop ASK_RETRIEVAL_SOURCE from .dev.vars, restart, then:
+assistant/pages-probe.sh http://127.0.0.1:8847 unconfigured
 rm .dev.vars
 ```
+
+`pages-probe.sh` exits non-zero on any mismatch. In `configured` mode it checks:
+
+- every 400 body recorded in `ask-wire.json`, plus a `null` body
+- the 413 body cap
+- the 403 Turnstile failure, which uses the always-fail test secret
+- `GET /api/ask` returns the static 404
+- `OPTIONS /api/ask` returns the CORS preflight
+- `/api/` and `/api/text-generation/chat-completions/` are still served as static HTML
+
+In `unconfigured` mode it checks the fail-closed `500 Server configuration error` instead of the 400s.
+
+`npx wrangler pages functions build --outdir <tmp> --output-routes-path <tmp>/_routes.json` shows that
+`/api/ask` is the only function route.
 
 The Turnstile secret above is Cloudflare's documented always-fail test secret, so the flow stops at 403
 before any paid call. Do not use the always-pass secret here: the next hop is the real Jina URL.
