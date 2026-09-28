@@ -18,6 +18,11 @@ const read = (f: string) => fs.readFileSync(path.join(dist, f), 'utf8');
 
 // Nimbus writes this stylesheet unconditionally (writeShikiStyleSheet); code blocks reference it from #7 on.
 const FRAMEWORK_ASSETS = ['_nimbus/shiki.css'];
+// Legacy static/ files keep their paths (publicDir) and are governed by their inventory rows.
+const inventory = JSON.parse(fs.readFileSync(path.join(root, '../migration/nimbus/route-inventory.json'), 'utf8'));
+const STATIC_ASSETS: string[] = inventory.routes
+  .filter((r: { kind: string; disposition: string }) => r.kind === 'static-asset' && r.disposition === 'preserve')
+  .map((r: { path: string }) => r.path.slice(1));
 
 const INTERNAL_SECRET_NAMES = /CLOUDFLARE_API_TOKEN|SUPABASE_|TURNSTILE_SECRET|JINA_API_KEY/;
 const ENV_FILE = /^(\.env|\.dev\.vars)(\..+)?$/;
@@ -36,7 +41,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const pages = manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
   const html = [...pages, '404.html'];
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
-  const allowed = new Set([...html, ...referenced, ...FRAMEWORK_ASSETS]);
+  const allowed = new Set([...html, ...referenced, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS]);
+  for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
   for (const f of html) assert.ok(files.includes(f), `missing ${f}`);
 });

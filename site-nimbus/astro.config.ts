@@ -7,6 +7,8 @@ import nimbus, { defineConfig as defineNimbusConfig } from '@cloudflare/nimbus-d
 export default defineConfig({
   site: 'https://docs.apertis.ai',
   output: 'static',
+  // Legacy static/ files are inventory rows (kind static-asset) served at their original paths.
+  publicDir: '../static',
   // Directory pages (`/api/` -> dist/api/index.html); Pages answers `/api` with 308 -> `/api/`.
   build: { format: 'directory' },
   integrations: [
