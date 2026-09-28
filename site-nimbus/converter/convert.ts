@@ -134,7 +134,9 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
     if (/<[A-Za-z/!]/.test(masked.replace(/<(https?|mailto):[^>\s]+>/g, ''))) fail(n, 'inline HTML/JSX');
     if (/^\s*\[[^\]]+\]:\s/.test(masked)) fail(n, 'reference-style link definition');
     const edits: [number, number, string][] = [];
-    for (const m of masked.matchAll(/(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)/g)) {
+    const LINK = /(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)/g;
+    if (/\]\(/.test(masked.replace(LINK, (m) => ' '.repeat(m.length)))) fail(n, 'unmatched link `](` (multi-line or malformed link)');
+    for (const m of masked.matchAll(LINK)) {
       const urlStart = m.index! + m[1].length + m[2].length + 3;
       const url = line.slice(urlStart, urlStart + m[3].length);
       edits.push([urlStart, urlStart + m[3].length, m[1] ? resolveImage(url, n) : resolveLink(url, n)]);
@@ -149,8 +151,16 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
   let fence: { char: string; len: number; line: number } | null = null;
   let admonition: { line: number; bodyStarted: boolean } | null = null;
   let h1Text: string | null = null;
+  // After `</aside>` / the blockquote: a blank line before the next content, so a paragraph that
+  // follows `:::` directly is neither swallowed by the HTML block nor lazily continued in the quote.
+  let blankAfterAdmonition = false;
+  const separate = (r: string) => {
+    if (blankAfterAdmonition && r.trim() !== '') { render.push(''); clean.push(''); }
+    blankAfterAdmonition = false;
+  };
 
   const emit = (r: string, c: string = r) => {
+    separate(r);
     if (admonition && !admonition.bodyStarted) {
       if (r.trim() === '') return;
       admonition.bodyStarted = true;
@@ -182,12 +192,15 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
         while (render.length && render.at(-1)!.trim() === '') { render.pop(); clean.pop(); }
         render.push('', '</aside>');
         admonition = null;
+        blankAfterAdmonition = true;
         continue;
       }
       const m = /^:::([a-z]+)(?:[ \t]+(.+?))?[ \t]*$/.exec(line);
       if (admonition) fail(n, 'nested admonition');
       if (!m || !ADMONITIONS.includes(m[1])) fail(n, `unsupported admonition ${JSON.stringify(line)}`);
+      if (m![2] && /[*_[\]<>~\\{}]/.test(m![2].replace(/`[^`]+`/g, ''))) fail(n, `unsupported Markdown in admonition title ${JSON.stringify(m![2])} (only code spans)`);
       const [type, title] = [m![1], m![2] ? transformText(m![2], n) : undefined];
+      separate(line);
       const label = type[0].toUpperCase() + type.slice(1);
       const titleHtml = (title ?? label).split(/(`[^`]+`)/).map((s) =>
         (s.startsWith('`') ? `<code>${escapeHtml(s.slice(1, -1))}</code>` : escapeHtml(s))).join('');
@@ -201,9 +214,9 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
       const icon = HEADING_ICON.exec(line);
       if (icon) {
         const [, src, width, style, text] = icon;
-        resolveImage(src, n);
+        const resolved = resolveImage(src, n);
         h1Text = text;
-        emit(`# <img src="${src}" width="${width}" alt="" style="${jsxStyle(style, () => fail(n, `unsupported icon style ${style}`))}" /> ${transformText(text, n)}`,
+        emit(`# <img src="${resolved}" width="${width}" alt="" style="${jsxStyle(style, () => fail(n, `unsupported icon style ${style}`))}" /> ${transformText(text, n)}`,
           `# ${transformText(text, n)}`);
         continue;
       }
@@ -270,14 +283,23 @@ export function sourceShaOf(repoRoot: string): string {
   return git(repoRoot, ['log', '-1', '--format=%H', '--', ...LEGACY_ROOTS]);
 }
 
-/** First 12 hex of SHA-256 over site-nimbus/package-lock.json and every converter/** file (sorted, path + bytes). */
-export function buildHashOf(siteRoot: string): string {
-  const converter = path.join(siteRoot, 'converter');
-  const files = ['package-lock.json', ...fs.readdirSync(converter, { recursive: true, withFileTypes: true })
-    .filter((e) => e.isFile())
-    .map((e) => path.relative(siteRoot, path.join(e.parentPath, e.name)).split(path.sep).join('/'))].sort();
+/**
+ * First 12 hex of SHA-256 over every build input: the working-tree bytes of each file `git ls-files`
+ * tracks under site-nimbus/ (lockfile, converter, contracts, routes, layouts, config, tests, README)
+ * plus the route inventory, sorted by repository path, each hashed as `path\0bytes\0`. Generated
+ * output (src/content/**, the manifest) is excluded, and untracked files never count.
+ */
+export function buildHashOf(siteRoot: string, repoRoot: string = REPO_ROOT): string {
+  const site = path.relative(repoRoot, siteRoot).split(path.sep).join('/');
+  const generated = (f: string) => f.startsWith(`${site}/src/content/`) || f === `${site}/${MANIFEST_FILE}`;
+  const tracked = execFileSync('git', ['-C', repoRoot, 'ls-files', '-z', '--', site], { encoding: 'utf8' }).split('\0').filter(Boolean);
+  const files = [...new Set([...tracked.filter((f) => !generated(f)), INVENTORY_PATH])].sort();
   const h = crypto.createHash('sha256');
-  for (const f of files) h.update(`${f}\0`).update(fs.readFileSync(path.join(siteRoot, f))).update('\0');
+  for (const f of files) {
+    const abs = path.join(repoRoot, f);
+    if (!fs.existsSync(abs)) continue; // tracked but deleted in the working tree
+    h.update(`${f}\0`).update(fs.readFileSync(abs)).update('\0');
+  }
   return h.digest('hex').slice(0, 12);
 }
 
@@ -302,11 +324,14 @@ export function writeManifest(root: string, manifest: ManifestV1) {
  * stale output. Entries without Markdown (`page:index`) keep their previous contentSha256 (all
  * zeros when none): phase 2 (converter/integration.ts, after `astro build`) sets it from the built `<main>`.
  */
-export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT }: { outRoot?: string; repoRoot?: string } = {}): ManifestV1 {
-  const inventory = (JSON.parse(fs.readFileSync(path.join(repoRoot, INVENTORY_PATH), 'utf8')) as RouteInventory).routes;
+export const readInventory = (repoRoot: string = REPO_ROOT) =>
+  (JSON.parse(fs.readFileSync(path.join(repoRoot, INVENTORY_PATH), 'utf8')) as RouteInventory).routes;
+
+export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot) }:
+  { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[] } = {}): ManifestV1 {
   const ctx = { inventory, repoRoot };
   const sourceSha = sourceShaOf(repoRoot);
-  const buildId = `${sourceSha}.${buildHashOf(SITE_ROOT)}`;
+  const buildId = `${sourceSha}.${buildHashOf(SITE_ROOT, repoRoot)}`;
   const previous = path.join(outRoot, MANIFEST_FILE);
   const previousHashes = new Map(fs.existsSync(previous)
     ? ((JSON.parse(fs.readFileSync(previous, 'utf8')) as ManifestV1).documents ?? []).map((d) => [d.id, d.contentSha256])
@@ -328,11 +353,16 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT }: { outRoot
       title: inventoryTitle(row),
       eligibility: { ...row.eligibility },
     };
+    if (!row.eligibility.publish && row.eligibility.agent) throw new ConversionError(`${row.documentId}: agent-eligible but not publish-eligible`);
     if (isStandalonePage(row.documentId!)) {
+      if (!row.eligibility.publish) throw new ConversionError(`${row.documentId}: unpublished standalone pages are not supported`);
       if (row.eligibility.agent) throw new ConversionError(`${row.documentId}: agent-eligible standalone pages are not converted`);
       return { ...base, markdown: null, contentSha256: htmlHash(base.id) };
     }
     const out = convertDocument(fs.readFileSync(path.join(repoRoot, row.sourcePath!), 'utf8'), row, ctx);
+    // Not published: still converted (constructs are checked) but nothing is written; there is no
+    // HTML and no artifact, so contentSha256 is the hash of the clean Markdown.
+    if (!row.eligibility.publish) return { ...base, markdown: null, contentSha256: sha256(out.clean) };
     writeFile(outRoot, `${GENERATED_DOCS}${base.servedPath}index.md`, out.render);
     for (const a of out.assets) {
       const dest = path.join(outRoot, GENERATED_PUBLIC, a.publicPath);
