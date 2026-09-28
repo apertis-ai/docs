@@ -315,8 +315,9 @@ export async function run(p: Plan, o: RunOptions): Promise<Receipt> {
     if (generationId !== null && runToken !== null) {
       try {
         // Not tied to the run's signal: a cancelled run still records its failure when it can.
-        const [row] = await store.rpc('docs_generation_fail', { p_generation_id: generationId, p_run_token: runToken, p_reason: r.error })
-        if (row?.docs_generation_fail !== false) r.generationState = 'failed'
+        // false: this run already lost the generation (lease expired and taken over), which is failed too.
+        await store.rpc('docs_generation_fail', { p_generation_id: generationId, p_run_token: runToken, p_reason: r.error })
+        r.generationState = 'failed'
       } catch {
         // The lease expires instead; the generation can never become ready without finish().
       }

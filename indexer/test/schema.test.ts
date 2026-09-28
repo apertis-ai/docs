@@ -42,6 +42,7 @@ test('service_role reads the new tables, writes them only through the indexer fu
   for (const t of NEW_TABLES) {
     assert.deepEqual(await asRole(db, 'service_role', `select * from public.${t}`), [])
     await denied(asRole(db, 'service_role', `insert into public.${t} default values`), `insert ${t}`)
+    await denied(asRole(db, 'service_role', `update public.${t} set ${COLUMN[t]} = ${COLUMN[t]}`), `update ${t}`)
     await denied(asRole(db, 'service_role', `delete from public.${t}`), `delete ${t}`)
     await denied(asRole(db, 'service_role', `truncate public.${t}`), `truncate ${t}`)
   }
