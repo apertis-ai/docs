@@ -132,3 +132,70 @@ that one missing artifact until #7 generates it.
 - **Duplicate definitions:** outside `site-nimbus/`, `functions/api/ask.ts` and
   `src/components/UnifiedSearchModal/assistantUtils.ts` still declare their own legacy
   `PageContext`. #9 and #10 should import `src/contracts/page.ts` instead.
+
+## Shell, navigation and page actions (#8)
+
+### Structure
+
+| File | Role |
+| --- | --- |
+| `src/layouts/BaseLayout.astro` | `<html>`/`<head>` (charset, viewport, `DocumentHead`, favicon, theme bootstrap, Google Fonts as legacy), navbar, mobile drawer, footer, Ask Docs trigger, the one `<AssistantRoot />`, the one client entry |
+| `src/layouts/DocLayout.astro` | Props unchanged (`doc`, `buildId`, `headings?`). Adds sidebar, breadcrumbs (mobile), page actions, `<article class="docs-content">` holding only the body, prev/next and the TOC |
+| `src/pages/index.astro` | Landing page ported from `src/pages/index.js` + `index.module.css` (`page:index`); uses `BaseLayout` and has no `<article>`, as at baseline |
+| `src/components/shell/navigation.ts` | `buildNavigation(inventory, documents)` / `pageNavigation(nav, docId)`: the two sidebars from the inventory `sidebar` fields; build-time only |
+| `src/components/shell/page-actions.ts` | `markdownUrl(origin, metaPath)` (same-origin `.md` only) and the AI-tool URLs |
+| `src/components/shell/*.astro` | `Navbar`, `Sidebar` + recursive `SidebarTree`, `Toc`, `PageActions`, `Footer` |
+| `src/components/shell/shell.client.ts` | Triggers, theme switch, drawer, page actions, TOC highlight, Nimbus code-copy and heading anchors |
+| `src/styles/shell.css`, `src/styles/landing.css` | Semantic port of `src/css/custom.css` and the landing CSS module |
+
+- **Triggers.** The navbar search box, the homepage hero search and the floating Ask Docs button call `openSearch()` / `openAskDocs()` from `src/contracts/events.ts`. The shell binds no keyboard shortcut and reads no other component's DOM.
+- **Theme.** `data-theme` on `<html>`, light by default, stored under the legacy `theme` localStorage key, never taken from `prefers-color-scheme`. Only CSS reads it.
+- **Page actions.** Rendered only when the manifest entry has `markdown`. The client reads `<meta name="apertis-docs:markdown">` and builds `location.origin + path`. Copy as Markdown fetches that URL. A failed fetch or blocked clipboard shows a message and copies nothing, with no fallback to rendered text. The actions are hidden without JavaScript.
+- **Mobile (≤ 996 px).** The navbar collapses to menu + brand. The drawer is a modal `<dialog>`, which provides focus containment, Escape and focus return; Nimbus `lockScroll` locks the page. Tables in `.docs-content` scroll inside their own box. The Ask Docs button becomes icon-only at ≤ 640 px.
+
+### Nimbus parts used
+
+- **Used:** `@cloudflare/nimbus-docs/client` only.
+  - `makeDisclosure`: the page-actions menu
+  - `lockScroll` / `unlockScroll`: the drawer
+  - `codeCopy`: copy buttons on Shiki `pre.astro-code`
+  - `headingAnchors`: `#` links on `.docs-content` h2 to h4
+- **Not used:**
+  - `NimbusHead`, per the #6 rule.
+  - The runtime sidebar/TOC helpers. They derive navigation from content collections, while the inventory is the navigation authority here.
+  - `Icon`, which needs Iconify sets that are not installed; icons are inline SVG.
+- No React island, so `astro.config.ts` is unchanged.
+
+### Deviations from legacy
+
+- **Logo link** goes to `/`, not `https://docs.apertis.ai`, so previews stay on their own deployment.
+- **Mobile drawer** shows the current sidebar, then the main links (Docs, API Reference, Release Notes, Log in, Create account). There is no Docusaurus "Back to main menu" sub-panel. Level-1 categories are headings, not collapsible.
+- **Nested categories** such as AI Coding Assistants and Python SDK are native `<details open>`. There are no per-category `className`s and no NEW badges; the inventory has neither.
+- **Desktop TOC** lists every h2 with its h3s. Legacy showed h3s only under the active h2.
+- **AI-tool icons** are generic inline SVGs, not the Claude/OpenAI/Cursor brand marks from `@lobehub/icons`.
+- **Copy as Markdown** no longer falls back to rendered text (baseline defect 5 and the #8 spec). The URL is this deployment's `.md`, never `raw.githubusercontent.com/.../main`.
+- **Ask Docs trigger** is the shell's floating button, as in the baseline screenshots. #9 must not render its own trigger. It cannot hide while the panel is open, because the shell does not listen to `apertis-docs:open`.
+- **Mobile search trigger:** none, as at legacy. The navbar search is hidden at ≤ 996 px; the hero search remains on `/`.
+- **Prism light and dark themes** are not ported. Code colours come from #7's Shiki output and `_nimbus/shiki.css`.
+
+### How #7's pages plug in
+
+- **Render call.** Render `<DocLayout doc={documentAt(servedPath)} buildId={manifest.buildId} headings={headings}>` with the body in the slot. `headings` come from Astro `render()`: depth 2 and 3 feed the TOC. Heading `id`s must be the inventory `headingIds`.
+- **H1 placement.** Put the H1 as the first child of the body. On desktop the page actions sit to its right, outside `<article>`, so fixture link and hash checks see only the body.
+- **Sidebar.** Entries come from `src/manifest/manifest.json`: label is `sidebar.label ?? title`, href is `servedPath`.
+  - Until a row has a manifest entry, the sidebar falls back to the inventory's live title and served path. This is PoC-only; remove it once the manifest covers every row.
+  - Documents with `sidebar: null` (for example `/help/ideas`) render with no sidebar and no entry, but stay published.
+- **Markdown actions** appear automatically when `doc.markdown` is set and read `doc.markdown.path` on the same origin.
+
+### Checks
+
+- `npm test` includes `test/m3-shell.test.ts`: navigation from the inventory and the same-origin Markdown URL rules.
+- `PREVIEW_URL=http://127.0.0.1:<port> PLAYWRIGHT=<path to playwright/index.mjs> npm run test:m3-browser` checks, with system Chrome:
+  - the /api/ sidebar against the inventory
+  - theme default and persistence
+  - the 390×844 drawer: focus, Escape, backdrop, scroll lock, no horizontal overflow
+  - `apertis-docs:open` surfaces, and no Cmd/Ctrl+K in the shell
+  - Copy/View/URL actions on the same-origin `.md`: the real 404 is reported, and a stub is copied byte-exact
+  - no-JS navigation
+  - no GitHub raw requests
+- Use a localhost origin, because the Clipboard API needs a secure context. `npm test` skips the browser test when either variable is unset.
