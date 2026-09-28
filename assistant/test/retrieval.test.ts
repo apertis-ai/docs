@@ -32,14 +32,27 @@ test('legacy mode calls the three-argument search_docs and returns the four cont
   assert.equal(call.headers.apikey, ENV.SUPABASE_ANON_KEY)
 })
 
-test('handler without retrieval configuration answers 500 before any provider call', async () => {
+test('handler without retrieval configuration answers 500 before any provider call and logs the class only', async () => {
   const { ASK_RETRIEVAL_SOURCE, ...rest } = ENV
-  for (const env of [rest, { ...rest, ASK_RETRIEVAL_SOURCE: 'generation' }, { ...ENV, SUPABASE_URL: undefined }]) {
+  const cases: Array<[Record<string, string | undefined>, string]> = [
+    [rest, 'RetrievalConfigError'],
+    [{ ...rest, ASK_RETRIEVAL_SOURCE: 'generation' }, 'RetrievalConfigError'],
+    [{ ...ENV, SUPABASE_URL: undefined }, 'RetrievalConfigError'],
+    [{ ...ENV, JINA_API_KEY: undefined }, 'MissingBinding'],
+  ]
+  for (const [env, errorClass] of cases) {
     const p = providers()
-    const res = await handleAsk(askRequest({ ...VALID, source: 'legacy', ASK_RETRIEVAL_SOURCE: 'legacy' }), env, { fetch: p.fetch })
+    const logs = captureLogs()
+    let res: Response
+    try {
+      res = await handleAsk(askRequest({ ...VALID, source: 'legacy', ASK_RETRIEVAL_SOURCE: 'legacy' }), env, { fetch: p.fetch })
+    } finally {
+      logs.restore()
+    }
     assert.equal(res.status, 500)
     assert.deepEqual(JSON.parse(await res.text()), { error: 'Server configuration error' })
     assert.equal(p.calls.length, 0)
+    assert.deepEqual(logs.lines.map((l) => JSON.parse(l)), [{ at: 'ask', traceId: 'none', stage: 'config', error: errorClass }])
   }
 })
 

@@ -27,3 +27,7 @@ CLAUDE.md
 
 # Scripts (internal tooling)
 scripts/
+
+# Local wrangler secrets (never commit)
+.dev.vars
+.dev.vars.*

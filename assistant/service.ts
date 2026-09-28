@@ -1,6 +1,6 @@
 // Framework-independent Ask Docs service: Request in, Response out. functions/api/ask.ts is only the
 // Pages adapter. Wire contract: migration/nimbus/fixtures/ask-wire.json.
-import { createRetrieval, RetrievalError, type RetrievalEnv, type RetrievalRow } from './retrieval.ts'
+import { createRetrieval, RetrievalConfigError, RetrievalError, type RetrievalEnv, type RetrievalRow } from './retrieval.ts'
 
 export interface AskEnv extends RetrievalEnv {
   JINA_API_KEY?: string
@@ -126,11 +126,19 @@ export async function handleAsk(request: Request, env: AskEnv, deps: AskDeps = {
       throw new Error('missing binding')
     }
     retrieval = createRetrieval(env, deps.fetch)
-  } catch {
+  } catch (err) {
+    // Class name only, never binding values.
+    log('none', 'config', { error: err instanceof RetrievalConfigError ? 'RetrievalConfigError' : 'MissingBinding' })
     return json(500, { error: 'Server configuration error' })
   }
 
-  const raw = await readBody(request, MAX_BODY_BYTES)
+  let raw: string | null
+  try {
+    raw = await readBody(request, MAX_BODY_BYTES)
+  } catch {
+    // Aborted upload or malformed body stream.
+    return json(400, { error: 'Invalid JSON body' })
+  }
   if (raw === null) return json(413, { error: 'Request body too large' })
   let parsed: unknown
   try {
