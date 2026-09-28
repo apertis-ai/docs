@@ -2,12 +2,18 @@
 // the candidate wire client (site-nimbus/src/components/assistant/wire.ts) reads the answers of the
 // deployed legacy handler (functions/api/ask.ts at 7b6ef85, loaded by assistant/test/harness.ts) with
 // the provider doubles. Contract evidence only; no network.
+//
+// Excluded: an upstream error in the middle of the stream. The legacy relay (7b6ef85
+// functions/api/ask.ts, about lines 261-295) reads the upstream in an async IIFE with try/finally and
+// no catch, so a mid-stream upstream error becomes an unhandled rejection in the legacy handler. That
+// is a legacy baseline defect, not a client behaviour this test can assert; the candidate server
+// handles it (assistant/test/failure.test.ts "midstream upstream error").
 //   node --test migration/nimbus/acceptance/new-client-old-server.test.ts
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { askBody, errorMessage, QUERY_LIMIT_MESSAGE, readAnswer, sourceLinks } from '../../../site-nimbus/src/components/assistant/wire.ts'
-import { ENV, loadLegacyHandler, providers, readAll, VALID, withGlobalFetch, type Script } from '../../../assistant/test/harness.ts'
+import { delta, ENV, loadLegacyHandler, providers, readAll, sse, VALID, withGlobalFetch, type Script } from '../../../assistant/test/harness.ts'
 
 const legacy = await loadLegacyHandler()
 const page = { title: 'Quick Start', href: '/getting-started/quick-start' }
@@ -60,4 +66,9 @@ test('500 shows the legacy error text', async () => {
   const r = await ask({ jina: { status: 502, text: 'upstream' } }, askBody(VALID.question, 'new-client-500', 'tok', page))
   assert.equal(r.status, 500)
   assert.match(r.message!, /^Ask Docs could not answer \(HTTP 500\): Jina API error: 502/)
+})
+
+test('an upstream that closes without [DONE] keeps the partial answer and reads as interrupted', async () => {
+  const r = await ask({ apertis: { chunks: [sse(delta('Partial '), delta('answer'))], end: 'close' } }, askBody(VALID.question, 'new-client-eof', 'tok', page))
+  assert.deepEqual(r, { status: 200, text: 'Partial answer', end: 'interrupted', sources: [] })
 })

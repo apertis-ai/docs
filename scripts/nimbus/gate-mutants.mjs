@@ -1,6 +1,6 @@
 // Gate mutants for the Nimbus PR gates (issue #12, acceptance criterion 1).
 //
-//   node scripts/nimbus/gate-mutants.mjs [--only activation,exclusion,wire,route,anchor] [--port 8805] [--out result.json]
+//   node scripts/nimbus/gate-mutants.mjs [--only activation,exclusion,wire,route,anchor,policy,preflight,real,perfgate] [--port 8805] [--out result.json]
 //
 // For every mutant: the gate passes on the pristine input, fails for the injected reason (the failure
 // output must name it) with the regression injected, and passes again after the input is restored.
@@ -9,6 +9,11 @@
 //   free: stop your preview first), checked with route-fixtures.mjs --scope poc.
 // - exclusion: in place in site-nimbus/dist (test:dist reads that fixed path), restored in `finally`.
 // - wire: in place in migration/nimbus/fixtures/ask-wire.json, restored in `finally` and verified by hash.
+// - policy: a temp copy of the nimbus workflows and the README, checked by workflow-policy.mjs.
+// - preflight: isolated-preflight.mjs with a synthetic, secret-free environment.
+// - real: real-evidence.mjs judgement over synthetic isolated-run facts (no network).
+// - perfgate: paired-perf.mjs gate over synthetic samples at the recorded baseline (no browser).
+// The result names the HEAD commit and the manifest buildId it ran against.
 // Requires `npm ci` at the root and in site-nimbus, and a `CI=1 npm run build` in site-nimbus.
 import fs from 'node:fs';
 import os from 'node:os';
@@ -22,7 +27,7 @@ const DIST = path.join(SITE, 'dist');
 const WIRE = path.join(ROOT, 'migration/nimbus/fixtures/ask-wire.json');
 const args = process.argv.slice(2);
 const opt = (name, fallback) => { const i = args.indexOf(`--${name}`); return i >= 0 ? args[i + 1] : fallback; };
-const only = opt('only', 'activation,exclusion,wire,route,anchor').split(',');
+const only = opt('only', 'activation,exclusion,wire,route,anchor,policy,preflight,real,perfgate').split(',');
 const port = Number(opt('port', '8805'));
 const sha = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const rows = [];
@@ -180,13 +185,148 @@ async function served(which) {
   }
 }
 
+// ---- paired-perf gate: synthetic samples at the recorded baseline (no browser) --------------------------
+async function perfgate() {
+  const budgets = JSON.parse(fs.readFileSync(path.join(ROOT, 'migration/nimbus/budgets.json'), 'utf8'));
+  const buildId = JSON.parse(fs.readFileSync(path.join(SITE, 'src/manifest/manifest.json'), 'utf8')).buildId;
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-perfgate-'));
+  const file = path.join(tmp, 'samples.json');
+  const good = () => {
+    const samples = [];
+    for (const page of budgets.protocol.pages) for (const profile of Object.keys(budgets.protocol.profiles)) for (let run = 0; run < budgets.protocol.runs; run++) {
+      for (const site of ['legacy', 'candidate']) {
+        samples.push({ site, page, profile, run, served: site === 'candidate' ? { build: buildId, mainBundle: null } : { build: null, mainBundle: 'main.333b8d31.js' },
+          metrics: { ...budgets.baseline.gatedBytes[profile][page], lcp: 500, tbt: 10, searchOpenMs: 50, keyboardFocus: 1, unreadableResponses: 0 } });
+      }
+    }
+    return { legacy: 'legacy', candidate: 'candidate', runs: budgets.protocol.runs, startedAt: 'synthetic', finishedAt: 'synthetic', samples };
+  };
+  const write = (d) => fs.writeFileSync(file, JSON.stringify(d));
+  const check = () => run(process.execPath, ['scripts/nimbus/paired-perf.mjs', 'gate', file, '--build-id', buildId, '--out', path.join(tmp, 'out.json')], ROOT);
+  const set = (fn) => ({ inject: () => { const d = good(); fn(d); write(d); }, restore: () => write(good()) });
+  write(good());
+  const page = budgets.protocol.pages[3];
+  const cases = [
+    ['one page missing', set((d) => { d.samples = d.samples.filter((x) => x.page !== page); }), new RegExp(`${page.replace(/\//g, '\\/')}: 0 legacy and 0 candidate samples`)],
+    ['one profile missing', set((d) => { d.samples = d.samples.filter((x) => x.profile !== 'mobile'); }), /mobile .*: 0 legacy and 0 candidate samples/],
+    ['a candidate run missing', set((d) => { d.samples.splice(d.samples.findIndex((x) => x.site === 'candidate'), 1); }), /4 candidate samples, protocol requires 5/],
+    ['no samples', set((d) => { d.samples = []; }), /no samples/],
+    ['candidate served another build', set((d) => { d.samples.find((x) => x.site === 'candidate').served.build = 'deadbeef.000000000000'; }), /candidate samples served buildId .*deadbeef/],
+    ['candidate build unrecorded', set((d) => { for (const x of d.samples) delete x.served; }), /candidate samples served buildId \[null\]/],
+    ['legacy server changed mid-run', set((d) => { d.samples.find((x) => x.site === 'legacy').served.mainBundle = 'main.9321920d.js'; }), /legacy samples served main bundles/],
+    ['page outside the frozen set', set((d) => { d.samples.push({ ...d.samples[0], page: '/extra/' }); }), /outside budgets.protocol.pages: \/extra\//],
+    ['byte budget exceeded', set((d) => { for (const x of d.samples) if (x.site === 'candidate' && x.page === page && x.profile === 'desktop') x.metrics.jsGzip += 1; }), /jsGzip: candidate median .* > recorded legacy median/],
+    ['timing budget exceeded', set((d) => { for (const x of d.samples) if (x.site === 'candidate' && x.page === page && x.profile === 'mobile') x.metrics.lcp = 600; }), /lcp: candidate median 600 > max\(500 x 1.10, 500 \+ 50\)/],
+  ];
+  try {
+    for (const [name, { inject, restore }, expect] of cases) await mutant(`perfgate: ${name}`, 'paired-perf.mjs gate', { check, inject, restore, expect });
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
+// ---- workflow policy: mutated copies of the two workflows and the README ------------------------------
+async function policy() {
+  const { checkWorkflows } = await import('./workflow-policy.mjs');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-policy-'));
+  const files = ['.github/workflows/nimbus-pr-gates.yml', '.github/workflows/nimbus-isolated.yml', 'migration/nimbus/acceptance/README.md'];
+  for (const rel of files) { fs.mkdirSync(path.dirname(path.join(tmp, rel)), { recursive: true }); fs.copyFileSync(path.join(ROOT, rel), path.join(tmp, rel)); }
+  const check = () => { const r = checkWorkflows(tmp, { gitRoot: ROOT, yamlFrom: ROOT }); return { status: r.failures.length ? 1 : 0, output: r.failures.join('\n') }; };
+  const edit = (rel, fn) => { let before; return { inject: () => { before = fs.readFileSync(path.join(tmp, rel), 'utf8'); const after = fn(before); if (after === before) throw new Error(`mutation did not apply to ${rel}`); fs.writeFileSync(path.join(tmp, rel), after); }, restore: () => fs.writeFileSync(path.join(tmp, rel), before) }; };
+  const iso = '.github/workflows/nimbus-isolated.yml', pr = '.github/workflows/nimbus-pr-gates.yml';
+  const cases = [
+    ['activation pipe without pipefail (no default shell)', edit(iso, (t) => t.replace('    shell: bash --noprofile --norc -euo pipefail {0}\n', '    shell: bash {0}\n')), /pipe without pipefail/],
+    ['PR multi-line step without errexit', edit(pr, (t) => t.replace('    shell: bash --noprofile --norc -euo pipefail {0}\n', '    shell: bash {0}\n')), /multi-line run without errexit/],
+    ['unpinned action', edit(pr, (t) => t.replace(/actions\/setup-node@[0-9a-f]{40} # v4/, 'actions/setup-node@v4')), /actions\/setup-node@v4 is not pinned/],
+    ['pull_request_target', edit(pr, (t) => t.replace('  pull_request:\n', '  pull_request_target:\n')), /pull_request_target/],
+    ['write permission', edit(pr, (t) => t.replace('contents: read', 'contents: write')), /permissions must be exactly contents: read/],
+    ['indexer path filter removed', edit(pr, (t) => t.replace("      - 'indexer/**'\n", '')), /paths miss indexer\/\*\*/],
+    ['isolated environment removed', edit(iso, (t) => t.replace('    environment: nimbus-isolated\n', '')), /not bound to the nimbus-isolated environment/],
+    ['preflight not run', edit(iso, (t) => t.replace('          node scripts/nimbus/isolated-preflight.mjs\n', '')), /does not run isolated-preflight/],
+    ['production project ref not fail-closed', edit(iso, (t) => t.replace('          : "${NIMBUS_PRODUCTION_PROJECT_REF:?variable NIMBUS_PRODUCTION_PROJECT_REF is missing}"\n', '')), /fail closed on NIMBUS_PRODUCTION_PROJECT_REF/],
+    ['README drops the protected-branch rule', edit('migration/nimbus/acceptance/README.md', (t) => t.replace('restrict deployment\n  branches to protected branches', 'limit deployments')), /README does not require/],
+  ];
+  try {
+    for (const [name, { inject, restore }, expect] of cases) await mutant(`policy: ${name}`, 'workflow-policy.mjs', { check, inject, restore, expect });
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
+// ---- isolated preflight: synthetic environment, no secret values ---------------------------------------
+async function preflight() {
+  const ref = 'abcdefghijklmnopqrst', prodRef = 'zyxwvutsrqponmlkjihg';
+  const good = {
+    TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_HOST: 'nimbus-isolated.example.org.', GEN_ENV: 'preview', PREVIEW_GEN_ENV: 'preview',
+    ACTIVATE: 'true', ALREADY_ACTIVE: 'false', SUPABASE_URL: `https://${ref}.supabase.co`, DATABASE_URL: `postgresql://postgres.${ref}:x@aws-0-us-east-1.pooler.supabase.com:6543/postgres`,
+    NIMBUS_PRODUCTION_PROJECT_REF: prodRef,
+  };
+  let env = { ...good };
+  const check = () => run(process.execPath, ['scripts/nimbus/isolated-preflight.mjs'], ROOT, Object.fromEntries(Object.keys(good).map((k) => [k, env[k] ?? ''])));
+  const set = (patch) => ({ inject: () => { env = { ...good, ...patch }; }, restore: () => { env = { ...good }; } });
+  const cases = [
+    ['target host not the allowlisted host', set({ TARGET_URL: 'https://other.example.org/' }), /not the allowlisted NIMBUS_ISOLATED_HOST/],
+    ['production host even when allowlisted', set({ TARGET_URL: 'https://docs.apertis.ai/', NIMBUS_ISOLATED_HOST: 'docs.apertis.ai' }), /production host/],
+    ['production pages.dev deployment host', set({ TARGET_URL: 'https://2efbe4c4.docs-2r1.pages.dev/', NIMBUS_ISOLATED_HOST: '2efbe4c4.docs-2r1.pages.dev' }), /production host/],
+    ['0.0.0.0 target', set({ TARGET_URL: 'https://0.0.0.0/', NIMBUS_ISOLATED_HOST: '0.0.0.0' }), /loopback or unspecified/],
+    ['allowlist unset', set({ NIMBUS_ISOLATED_HOST: '' }), /NIMBUS_ISOLATED_HOST is not set/],
+    ['database and Supabase URL in different projects', set({ DATABASE_URL: `postgresql://postgres:x@db.${prodRef.replace('z', 'y')}.supabase.co:5432/postgres` }), /different projects/],
+    ['isolated project is production', set({ SUPABASE_URL: `https://${prodRef}.supabase.co`, DATABASE_URL: `postgresql://postgres:x@db.${prodRef}.supabase.co:5432/postgres` }), /is the production project/],
+    ['production project ref unset', set({ NIMBUS_PRODUCTION_PROJECT_REF: '' }), /NIMBUS_PRODUCTION_PROJECT_REF is not set/],
+    ['generation environment differs from the preview', set({ PREVIEW_GEN_ENV: 'staging' }), /differs from the preview/],
+    ['neither activation nor confirmation', set({ ACTIVATE: 'false', ALREADY_ACTIVE: 'false' }), /activate_generation or an explicit/],
+    ['http target', set({ TARGET_URL: 'http://nimbus-isolated.example.org/' }), /must be https/],
+  ];
+  for (const [name, { inject, restore }, expect] of cases) await mutant(`preflight: ${name}`, 'isolated-preflight.mjs', { check, inject, restore, expect });
+}
+
+// ---- real-* judgement: synthetic facts ------------------------------------------------------------------
+async function real() {
+  const { judgeReal, DUMMY_TOKEN } = await import('./real-evidence.mjs');
+  const buildId = JSON.parse(fs.readFileSync(path.join(SITE, 'src/manifest/manifest.json'), 'utf8')).buildId;
+  const good = () => ({
+    manifestBuildId: buildId, servedBuildId: buildId, generationEnvironment: 'preview', previewGenerationEnvironment: 'preview', activeGenerationId: 42,
+    receipt: { generationId: 42, generationState: 'ready', buildId, documents: { failed: 0, pending: 0 }, items: [{ urlPath: '/authentication/api-keys' }, { urlPath: '/getting-started/quick-start' }] },
+    probe: { ok: true, sources: ['/authentication/api-keys'], record: { sitekey: '0x4AAAAAACS2SzpYBFytHb_E', tokenSent: true, dummyToken: false, status: 200 } },
+  });
+  let facts = good();
+  const entries = ['real-assistant', 'real-turnstile', 'real-indexing'];
+  // Pass only when all three entries PASS; the output lists each verdict and its reasons.
+  const check = () => {
+    const v = entries.map((e) => [e, judgeReal(e, facts)]);
+    return { status: v.every(([, x]) => x.status === 'PASS') ? 0 : 1, output: v.map(([e, x]) => `${e} ${x.status}: ${x.reasons.join('; ')}`).join('\n') };
+  };
+  const set = (fn) => ({ inject: () => { facts = good(); fn(facts); }, restore: () => { facts = good(); } });
+  const cases = [
+    ['preview serves another buildId', set((f) => { f.servedBuildId = 'deadbeef.000000000000'; }), /real-assistant FAIL: isolated preview serves buildId deadbeef/],
+    ['preview build meta missing', set((f) => { f.servedBuildId = null; }), /real-indexing FAIL: isolated preview serves buildId null/],
+    ['another generation is active', set((f) => { f.activeGenerationId = 41; }), /real-assistant FAIL: .*active generation 41 is not the receipt's 42/],
+    ['no generation active', set((f) => { f.activeGenerationId = 'none'; }), /active generation none is not the receipt's 42/],
+    ['active generation unreadable', set((f) => { f.activeGenerationId = null; }), /real-indexing BLOCKED: active generation could not be read/],
+    ['preview reads another environment', set((f) => { f.previewGenerationEnvironment = 'staging'; }), /indexed environment preview is not the preview's staging/],
+    ['citation outside the generation', set((f) => { f.probe.sources = ['/billing/payg']; }), /real-indexing FAIL: citations .* are not all documents of the generation/],
+    ['Turnstile test sitekey', set((f) => { f.probe.record.sitekey = '1x00000000000000000000AA'; }), /real-turnstile FAIL: Turnstile test sitekey/],
+    ['Turnstile dummy token', set((f) => { f.probe.record.dummyToken = true; }), /real-turnstile FAIL: Turnstile dummy token/],
+    ['sitekey not observed', set((f) => { f.probe.record.sitekey = undefined; }), /real-turnstile BLOCKED: Turnstile sitekey not observed/],
+    ['receipt generation not ready', set((f) => { f.receipt.generationState = 'failed'; }), /real-indexing FAIL: receipt generation is not ready/],
+  ];
+  if (DUMMY_TOKEN !== 'XXXX.DUMMY.TOKEN.XXXX') throw new Error('dummy token constant changed');
+  for (const [name, { inject, restore }, expect] of cases) await mutant(`real: ${name}`, 'real-evidence.mjs judgeReal', { check, inject, restore, expect });
+}
+
 if (only.includes('activation')) await activation();
 if (only.includes('exclusion')) await exclusion();
 if (only.includes('wire')) await wire();
 if (only.includes('route')) await served('route');
 if (only.includes('anchor')) await served('anchor');
+if (only.includes('policy')) await policy();
+if (only.includes('preflight')) await preflight();
+if (only.includes('real')) await real();
+if (only.includes('perfgate')) await perfgate();
 
-const result = { ranAt: new Date().toISOString(), mutants: rows, detected: rows.filter((r) => r.result === 'DETECTED').length, total: rows.length };
+const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).stdout.trim();
+const buildId = JSON.parse(fs.readFileSync(path.join(SITE, 'src/manifest/manifest.json'), 'utf8')).buildId;
+const result = { ranAt: new Date().toISOString(), candidateSha: head, buildId, only, mutants: rows, detected: rows.filter((r) => r.result === 'DETECTED').length, total: rows.length };
 if (opt('out')) fs.writeFileSync(opt('out'), JSON.stringify(result, null, 2) + '\n');
 console.log(`gate-mutants: ${result.detected}/${result.total} regressions detected`);
 process.exit(result.total > 0 && result.detected === result.total ? 0 : 1);
