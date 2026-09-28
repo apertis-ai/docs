@@ -1,23 +1,11 @@
 ---
-import DocumentHead from '../components/DocumentHead.astro';
+import DocLayout from '../layouts/DocLayout.astro';
 import { documentAt, manifest } from '../manifest/manifest.ts';
 
 const doc = documentAt('/');
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <DocumentHead doc={doc} buildId={manifest.buildId} />
-  </head>
-  <body>
-    <main>
-      <article>
-        <h1>Apertis Documentation</h1>
-        <p>Nimbus candidate fixture shell. Content arrives with the converted pages.</p>
-        <p><a href="/api/">API Reference</a></p>
-      </article>
-    </main>
-  </body>
-</html>
+<DocLayout doc={doc} buildId={manifest.buildId}>
+  <h1>Apertis Documentation</h1>
+  <p>Nimbus candidate fixture shell. Content arrives with the converted pages.</p>
+  <p><a href="/api/">API Reference</a></p>
+</DocLayout>

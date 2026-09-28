@@ -1,0 +1,39 @@
+---
+// The one page frame for every manifest document. #8 owns this file and replaces the body with the
+// Apertis shell (navbar, sidebar, TOC, footer, page actions, theme); the Props below are the
+// interface #7's routes render against and must stay compatible. Head identity comes only from
+// DocumentHead.
+import DocumentHead from '../components/DocumentHead.astro';
+import AssistantRoot from '../components/assistant/AssistantRoot.astro';
+import type { ManifestDocument } from '../contracts/manifest.ts';
+
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  doc: ManifestDocument;
+  buildId: string;
+  /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
+  headings?: Heading[];
+}
+const { doc, buildId } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <DocumentHead doc={doc} buildId={buildId} />
+  </head>
+  <body>
+    <main>
+      <article>
+        <slot />
+      </article>
+    </main>
+    <AssistantRoot />
+  </body>
+</html>
