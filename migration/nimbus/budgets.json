@@ -1,0 +1,71 @@
+{
+  "frozenAt": "2026-09-29",
+  "baseSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
+  "protocol": {
+    "harness": "Build output served on the measuring machine with `wrangler pages dev <outputDir>`; system Google Chrome driven by Playwright (scripts/nimbus/measure.mjs). Legacy and candidate are compared only when measured with the same harness, machine and profile.",
+    "runs": 5,
+    "statistic": "median of the runs; raw samples are retained with the result",
+    "pages": [
+      "/",
+      "/getting-started/quick-start/",
+      "/authentication/api-keys/",
+      "/billing/subscription-plans/",
+      "/installation/claude-code/",
+      "/installation/roocode/",
+      "/api/",
+      "/api/text-generation/chat-completions/",
+      "/api/text-generation/messages/",
+      "/api/text-generation/responses/",
+      "/api/text-generation/streaming/",
+      "/api/sdks/ai-sdk-provider/"
+    ],
+    "profiles": {
+      "mobile": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "cpuSlowdown": 4,
+        "network": {
+          "latency": 150,
+          "downloadThroughput": 204800,
+          "uploadThroughput": 96000
+        }
+      },
+      "desktop": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "deviceScaleFactor": 1,
+        "isMobile": false,
+        "cpuSlowdown": 1,
+        "network": null
+      }
+    },
+    "searchPayloadQuery": "api key",
+    "searchSettleMs": 800,
+    "metrics": {
+      "htmlGzip": "gzip -9 bytes of same-origin document responses during load (recorded, not gated).",
+      "jsGzip": "gzip -9 bytes of every same-origin script response until 500 ms without same-origin requests in flight after load (includes lazy chunks and worker scripts).",
+      "cssGzip": "Same window, stylesheet responses.",
+      "dataGzip": "Same window, every other same-origin response except document, image, font and media (fetch/XHR/JSON/WASM, e.g. a preloaded search index).",
+      "mediaGzip": "Same window, image, font and media responses (recorded, not gated).",
+      "searchPayloadGzip": "gzip -9 bytes of every same-origin response (any type, including requests made by workers) that arrives from pressing Cmd/Ctrl+K until the dialog text for searchPayloadQuery has been unchanged for searchSettleMs and no same-origin request has been in flight for 500 ms.",
+      "lcp": "largest-contentful-paint startTime (ms) observed until network idle + 1 s.",
+      "tbt": "Sum over long tasks of (duration - 50 ms) observed until network idle + 1 s.",
+      "searchOpenMs": "Wall time from pressing Cmd/Ctrl+K until a visible text input exists inside a dialog (`<dialog open>` or role=dialog). Focus is reported separately as keyboardFocus.",
+      "keyboardFocus": "1 when that input holds keyboard focus 300 ms after the shortcut, else 0 (the candidate must be 1).",
+      "loadAvg1m": "Host 1-minute load average when the sample finished (context for timing)."
+    },
+    "responseAccounting": "The phase of a response is fixed when the response arrives; every body is read before the browser context closes; redirects are skipped; unreadableResponses must be 0 for a valid sample."
+  },
+  "budgetRules": {
+    "bytes": "For jsGzip, cssGzip, dataGzip and searchPayloadGzip, the candidate median for each page and profile must be <= the recorded legacy median. Zero tolerance. htmlGzip and mediaGzip are recorded only.",
+    "timing": "For lcp, tbt and searchOpenMs, run legacy and candidate in the same window on the same machine, alternating per page, and require candidate median <= max(paired legacy median x 1.10, paired legacy median + 50 ms). The recorded timing baseline is informational.",
+    "enforcement": "Every page and profile is gated; a single exceedance fails the performance gate. Budgets are not re-derived from candidate results and are never relaxed without a recorded decision on #4."
+  },
+  "baseline": null
+}
