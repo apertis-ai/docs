@@ -11,7 +11,8 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type { ManifestDocument } from '../src/contracts/manifest.ts';
-import { buildSearchIndex } from '../src/search/index-build.ts';
+import { manifest } from '../src/manifest/manifest.ts';
+import { buildSearchIndex, searchDocuments } from '../src/search/index-build.ts';
 
 const base = process.env.PREVIEW_URL?.replace(/\/$/, '');
 const skip = base && process.env.PLAYWRIGHT ? false : 'set PREVIEW_URL and PLAYWRIGHT to run the browser proof';
@@ -20,21 +21,33 @@ type Page = any; // Playwright is not a dependency (see scripts/nimbus/measure.m
 let browser: any;
 let offOrigin: string[] = [];
 
+// Expectations come from the manifest, so the proof holds for whatever #7 publishes.
+const searchable = searchDocuments(manifest.documents);
+const target = searchable[0];
+const home = manifest.documents.find((d) => d.servedPath === '/')!;
+
 const sse = (...deltas: string[]) => deltas.map((d) => `data: ${JSON.stringify({ content: d })}\n\n`).join('');
 const DONE = 'data: [DONE]\n\n';
 
-/** Turnstile stub: 'ok' issues a fresh token per render/reset, 'error' reports 110200, 'offline' fails to load. */
-async function newPage(turnstile: 'ok' | 'error' | 'offline' = 'ok', viewport = { width: 1440, height: 900 }): Promise<Page> {
-  const context = await browser.newContext({ viewport });
+type TurnstileMode = 'ok' | 'error' | 'offline' | 'silent';
+/**
+ * Turnstile stub: 'ok' issues a fresh token per render/reset, 'error' reports 110200, 'offline' fails to
+ * load, 'silent' never calls back. The render options are exposed as `window.__ts` so tests can fire
+ * expired/timeout callbacks. `mode.value` may change between loads (retry after a load failure).
+ */
+async function newPage(turnstile: TurnstileMode | { value: TurnstileMode } = 'ok', options: Record<string, unknown> = { viewport: { width: 1440, height: 900 } }): Promise<Page> {
+  const mode = typeof turnstile === 'string' ? { value: turnstile } : turnstile;
+  const context = await browser.newContext(options);
   await context.route('**/*', (route: any) => {
     const url = route.request().url();
     if (url.startsWith(base!)) return route.fallback();
-    if (url.startsWith('https://challenges.cloudflare.com/') && turnstile !== 'offline') {
+    if (url.startsWith('https://challenges.cloudflare.com/') && mode.value !== 'offline') {
+      const first = { ok: "o.callback('stub-token-' + (++n))", error: "o['error-callback']('110200')", silent: '0' }[mode.value];
       return route.fulfill({
         contentType: 'text/javascript',
         body: `(() => { let n = 0, o;
           window.turnstile = {
-            render(el, opts) { o = opts; setTimeout(() => ${turnstile === 'ok' ? "o.callback('stub-token-' + (++n))" : "o['error-callback']('110200')"}, 10); return 'w1'; },
+            render(el, opts) { o = window.__ts = opts; setTimeout(() => ${first}, 10); return 'w1'; },
             reset() { setTimeout(() => o.callback('stub-token-' + (++n)), 10); },
           }; })();`,
       });
@@ -69,6 +82,32 @@ async function ask(page: Page, text: string) {
   await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
   await page.press('#aa-question', 'Enter');
 }
+
+/** Replaces fetch('/api/ask') with a stream the test drives: __delta(text), __finish(); records __aborted. */
+async function controlledAsk(page: Page) {
+  await page.addInitScript(() => {
+    const realFetch = window.fetch;
+    const w = window as any;
+    w.__aborted = false;
+    window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) !== '/api/ask') return realFetch(input, init);
+      const enc = new TextEncoder();
+      const body = new ReadableStream({
+        start(c) {
+          w.__delta = (t: string) => c.enqueue(enc.encode(`data: ${JSON.stringify({ content: t })}\n\n`));
+          w.__finish = () => { c.enqueue(enc.encode('data: [DONE]\n\n')); c.close(); };
+          init?.signal?.addEventListener('abort', () => { w.__aborted = true; c.error(new DOMException('aborted', 'AbortError')); });
+        },
+      });
+      return Promise.resolve(new Response(body, { status: 200, headers: { 'Content-Type': 'text/event-stream' } }));
+    };
+  });
+}
+
+const stored = (page: Page) => page.evaluate(() => {
+  const id = sessionStorage.getItem('askai_session_id');
+  return JSON.parse(sessionStorage.getItem(`askdocs_messages_${id}`) ?? '[]');
+});
 
 const lastAnswer = (page: Page) => page.locator('.aa-msg[data-role="assistant"]').last();
 
@@ -113,25 +152,27 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.locator('dialog[open] #aa-q').waitFor();
     await page.keyboard.press('ControlOrMeta+k');
     await page.locator('#apertis-assistant').waitFor({ state: 'hidden' });
-    assert.equal(await page.evaluate(() => document.querySelectorAll('dialog, [role="dialog"]').length), 1, 'one dialog');
+    assert.equal(await page.locator('#apertis-assistant').count(), 1, 'one assistant dialog (the shell may own others)');
     await page.context().close();
   });
 
   test('apertis-docs:open with a query shows results; Enter opens the selected result; backdrop click closes', async () => {
     const page = await newPage();
     await goto(page, '/');
-    await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search', query: 'overview' } })));
+    await page.evaluate((q: string) => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search', query: q } })), target.title);
     await page.locator('#aa-results [role="option"]').first().waitFor();
-    assert.equal(await page.inputValue('#aa-q'), 'overview');
+    assert.equal(await page.inputValue('#aa-q'), target.title);
     assert.equal(await page.getAttribute('#aa-results [role="option"] >> nth=0', 'aria-selected'), 'true', 'first result selected');
     assert.equal(await page.getAttribute('#aa-q', 'aria-activedescendant'), 'aa-result-0');
     await page.mouse.click(5, 5);
     await page.locator('#apertis-assistant').waitFor({ state: 'hidden' });
     await page.keyboard.press('ControlOrMeta+k');
-    await page.keyboard.type('overview');
+    await page.keyboard.type(target.title);
     await page.locator('#aa-results [role="option"]').first().waitFor();
+    await page.waitForTimeout(300);
+    const first = await page.getAttribute('#aa-results a >> nth=0', 'href');
     await page.keyboard.press('Enter');
-    await page.waitForURL(base + '/api/');
+    await page.waitForURL(base + first);
     await page.context().close();
   });
 
@@ -163,14 +204,16 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.route('**/pagefind/pagefind.js', async (route: any) => { await held; await route.fallback(); });
     await goto(page, '/');
     await page.keyboard.press('ControlOrMeta+k');
-    await page.keyboard.type('overview');
+    await page.keyboard.type(target.title);
     await page.waitForTimeout(300);
     assert.equal(await page.textContent('#aa-status'), 'Loading search index…');
     assert.equal(await page.locator('#aa-results [role="option"]').count(), 0);
     release();
     await page.locator('#aa-results [role="option"]').first().waitFor({ timeout: 10000 });
-    assert.equal(await page.getAttribute('#aa-results a >> nth=0', 'href'), '/api/');
-    assert.equal(await page.inputValue('#aa-q'), 'overview', 'not retyped');
+    await page.waitForTimeout(300);
+    const hrefs: string[] = await page.$$eval('#aa-results a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
+    assert.ok(hrefs.slice(0, 3).includes(target.servedPath), hrefs.join(', '));
+    assert.equal(await page.inputValue('#aa-q'), target.title, 'not retyped');
     await page.context().close();
   });
 
@@ -187,17 +230,19 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.context().close();
   });
 
+  // The real failure (#9 repair): the chat-completions page shows its path only inside a URL and code,
+  // which Pagefind indexes as one compound word, while another page has the literal `chat/completions`.
   describe('identifiers and punctuation (synthetic Pagefind index served in place of /pagefind/)', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'm4-e2e-index-'));
     const pages: Record<string, string> = {
       '/installation/claude-code/': '<h1>Claude Code</h1><p>Export ANTHROPIC_BASE_URL=https://api.apertis.ai and ANTHROPIC_AUTH_TOKEN.</p>',
-      '/api/text-generation/chat-completions/': '<h1>Chat Completion</h1><p>POST https://api.apertis.ai/v1/chat/completions with messages.</p>',
+      '/api/text-generation/chat-completions/': '<h1>Chat Completion</h1><p>Create a model response for a conversation.</p><pre><code>curl https://api.apertis.ai/v1/chat/completions -H "Content-Type: application/json"</code></pre>',
       // Pagefind keeps a full URL as one word, so the endpoint must also appear on its own (as the real
       // API pages show it above their curl example); see README #9 "Known search limits".
       '/api/text-generation/messages/': '<h1>Messages API</h1><p>POST /v1/messages</p><p>curl https://api.apertis.ai/v1/messages for the Anthropic format.</p>',
       '/api/sdks/ai-sdk-provider/': '<h1>AI SDK Provider</h1><p>npm install @apertis/ai-sdk-provider then import { createApertis } from it.</p>',
       '/billing/rate-limits/': '<h1>Rate Limits</h1><p>Requests over the limit return 429. Chat completions and messages both count.</p>',
-      '/getting-started/quick-start/': '<h1>Quick Start</h1><p>Set the base URL and your API key. Chat completions are the default. The provider package is optional.</p>',
+      '/getting-started/quick-start/': '<h1>Quick Start</h1><p>Set the base URL and your API key, then call chat/completions. The provider package is optional.</p>',
     };
     const docs = Object.keys(pages).map((servedPath) => ({ servedPath, id: servedPath, eligibility: { publish: true, search: true } }) as ManifestDocument);
     before(async () => {
@@ -243,7 +288,7 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await goto(page, '/');
     const bodies = await stubAsk(page, 200, sse('See ', '[Quick Start](/getting-started/quick-start).') + DONE + sse('ignored'));
     await openAsk(page);
-    assert.equal(await page.textContent('#aa-context-title'), 'Home');
+    assert.equal(await page.textContent('#aa-context-title'), home.title);
     assert.equal(await page.evaluate(() => (document.getElementById('apertis-assistant') as HTMLDialogElement).matches(':modal')), false, 'non-blocking');
     await ask(page, 'How do I start?');
     await lastAnswer(page).locator('.aa-sources a').waitFor();
@@ -254,7 +299,7 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     assert.deepEqual(Object.keys(body).sort(), ['pageContext', 'question', 'sessionId', 'turnstileToken']);
     assert.equal(body.question, 'How do I start?');
     assert.match(String(body.turnstileToken), /^stub-token-/);
-    assert.deepEqual(body.pageContext, { title: 'Home', href: '/' });
+    assert.deepEqual(body.pageContext, { title: home.title, href: '/' });
     assert.equal(body.sessionId, await page.evaluate(() => sessionStorage.getItem('askai_session_id')));
     // A second question needs a fresh one-shot token.
     await ask(page, 'And then?');
@@ -364,10 +409,9 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await openAsk(page);
     await ask(page, 'one');
     await page.waitForFunction(() => document.querySelectorAll('.aa-msg[data-state="done"]').length === 1);
-    await page.click('main a[href="/api/"]');
-    await page.waitForURL(base + '/api/');
+    await goto(page, target.servedPath);
     await page.locator('dialog[open] #aa-ask').waitFor();
-    assert.equal(await page.textContent('#aa-context-title'), 'API Reference', 'chip names the new page');
+    assert.equal(await page.textContent('#aa-context-title'), target.title, 'chip names the new page');
     assert.equal(await page.locator('.aa-msg').count(), 2, 'conversation persists for the session');
     await ask(page, 'two');
     await page.waitForFunction(() => document.querySelectorAll('.aa-msg[data-state="done"]').length === 2);
@@ -375,9 +419,9 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await ask(page, 'three');
     await page.waitForFunction(() => document.querySelectorAll('.aa-msg[data-state="done"]').length === 3);
     assert.deepEqual(bodies.map((b) => b.pageContext), [
-      { title: 'Home', href: '/' },
-      { title: 'API Reference', href: '/api/' },
-      { title: 'API Reference', href: '/api/#overview' },
+      { title: home.title, href: '/' },
+      { title: target.title, href: target.servedPath },
+      { title: target.title, href: `${target.servedPath}#overview` },
     ]);
     await page.context().close();
   });
@@ -402,12 +446,178 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
 
   test('LOCAL-BUILD: without .dev.vars the real /api/ask answers 500 and the panel shows it', async () => {
     const page = await newPage();
-    await goto(page, '/api/');
+    await goto(page, target.servedPath);
     await openAsk(page);
     await ask(page, 'What is Apertis?');
     const alert = page.locator('.aa-msg[data-state="error"]');
     await alert.waitFor({ timeout: 20000 });
     assert.equal(await alert.textContent(), 'Ask Docs could not answer (HTTP 500): Server configuration error');
+    await page.context().close();
+  });
+
+  test('a streaming answer keeps rendering after the panel re-renders (open event mid-stream)', async () => {
+    const page = await newPage();
+    await controlledAsk(page);
+    await goto(page, '/');
+    await openAsk(page);
+    await ask(page, 'q');
+    await page.waitForFunction(() => typeof (window as any).__delta === 'function');
+    await page.evaluate(() => (window as any).__delta('one'));
+    await page.waitForFunction(() => document.querySelector('.aa-msg[data-role="assistant"]')?.textContent === 'one');
+    await openAsk(page);
+    await page.evaluate(() => (window as any).__delta(' two'));
+    await page.waitForFunction(() => document.querySelector('.aa-msg[data-role="assistant"]')?.textContent === 'one two', null, { timeout: 5000 });
+    assert.equal(await lastAnswer(page).getAttribute('data-state'), 'streaming');
+    await page.evaluate(() => (window as any).__finish());
+    await page.waitForFunction(() => document.querySelector('.aa-msg[data-role="assistant"]')?.getAttribute('data-state') === 'done');
+    assert.equal(await lastAnswer(page).textContent(), 'one two');
+    await page.context().close();
+  });
+
+  test('closing the panel mid-stream aborts the request and keeps the turn as interrupted', async () => {
+    const page = await newPage();
+    await controlledAsk(page);
+    await goto(page, '/');
+    await openAsk(page);
+    await ask(page, 'long question');
+    await page.waitForFunction(() => typeof (window as any).__delta === 'function');
+    await page.evaluate(() => (window as any).__delta('partial'));
+    await page.waitForFunction(() => document.querySelector('.aa-msg[data-role="assistant"]')?.textContent === 'partial');
+    await page.click('#aa-close');
+    await page.waitForFunction(() => (window as any).__aborted === true);
+    await page.waitForFunction(() => JSON.parse(sessionStorage.getItem(`askdocs_messages_${sessionStorage.getItem('askai_session_id')}`) ?? '[]')[1]?.state === 'interrupted');
+    assert.deepEqual(await stored(page), [
+      { role: 'user', content: 'long question' },
+      { role: 'assistant', content: 'partial', state: 'interrupted' },
+    ]);
+    await openAsk(page);
+    assert.equal(await lastAnswer(page).getAttribute('data-state'), 'interrupted');
+    await page.context().close();
+  });
+
+  test('navigating mid-stream keeps the question and partial answer, stored as interrupted', async () => {
+    const page = await newPage();
+    await controlledAsk(page);
+    await goto(page, '/');
+    await openAsk(page);
+    await ask(page, 'question before navigating');
+    await page.waitForFunction(() => typeof (window as any).__delta === 'function');
+    assert.deepEqual((await stored(page))[0], { role: 'user', content: 'question before navigating' }, 'saved when sent');
+    await page.evaluate(() => (window as any).__delta('half an answer'));
+    await page.waitForFunction(() => document.querySelector('.aa-msg[data-role="assistant"]')?.textContent === 'half an answer');
+    await goto(page, target.servedPath);
+    await page.locator('dialog[open] #aa-ask').waitFor();
+    assert.deepEqual(await stored(page), [
+      { role: 'user', content: 'question before navigating' },
+      { role: 'assistant', content: 'half an answer', state: 'interrupted' },
+    ]);
+    assert.equal(await lastAnswer(page).getAttribute('data-state'), 'interrupted');
+    await page.context().close();
+  });
+
+  test('a failing result load (fragment request aborted) shows a visible error, not a stuck loading state', async () => {
+    const page = await newPage();
+    await page.route('**/pagefind/fragment/**', (route: any) => route.abort());
+    await goto(page, '/');
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.keyboard.type(target.title);
+    await page.waitForFunction(() => /could not be completed/.test(document.getElementById('aa-status')?.textContent ?? ''), null, { timeout: 10000 });
+    assert.equal(await page.isVisible('#aa-status'), true);
+    await page.context().close();
+  });
+
+  test('an index chunk failure ends in a terminal state (Pagefind itself reports it as no results)', async () => {
+    const page = await newPage();
+    await page.route('**/pagefind/index/**', (route: any) => route.abort());
+    page.on('console', () => {}); // Pagefind logs the failed chunk
+    await goto(page, '/');
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.keyboard.type(target.title);
+    await page.waitForFunction(() => /^No results for/.test(document.getElementById('aa-status')?.textContent ?? ''), null, { timeout: 10000 });
+    await page.context().close();
+  });
+
+  test('with site storage blocked, search and Ask Docs still work (in-memory session)', async () => {
+    const page = await newPage();
+    await page.addInitScript(() => {
+      for (const name of ['sessionStorage', 'localStorage']) {
+        Object.defineProperty(window, name, { get() { throw new DOMException('The operation is insecure.', 'SecurityError'); } });
+      }
+    });
+    const bodies = await stubAsk(page, 200, sse('ok') + DONE);
+    await goto(page, '/');
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.keyboard.type(target.title);
+    await page.locator('#aa-results [role="option"]').first().waitFor();
+    await openAsk(page);
+    await ask(page, 'q');
+    await page.locator('.aa-msg[data-state="done"]').waitFor();
+    assert.match(String((bodies[0] as Record<string, unknown>).sessionId), /^[0-9a-f-]{32,36}$/);
+    await page.context().close();
+  });
+
+  test('a Turnstile load failure can be retried by reopening Ask Docs', async () => {
+    const mode = { value: 'offline' as TurnstileMode };
+    const page = await newPage(mode);
+    await goto(page, '/');
+    await openAsk(page);
+    await page.waitForFunction(() => document.getElementById('aa-ask-status')?.dataset.kind === 'error');
+    assert.match(await page.textContent('#aa-ask-status'), /could not be loaded.*reopen Ask Docs/);
+    mode.value = 'ok';
+    await page.click('#aa-close');
+    await openAsk(page);
+    await page.fill('#aa-question', 'hello');
+    await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
+    assert.equal(await page.textContent('#aa-ask-status'), '');
+    await page.context().close();
+  });
+
+  test('Turnstile expiry re-verifies; a challenge timeout is shown', async () => {
+    const page = await newPage();
+    await goto(page, '/');
+    await openAsk(page);
+    await page.fill('#aa-question', 'hello');
+    await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
+    await page.evaluate(() => (window as any).__ts['expired-callback']());
+    assert.equal(await page.isDisabled('#aa-send'), true, 'no sending with an expired token');
+    assert.match(await page.textContent('#aa-ask-status'), /expired/);
+    await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
+    await page.evaluate(() => (window as any).__ts['timeout-callback']());
+    await page.waitForFunction(() => document.getElementById('aa-ask-status')?.dataset.kind === 'error');
+    assert.match(await page.textContent('#aa-ask-status'), /timed out/);
+    assert.equal(await page.isDisabled('#aa-send'), true);
+    await page.context().close();
+  });
+
+  test('a Turnstile widget that never answers is reported after 30 s', async () => {
+    const page = await newPage('silent');
+    await page.clock.install();
+    await goto(page, '/');
+    await openAsk(page);
+    await page.waitForFunction(() => Boolean((window as any).__ts));
+    assert.match(await page.textContent('#aa-ask-status'), /Verifying/);
+    await page.clock.fastForward(29000);
+    assert.notEqual(await page.getAttribute('#aa-ask-status', 'data-kind'), 'error');
+    await page.clock.fastForward(2000);
+    await page.waitForFunction(() => document.getElementById('aa-ask-status')?.dataset.kind === 'error');
+    assert.match(await page.textContent('#aa-ask-status'), /did not respond/);
+    await page.context().close();
+  });
+
+  test('mobile 390 px: touch scrolling does not move the page behind the open search sheet', async () => {
+    const page = await newPage('ok', { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+    await goto(page, '/');
+    await page.evaluate(() => document.body.append(Object.assign(document.createElement('div'), { style: 'height:5000px' })));
+    const cdp = await page.context().newCDPSession(page);
+    const swipe = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
+    await page.locator('dialog[open] #aa-q').waitFor();
+    await swipe();
+    await page.waitForTimeout(300);
+    assert.equal(await page.evaluate(() => scrollY), 0, 'page did not scroll while the sheet is open');
+    await page.click('#aa-close');
+    await swipe();
+    await page.waitForFunction(() => scrollY > 0);
     await page.context().close();
   });
 });

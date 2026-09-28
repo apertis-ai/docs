@@ -9,6 +9,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { manifest } from '../src/manifest/manifest.ts';
+import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
@@ -188,5 +189,32 @@ test('m2: HTML and clean Markdown carry the same code blocks for every converted
     const mdCode = [...read(d.markdown!.path.slice(1)).matchAll(/^((?:> )?)([ \t]*)(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n\1[ \t]*\3[ \t]*$/gm)]
       .map((m) => m[4].split('\n').map((l) => l.slice(m[1].length).slice(m[2].length)).join('\n').trimEnd());
     assert.deepEqual(htmlCode, mdCode, d.id);
+  }
+});
+
+// ---- #9 assistant mount and search-index content ----
+const publishedHtml = () => manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
+
+test('m4: every published page mounts the assistant dialog exactly once', () => {
+  for (const f of publishedHtml()) assert.equal(read(f).match(/\bid="apertis-assistant"/g)?.length ?? 0, 1, f);
+});
+
+// Shell chrome (#8) must stay out of the index. Skipped until a shell renders <nav>/<aside> outside <article>.
+const outsideArticle = (html: string) => html.replace(/<article[\s\S]*?<\/article>/g, '').replace(/<dialog id="apertis-assistant"[\s\S]*?<\/dialog>/, '');
+const hasShell = publishedHtml().some((f) => /<(nav|aside)\b/.test(outsideArticle(read(f))));
+test('m4: search fragments carry no shell chrome (navbar/sidebar labels) beyond what the article says', { skip: hasShell ? false : 'no shell <nav>/<aside> outside <article> yet (#8)' }, () => {
+  const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  const count = (hay: string, needle: string) => hay.split(needle).length - 1;
+  const byUrl = new Map(fragments().map((f) => [f.url, (f as unknown as { content: string }).content]));
+  for (const d of searchDocuments(manifest.documents)) {
+    const html = read(`${d.servedPath.slice(1)}index.html`);
+    const article = text(html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '');
+    // Every link label of the page chrome (navbar, sidebar, footer, TOC), wherever the shell puts it.
+    const labels = [...new Set([...outsideArticle(html).matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)]
+      .map((a) => text(a[1]).replace(/\s+/g, ' ').trim())
+      .filter((l) => l.length > 2))];
+    const content = byUrl.get(d.servedPath) ?? '';
+    const extra = labels.filter((l) => count(content, l) > count(article.replace(/\s+/g, ' '), l));
+    assert.deepEqual(extra, [], `${d.servedPath}: shell labels in the index`);
   }
 });

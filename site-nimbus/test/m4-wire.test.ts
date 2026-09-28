@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { askBody, currentPageContext, errorMessage, QUERY_LIMIT_MESSAGE, readAnswer, sourceLinks } from '../src/components/assistant/wire.ts';
+import { askBody, currentPageContext, errorMessage, isInternalHref, QUERY_LIMIT_MESSAGE, readAnswer, sourceLinks } from '../src/components/assistant/wire.ts';
 
 const wire = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../../migration/nimbus/fixtures/ask-wire.json'), 'utf8'));
 const wireCase = (name: string) => wire.cases.find((c: { name: string }) => c.name === name);
@@ -76,4 +76,7 @@ test('error responses are shown with their wire text; 429 is the fixed legacy me
 test('source links are internal, unique documentation links', () => {
   assert.deepEqual(sourceLinks('See [Quick Start](/getting-started/quick-start), [QS](/getting-started/quick-start), [x](//evil.test/a) and [ext](https://example.com).'),
     [{ title: 'Quick Start', href: '/getting-started/quick-start' }]);
+  assert.deepEqual(sourceLinks('[a](/\\evil.example/x) [b](/\\/evil.example) [c](/ok\\x) [d](/%5Cevil)'), [{ title: 'd', href: '/%5Cevil' }]);
+  assert.equal(isInternalHref('/api/'), true);
+  for (const h of ['//evil.example', '/\\evil.example', '\\\\evil.example', 'https://evil.example/', 'javascript:alert(1)', 'api/']) assert.equal(isInternalHref(h), false, h);
 });
