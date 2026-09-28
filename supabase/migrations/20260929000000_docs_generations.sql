@@ -314,18 +314,26 @@ $$;
 
 -- Operator only: set the SHA-256 (hex) of the environment's reader secret. The secret itself stays in
 -- the server environment (ASK_GENERATION_READER_TOKEN) and never in the database.
+-- The digest of the empty string is refused (a hash taken from an unset shell variable).
 create function public.docs_generation_set_reader(p_environment text, p_reader_token_sha256 text)
 returns void
-language sql security definer set search_path = ''
+language plpgsql security definer set search_path = ''
 as $$
+begin
+  if p_reader_token_sha256 = encode(sha256(''::bytea), 'hex') then
+    raise exception 'refusing the SHA-256 of the empty secret' using errcode = '22023';
+  end if;
   insert into public.docs_generation_slots as s (environment, reader_token_sha256)
   values (p_environment, p_reader_token_sha256)
   on conflict (environment) do update set reader_token_sha256 = excluded.reader_token_sha256;
+end;
 $$;
 
 -- The only reader. Serves the active ready generation of the environment whose reader secret matches;
 -- missing, unknown, not-ready or foreign-environment state raises instead of falling back anywhere.
 -- Same semantics as the legacy 3-argument search_docs: cosine similarity > threshold, nearest first.
+-- The secret must be at least 32 characters (checked before hashing); match_count is 1..20 in effect
+-- (null or < 1 raises, larger values are capped) and similarity_threshold must lie in [-1, 1].
 create function public.search_docs_generation(
   query_embedding extensions.vector, match_count int, similarity_threshold float8,
   target_environment text, reader_token text)
@@ -336,9 +344,18 @@ declare
   s public.docs_generation_slots;
   g public.docs_generations;
 begin
+  if reader_token is null or length(reader_token) < 32 then
+    raise exception 'generation retrieval is not configured' using errcode = '42501';
+  end if;
+  if match_count is null or match_count < 1 then
+    raise exception 'match_count must be at least 1' using errcode = '22023';
+  end if;
+  if similarity_threshold is null or similarity_threshold = 'NaN'::float8 or similarity_threshold not between -1 and 1 then
+    raise exception 'similarity_threshold must be in [-1, 1]' using errcode = '22023';
+  end if;
   select * into s from public.docs_generation_slots x
   where x.environment = target_environment
-    and x.reader_token_sha256 = encode(sha256(convert_to(coalesce(reader_token, ''), 'UTF8')), 'hex');
+    and x.reader_token_sha256 = encode(sha256(convert_to(reader_token, 'UTF8')), 'hex');
   if not found then
     raise exception 'generation retrieval is not configured' using errcode = '42501';
   end if;
@@ -357,7 +374,7 @@ begin
   where c.generation_id = g.id
     and 1 - (c.embedding operator(extensions.<=>) query_embedding) > similarity_threshold
   order by c.embedding operator(extensions.<=>) query_embedding
-  limit match_count;
+  limit least(match_count, 20);
 end;
 $$;
 

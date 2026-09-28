@@ -27,7 +27,7 @@ function route(db: Awaited<ReturnType<typeof replica>>, jina: 'ok' | 'fail') {
     if (url === 'https://api.jina.ai/v1/embeddings') {
       if (jina === 'fail') return new Response('bad request', { status: 400 })
       const { input: texts } = JSON.parse(String(init!.body))
-      return Response.json({ data: texts.map((t: string) => ({ embedding: fakeVector(t) })) })
+      return Response.json({ data: texts.map((t: string, index: number) => ({ index, embedding: fakeVector(t) })).reverse() })
     }
     throw new TypeError(`unexpected fetch ${url}`)
   }) as typeof fetch
