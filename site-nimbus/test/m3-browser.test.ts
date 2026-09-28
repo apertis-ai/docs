@@ -121,10 +121,17 @@ test('the mobile drawer opens and closes at 390x844 with focus contained and ret
 
 test('triggers dispatch apertis-docs:open with the right surface; the shell binds no Cmd/Ctrl+K', { skip }, async () => {
   const { context, page } = await open('/api/');
+  // #9's dialog opens on each trigger; close it before the next click.
   await page.click('.navbar__search');
+  await page.keyboard.press('Escape');
   await page.click('.ask-docs-trigger');
+  await page.keyboard.press('Escape');
+  const before = (await opens(page)).length;
   await page.keyboard.press('ControlOrMeta+k');
-  assert.deepEqual(await opens(page), [{ surface: 'search' }, { surface: 'ask' }]);
+  assert.deepEqual((await opens(page)).slice(0, before), [{ surface: 'search' }, { surface: 'ask' }]);
+  // The shell dispatches nothing for Cmd/Ctrl+K; #9 is the only key owner.
+  assert.equal((await opens(page)).length, before);
+  await page.keyboard.press('Escape');
   await page.goto(base + '/', { waitUntil: 'load' });
   await page.click('.hero__search');
   assert.deepEqual(await opens(page), [{ surface: 'search' }]);
@@ -345,6 +352,7 @@ test('prev/next only link converted pages', { skip }, async () => {
 });
 
 test('no GitHub raw or other-release requests and no uncaught page errors', { skip }, () => {
-  assert.deepEqual(external.filter((u) => !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(u)), []);
+  // Google Fonts (inherited from legacy) and #9's Turnstile script, loaded when the Ask surface opens.
+  assert.deepEqual(external.filter((u) => !/^https:\/\/(fonts\.(googleapis|gstatic)\.com|challenges\.cloudflare\.com\/turnstile\/)/.test(u)), []);
   assert.deepEqual(errors, []);
 });
