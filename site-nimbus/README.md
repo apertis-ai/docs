@@ -137,15 +137,22 @@ that one missing artifact until #7 generates it.
 
 ### Usage
 
-Run these in `site-nimbus/`:
+Run this in `site-nimbus/`:
 
 ```sh
-node converter/convert.ts   # phase 1: regenerate content + manifest from the legacy sources
-npm run build               # astro build; phase 2 runs in astro:build:done
+npm run m2:regenerate   # = node converter/convert.ts (phase 1) && npm run build (phase 2 in astro:build:done)
 ```
 
-Commit what they change. Generated files are never edited by hand. A test regenerates them and
-fails on any drift.
+Commit what it changes. Generated files are never edited by hand. A test regenerates them and fails
+on any drift.
+
+**Every committed change to a `site-nimbus` input needs a regenerated manifest.** `buildId` hashes
+every tracked file under `site-nimbus/`, so this applies to the converter, contracts, routes,
+layouts, config, tests, the README and the lockfile. It also applies to the route inventory.
+
+- Run `npm run m2:regenerate` and commit `src/manifest/manifest.json` together with the change.
+- Otherwise the drift test (`test/m2-convert.test.ts`) fails.
+- If the change alters `/`, a build under `CI` or `M2_CHECK=1` also fails.
 
 | Path | What it is |
 | --- | --- |
@@ -171,6 +178,8 @@ These are the constructs the 11 PoC sources actually use.
 - **Docusaurus admonitions:** `:::note|tip|info|warning|caution|danger [title]` at column 0.
   - HTML gets `<aside class="admonition admonition-<type>">` with a `.admonition-title`.
   - Clean Markdown gets a blockquote, `> **Tip: title**`.
+  - Both forms are followed by a blank line, so a paragraph right after `:::` stays outside the
+    admonition.
 - **Links:** an internal link must resolve to an inventory route, else conversion fails.
   - `./x.md` / `../x.mdx` resolve through the inventory `sourcePath`.
   - Extensionless relative links resolve against the canonical path, as Docusaurus does.
@@ -189,6 +198,8 @@ These fail with `file:line: construct` and stop the conversion:
 
 - imports/exports
 - JSX or inline HTML, including `<Tabs>`/`<TabItem>` and HTML comments
+- links split across lines (an unmatched `](`)
+- admonition titles with Markdown other than code spans
 - `{…}` expressions
 - `{#id}` heading ids
 - fence meta (`title=`, `npm2yarn`)
@@ -216,6 +227,8 @@ HTML is rendered by Nimbus's Sätteri pipeline:
    - sets each markdown-less entry's `contentSha256` to the SHA-256 of its built `<main>` text,
      with whitespace collapsed and trimmed;
    - writes the manifest atomically, and only when the hash changed;
+   - under `CI` or `M2_CHECK=1`, fails instead of rewriting, because the committed manifest is
+     stale (`npm test` builds this way and never modifies tracked files);
    - fails the build unless `validateManifest(manifest, { inventory, outDir })` returns `[]` and
      nothing exists at `/api/ask`.
 
@@ -223,7 +236,11 @@ No HTML output contains `contentSha256` (`test:dist` asserts this). So phase 2 n
 the pages it hashes: one build reaches the fixed point, and a rebuild is byte-identical
 (`test/m2-rebuild.test.ts`).
 
-After #8 changes `/`, run `npm run build` and commit the updated `page:index` hash.
+After #8 changes `/`, run `npm run m2:regenerate` and commit the updated manifest.
+
+Rows that are not publish-eligible are still converted, so their constructs are checked, but they
+get no render source and no artifact. Their `contentSha256` is the hash of the clean Markdown, since
+they have neither HTML nor an artifact. A row that is agent-eligible but not publish-eligible fails.
 
 The full manifest is a build input only. It is never copied to `dist/`.
 
@@ -234,11 +251,17 @@ The full manifest is a build input only. It is never copied to `dist/`.
   - It is reproducible from any full clone.
   - It does not change when the candidate, the converter or sibling packets commit, so the
     committed manifest can name it. `HEAD` would always be one commit stale.
-  - Conversion refuses a shallow clone and uncommitted changes under those roots.
-- **`buildId`** is `<sourceSha>.<first 12 hex of SHA-256>` over `package-lock.json` and every file
-  under `converter/`.
-  - Files are hashed in sorted order, each as `path\0bytes\0`.
-  - Any converter or dependency change gives a new id.
+  - Conversion refuses a shallow clone and uncommitted changes under those roots. CI must check out
+    with `fetch-depth: 0`.
+  - It assumes docs changes land as merge commits. If a docs change is squash- or rebase-merged,
+    `main` gets a new commit, so the committed manifest's `sourceSha` goes stale. The drift test
+    then fails on `main` until someone runs `npm run m2:regenerate` and commits the result.
+- **`buildId`** is `<sourceSha>.<first 12 hex of SHA-256>` over the build inputs:
+  - the working-tree bytes of every file `git ls-files` tracks under `site-nimbus/`;
+  - `migration/nimbus/route-inventory.json`.
+  - Generated output (`src/content/**`, `src/manifest/manifest.json`) is excluded. Untracked files
+    (such as `.DS_Store` or `.evidence/`) never count.
+  - Paths are repository-relative, sorted, and each hashed as `path\0bytes\0`.
 
 ### Extending to the full corpus (#13)
 

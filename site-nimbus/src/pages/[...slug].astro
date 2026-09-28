@@ -11,7 +11,11 @@ export async function getStaticPaths() {
   const missing = manifest.documents.filter((d) => !d.id.startsWith('page:') && d.eligibility.publish && !served.has(d.servedPath));
   if (missing.length) throw new Error(`no generated content for ${missing.map((d) => d.id).join(', ')}; run node converter/convert.ts`);
   // documentAt throws for a generated entry without a manifest entry (stale content).
-  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry, doc: documentAt(`/${entry.id}/`) } }));
+  return entries.map((entry) => {
+    const doc = documentAt(`/${entry.id}/`);
+    if (!doc.eligibility.publish) throw new Error(`${doc.id} is not publish-eligible but has generated content`);
+    return { params: { slug: entry.id }, props: { entry, doc } };
+  });
 }
 
 interface Props {

@@ -2,11 +2,13 @@
 // Pure: needs no build output. Post-build checks live in test/dist.check.ts.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { ConversionError, convert, convertDocument, mainTextSha256 } from '../converter/convert.ts';
+import { ConversionError, buildHashOf, convert, convertDocument, mainTextSha256 } from '../converter/convert.ts';
+import { finalize } from '../converter/integration.ts';
 import type { InventoryRoute, RouteInventory } from '../src/contracts/navigation.ts';
 
 const site = path.resolve(import.meta.dirname, '..');
@@ -131,4 +133,84 @@ test('the manifest covers all 12 PoC documents with the spec buildId form', () =
   const home = m.documents.find((d) => d.id === 'page:index')!;
   assert.equal(home.markdown, null);
   for (const d of m.documents.filter((x) => x.id !== 'page:index')) assert.equal(d.contentSha256, d.markdown?.sha256);
+});
+
+// ---- repair round: review findings P1/P2 ----
+
+test('an admonition close is followed by a blank line, so the next paragraph stays outside it', () => {
+  const out = doc(':::tip\nx\n:::\nAfter.');
+  assert.match(out.render, /<\/aside>\n\nAfter\./);
+  assert.match(out.clean, /> x\n\nAfter\./);
+});
+
+test('the H1 icon uses the resolved image path', () => {
+  const out = convertDocument('# <img src="../static/img/roocode_1.png" width="36" style={{display: \'inline-block\'}} /> API Keys\n', keys, ctx);
+  assert.match(out.render, /# <img src="\/assets\/images\/roocode_1-[0-9a-f]{16}\.png"/);
+  assert.equal(out.assets.length, 1);
+});
+
+test('admonition titles with Markdown beyond code spans and multi-line links fail loudly', () => {
+  fails(':::tip A **bold** title\nx\n:::', /admonition title/);
+  fails(':::note See [x](/intro)\nx\n:::', /admonition title/);
+  fails('[multi\nline](/intro)', /unmatched link/);
+  fails('[x](\n/intro)', /unmatched link/);
+});
+
+test('rows that are not publish-eligible get no render source or artifact', () => {
+  const edited = inventory.map((r) => (r.documentId === 'default:getting-started/quick-start'
+    ? { ...r, eligibility: { publish: false, search: false, agent: false, rag: false } } : r));
+  const out = tmp();
+  const m = convert({ outRoot: out, inventory: edited });
+  const d = m.documents.find((x) => x.id === 'default:getting-started/quick-start')!;
+  assert.equal(d.markdown, null);
+  assert.match(d.contentSha256, /^[0-9a-f]{64}$/);
+  assert.notEqual(d.contentSha256, '0'.repeat(64));
+  assert.equal(fs.existsSync(path.join(out, 'src/content/docs/getting-started')), false);
+  assert.equal(fs.existsSync(path.join(out, 'src/content/public/getting-started')), false);
+  const agentOnly = inventory.map((r) => (r.documentId === 'default:getting-started/quick-start'
+    ? { ...r, eligibility: { ...r.eligibility, publish: false } } : r));
+  assert.throws(() => convert({ outRoot: tmp(), inventory: agentOnly }), /publish/);
+});
+
+test('buildId covers tracked site-nimbus inputs and the inventory, never generated output or untracked files', () => {
+  const repo = tmp();
+  const put = (rel: string, body: string) => {
+    fs.mkdirSync(path.dirname(path.join(repo, rel)), { recursive: true });
+    fs.writeFileSync(path.join(repo, rel), body);
+  };
+  for (const rel of ['site-nimbus/package-lock.json', 'site-nimbus/converter/convert.ts', 'site-nimbus/astro.config.ts',
+    'site-nimbus/src/pages/[...slug].astro', 'site-nimbus/src/layouts/DocLayout.astro', 'site-nimbus/src/contracts/manifest.ts',
+    'site-nimbus/src/content/docs/x/index.md', 'site-nimbus/src/manifest/manifest.json', 'migration/nimbus/route-inventory.json',
+    'docs/unrelated.md']) put(rel, `${rel}\n`);
+  execFileSync('git', ['-C', repo, 'init', '-q']);
+  execFileSync('git', ['-C', repo, 'add', '-A']);
+  const siteRoot = path.join(repo, 'site-nimbus');
+  const base = buildHashOf(siteRoot, repo);
+  assert.match(base, /^[0-9a-f]{12}$/);
+  const same = (rel: string, body: string) => { const old = fs.readFileSync(path.join(repo, rel)); put(rel, body); assert.equal(buildHashOf(siteRoot, repo), base, rel); fs.writeFileSync(path.join(repo, rel), old); };
+  const differs = (rel: string) => { const old = fs.readFileSync(path.join(repo, rel)); put(rel, 'changed\n'); assert.notEqual(buildHashOf(siteRoot, repo), base, rel); fs.writeFileSync(path.join(repo, rel), old); };
+  put('site-nimbus/.DS_Store', 'junk');
+  put('site-nimbus/converter/scratch.ts', 'untracked');
+  assert.equal(buildHashOf(siteRoot, repo), base, 'untracked files');
+  same('site-nimbus/src/content/docs/x/index.md', 'regenerated\n');
+  same('site-nimbus/src/manifest/manifest.json', '{}\n');
+  same('docs/unrelated.md', 'legacy edit\n');
+  for (const rel of ['site-nimbus/package-lock.json', 'site-nimbus/converter/convert.ts', 'site-nimbus/astro.config.ts',
+    'site-nimbus/src/pages/[...slug].astro', 'site-nimbus/src/layouts/DocLayout.astro', 'site-nimbus/src/contracts/manifest.ts',
+    'migration/nimbus/route-inventory.json']) differs(rel);
+});
+
+test('finalize in check mode refuses a stale committed manifest instead of rewriting it', () => {
+  const siteRoot = tmp();
+  const outDir = tmp();
+  fs.mkdirSync(path.join(siteRoot, 'src/content/public'), { recursive: true });
+  const stale = { ...JSON.parse(fs.readFileSync(path.join(site, 'src/manifest/manifest.json'), 'utf8')) };
+  stale.documents = stale.documents.map((d: { id: string }) => (d.id === 'page:index' ? { ...d, contentSha256: '0'.repeat(64) } : d));
+  const file = path.join(siteRoot, 'src/manifest/manifest.json');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const bytes = `${JSON.stringify(stale, null, 2)}\n`;
+  fs.writeFileSync(file, bytes);
+  fs.writeFileSync(path.join(outDir, 'index.html'), '<main>home</main>');
+  assert.throws(() => finalize(outDir, siteRoot, { check: true }), /not regenerated/);
+  assert.equal(fs.readFileSync(file, 'utf8'), bytes);
 });

@@ -86,7 +86,10 @@ const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
   assert.equal(manifest.documents.length, 12);
-  assert.deepEqual(files.filter((f) => /manifest/i.test(f)), []);
+  // Content, not file names: Astro may name a CSS chunk after src/manifest/manifest.ts.
+  const keys = ['manifestVersion', 'sourceSha', 'sourcePath', 'servedPath', 'canonicalUrl', 'contentSha256'].map((k) => `"${k}"`);
+  const values = manifest.documents.flatMap((d) => [d.contentSha256, JSON.stringify(d.sourcePath)]);
+  assert.deepEqual(files.filter((f) => { const body = read(f); return [...keys, ...values].some((v) => body.includes(v)); }), []);
 });
 
 test('m2: entries without Markdown hash their built <main> text, and no page embeds that hash', () => {
@@ -133,6 +136,8 @@ test('m2: images resolve in dist, and no Docusaurus/MDX syntax survives into HTM
     const prose = md.replace(/^(?:> )?[ \t]*(`{3,}|~{3,})[\s\S]*?^(?:> )?[ \t]*\1[ \t]*$/gm, '').replace(/`[^`\n]+`/g, '');
     assert.doesNotMatch(prose, /^(import|export)\s|<[A-Za-z]/m, d.id);
     for (const [, src] of md.matchAll(/!\[[^\]]*\]\(\/([^)\s]+)\)/g)) assert.ok(files.includes(src), `${d.id}.md: ${src}`);
+    const targets = [...prose.matchAll(/\]\(([^)\s]*)/g)].map((m) => m[1]);
+    assert.deepEqual(targets.filter((t) => !/^(\/|#|[a-z][a-z0-9+.-]*:)/i.test(t)), [], `${d.id}.md: relative links`);
   }
 });
 
