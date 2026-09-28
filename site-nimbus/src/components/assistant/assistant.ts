@@ -239,7 +239,11 @@ declare global {
   }
 }
 
-const sessionId = sessionStorage.getItem(SESSION_KEY) ?? crypto.randomUUID();
+// crypto.randomUUID exists only in secure contexts; plain-HTTP hosts (a tailnet preview) need the fallback.
+const newSessionId = () => typeof crypto.randomUUID === 'function'
+  ? crypto.randomUUID()
+  : Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+const sessionId = sessionStorage.getItem(SESSION_KEY) ?? newSessionId();
 sessionStorage.setItem(SESSION_KEY, sessionId);
 const messagesKey = `askdocs_messages_${sessionId}`;
 let messages: Message[] = [];
