@@ -1,0 +1,21 @@
+---
+// "On this page" from the rendered body's headings (h2, with h3 nested), as the legacy TOC.
+import type { Heading } from '../../layouts/DocLayout.astro';
+
+interface Props {
+  headings: Heading[];
+}
+const tree: { h: Heading; children: Heading[] }[] = [];
+for (const h of Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3)) {
+  if (h.depth === 2 || !tree.length) tree.push({ h, children: [] });
+  else tree[tree.length - 1].children.push(h);
+}
+---
+<ul class="toc">
+  {tree.map(({ h, children }) => (
+    <li>
+      <a href={`#${h.slug}`}>{h.text}</a>
+      {children.length > 0 && <ul>{children.map((c) => <li><a href={`#${c.slug}`}>{c.text}</a></li>)}</ul>}
+    </li>
+  ))}
+</ul>
