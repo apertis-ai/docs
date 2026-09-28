@@ -1,12 +1,14 @@
 # Nimbus isolated real-integration path (issue #12). Runs ONLY on explicit dispatch, bound to the
-# `nimbus-isolated` GitHub Environment, which must have required reviewers and hold the isolated
-# project's secrets. Never runs on pull requests. Fails closed when a secret or the target is missing.
+# `nimbus-isolated` GitHub Environment. That environment must have required reviewers and must restrict
+# deployment branches to protected branches; it holds the isolated project's secrets and the
+# non-secret variables NIMBUS_ISOLATED_HOST and NIMBUS_PRODUCTION_PROJECT_REF. Never runs on pull
+# requests. Fails closed when a secret, a variable or the target is missing or does not match.
 #
 # It exercises what the PR gates cannot: real Turnstile, Jina embeddings, the isolated Supabase
-# project, the #11 generation create/validate (and, when asked, activation in that isolated project),
-# and the real /api/ask on a deployment-shaped isolated preview whose bindings an operator configured
-# (indexer/README.md "Operator contract", step 8). It never deploys, never touches production
-# retrieval, and never activates anything outside the isolated project.
+# project, the #11 generation create/validate/activate in that project, and the real /api/ask on a
+# deployment-shaped isolated preview whose bindings an operator configured (indexer/README.md
+# "Operator contract", step 8). It never deploys, never touches production retrieval, and never
+# activates anything outside the isolated project.
 # Documentation: migration/nimbus/acceptance/README.md
 name: nimbus-isolated
 
@@ -14,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       target_url:
-        description: 'Origin of the isolated, operator-configured preview (https, not production, not loopback)'
+        description: 'Origin of the isolated, operator-configured preview (https; its host must equal vars.NIMBUS_ISOLATED_HOST)'
         required: true
         type: string
       generation_environment:
@@ -22,12 +24,20 @@ on:
         required: true
         default: preview
         type: string
+      preview_generation_environment:
+        description: 'The ASK_GENERATION_ENVIRONMENT binding of the target preview (operator-confirmed; must equal generation_environment)'
+        required: true
+        type: string
       apply_migration:
         description: 'Apply supabase/migrations to the isolated project first (operator step 1)'
         type: boolean
         default: false
       activate_generation:
         description: 'Activate the new generation in the isolated project (operator step 7)'
+        type: boolean
+        default: true
+      generation_already_active:
+        description: 'Operator confirms the new generation is already active for this environment (instead of activating it here)'
         type: boolean
         default: false
 
@@ -37,6 +47,10 @@ permissions:
 concurrency:
   group: nimbus-isolated
   cancel-in-progress: false # a cancelled run must not leave a half-created generation behind
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
 
 env:
   ASTRO_TELEMETRY_DISABLED: '1'
@@ -51,33 +65,36 @@ jobs:
     env:
       TARGET_URL: ${{ inputs.target_url }}
       GEN_ENV: ${{ inputs.generation_environment }}
+      PREVIEW_GEN_ENV: ${{ inputs.preview_generation_environment }}
+      ACTIVATE: ${{ inputs.activate_generation }}
+      ALREADY_ACTIVE: ${{ inputs.generation_already_active }}
+      NIMBUS_ISOLATED_HOST: ${{ vars.NIMBUS_ISOLATED_HOST }}
+      NIMBUS_PRODUCTION_PROJECT_REF: ${{ vars.NIMBUS_PRODUCTION_PROJECT_REF }}
       DATABASE_URL: ${{ secrets.NIMBUS_ISOLATED_DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.NIMBUS_ISOLATED_SUPABASE_URL }}
       SUPABASE_SERVICE_KEY: ${{ secrets.NIMBUS_ISOLATED_SUPABASE_SERVICE_KEY }}
       JINA_API_KEY: ${{ secrets.NIMBUS_ISOLATED_JINA_API_KEY }}
     steps:
-      - name: fail closed on a missing target, secret or indexer
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - name: fail closed on a missing or mismatched target, project, secret or indexer
         run: |
-          set -euo pipefail
-          : "${TARGET_URL:?target_url is required}" "${GEN_ENV:?}"
+          : "${TARGET_URL:?target_url is required}" "${GEN_ENV:?}" "${PREVIEW_GEN_ENV:?}"
+          : "${NIMBUS_ISOLATED_HOST:?variable NIMBUS_ISOLATED_HOST is missing}"
+          : "${NIMBUS_PRODUCTION_PROJECT_REF:?variable NIMBUS_PRODUCTION_PROJECT_REF is missing}"
           : "${DATABASE_URL:?secret NIMBUS_ISOLATED_DATABASE_URL is missing}"
           : "${SUPABASE_URL:?secret NIMBUS_ISOLATED_SUPABASE_URL is missing}"
           : "${SUPABASE_SERVICE_KEY:?secret NIMBUS_ISOLATED_SUPABASE_SERVICE_KEY is missing}"
           : "${JINA_API_KEY:?secret NIMBUS_ISOLATED_JINA_API_KEY is missing}"
-          host=$(node -e 'const u = new URL(process.argv[1]); if (u.protocol !== "https:") process.exit(3); console.log(u.hostname)' "$TARGET_URL") \
-            || { echo "target_url must be an https origin"; exit 1; }
-          case "$host" in
-            localhost|127.*|::1|\[::1\]|docs.apertis.ai|apertis.ai|www.apertis.ai) echo "refusing target host $host (loopback or production)"; exit 1 ;;
-          esac
-          [[ "$GEN_ENV" =~ ^[a-z][a-z0-9-]{0,31}$ ]] || { echo "invalid generation_environment"; exit 1; }
-          [ "$GEN_ENV" != production ] || { echo "refusing the production generation environment"; exit 1; }
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0, persist-credentials: false }
-      - name: the #11 indexer is mandatory on this path
-        run: test -f indexer/package.json && test -d supabase/migrations
-      - uses: actions/setup-node@v4
+          node scripts/nimbus/isolated-preflight.mjs
+          test -f indexer/package.json && test -d supabase/migrations
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
-      - run: npm ci && npm ci --prefix site-nimbus && npm ci --prefix indexer
+      - name: install
+        run: |
+          npm ci
+          npm ci --prefix site-nimbus
+          npm ci --prefix indexer
       - name: build (operator step 2)
         run: CI=1 npm run build
         working-directory: site-nimbus
@@ -90,7 +107,6 @@ jobs:
         run: node indexer/index.ts --environment "$GEN_ENV" --receipt "$RUNNER_TEMP/receipt.json"
       - name: validate the generation (operator step 5)
         run: |
-          set -euo pipefail
           jq -e --slurpfile d "$RUNNER_TEMP/dry.json" --slurpfile m site-nimbus/src/manifest/manifest.json '
             .generationState == "ready" and .documents.failed == 0 and .documents.pending == 0
             and .documents.complete == $d[0].documents.planned and .chunks.written == .chunks.planned
@@ -103,7 +119,7 @@ jobs:
       - name: activate the generation in the isolated project (operator step 7)
         if: inputs.activate_generation
         run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -At -c "select * from docs_generation_activate('$GEN_ENV', $GENERATION_ID)" | tee "$RUNNER_TEMP/activation.txt"
-      - name: Playwright outside the repository
+      - name: Playwright outside the repository (runner only)
         run: |
           npm install --prefix "$RUNNER_TEMP/pw" --no-save --no-package-lock "playwright@$PLAYWRIGHT_VERSION"
           "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
@@ -115,10 +131,11 @@ jobs:
         run: |
           export PLAYWRIGHT_MODULE="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs"
           node scripts/nimbus/acceptance.mjs --sha "$GITHUB_SHA" --only real-assistant,real-turnstile,real-indexing \
-            --indexer-receipt "$RUNNER_TEMP/receipt.json" --out "$RUNNER_TEMP/isolated-records.jsonl"
+            --indexer-receipt "$RUNNER_TEMP/receipt.json" --generation-environment "$GEN_ENV" \
+            --preview-generation-environment "$PREVIEW_GEN_ENV" --out "$RUNNER_TEMP/isolated-records.jsonl"
       - name: keep the evidence (receipts carry no keys or tokens)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: nimbus-isolated-evidence-${{ github.run_id }}
           path: |

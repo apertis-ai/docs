@@ -16,8 +16,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
+import { DUMMY_TOKEN, judgeReal } from './real-evidence.mjs';
+import { checkWorkflows } from './workflow-policy.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const SITE = path.join(ROOT, 'site-nimbus');
@@ -31,6 +32,8 @@ const preview = opt('preview')?.replace(/\/$/, '');
 const perfFiles = opts('perf');
 const mutantsFile = opt('mutants');
 const receiptFile = opt('indexer-receipt');
+const generationEnvironment = opt('generation-environment');
+const previewGenerationEnvironment = opt('preview-generation-environment');
 const only = opt('only')?.split(',');
 const outFile = opt('out');
 const isolated = process.env.NIMBUS_ISOLATED_URL?.replace(/\/$/, '');
@@ -217,7 +220,7 @@ const CUSTOM = {
   perf() {
     if (!perfFiles.length) return { status: 'BLOCKED', reason: 'no paired-perf result supplied (--perf); run scripts/nimbus/paired-perf.mjs', steps: [] };
     const merged = path.join(artifacts, 'paired-perf-merged.json');
-    const { step, log } = exec('paired-perf-gate', process.execPath, ['scripts/nimbus/paired-perf.mjs', 'gate', ...perfFiles.map((f) => path.resolve(f)), '--out', merged], ROOT);
+    const { step, log } = exec('paired-perf-gate', process.execPath, ['scripts/nimbus/paired-perf.mjs', 'gate', ...perfFiles.map((f) => path.resolve(f)), '--build-id', manifest.buildId, '--out', merged], ROOT);
     const r = JSON.parse(fs.readFileSync(merged, 'utf8'));
     step.inputsSha256 = perfFiles.map((f) => sha256(fs.readFileSync(f)));
     step.result = { pages: r.pages.length, samples: r.samples.length, gated: r.gates.length, withinBudget: r.gates.filter((g) => g.pass).length, failures: r.failures.map(redact), window: [r.startedAt, r.finishedAt] };
@@ -226,10 +229,13 @@ const CUSTOM = {
   mutants() {
     if (mutantsFile) {
       const r = JSON.parse(fs.readFileSync(mutantsFile, 'utf8'));
-      const kinds = ['activation', 'exclusion', 'wire', 'route', 'anchor'];
+      const kinds = ['activation', 'exclusion', 'wire', 'route', 'anchor', 'policy', 'preflight', 'real', 'perfgate'];
       const absent = kinds.filter((k) => !r.mutants.some((m) => m.mutant.startsWith(`${k}:`)));
-      const ok = r.total > 0 && r.detected === r.total && !absent.length;
-      return { status: ok ? 'PASS' : 'FAIL', reason: `${r.detected}/${r.total} injected regressions detected${absent.length ? `; missing classes ${absent.join(', ')}` : ''} (recorded ${r.ranAt})`, steps: [{ command: 'node scripts/nimbus/gate-mutants.mjs --out <file>', input: path.basename(mutantsFile), inputSha256: sha256(fs.readFileSync(mutantsFile)) }] };
+      const identity = [];
+      if (r.candidateSha !== head) identity.push(`ran at ${r.candidateSha}, candidate is ${head}`);
+      if (r.buildId !== manifest.buildId) identity.push(`ran against buildId ${r.buildId}, candidate is ${manifest.buildId}`);
+      const ok = r.total > 0 && r.detected === r.total && !absent.length && !identity.length;
+      return { status: ok ? 'PASS' : 'FAIL', reason: `${r.detected}/${r.total} injected regressions detected at ${String(r.candidateSha).slice(0, 12)}${absent.length ? `; missing classes ${absent.join(', ')}` : ''}${identity.length ? `; ${identity.join('; ')}` : ''} (recorded ${r.ranAt})`, steps: [{ command: 'node scripts/nimbus/gate-mutants.mjs --out <file>', input: path.basename(mutantsFile), inputSha256: sha256(fs.readFileSync(mutantsFile)) }] };
     }
     return { status: 'BLOCKED', reason: 'no gate-mutants result supplied (--mutants); its served mutants need the preview port free, so run scripts/nimbus/gate-mutants.mjs --out <file> first', steps: [] };
   },
@@ -245,71 +251,39 @@ const CUSTOM = {
     return { status: ok ? 'PASS' : 'FAIL', reason: `${r.items.length} items, ${r.documents.excluded} excluded, ${r.chunks.planned} chunks planned for ${r.buildId}`, steps: [step] };
   },
   workflowPolicy() {
-    const failures = [];
     const dir = path.join(ROOT, '.github/workflows');
-    const require = createRequire(path.join(ROOT, 'package.json'));
-    const YAML = require('yaml');
-    const files = fs.readdirSync(dir).filter((f) => /^nimbus-.*\.ya?ml$/.test(f));
-    const pr = files.find((f) => f.startsWith('nimbus-pr')), iso = files.find((f) => f.startsWith('nimbus-isolated'));
-    if (!pr || !iso) failures.push('nimbus-pr-gates.yml and nimbus-isolated.yml are both required');
-    for (const f of files) {
-      const text = fs.readFileSync(path.join(dir, f), 'utf8');
-      const wf = YAML.parse(text);
-      const on = wf.on ?? wf.true;
-      const triggers = Object.keys(typeof on === 'string' ? { [on]: null } : on);
-      if (triggers.includes('pull_request_target')) failures.push(`${f}: pull_request_target`);
-      if (JSON.stringify(wf.permissions) !== JSON.stringify({ contents: 'read' })) failures.push(`${f}: top-level permissions must be exactly contents: read`);
-      for (const [id, job] of Object.entries(wf.jobs)) {
-        if (job.permissions) failures.push(`${f} ${id}: job-level permissions`);
-        for (const step of job.steps ?? []) {
-          if (String(step.uses ?? '').startsWith('actions/checkout') && step.with?.['fetch-depth'] !== 0) failures.push(`${f} ${id}: checkout without fetch-depth 0`);
-          if (/\b(wrangler\s+(pages\s+)?deploy|gh\s+(pr|release|workflow)|git\s+push|supabase\s+db\s+push)\b/.test(step.run ?? '')) failures.push(`${f} ${id}: deploy/push/dispatch command`);
-        }
-      }
-      if (f === pr) {
-        if (triggers.some((t) => !['pull_request', 'push'].includes(t))) failures.push(`${f}: triggers ${triggers}`);
-        if (/secrets\./.test(text) || /^\s*environment:/m.test(text)) failures.push(`${f}: uses secrets or an environment`);
-        if (wf.concurrency?.['cancel-in-progress'] !== true) failures.push(`${f}: superseded runs are not cancelled`);
-        const need = ['site-nimbus/**', 'docs/**', 'docs-api/**', 'src/**', 'functions/**', 'assistant/**', 'indexer/**', 'supabase/migrations/**', 'migration/nimbus/**', 'scripts/**', '.github/workflows/nimbus-*.yml'];
-        for (const t of ['pull_request', 'push']) for (const p of need) if (!on[t]?.paths?.includes(p)) failures.push(`${f}: ${t} paths miss ${p}`);
-      }
-      if (f === iso) {
-        if (JSON.stringify(triggers) !== '["workflow_dispatch"]') failures.push(`${f}: must be workflow_dispatch only`);
-        if (wf.concurrency?.['cancel-in-progress'] !== false) failures.push(`${f}: an isolated run must not be cancelled midway`);
-        for (const [id, job] of Object.entries(wf.jobs)) {
-          if (job.environment !== 'nimbus-isolated') failures.push(`${f} ${id}: not bound to the nimbus-isolated environment`);
-          const guard = job.steps?.[0]?.run ?? '';
-          for (const name of Object.keys(job.env ?? {}).filter((k) => /secrets\./.test(String(job.env[k])))) if (!guard.includes(`\${${name}:?`)) failures.push(`${f} ${id}: first step does not fail closed on ${name}`);
-          if (!/TARGET_URL:\?/.test(guard)) failures.push(`${f} ${id}: first step does not fail closed on the target`);
-        }
-      }
-    }
-    const legacyIndexing = spawnSync('git', ['diff', '--quiet', '7b6ef85', '--', '.github/workflows/index-docs.yml'], { cwd: ROOT }).status;
-    if (legacyIndexing !== 0) failures.push('.github/workflows/index-docs.yml differs from 7b6ef85');
+    const { failures, files } = checkWorkflows(ROOT);
     return { status: failures.length ? 'FAIL' : 'PASS', reason: failures.join('; ') || `${files.length} nimbus workflows: no pull_request_target, contents: read, fetch-depth 0, no secrets in PR gates, dispatch-only isolated path bound to its environment, legacy indexing workflow byte-identical`, steps: [{ command: 'workflow policy (YAML parse)', files: files.map((f) => ({ file: f, sha256: sha256(fs.readFileSync(path.join(dir, f))) })) }] };
   },
   async real(entry) {
     if (!isolated) return { status: 'BLOCKED', reason: 'no isolated environment configured (NIMBUS_ISOLATED_URL); mock/contract evidence cannot close this entry', steps: [] };
-    if (/^(localhost|127\.|\[?::1)/.test(new URL(isolated).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
+    if (/^(localhost|0\.0\.0\.0|127\.|\[?::1)/.test(new URL(isolated).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
     // Every real entry names the exact corpus: the generation receipt of the isolated run.
     if (!receiptFile) return { status: 'BLOCKED', reason: 'no generation receipt (--indexer-receipt); real evidence must name the generation it retrieved from', steps: [] };
-    const r = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
-    const norm = (p) => p.replace(/[#?].*$/, '').replace(/(.)\/$/, '$1');
-    const inGeneration = new Set(r.items.map((i) => norm(i.urlPath)));
-    const ready = r.generationState === 'ready' && r.buildId === manifest.buildId && r.documents.failed === 0 && r.documents.pending === 0;
+    const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
+    const isolatedBuildId = await fetch(isolated + '/').then((res) => res.text()).then(buildMeta, () => null);
     const probe = await realProbe();
-    const cited = probe.sources.map(norm);
-    const fromGeneration = cited.length > 0 && cited.every((p) => inGeneration.has(p));
-    const ok = entry.id === 'real-turnstile' ? probe.record.tokenSent === true && probe.record.status === 200
-      : entry.id === 'real-indexing' ? ready && fromGeneration
-      : probe.ok && ready && fromGeneration;
+    const active = activeGeneration(generationEnvironment); // read after the probe
+    const verdict = judgeReal(entry.id, { manifestBuildId: manifest.buildId, servedBuildId: isolatedBuildId, receipt, generationEnvironment, previewGenerationEnvironment, activeGenerationId: active.id, probe });
     return {
-      status: ok ? 'PASS' : 'FAIL',
-      reason: `generation ${r.generationId} (${r.generationState}, ${r.buildId}); ${probe.reason}; citations ${fromGeneration ? 'all' : 'not all'} in the generation`,
-      steps: [{ command: 'real probe (Playwright) against the isolated preview + generation receipt', generationId: r.generationId, receiptSha256: sha256(fs.readFileSync(receiptFile)), probe: probe.record }],
+      status: verdict.status,
+      reason: `generation ${receipt.generationId}; ${probe.reason}${verdict.reasons.length ? `; ${verdict.reasons.join('; ')}` : ''}`,
+      steps: [{ command: 'real probe (Playwright) against the isolated preview + generation receipt + docs_generation_slots', generationId: receipt.generationId, receiptSha256: sha256(fs.readFileSync(receiptFile)),
+        isolatedServedBuildId: isolatedBuildId, generationEnvironment: generationEnvironment ?? null, previewGenerationEnvironment: previewGenerationEnvironment ?? null, activeGenerationId: active.id, activeGenerationNote: active.why ?? null, probe: probe.record }],
     };
   },
 };
+
+// The environment's active generation in the isolated project. null when it cannot be read.
+function activeGeneration(environment) {
+  if (!environment || !/^[a-z][a-z0-9-]{0,31}$/.test(environment)) return { id: null, why: 'no valid --generation-environment' };
+  if (!process.env.DATABASE_URL) return { id: null, why: 'DATABASE_URL is not set' };
+  const r = spawnSync('psql', [process.env.DATABASE_URL, '-X', '-At', '-v', 'ON_ERROR_STOP=1', '-v', `env=${environment}`],
+    { input: "select coalesce(active_generation_id::text, 'none') from docs_generation_slots where environment = :'env';\n", encoding: 'utf8' });
+  if (r.status !== 0) return { id: null, why: 'psql could not read docs_generation_slots' };
+  const v = r.stdout.trim();
+  return /^\d+$/.test(v) ? { id: Number(v) } : { id: 'none', why: 'no active generation for this environment' };
+}
 
 // One real question through the candidate UI on the isolated preview: Turnstile (real widget),
 // /api/ask (real handler, real providers, configured generation), streamed frames, rendered citations.
@@ -322,7 +296,17 @@ async function realProbe() {
   try {
     const page = await (await browser.newContext()).newPage();
     let body = '';
-    page.on('request', (req) => { if (req.method() === 'POST' && new URL(req.url()).pathname === '/api/ask') { const b = req.postDataJSON(); record.requestFields = Object.keys(b).sort(); record.tokenSent = typeof b.turnstileToken === 'string' && b.turnstileToken.length > 20; } });
+    page.on('request', (req) => {
+      const u = new URL(req.url());
+      const key = u.hostname === 'challenges.cloudflare.com' && u.pathname.match(/\/([0-3]x[0-9A-Za-z_-]{10,})(\/|$)/)?.[1];
+      if (key) record.sitekey = key;
+      if (req.method() === 'POST' && u.pathname === '/api/ask') {
+        const b = req.postDataJSON();
+        record.requestFields = Object.keys(b).sort();
+        record.tokenSent = typeof b.turnstileToken === 'string' && b.turnstileToken.length > 20;
+        record.dummyToken = b.turnstileToken === DUMMY_TOKEN;
+      }
+    });
     const answered = page.waitForResponse((res) => res.request().method() === 'POST' && new URL(res.url()).pathname === '/api/ask', { timeout: 120000 });
     await page.goto(isolated + record.path, { waitUntil: 'load', timeout: 60000 });
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
@@ -342,7 +326,7 @@ async function realProbe() {
     record.frames = { total: frames.length, content: frames.filter((l) => /"content"\s*:\s*"[^"]/.test(l)).length, done: frames.at(-1) === 'data: [DONE]' };
     const served = new Set(manifest.documents.filter((d) => d.eligibility.rag).map((d) => new URL(d.canonicalUrl).pathname));
     record.citations = sources.map((s) => ({ href: s, known: served.has(s.replace(/[#?].*$/, '')) || served.has(s.replace(/[#?].*$/, '').replace(/(.)\/$/, '$1')) }));
-    const ok = record.tokenSent && record.status === 200 && /text\/event-stream/.test(record.contentType ?? '') && record.frames.content > 0 && record.frames.done && sources.length > 0 && record.citations.every((c) => c.known);
+    const ok = record.tokenSent && !record.dummyToken && record.status === 200 && /text\/event-stream/.test(record.contentType ?? '') && record.frames.content > 0 && record.frames.done && sources.length > 0 && record.citations.every((c) => c.known);
     probeResult = { ok, sources, record, reason: `status ${record.status}, ${record.frames.content} content frames, [DONE] ${record.frames.done}, ${sources.length} citations (${record.citations.filter((c) => c.known).length} to rag-eligible manifest pages); server-side embedding and retrieval are evidenced by the cited generation, not observed here` };
   } catch (e) {
     probeResult = { ok: false, sources: [], record, reason: redact(e.message).slice(0, 300) };
