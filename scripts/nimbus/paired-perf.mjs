@@ -2,8 +2,8 @@
 // migration/nimbus/budgets.json `budgetRules`.
 //
 //   PLAYWRIGHT=<playwright/index.mjs or scripts/nimbus/playwright-channel.mjs> \
-//   node scripts/nimbus/paired-perf.mjs run --legacy <url> --candidate <url> [--runs 5] [--page /p/ ...] [--out result.json]
-//   node scripts/nimbus/paired-perf.mjs gate <result.json> [<result.json> ...] [--out merged.json]
+//   node scripts/nimbus/paired-perf.mjs run --legacy <url> --candidate <url> --build-id <expected candidate buildId> [--runs 5] [--page /p/ ...] [--out result.json]
+//   node scripts/nimbus/paired-perf.mjs gate <result.json> [<result.json> ...] --build-id <expected candidate buildId> [--out merged.json]
 //
 // `run` measures; `gate` re-evaluates recorded raw samples (for example page shards) without a browser.
 // Each sample is one `measure.mjs perf <base> --runs 1 --page <p>` process, so the measurement code
@@ -26,6 +26,16 @@ const mode = args.shift();
 const opt = (name) => { const i = args.indexOf(`--${name}`); return i >= 0 ? args.splice(i, 2)[1] : undefined; };
 const opts = (name) => { const out = []; for (let v; (v = opt(name)) !== undefined;) out.push(v); return out; };
 
+// What each side served for this sample: the candidate's `apertis-docs:build` meta, and the legacy
+// build's main bundle name (Docusaurus has no build meta).
+async function servedIdentity(base) {
+  const html = await fetch(base + '/').then((r) => r.text(), () => '');
+  return {
+    build: html.match(/<meta name="apertis-docs:build" content="([^"]*)"/)?.[1] ?? null,
+    mainBundle: html.match(/\/assets\/js\/(main\.[0-9a-f]+\.js)/)?.[1] ?? null,
+  };
+}
+
 function measure(base, page) {
   const stdout = execFileSync(process.execPath, [MEASURE, 'perf', base, '--runs', '1', '--page', page], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 1 << 26 });
   const { results } = JSON.parse(stdout);
@@ -33,11 +43,20 @@ function measure(base, page) {
 }
 
 // Pure evaluation of raw samples against budgets.json. Returns medians, one row per gated value, and failures.
-function evaluate(samples) {
+function evaluate(samples, expectedBuildId) {
   const medians = {};
   const gates = [];
   const failures = [];
-  const pages = [...new Set(samples.map((s) => s.page))];
+  // The gate covers exactly the frozen page set, both profiles and `runs` rounds per side.
+  const pages = budgets.protocol.pages;
+  if (!samples.length) failures.push('no samples');
+  const extra = [...new Set(samples.map((s) => s.page))].filter((p) => !pages.includes(p));
+  if (extra.length) failures.push(`samples for pages outside budgets.protocol.pages: ${extra.join(', ')}`);
+  if (!expectedBuildId) failures.push('no expected candidate buildId (--build-id)');
+  const builds = [...new Set(samples.filter((s) => s.site === 'candidate').map((s) => s.served?.build ?? null))];
+  if (builds.length !== 1 || builds[0] !== expectedBuildId) failures.push(`candidate samples served buildId ${JSON.stringify(builds)}, expected ${expectedBuildId}`);
+  const bundles = [...new Set(samples.filter((s) => s.site === 'legacy').map((s) => s.served?.mainBundle ?? null))];
+  if (bundles.length !== 1 || !bundles[0]) failures.push(`legacy samples served main bundles ${JSON.stringify(bundles)}, expected one`);
   for (const profile of Object.keys(budgets.protocol.profiles)) {
     for (const page of pages) {
       const of = (site) => samples.filter((s) => s.site === site && s.profile === profile && s.page === page);
@@ -93,10 +112,11 @@ function emit(result) {
 if (mode === 'run') {
   const legacy = opt('legacy')?.replace(/\/$/, ''), candidate = opt('candidate')?.replace(/\/$/, '');
   const runs = Number(opt('runs') ?? budgets.protocol.runs);
+  const buildId = opt('build-id');
   const pages = opts('page');
   const selected = pages.length ? pages : budgets.protocol.pages;
-  if (!legacy || !candidate || selected.some((p) => !budgets.protocol.pages.includes(p))) {
-    console.error('usage: paired-perf.mjs run --legacy <url> --candidate <url> [--runs 5] [--page /p/ ...] [--out file]'); process.exit(2);
+  if (!legacy || !candidate || !buildId || selected.some((p) => !budgets.protocol.pages.includes(p))) {
+    console.error('usage: paired-perf.mjs run --legacy <url> --candidate <url> --build-id <id> [--runs 5] [--page /p/ ...] [--out file]'); process.exit(2);
   }
   const samples = [];
   const startedAt = new Date().toISOString();
@@ -105,20 +125,22 @@ if (mode === 'run') {
       const order = run % 2 ? [['candidate', candidate], ['legacy', legacy]] : [['legacy', legacy], ['candidate', candidate]];
       for (const [site, base] of order) {
         const at = new Date().toISOString();
-        for (const [profile, metrics] of Object.entries(measure(base, page))) samples.push({ site, page, profile, run, at, metrics });
+        const served = await servedIdentity(base);
+        for (const [profile, metrics] of Object.entries(measure(base, page))) samples.push({ site, page, profile, run, at, served, metrics });
         console.error(`${page} run ${run} ${site} done`);
       }
     }
   }
-  emit({ methodology, legacy: redact(legacy, 'legacy'), candidate: redact(candidate, 'candidate'), runs, startedAt, finishedAt: new Date().toISOString(), pages: selected, ...evaluate(samples), samples });
+  emit({ methodology, legacy: redact(legacy, 'legacy'), candidate: redact(candidate, 'candidate'), runs, startedAt, finishedAt: new Date().toISOString(), pages: selected, expectedBuildId: buildId, ...evaluate(samples, buildId), samples });
 } else if (mode === 'gate') {
   const out = opt('out');
+  const buildId = opt('build-id');
   const files = args.filter((a) => !a.startsWith('--'));
-  if (!files.length) { console.error('usage: paired-perf.mjs gate <result.json> ... [--out file]'); process.exit(2); }
+  if (!files.length) { console.error('usage: paired-perf.mjs gate <result.json> ... --build-id <id> [--out file]'); process.exit(2); }
   const parts = files.map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
   const samples = parts.flatMap((p) => p.samples);
   if (out) args.push('--out', out);
-  emit({ methodology, legacy: parts[0].legacy, candidate: parts[0].candidate, runs: parts[0].runs, startedAt: parts.map((p) => p.startedAt).sort()[0], finishedAt: parts.map((p) => p.finishedAt).sort().at(-1), pages: [...new Set(samples.map((s) => s.page))], ...evaluate(samples), samples });
+  emit({ methodology, legacy: parts[0].legacy, candidate: parts[0].candidate, runs: parts[0].runs, startedAt: parts.map((p) => p.startedAt).sort()[0], finishedAt: parts.map((p) => p.finishedAt).sort().at(-1), pages: [...new Set(samples.map((s) => s.page))], expectedBuildId: buildId, ...evaluate(samples, buildId), samples });
 } else if (mode) {
   console.error('usage: paired-perf.mjs run|gate ...'); process.exit(2);
 }
