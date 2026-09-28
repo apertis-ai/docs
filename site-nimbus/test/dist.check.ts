@@ -6,8 +6,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import zlib from 'node:zlib';
 
 import { manifest } from '../src/manifest/manifest.ts';
+import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
@@ -26,6 +28,14 @@ const inventory = JSON.parse(fs.readFileSync(path.join(root, '../migration/nimbu
 const STATIC_ASSETS: string[] = inventory.routes
   .filter((r: { kind: string; disposition: string }) => r.kind === 'static-asset' && r.disposition === 'preserve')
   .map((r: { path: string }) => r.path.slice(1));
+
+// #9 search index (Pagefind, fetched lazily by the assistant client so no HTML references it). Only the
+// files the client loads are allowed; the index content is checked against the manifest below.
+const SEARCH_BUNDLE = /^pagefind\/(pagefind\.js|pagefind-worker\.js|pagefind-entry\.json|pagefind\.en_[0-9a-f]+\.pf_meta|wasm\.en\.pagefind|index\/en_[0-9a-f]+\.pf_index|fragment\/en_[0-9a-f]+\.pf_fragment)$/;
+const SEARCH_FILES = files.filter((f) => SEARCH_BUNDLE.test(f));
+const searchText = (f: string) => zlib.gunzipSync(fs.readFileSync(path.join(dist, f))).toString('utf8');
+const fragments = () => SEARCH_FILES.filter((f) => f.startsWith('pagefind/fragment/'))
+  .map((f) => JSON.parse(searchText(f).replace(/^pagefind_dcd/, '')) as { url: string; word_count: number; meta: { title?: string } });
 
 const INTERNAL_SECRET_NAMES = /CLOUDFLARE_API_TOKEN|SUPABASE_|TURNSTILE_SECRET|JINA_API_KEY/;
 const ENV_FILE = /^(\.env|\.dev\.vars)(\..+)?$/;
@@ -46,7 +56,7 @@ test('every output file derives from a publishable manifest entry or is referenc
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // #7: clean Markdown artifacts at their manifest paths (agent-eligible entries only).
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
-  const allowed = new Set([...html, ...referenced, ...markdown, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS]);
+  const allowed = new Set([...html, ...referenced, ...markdown, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
   for (const f of html) assert.ok(files.includes(f), `missing ${f}`);
@@ -76,6 +86,35 @@ test('no environment secret values or internal secret names appear in the output
   });
   // Report file names only, never the values.
   assert.deepEqual(leaked, []);
+});
+
+test('the search index holds exactly the publish+search-eligible manifest entries, with content', () => {
+  const eligible = manifest.documents.filter((d) => d.eligibility.publish && d.eligibility.search);
+  const indexed = fragments();
+  assert.deepEqual(indexed.map((f) => f.url).sort(), eligible.map((d) => d.servedPath).sort());
+  for (const f of indexed) assert.ok(f.word_count > 0 && f.meta.title, `${f.url} indexed without content or title`);
+  for (const f of ['pagefind/pagefind.js', 'pagefind/pagefind-entry.json', 'pagefind/wasm.en.pagefind']) assert.ok(files.includes(f), `missing ${f}`);
+});
+
+test('decompressed search index carries no internals, secret names or env values', () => {
+  const values = envValues([root, path.dirname(root)]);
+  const leaks = /sourceMappingURL|openspec|migration\/nimbus|scripts\/nimbus|functions\/api|"sourcePath"|"manifestVersion"|"contentSha256"/;
+  const compressed = SEARCH_FILES.filter((f) => /\.pf_(fragment|index|meta)$/.test(f));
+  assert.ok(compressed.length > 0);
+  assert.deepEqual(compressed.filter((f) => {
+    const body = searchText(f);
+    return leaks.test(body) || INTERNAL_SECRET_NAMES.test(body) || values.some((v) => body.includes(v));
+  }), []);
+});
+
+test('no simulated or canned Ask Docs answer path ships (baseline defect 6)', () => {
+  const scripts = [
+    ...files.filter((f) => f.endsWith('.js') && !f.startsWith('pagefind/')).map(read),
+    ...files.filter((f) => f.endsWith('.html')).flatMap((f) => [...read(f).matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1])),
+  ];
+  assert.ok(scripts.some((s) => s.includes('apertis-docs:open')), 'the assistant client is not in the output');
+  const canned = /Local preview response|isLocalPreview|location\.hostname|["'](localhost|127\.0\.0\.1|::1)["']/;
+  assert.deepEqual(scripts.filter((s) => canned.test(s)).map((s) => s.match(canned)![0]), []);
 });
 
 // ---- #7 conversion and publication manifest (run after `npm run build`) ----
@@ -150,5 +189,32 @@ test('m2: HTML and clean Markdown carry the same code blocks for every converted
     const mdCode = [...read(d.markdown!.path.slice(1)).matchAll(/^((?:> )?)([ \t]*)(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n\1[ \t]*\3[ \t]*$/gm)]
       .map((m) => m[4].split('\n').map((l) => l.slice(m[1].length).slice(m[2].length)).join('\n').trimEnd());
     assert.deepEqual(htmlCode, mdCode, d.id);
+  }
+});
+
+// ---- #9 assistant mount and search-index content ----
+const publishedHtml = () => manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
+
+test('m4: every published page mounts the assistant dialog exactly once', () => {
+  for (const f of publishedHtml()) assert.equal(read(f).match(/\bid="apertis-assistant"/g)?.length ?? 0, 1, f);
+});
+
+// Shell chrome (#8) must stay out of the index. Skipped until a shell renders <nav>/<aside> outside <article>.
+const outsideArticle = (html: string) => html.replace(/<article[\s\S]*?<\/article>/g, '').replace(/<dialog id="apertis-assistant"[\s\S]*?<\/dialog>/, '');
+const hasShell = publishedHtml().some((f) => /<(nav|aside)\b/.test(outsideArticle(read(f))));
+test('m4: search fragments carry no shell chrome (navbar/sidebar labels) beyond what the article says', { skip: hasShell ? false : 'no shell <nav>/<aside> outside <article> yet (#8)' }, () => {
+  const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  const count = (hay: string, needle: string) => hay.split(needle).length - 1;
+  const byUrl = new Map(fragments().map((f) => [f.url, (f as unknown as { content: string }).content]));
+  for (const d of searchDocuments(manifest.documents)) {
+    const html = read(`${d.servedPath.slice(1)}index.html`);
+    const article = text(html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '');
+    // Every link label of the page chrome (navbar, sidebar, footer, TOC), wherever the shell puts it.
+    const labels = [...new Set([...outsideArticle(html).matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)]
+      .map((a) => text(a[1]).replace(/\s+/g, ' ').trim())
+      .filter((l) => l.length > 2))];
+    const content = byUrl.get(d.servedPath) ?? '';
+    const extra = labels.filter((l) => count(content, l) > count(article.replace(/\s+/g, ' '), l));
+    assert.deepEqual(extra, [], `${d.servedPath}: shell labels in the index`);
   }
 });
