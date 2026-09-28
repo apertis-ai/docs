@@ -354,6 +354,9 @@ button { font: inherit; color: inherit; }
 /* Table of contents */
 .toc { margin: 0; padding: 0 0 0 18px; border-left: 1px solid var(--border); list-style: none; }
 .toc ul { margin: 2px 0 8px; padding: 0 0 0 16px; list-style: none; }
+/* Legacy desktop rule: an h2's h3 list shows only while that h2 or one of its h3s is active. */
+.doc-page__toc .toc ul { display: none; }
+.doc-page__toc .toc > li:has(a.active) > ul { display: block; }
 .toc a {
   display: block;
   padding: 3px 0 3px 8px;
@@ -485,6 +488,10 @@ button { font: inherit; color: inherit; }
   font-size: 14px;
   line-height: 24px;
 }
+.docs-content figure { margin: 0; }
+/* Nimbus emits Shiki tokens as --shiki-light / --shiki-dark variables (_nimbus/shiki.css). */
+.astro-code, .astro-code span { color: var(--shiki-light); }
+[data-theme='dark'] .astro-code, [data-theme='dark'] .astro-code span { color: var(--shiki-dark); }
 .docs-content pre {
   max-width: 100%;
   margin: 20px 0 24px;
@@ -525,9 +532,13 @@ button { font: inherit; color: inherit; }
   border-radius: 8px;
   border-collapse: separate;
   border-spacing: 0;
-  overflow: hidden;
+  /* Legacy sizing (auto layout, wraps to the column) but scrolls in its own box when it cannot fit. */
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
 }
-.docs-content th, .docs-content td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 20px; text-align: left; }
+.docs-content th, .docs-content td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 20px; text-align: left; }
 .docs-content th { background: var(--surface); color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
 .docs-content tr:last-child td { border-bottom: 0; }
 .docs-content tr:hover td { background: rgba(13, 148, 136, 0.04); }
@@ -584,7 +595,8 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 996px) {
   :root { --navbar-height: 56px; }
-  html, body { max-width: 100%; overflow-x: hidden; }
+  /* clip, not hidden, and never on <html>: html overflow would stop body[data-scroll-locked] reaching the viewport. */
+  body { max-width: 100%; overflow-x: clip; }
   .navbar { padding: 0 16px; }
   .navbar__menu { display: inline-flex; }
   .navbar__links, .navbar__right { display: none; }
@@ -599,7 +611,8 @@ button { font: inherit; color: inherit; }
   .docs-content h1 { font-size: 32px; line-height: 38px; }
   .docs-content h2 { font-size: 23px; line-height: 31px; }
   /* Wide tables scroll inside their own box. */
-  .docs-content table { display: block; max-width: 100%; overflow-x: auto; white-space: nowrap; }
+  .docs-content table { white-space: nowrap; }
+  .docs-content table::after { content: '→ Scroll to see more'; display: block; padding: 0.5rem; color: var(--muted); font-size: 0.75rem; font-style: italic; text-align: center; }
   .drawer .sidebar__heading { font-family: var(--font); font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--text); }
   .drawer .sidebar__link, .drawer .sidebar__group > summary { font-size: 15px; }
 }
@@ -616,3 +629,36 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Admonitions (#7 emits aside.admonition.admonition-<type> > p.admonition-title), legacy Infima look:
+   note=secondary, tip=success, info=info, warning/caution=warning, danger=danger. */
+.admonition {
+  --adm: #3b82f6;
+  --adm-rgb: 59, 130, 246;
+  --adm-fg: #474748;
+  margin: 0 0 1em;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--adm);
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, rgba(var(--adm-rgb), 0.1) 0%, rgba(var(--adm-rgb), 0.05) 100%);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.admonition-tip { --adm: #22c55e; --adm-rgb: 34, 197, 94; --adm-fg: #003100; }
+.admonition-info { --adm: #06b6d4; --adm-rgb: 6, 182, 212; --adm-fg: #193c47; }
+.admonition-warning, .admonition-caution { --adm: #f59e0b; --adm-rgb: 245, 158, 11; --adm-fg: #4d3800; }
+.admonition-danger { --adm: #ef4444; --adm-rgb: 239, 68, 68; --adm-fg: #4b1113; }
+[data-theme='dark'] .admonition { --adm-fg: #fdfdfe; }
+[data-theme='dark'] .admonition-tip { --adm-fg: #e6f6e6; }
+[data-theme='dark'] .admonition-info { --adm-fg: #eef9fd; }
+[data-theme='dark'] :is(.admonition-warning, .admonition-caution) { --adm-fg: #fff8e6; }
+[data-theme='dark'] .admonition-danger { --adm-fg: #ffebec; }
+.docs-content .admonition-title {
+  margin: 0 0 0.3rem;
+  color: var(--adm-fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.docs-content .admonition > :last-child { margin-bottom: 0; }
+.docs-content .admonition a { text-decoration: underline; text-decoration-color: var(--adm); }

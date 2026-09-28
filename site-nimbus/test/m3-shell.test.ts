@@ -76,8 +76,13 @@ test('page navigation gives the active sidebar, trail, and prev/next within that
   assert.equal(api?.next?.label, 'Chat Completion');
   const quick = pageNavigation(buildNavigation(inventory.routes, example.documents), 'default:getting-started/quick-start');
   assert.deepEqual(quick?.trail, ['Getting Started']);
-  assert.equal(quick?.prev?.href, '/intro/');
-  assert.equal(quick?.next?.label, 'Models');
+  // Prev/next skip sidebar rows without a manifest entry (they would 404): the example manifest has none nearby.
+  assert.equal(quick?.prev, null);
+  assert.equal(quick?.next, null);
+  const docs: ManifestDocument[] = [...example.documents, { ...example.documents[1], id: 'default:billing/payg', servedPath: '/billing/payg/' }];
+  const withPayg = pageNavigation(buildNavigation(inventory.routes, docs), 'default:getting-started/quick-start');
+  assert.equal(withPayg?.next?.href, '/billing/payg/');
+  assert.equal(pageNavigation(buildNavigation(inventory.routes, docs), 'default:billing/payg')?.prev?.href, '/getting-started/quick-start/');
 });
 
 test('markdown URL is the same origin plus the page meta path, never another host', () => {
