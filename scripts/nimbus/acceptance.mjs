@@ -177,7 +177,9 @@ function exitStep(label, cmd, argv, cwd, env, needs) {
   const why = missing(needs);
   if (why.length) return { status: 'BLOCKED', reason: why.map((w) => WHY[w]).join('; '), steps: [] };
   const { step, log } = exec(label, cmd, argv, cwd, env);
-  return { status: step.exitCode === 0 ? 'PASS' : 'FAIL', reason: log.trim().split('\n').filter(Boolean).slice(-1)[0]?.slice(0, 300) ?? '', steps: [step] };
+  const lines = log.trim().split('\n').filter(Boolean);
+  const summary = lines.findLast((l) => /\b(passed|detected|without failure|errors?|failures?)\b/i.test(l)) ?? lines.at(-1) ?? '';
+  return { status: step.exitCode === 0 ? 'PASS' : 'FAIL', reason: summary.slice(0, 300), steps: [step] };
 }
 
 const CUSTOM = {
@@ -288,20 +290,24 @@ const CUSTOM = {
   },
   async real(entry) {
     if (!isolated) return { status: 'BLOCKED', reason: 'no isolated environment configured (NIMBUS_ISOLATED_URL); mock/contract evidence cannot close this entry', steps: [] };
-    const host = new URL(isolated).hostname;
-    if (/^(localhost|127\.|\[?::1)/.test(host)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
-    if (entry.id === 'real-indexing') {
-      if (!receiptFile) return { status: 'BLOCKED', reason: 'no generation receipt (--indexer-receipt)', steps: [] };
-      const r = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
-      const probe = await realProbe();
-      const paths = new Set(r.items.map((i) => i.urlPath));
-      const cited = probe.sources.map((s) => s.replace(/[#?].*$/, '').replace(/(.)\/$/, '$1'));
-      const ok = r.generationState === 'ready' && r.buildId === manifest.buildId && r.documents.failed === 0 && probe.ok && cited.length > 0 && cited.every((p) => paths.has(p));
-      return { status: ok ? 'PASS' : 'FAIL', reason: `generation ${r.generationId} ${r.generationState} for ${r.buildId}; cited ${cited.join(', ') || 'nothing'}`, steps: [{ command: 'receipt + real probe', receiptSha256: sha256(fs.readFileSync(receiptFile)), generationId: r.generationId, probe: probe.record }] };
-    }
+    if (/^(localhost|127\.|\[?::1)/.test(new URL(isolated).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
+    // Every real entry names the exact corpus: the generation receipt of the isolated run.
+    if (!receiptFile) return { status: 'BLOCKED', reason: 'no generation receipt (--indexer-receipt); real evidence must name the generation it retrieved from', steps: [] };
+    const r = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
+    const norm = (p) => p.replace(/[#?].*$/, '').replace(/(.)\/$/, '$1');
+    const inGeneration = new Set(r.items.map((i) => norm(i.urlPath)));
+    const ready = r.generationState === 'ready' && r.buildId === manifest.buildId && r.documents.failed === 0 && r.documents.pending === 0;
     const probe = await realProbe();
-    const ok = entry.id === 'real-turnstile' ? probe.record.tokenSent && probe.record.status === 200 : probe.ok;
-    return { status: ok ? 'PASS' : 'FAIL', reason: probe.reason, steps: [{ command: 'real probe (Playwright) against the isolated preview', probe: probe.record }] };
+    const cited = probe.sources.map(norm);
+    const fromGeneration = cited.length > 0 && cited.every((p) => inGeneration.has(p));
+    const ok = entry.id === 'real-turnstile' ? probe.record.tokenSent === true && probe.record.status === 200
+      : entry.id === 'real-indexing' ? ready && fromGeneration
+      : probe.ok && ready && fromGeneration;
+    return {
+      status: ok ? 'PASS' : 'FAIL',
+      reason: `generation ${r.generationId} (${r.generationState}, ${r.buildId}); ${probe.reason}; citations ${fromGeneration ? 'all' : 'not all'} in the generation`,
+      steps: [{ command: 'real probe (Playwright) against the isolated preview + generation receipt', generationId: r.generationId, receiptSha256: sha256(fs.readFileSync(receiptFile)), probe: probe.record }],
+    };
   },
 };
 
