@@ -21,6 +21,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'docusaurus.config.js'
+      - 'babel.config.js'
       - 'sidebars.js'
       - 'sidebarsApi.js'
       - '.github/workflows/nimbus-*.yml'
@@ -42,6 +43,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'docusaurus.config.js'
+      - 'babel.config.js'
       - 'sidebars.js'
       - 'sidebarsApi.js'
       - '.github/workflows/nimbus-*.yml'
@@ -52,6 +54,10 @@ permissions:
 concurrency:
   group: nimbus-pr-gates-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
 
 env:
   ASTRO_TELEMETRY_DISABLED: '1'
@@ -65,9 +71,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '22', cache: npm }
       - run: npm ci
       - run: npm run build
@@ -78,9 +84,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false } # sourceSha needs full history (#7)
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: site-nimbus/package-lock.json }
       - run: npm ci
         working-directory: site-nimbus
@@ -88,7 +94,9 @@ jobs:
         run: CI=1 npm run build
         working-directory: site-nimbus
       - name: conversion is deterministic (the build changed no tracked file)
-        run: git diff --exit-code && test -z "$(git status --porcelain --untracked-files=no)"
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=no)"
       - run: npm run typecheck
         working-directory: site-nimbus
       - run: npm test
@@ -106,12 +114,14 @@ jobs:
       PREVIEW_URL: http://127.0.0.1:8788
       PLAYWRIGHT_CHANNEL: bundled # Playwright's own Chromium in CI; local runs keep system Chrome
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
       - name: install (root for the Pages Function, site-nimbus for the build and wrangler)
-        run: npm ci && npm ci --prefix site-nimbus
+        run: |
+          npm ci
+          npm ci --prefix site-nimbus
       - run: CI=1 npm run build
         working-directory: site-nimbus
       - name: Playwright outside the repository (no lockfile change)
@@ -143,9 +153,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false } # the legacy handler is read from 7b6ef85
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
       - run: npm ci
       - run: node --test --test-timeout=10000 'assistant/test/*.test.ts'
@@ -157,8 +167,11 @@ jobs:
       - name: indexer tests (local PGlite replica, no network)
         if: steps.indexer.outputs.present == 'true'
         run: |
-          npm ci --prefix site-nimbus && (cd site-nimbus && CI=1 npm run build)
-          cd indexer && npm ci && node --test --test-timeout=120000 'test/*.test.ts'
+          npm ci --prefix site-nimbus
+          (cd site-nimbus && CI=1 npm run build)
+          cd indexer
+          npm ci
+          node --test --test-timeout=120000 'test/*.test.ts'
       - name: indexer dry run (no credentials, no writes)
         if: steps.indexer.outputs.present == 'true'
         run: |
@@ -172,25 +185,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
-      - run: npm ci && npm ci --prefix site-nimbus
+      - run: |
+          npm ci
+          npm ci --prefix site-nimbus
       - run: CI=1 npm run build
         working-directory: site-nimbus
       - run: node scripts/nimbus/gate-mutants.mjs --port 8805
       - name: every mutant was restored
-        run: git diff --exit-code && test -z "$(git status --porcelain --untracked-files=all -- site-nimbus/src migration assistant functions)"
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all -- site-nimbus/src migration assistant functions)"
 
   policy:
     name: workflow policy
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm }
       - run: npm ci
       - run: node scripts/nimbus/acceptance.mjs --only workflow-policy --sha "$GITHUB_SHA"
