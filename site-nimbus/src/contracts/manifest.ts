@@ -52,6 +52,8 @@ export interface ManifestV1 {
 }
 
 export const MANIFEST_SITE = 'https://docs.apertis.ai';
+/** The one manifest location, relative to `site-nimbus/`. #7 writes it; `src/manifest/manifest.ts` is its only loader. */
+export const MANIFEST_PATH = 'src/manifest/manifest.json';
 export const RESERVED_RUNTIME_PATH = '/api/ask';
 
 /** `<canonical path>.md`, or `<canonical path>index.md` for slash-canonical documents. */

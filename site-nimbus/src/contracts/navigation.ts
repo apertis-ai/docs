@@ -1,6 +1,19 @@
-// Navigation data — derived from the `sidebar` fields of migration/nimbus/route-inventory.json,
-// which is the route authority (openspec docs-routing-publication, docs-shell-interfaces).
+// Route inventory and navigation data — the types of migration/nimbus/route-inventory.json, which is
+// the route authority (openspec docs-routing-publication, docs-shell-interfaces). One definition only.
 import type { Eligibility } from './manifest.ts';
+
+export const INVENTORY_KINDS = [
+  'doc', 'page', 'blog-post', 'blog-generated', 'feed', 'generated', 'static', 'static-asset', 'runtime', 'absent',
+] as const;
+export type InventoryKind = (typeof INVENTORY_KINDS)[number];
+
+/** Kinds that have a manifest entry; every other kind is governed by its inventory row alone. */
+export const MANIFEST_KINDS = ['doc', 'page', 'blog-post'] as const satisfies readonly InventoryKind[];
+
+export const INVENTORY_DISPOSITIONS = [
+  'preserve', 'preserve-pending-decision', 'absent-at-baseline', 'reserved-runtime', 'legacy-implementation-artifact',
+] as const;
+export type InventoryDisposition = (typeof INVENTORY_DISPOSITIONS)[number];
 
 export type SidebarId = 'tutorialSidebar' | 'apiSidebar';
 
@@ -15,17 +28,50 @@ export interface SidebarPlacement {
   label?: string;
 }
 
-/** The inventory fields consumers rely on (the file carries more, e.g. `live` observations). */
+/** What the live legacy site served for the row (recorded at #5); `null` for rows not probed live. */
+export interface LiveObservation {
+  requested: string;
+  status: number;
+  location: string | null;
+  /** Same-origin redirect target and its status. */
+  final: { path: string; status: number } | null;
+  /** The slash-toggled request (`/x` <-> `/x/`); `null` for `/`. */
+  slashVariant: { path: string; status: number; location: string | null } | null;
+  /** Absolute canonical as rendered; manifest `canonicalUrl` must equal it. */
+  canonical: string | null;
+  /** Full `<title>`, normally `<manifest title> | Apertis Documentation`. */
+  title: string | null;
+  headingIds: string[];
+  links: string[];
+  images: string[];
+  articleSha256: string | null;
+}
+
 export interface InventoryRoute {
   path: string;
-  kind: string;
+  kind: InventoryKind;
+  /** `default:…`, `api:…`, `page:…`, `blog:…`, `generated:…`, `runtime:…`; `null` for absent/static rows. */
   documentId: string | null;
   sourcePath?: string | null;
   sidebar: SidebarPlacement | null;
   listed: boolean;
-  disposition: string;
+  disposition: InventoryDisposition;
+  note?: string;
   eligibility: Eligibility;
-  poc?: boolean;
+  /** Legacy (Docusaurus) search and retrieval behavior, for delta reporting. */
+  legacy: { search: boolean; rag: boolean };
+  poc: boolean;
+  /** Present in the legacy build output. */
+  built: boolean;
+  live: LiveObservation | null;
+}
+
+/** The whole migration/nimbus/route-inventory.json file. */
+export interface RouteInventory {
+  baseSha: string;
+  site: string;
+  liveSnapshotSha256: string;
+  routes: InventoryRoute[];
 }
 
 /** A sidebar link as the shell renders it: `label` is `sidebar.label ?? manifest title`, `href` the servedPath. */

@@ -1,12 +1,16 @@
 ---
 import DocumentHead from '../../components/DocumentHead.astro';
-import { documentAt, manifest } from '../../fixtures/manifest.ts';
+import { documentAt, manifest } from '../../manifest/manifest.ts';
 
 const doc = documentAt('/api/');
 ---
 <!doctype html>
 <html lang="en">
-  <head><DocumentHead doc={doc} buildId={manifest.buildId} /></head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <DocumentHead doc={doc} buildId={manifest.buildId} />
+  </head>
   <body>
     <main>
       <article>

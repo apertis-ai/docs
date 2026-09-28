@@ -6,14 +6,22 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
-import { markdownPathFor, type ManifestV1 } from '../src/contracts/manifest.ts';
+import { MANIFEST_PATH, markdownPathFor, type ManifestV1 } from '../src/contracts/manifest.ts';
 import { OPEN_EVENT, openAskDocs, openSearch, type OpenSurfaceDetail } from '../src/contracts/events.ts';
-import { PAGE_META, pageContext } from '../src/contracts/page.ts';
-import type { InventoryRoute } from '../src/contracts/navigation.ts';
+import { PAGE_META, TITLE_SUFFIX, pageContext } from '../src/contracts/page.ts';
+import {
+  INVENTORY_DISPOSITIONS,
+  INVENTORY_KINDS,
+  type InventoryRoute,
+  type LiveObservation,
+  type RouteInventory,
+} from '../src/contracts/navigation.ts';
+import { manifest as loadedManifest } from '../src/manifest/manifest.ts';
 
 const repo = path.resolve(import.meta.dirname, '../..');
 const readJson = (p: string) => JSON.parse(fs.readFileSync(path.join(repo, p), 'utf8'));
-const inventory: InventoryRoute[] = readJson('migration/nimbus/route-inventory.json').routes;
+const inventoryFile: RouteInventory = readJson('migration/nimbus/route-inventory.json');
+const inventory: InventoryRoute[] = inventoryFile.routes;
 const sha256 = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
 
 // A tiny build output with one real Markdown artifact.
@@ -109,8 +117,14 @@ test('the #5 example manifest only fails on the Markdown files it does not ship'
   assert.ok(errors.length > 0 && errors.every((e) => e.includes('missing')), errors.join('\n'));
 });
 
+test('the manifest loader reads the one canonical manifest location', () => {
+  assert.equal(MANIFEST_PATH, 'src/manifest/manifest.json');
+  const onDisk = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '..', MANIFEST_PATH), 'utf8'));
+  assert.deepEqual(loadedManifest, onDisk);
+});
+
 test('the fixture manifest matches the inventory; its only gap is the unconverted /api/index.md', () => {
-  const fixture = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../src/fixtures/manifest.json'), 'utf8'));
+  const fixture = loadedManifest;
   assert.deepEqual(fixture.documents.map((d: { servedPath: string }) => d.servedPath), ['/', '/api/']);
   assert.deepEqual(check(fixture, {}), ['api:index: markdown /api/index.md missing from build output']);
 });
@@ -132,9 +146,57 @@ test('openSearch/openAskDocs dispatch the one apertis-docs:open event', () => {
 });
 
 test('page metadata names and page context', () => {
+  assert.equal(TITLE_SUFFIX, ' | Apertis Documentation');
   assert.deepEqual(PAGE_META, { id: 'apertis-docs:id', build: 'apertis-docs:build', markdown: 'apertis-docs:markdown' });
   assert.deepEqual(pageContext('Quick Start', { pathname: '/getting-started/quick-start/', search: '?a=1', hash: '#x' }), {
     title: 'Quick Start',
     href: '/getting-started/quick-start/?a=1#x',
   });
+});
+
+test('the inventory file matches the RouteInventory contract', () => {
+  // Compile-time completeness: adding or dropping a LiveObservation field breaks this literal.
+  const liveKeys: Record<keyof LiveObservation, true> = {
+    requested: true, status: true, location: true, final: true, slashVariant: true, canonical: true,
+    title: true, headingIds: true, links: true, images: true, articleSha256: true,
+  };
+  assert.deepEqual(Object.keys(inventoryFile).sort(), ['baseSha', 'liveSnapshotSha256', 'routes', 'site']);
+  for (const r of inventory) {
+    assert.ok((INVENTORY_KINDS as readonly string[]).includes(r.kind), `${r.path}: kind ${r.kind}`);
+    assert.ok((INVENTORY_DISPOSITIONS as readonly string[]).includes(r.disposition), `${r.path}: ${r.disposition}`);
+    if (r.live) assert.deepEqual(Object.keys(r.live).sort(), Object.keys(liveKeys).sort(), r.path);
+  }
+  assert.ok(inventory.some((r) => r.live === null));
+});
+
+test('entries must come from doc, page or blog-post rows', () => {
+  const m = validManifest();
+  const blog = inventory.find((r) => r.documentId === 'generated:/blog')!;
+  m.documents[0] = { ...m.documents[0], id: 'generated:/blog', eligibility: blog.eligibility };
+  assert.ok(check(m).some((e) => e.includes('generated:/blog') && e.includes('kind blog-generated')));
+});
+
+test('canonicalUrl and title must equal the inventory live observation', () => {
+  const m = validManifest();
+  m.documents[1] = { ...m.documents[1], canonicalUrl: 'https://docs.apertis.ai/api/overview' };
+  assert.ok(check(m).some((e) => e.includes('api:index') && e.includes('canonicalUrl')));
+  const t = validManifest();
+  t.documents[1] = { ...t.documents[1], title: 'API Reference | Apertis Documentation' };
+  assert.ok(check(t).some((e) => e.includes('api:index') && e.includes('title')));
+});
+
+test('malformed manifests are reported, never thrown', () => {
+  const bad: unknown[] = [
+    null, 42, [], {},
+    { ...validManifest(), sourceSha: '(.*', buildId: '(.*.0123456789ab' },
+    { ...validManifest(), documents: [null, 5, 'x', {}] },
+    { ...validManifest(), documents: [{ ...validManifest().documents[0], canonicalUrl: 'not a url' }] },
+    { ...validManifest(), documents: [{ ...validManifest().documents[1], markdown: { path: 5, sha256: null }, canonicalUrl: 7, eligibility: null }] },
+  ];
+  for (const m of bad) {
+    let errors: string[] = [];
+    assert.doesNotThrow(() => { errors = check(m); }, JSON.stringify(m));
+    assert.ok(errors.length > 0, JSON.stringify(m));
+  }
+  assert.ok(check({ ...validManifest(), sourceSha: '(.*', buildId: '(.*.0123456789ab' }).some((e) => e.includes('sourceSha')));
 });
