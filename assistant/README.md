@@ -94,6 +94,13 @@ receives the request, so no body field, header, cookie or query parameter can ch
   | Apertis, including the whole relayed stream | 120 s |
 
   Client cancellation aborts the in-flight provider call and cancels the upstream stream.
+- **Stream termination:** `data: [DONE]` is sent exactly once, and only when the upstream sent `[DONE]`.
+  - Content after `[DONE]` is dropped, and the upstream is cancelled.
+  - These all end the stream the same way: an upstream error, an in-band `error` frame, a timeout, or
+    an upstream EOF without `[DONE]` (possibly a truncated answer).
+  - Each sends one `data: {"error":"Upstream stream interrupted","traceId":…}` frame with no `content`
+    key, then closes without `[DONE]`.
+  - Legacy clients keep the partial answer.
 - **Session counter, a known limitation and not abuse protection:** at most 20 questions per `sessionId`,
   counted in an in-memory `Map` that is local to one isolate.
   - The counter resets on cold start and is not shared between isolates.

@@ -134,7 +134,7 @@ describe('stream relay', () => {
   })
 
   test('CRLF lines, "data:" without a space and final buffered data without a newline', async () => {
-    const r = await run([`data: ${delta('a')}\r\n\r\ndata:${delta('b')}\n\ndata: ${delta('c')}`])
+    const r = await run([`data: ${delta('a')}\r\n\r\ndata:${delta('b')}\n\ndata: ${delta('c')}\n\ndata: [DONE]`])
     assert.deepEqual(frames(r.text), ['data: {"content":"a"}\n\n', 'data: {"content":"b"}\n\n', 'data: {"content":"c"}\n\n', 'data: [DONE]\n\n'])
   })
 
@@ -145,9 +145,17 @@ describe('stream relay', () => {
     assert.ok(p.apertisStream.cancelled || p.apertisStream.aborted, 'upstream released after [DONE]')
   })
 
-  test('upstream EOF without [DONE] still terminates with one [DONE]', async () => {
-    const r = await run([sse(delta('x'))])
-    assert.deepEqual(frames(r.text), ['data: {"content":"x"}\n\n', 'data: [DONE]\n\n'])
+  test('upstream EOF without [DONE] is an interrupted stream: content, one error frame, no [DONE]', async () => {
+    for (const chunks of [[sse(delta('x'))], [sse(delta('x')) + `data: ${delta('y')}`], []]) {
+      const r = await run(chunks)
+      const f = frames(r.text)
+      const content = f.slice(0, -1)
+      assert.deepEqual(content, chunks.length ? ['data: {"content":"x"}\n\n', ...(chunks[0].endsWith('}') ? ['data: {"content":"y"}\n\n'] : [])] : [])
+      const err = JSON.parse(f.at(-1)!.slice(6))
+      assert.deepEqual(Object.keys(err).sort(), ['error', 'traceId'])
+      assert.equal(err.error, 'Upstream stream interrupted')
+      assert.equal(f.filter((x) => x.includes('[DONE]')).length, 0)
+    }
   })
 
   test('midstream upstream error: partial content, one error frame, no [DONE]', async () => {

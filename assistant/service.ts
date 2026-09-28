@@ -248,7 +248,8 @@ export async function handleAsk(request: Request, env: AskEnv, deps: AskDeps = {
 }
 
 // Converts the upstream OpenAI-style stream into legacy frames: `data: {"content":…}` for each non-empty
-// delta and exactly one `data: [DONE]` on success. On an upstream failure it emits one
+// delta and exactly one `data: [DONE]`, only when the upstream sent [DONE]. On an upstream failure,
+// including EOF without [DONE], it emits one
 // `data: {"error":…,"traceId":…}` frame (no `content` key, so legacy clients ignore it) and closes
 // without [DONE]. Cancelling the response aborts and cancels the upstream request.
 function relay(body: ReadableStream<Uint8Array>, upstream: AbortController, traceId: string): ReadableStream<Uint8Array> {
@@ -299,7 +300,9 @@ function relay(body: ReadableStream<Uint8Array>, upstream: AbortController, trac
           if (finished) return
           for (const f of out) controller.enqueue(f)
           if (terminal === 'error') throw new Error('upstream error frame')
-          if (terminal === 'done' || done) {
+          // EOF without [DONE] may be a truncated answer, so it is reported as interrupted, not completed.
+          if (done && terminal !== 'done') throw new Error('upstream ended without [DONE]')
+          if (terminal === 'done') {
             controller.enqueue(frame('[DONE]'))
             controller.close()
             stop()
