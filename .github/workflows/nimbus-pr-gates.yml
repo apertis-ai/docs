@@ -149,6 +149,8 @@ jobs:
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
       - run: npm ci
       - run: node --test --test-timeout=10000 'assistant/test/*.test.ts'
+      - name: new client against the deployed legacy handler
+        run: node --test --test-timeout=20000 migration/nimbus/acceptance/new-client-old-server.test.ts
       - id: indexer
         name: indexer present?
         run: if [ -f indexer/package.json ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "indexer/ absent, its gate does not apply"; fi
