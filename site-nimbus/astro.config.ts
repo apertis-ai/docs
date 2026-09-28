@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import nimbus, { defineConfig as defineNimbusConfig } from '@cloudflare/nimbus-docs';
+import publication from './converter/integration.ts';
 
 import { manifest } from './src/manifest/manifest.ts';
 import { searchIndex } from './src/search/index-build.ts';
@@ -14,6 +15,8 @@ export default defineConfig({
   publicDir: '../static',
   // Directory pages (`/api/` -> dist/api/index.html); Pages answers `/api` with 308 -> `/api/`.
   build: { format: 'directory' },
+  // Legacy Docusaurus renders straight quotes; keep HTML text equal to the clean Markdown artifacts.
+  markdown: { smartypants: false },
   integrations: [
     nimbus(
       defineNimbusConfig({
@@ -29,6 +32,8 @@ export default defineConfig({
       // not @astrojs/sitemap's sitemap-index.xml.
       { sitemap: false },
     ),
+    // #7: publishes Markdown artifacts and finalizes/validates the manifest after the build.
+    publication(),
     // After the pages exist: Pagefind index of the publish+search-eligible manifest entries (#9).
     searchIndex(manifest.documents),
   ],

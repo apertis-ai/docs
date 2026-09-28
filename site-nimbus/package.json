@@ -13,7 +13,8 @@
     "test": "node --test \"test/*.test.ts\"",
     "preview": "cd .. && CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false WRANGLER_SEND_METRICS=false wrangler pages dev site-nimbus/dist --compatibility-date=2024-01-01 --persist-to site-nimbus/.wrangler/state",
     "test:routes": "node --test test/routes.check.ts",
-    "test:dist": "node --test test/dist.check.ts"
+    "test:dist": "node --test test/dist.check.ts",
+    "m2:regenerate": "node converter/convert.ts && CI= M2_CHECK=0 npm run build"
   },
   "dependencies": {
     "@astrojs/react": "6.0.1",
