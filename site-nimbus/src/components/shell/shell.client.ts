@@ -1,3 +1,4 @@
+import '../../styles/shell.css';
 // Shell behavior, one entry for every page: surface triggers, theme switch, mobile drawer, page
 // actions, TOC highlight, and Nimbus's code-copy buttons and heading anchors.
 // Search and Ask Docs open only through the contract event; this file binds no keyboard shortcut.
