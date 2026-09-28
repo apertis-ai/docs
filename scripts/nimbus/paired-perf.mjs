@@ -28,9 +28,16 @@ const opts = (name) => { const out = []; for (let v; (v = opt(name)) !== undefin
 
 // What each side served for this sample: the candidate's `apertis-docs:build` meta, and the legacy
 // build's main bundle name (Docusaurus has no build meta).
+// Retried: a keep-alive socket left idle across a measurement can be closed by the server, and the
+// first request on it then fails (seen as a null identity on every round's first sample).
 async function servedIdentity(base) {
-  const html = await fetch(base + '/').then((r) => r.text(), () => '');
+  let html = '', error = null;
+  for (let attempt = 0; attempt < 3 && !html; attempt++) {
+    html = await fetch(base + '/', { cache: 'no-store' }).then((r) => r.text(), (e) => { error = e.cause?.code ?? e.message; return ''; });
+    if (!html) await new Promise((r) => setTimeout(r, 500));
+  }
   return {
+    ...(html ? {} : { error }),
     build: html.match(/<meta name="apertis-docs:build" content="([^"]*)"/)?.[1] ?? null,
     mainBundle: html.match(/\/assets\/js\/(main\.[0-9a-f]+\.js)/)?.[1] ?? null,
   };
