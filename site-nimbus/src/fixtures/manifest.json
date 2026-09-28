@@ -1,0 +1,42 @@
+{
+  "_fixture": "M1 fixture derived from migration/nimbus/fixtures/manifest-v1.example.json: only the / and /api/ shells. Hashes are all-zero placeholders and buildId is synthetic; #7 replaces this with the generated manifest. Build-time input only; never publish it.",
+  "manifestVersion": 1,
+  "site": "https://docs.apertis.ai",
+  "sourceSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
+  "buildId": "7b6ef85abaaef50de5c8d277629b07a39c9c3065.000000000000",
+  "documents": [
+    {
+      "id": "page:index",
+      "sourcePath": "src/pages/index.js",
+      "servedPath": "/",
+      "canonicalUrl": "https://docs.apertis.ai/",
+      "title": "Home",
+      "eligibility": {
+        "publish": true,
+        "search": false,
+        "agent": false,
+        "rag": false
+      },
+      "markdown": null,
+      "contentSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "id": "api:index",
+      "sourcePath": "docs-api/index.md",
+      "servedPath": "/api/",
+      "canonicalUrl": "https://docs.apertis.ai/api/",
+      "title": "API Reference",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/index.md",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "contentSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}
