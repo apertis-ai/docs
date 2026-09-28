@@ -52,7 +52,8 @@ async function newPage(turnstile: TurnstileMode | { value: TurnstileMode } = 'ok
           }; })();`,
       });
     }
-    if (!url.startsWith('https://challenges.cloudflare.com/')) offOrigin.push(url);
+    // The shell's Google Fonts stylesheet is inherited from legacy (docusaurus.config.js); aborted, not counted.
+    if (!url.startsWith('https://challenges.cloudflare.com/') && !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url)) offOrigin.push(url);
     return route.abort();
   });
   const page = await context.newPage();
