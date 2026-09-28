@@ -188,7 +188,16 @@ const CUSTOM = {
     if (!preview) problems.push('no --preview');
     return { status: problems.length ? (preview ? 'FAIL' : 'BLOCKED') : 'PASS', reason: problems.join('; ') || `HEAD, manifest, dist and served buildId agree (${manifest.buildId})`, steps: [] };
   },
-  fixtures: () => exitStep('route-fixtures', process.execPath, ['scripts/nimbus/route-fixtures.mjs', 'check', preview ?? '', '--scope', 'poc'], ROOT, {}, ['preview']),
+  fixtures() {
+    const r = exitStep('route-fixtures', process.execPath, ['scripts/nimbus/route-fixtures.mjs', 'check', preview ?? '', '--scope', 'poc'], ROOT, {}, ['preview']);
+    if (!r.steps.length) return r;
+    // Per-path result, so every PoC page is readable from the record itself.
+    const log = fs.readFileSync(path.join(artifacts, r.steps[0].log), 'utf8');
+    const failed = new Set([...log.matchAll(/^- (\S+?): /gm)].map((m) => m[1]));
+    const fixtures = JSON.parse(fs.readFileSync(path.join(ROOT, 'migration/nimbus/route-fixtures.json'), 'utf8')).routes.filter((f) => f.scope === 'poc');
+    r.steps[0].result = fixtures.map((f) => ({ path: f.path, status: f.status, anchors: f.anchors?.length ?? 0, pass: !failed.has(f.path) }));
+    return r;
+  },
   guard: () => exitStep('activation-guard', process.execPath, ['scripts/check-developer-activation.mjs'], ROOT),
   typecheck: () => exitStep('typecheck', 'npm', ['run', 'typecheck'], SITE),
   search() {
@@ -212,7 +221,7 @@ const CUSTOM = {
     step.result = { pages: r.pages.length, samples: r.samples.length, gated: r.gates.length, withinBudget: r.gates.filter((g) => g.pass).length, failures: r.failures.map(redact), window: [r.startedAt, r.finishedAt] };
     return { status: step.exitCode === 0 ? 'PASS' : 'FAIL', reason: log.trim().split('\n').at(-1), steps: [step] };
   },
-  mutants(entry) {
+  mutants() {
     if (mutantsFile) {
       const r = JSON.parse(fs.readFileSync(mutantsFile, 'utf8'));
       const kinds = ['activation', 'exclusion', 'wire', 'route', 'anchor'];
@@ -220,7 +229,7 @@ const CUSTOM = {
       const ok = r.total > 0 && r.detected === r.total && !absent.length;
       return { status: ok ? 'PASS' : 'FAIL', reason: `${r.detected}/${r.total} injected regressions detected${absent.length ? `; missing classes ${absent.join(', ')}` : ''} (recorded ${r.ranAt})`, steps: [{ command: 'node scripts/nimbus/gate-mutants.mjs --out <file>', input: path.basename(mutantsFile), inputSha256: sha256(fs.readFileSync(mutantsFile)) }] };
     }
-    return exitStep('gate-mutants', process.execPath, ['scripts/nimbus/gate-mutants.mjs', ...(entry.only ? ['--only', entry.only] : [])], ROOT);
+    return { status: 'BLOCKED', reason: 'no gate-mutants result supplied (--mutants); its served mutants need the preview port free, so run scripts/nimbus/gate-mutants.mjs --out <file> first', steps: [] };
   },
   exclusionMutants: () => exitStep('gate-mutants-exclusion', process.execPath, ['scripts/nimbus/gate-mutants.mjs', '--only', 'exclusion'], ROOT),
   dryRun() {
