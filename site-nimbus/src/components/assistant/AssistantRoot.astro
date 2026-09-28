@@ -68,13 +68,15 @@
     position: fixed; inset: 64px 16px 16px auto; margin: 0; width: min(420px, calc(100vw - 32px)); height: auto; max-height: none; z-index: 1000;
   }
   html.aa-scroll-lock { overflow: hidden; }
+  /* The panels set display; keep the hidden attribute authoritative. */
+  .aa [hidden] { display: none; }
   .aa-frame { display: flex; flex-direction: column; max-height: inherit; height: 100%; }
   .aa-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--aa-border); }
   .aa-tabs { display: inline-flex; gap: 4px; padding: 3px; border-radius: 999px; background: #f1f5f9; }
   .aa-tabs button { border: 0; border-radius: 999px; padding: 4px 12px; background: none; color: var(--aa-muted); font: inherit; cursor: pointer; }
   .aa-tabs button[aria-selected='true'] { background: var(--aa-accent); color: #fff; }
   .aa-close, .aa-clear { border: 0; background: none; color: var(--aa-muted); cursor: pointer; padding: 4px; font: inherit; }
-  .aa button:focus-visible, .aa a:focus-visible, .aa textarea:focus-visible { outline: 2px solid var(--aa-accent); outline-offset: 2px; }
+  .aa button:focus-visible, .aa a:focus-visible { outline: 2px solid var(--aa-accent); outline-offset: 2px; }
   .aa-search { display: flex; flex-direction: column; min-height: 0; padding: 12px; }
   .aa-field { display: flex; align-items: center; gap: 8px; border: 2px solid var(--aa-accent); border-radius: 8px; padding: 8px 10px; color: var(--aa-muted); }
   .aa-field input { flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; color: var(--aa-text); background: none; min-width: 0; }

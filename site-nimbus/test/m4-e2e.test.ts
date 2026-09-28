@@ -147,9 +147,11 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.click('#aa-tab-ask');
     await page.waitForTimeout(200);
     assert.deepEqual(await state(), { open: true, surface: 'ask', locked: false });
+    assert.deepEqual([await page.isVisible('#aa-q'), await page.isVisible('#aa-question')], [false, true], 'only the Ask surface shows');
     await page.keyboard.press('ControlOrMeta+k');
     await page.waitForTimeout(200);
     assert.deepEqual(await state(), { open: true, surface: 'search', locked: true });
+    assert.deepEqual([await page.isVisible('#aa-q'), await page.isVisible('#aa-question')], [true, false], 'only the Search surface shows');
     assert.equal(await page.evaluate(() => document.activeElement?.id), 'aa-q');
     await page.context().close();
   });
