@@ -142,8 +142,8 @@ deletes or garbage-collects a generation.
 
 1. Generate a secret of 32 characters or more, for example `openssl rand -hex 32`.
 2. Store it only as the Pages secret.
-3. Compute its hash in the same shell. The `:?` stops with an error when the variable is unset or empty, and `cut` keeps only the hex:
-   `printf %s "${ASK_GENERATION_READER_TOKEN:?}" | shasum -a 256 | cut -d' ' -f1`
+3. Compute its hash in the same shell. The `:?` check runs before the pipe, so an unset or empty variable stops with an error instead of hashing empty input (inside the pipe it would still print the empty digest); `cut` keeps only the hex:
+   `: "${ASK_GENERATION_READER_TOKEN:?}" && printf %s "$ASK_GENERATION_READER_TOKEN" | shasum -a 256 | cut -d' ' -f1`
 4. Register the hash: `select docs_generation_set_reader('preview', '<64-hex hash>');`. The database refuses the hash of the empty string.
 
 **Roll back**
