@@ -51,6 +51,21 @@ describe('request validation', () => {
     })
   }
 
+  test('request body stream error (aborted upload) answers 400, not a rejection', async () => {
+    const p = providers()
+    const body = new ReadableStream<Uint8Array>({
+      start(c) {
+        c.enqueue(new TextEncoder().encode('{"question":'))
+        c.error(new Error('client aborted upload'))
+      },
+    })
+    const req = new Request('https://docs.test/api/ask', { method: 'POST', body, duplex: 'half' } as RequestInit)
+    const res = await handleAsk(req, ENV, { fetch: p.fetch })
+    assert.equal(res.status, 400)
+    assert.deepEqual(await res.json(), { error: 'Invalid JSON body' })
+    assert.equal(p.calls.length, 0)
+  })
+
   test('oversized chunked body without Content-Length is cut off', async () => {
     const p = providers()
     const chunk = new TextEncoder().encode('x'.repeat(16 * 1024))
@@ -129,7 +144,10 @@ describe('stream relay', () => {
 
   test('split SSE frames and split UTF-8 across chunks', async () => {
     const bytes = new TextEncoder().encode(sse(delta('héllo 🚀'), '[DONE]'))
-    const r = await run([bytes.slice(0, 20), bytes.slice(20, 37), bytes.slice(37)])
+    const e = bytes.indexOf(0xc3) + 1 // inside the 2-byte 'é'
+    const rocket = bytes.indexOf(0xf0) + 2 // inside the 4-byte '🚀'
+    assert.ok(bytes[e] >= 0x80 && bytes[rocket] >= 0x80, 'split points fall inside multi-byte characters')
+    const r = await run([bytes.slice(0, 20), bytes.slice(20, e), bytes.slice(e, rocket), bytes.slice(rocket, 55), bytes.slice(55)])
     assert.deepEqual(frames(r.text), ['data: {"content":"héllo 🚀"}\n\n', 'data: [DONE]\n\n'])
   })
 
