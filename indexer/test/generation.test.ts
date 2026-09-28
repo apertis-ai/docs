@@ -251,6 +251,7 @@ test('cancellation: an aborted run records failure; a killed run blocks nothing 
   const z = await zombie
   assert.equal(z.ok, false)
   assert.match(z.error!, /is failed, not building/)
+  assert.equal(z.generationState, 'failed')
   assert.equal(await generationDigest(db, r.generationId!), digest, 'the zombie could not touch the new generation')
   assert.equal(await legacyDigest(db), legacy)
 })
