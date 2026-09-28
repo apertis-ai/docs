@@ -1,7 +1,9 @@
 ---
-// Head metadata for one manifest entry: title, canonical and the apertis-docs:* metas.
+// Document identity for one manifest entry: <title>, canonical and the apertis-docs:* metas.
+// Charset/viewport belong to the page or layout head. Do not combine with Nimbus's NimbusHead,
+// which emits its own canonical (from Astro.url.pathname) and a sitemap-index link.
 import type { ManifestDocument } from '../contracts/manifest.ts';
-import { PAGE_META } from '../contracts/page.ts';
+import { PAGE_META, TITLE_SUFFIX } from '../contracts/page.ts';
 
 interface Props {
   doc: ManifestDocument;
@@ -9,9 +11,7 @@ interface Props {
 }
 const { doc, buildId } = Astro.props;
 ---
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{doc.title} | Apertis Documentation</title>
+<title>{doc.title + TITLE_SUFFIX}</title>
 <link rel="canonical" href={doc.canonicalUrl} />
 <meta name={PAGE_META.id} content={doc.id} />
 <meta name={PAGE_META.build} content={buildId} />

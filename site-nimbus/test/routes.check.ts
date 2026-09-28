@@ -4,7 +4,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { PAGE_META } from '../src/contracts/page.ts';
+import { PAGE_META, TITLE_SUFFIX } from '../src/contracts/page.ts';
+import { documentAt } from '../src/manifest/manifest.ts';
 
 const base = process.env.PREVIEW_URL?.replace(/\/$/, '');
 if (!base) throw new Error('set PREVIEW_URL to the running preview origin');
@@ -24,6 +25,9 @@ for (const [path, canonical, id] of [
     assert.equal(html.match(/<link rel="canonical" href="([^"]+)"/)?.[1], canonical);
     assert.equal(meta(html, PAGE_META.id), id);
     assert.match(meta(html, PAGE_META.build) ?? '', /^[0-9a-f]{40}\.[0-9a-f]{12}$/);
+    assert.equal(html.match(/<title>([^<]*)<\/title>/)?.[1], documentAt(path).title + TITLE_SUFFIX);
+    assert.equal(html.match(/<meta charset=/g)?.length, 1, 'exactly one charset meta');
+    assert.equal(html.match(/<meta name="viewport"/g)?.length, 1, 'exactly one viewport meta');
   });
 }
 

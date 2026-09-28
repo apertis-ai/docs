@@ -7,7 +7,10 @@ export const PAGE_META = {
   markdown: 'apertis-docs:markdown',
 } as const;
 
-/** Ask Docs page context: `title` from the manifest entry, `href` from the current location. */
+/** Site suffix of every `<title>`: `<manifest title> | Apertis Documentation`. */
+export const TITLE_SUFFIX = ' | Apertis Documentation';
+
+/** Ask Docs page context: `title` is the manifest title (the `<title>` without TITLE_SUFFIX), `href` from the current location. */
 export interface PageContext {
   title: string;
   href: string;
