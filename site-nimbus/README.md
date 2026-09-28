@@ -132,3 +132,121 @@ that one missing artifact until #7 generates it.
 - **Duplicate definitions:** outside `site-nimbus/`, `functions/api/ask.ts` and
   `src/components/UnifiedSearchModal/assistantUtils.ts` still declare their own legacy
   `PageContext`. #9 and #10 should import `src/contracts/page.ts` instead.
+
+## #7 — PoC conversion and publication manifest
+
+### Usage
+
+Run these in `site-nimbus/`:
+
+```sh
+node converter/convert.ts   # phase 1: regenerate content + manifest from the legacy sources
+npm run build               # astro build; phase 2 runs in astro:build:done
+```
+
+Commit what they change. Generated files are never edited by hand. A test regenerates them and
+fails on any drift.
+
+| Path | What it is |
+| --- | --- |
+| `converter/convert.ts` | Phase 1: converter, `sourceSha`/`buildId`, manifest writer, `mainTextSha256()` |
+| `converter/integration.ts` | Phase 2 (Astro integration registered in `astro.config.ts`) |
+| `src/content/docs/<servedPath>index.md` | Render sources: the Nimbus `docs` collection (`src/content.config.ts`) |
+| `src/content/public/**` | Clean Markdown artifacts at `markdown.path`, plus bundled images; copied verbatim into `dist/` |
+| `src/manifest/manifest.json` | Manifest v1 for the 12 PoC documents |
+| `src/pages/[...slug].astro` | One route for every converted document, rendered in `DocLayout` with `headings`. It replaces the `/api/` fixture shell |
+
+Phase 1 wipes its output directories before each run. That way a deleted or renamed source leaves
+nothing stale behind.
+
+### Supported constructs
+
+These are the constructs the 11 PoC sources actually use.
+
+- **Front matter:** only the keys `title`, `description`, `sidebar_label` and `sidebar_position`.
+  - `title` and `description` go into the render source.
+  - Sidebar keys are dropped, because navigation comes from the inventory `sidebar`.
+  - The title (front matter, else the body H1) must equal the inventory title.
+  - Only one H1 is allowed. When the body has none, the title is added as the H1.
+- **Docusaurus admonitions:** `:::note|tip|info|warning|caution|danger [title]` at column 0.
+  - HTML gets `<aside class="admonition admonition-<type>">` with a `.admonition-title`.
+  - Clean Markdown gets a blockquote, `> **Tip: title**`.
+- **Links:** an internal link must resolve to an inventory route, else conversion fails.
+  - `./x.md` / `../x.mdx` resolve through the inventory `sourcePath`.
+  - Extensionless relative links resolve against the canonical path, as Docusaurus does.
+  - Output is root-absolute and keeps any `?query`/`#fragment`.
+  - External and `mailto:` links pass through unchanged.
+- **Images:**
+  - Absolute `/img/...` must exist in legacy `static/` and stays at that path.
+  - Relative images (such as `../static/img/roocode_1.png`) are bundled to `/assets/images/<name>-<16 hex sha256>.<ext>`.
+- **The MDX heading icon:** `# <img src=… width=… style={{…}} /> Title`.
+  - HTML keeps it as a plain `<img alt="">` with CSS converted from the JSX style.
+  - Clean Markdown drops the decorative icon, leaving `# Title`.
+- **Code:** fenced code bytes are preserved (CRLF becomes LF). The info string may only be a
+  language.
+
+These fail with `file:line: construct` and stop the conversion:
+
+- imports/exports
+- JSX or inline HTML, including `<Tabs>`/`<TabItem>` and HTML comments
+- `{…}` expressions
+- `{#id}` heading ids
+- fence meta (`title=`, `npm2yarn`)
+- indented, nested or unclosed admonitions
+- unclosed fences
+- reference-style links
+- unknown front-matter keys
+
+The PoC set uses none of these. #13 adds support for each one as the full corpus needs it.
+
+HTML is rendered by Nimbus's Sätteri pipeline:
+
+- Its heading ids match every inventory `live.headingIds` value on all 11 pages.
+- `markdown.smartypants: false` keeps legacy straight quotes. Astro flags this option as
+  deprecated (see gaps).
+
+### Two-phase manifest
+
+1. **Phase 1 (`convert.ts`)** writes every manifest field.
+   - `contentSha256` equals `markdown.sha256` for agent-eligible entries.
+   - Entries without Markdown (`page:index`) carry forward their previous hash, or zeros when
+     there is none.
+2. **Phase 2 (`astro:build:done`)** does the rest of the work after the build:
+   - copies `src/content/public/**` into `dist/`, refusing to overwrite anything;
+   - sets each markdown-less entry's `contentSha256` to the SHA-256 of its built `<main>` text,
+     with whitespace collapsed and trimmed;
+   - writes the manifest atomically, and only when the hash changed;
+   - fails the build unless `validateManifest(manifest, { inventory, outDir })` returns `[]` and
+     nothing exists at `/api/ask`.
+
+No HTML output contains `contentSha256` (`test:dist` asserts this). So phase 2 never invalidates
+the pages it hashes: one build reaches the fixed point, and a rebuild is byte-identical
+(`test/m2-rebuild.test.ts`).
+
+After #8 changes `/`, run `npm run build` and commit the updated `page:index` hash.
+
+The full manifest is a build input only. It is never copied to `dist/`.
+
+### sourceSha and buildId
+
+- **`sourceSha`** is `git log -1 --format=%H -- docs docs-api src/pages blog static`: the last commit
+  touching the legacy publication roots.
+  - It is reproducible from any full clone.
+  - It does not change when the candidate, the converter or sibling packets commit, so the
+    committed manifest can name it. `HEAD` would always be one commit stale.
+  - Conversion refuses a shallow clone and uncommitted changes under those roots.
+- **`buildId`** is `<sourceSha>.<first 12 hex of SHA-256>` over `package-lock.json` and every file
+  under `converter/`.
+  - Files are hashed in sorted order, each as `path\0bytes\0`.
+  - Any converter or dependency change gives a new id.
+
+### Extending to the full corpus (#13)
+
+1. Widen the row filter in `convert()` (marked `ponytail:`) from `r.poc` to every preserved
+   `doc`/`page`/`blog-post` row.
+2. Add each construct the corpus actually uses to `convertDocument()`, with a test, instead of
+   loosening the loud failures.
+3. Standalone pages (`page:*`) and blog posts keep their own routes. Markdown-less entries are
+   already hashed by phase 2.
+4. Replace the `/`-only `live.links` parity with full-corpus link and anchor checks. Out-of-PoC
+   targets are then in the set, so `pocCoverageLimits` goes away.
