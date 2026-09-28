@@ -13,6 +13,8 @@ export interface Navigation {
   trees: Record<SidebarId, SidebarNode[]>;
   /** Every sidebar entry, in sidebar order. */
   entries: NavigationEntry[];
+  /** Ids of entries with a manifest entry (rows still on the PoC fallback are absent). */
+  converted: Set<string>;
 }
 
 export interface PageNavigation {
@@ -55,14 +57,15 @@ export function buildNavigation(inventory: InventoryRoute[], documents: Manifest
     }
     level.push({ kind: 'link', entry });
   }
-  return { trees, entries };
+  return { trees, entries, converted: new Set(entries.filter((e) => byId.has(e.id)).map((e) => e.id)) };
 }
 
 /** The sidebar a document belongs to, or null for unlisted documents and standalone pages. */
 export function pageNavigation(nav: Navigation, docId: string): PageNavigation | null {
   const entry = nav.entries.find((e) => e.id === docId);
   if (!entry) return null;
-  const siblings = nav.entries.filter((e) => e.sidebar.sidebar === entry.sidebar.sidebar);
+  // Prev/next link only converted pages, so pagination never leads to a PoC 404.
+  const siblings = nav.entries.filter((e) => e.sidebar.sidebar === entry.sidebar.sidebar && (e === entry || nav.converted.has(e.id)));
   const i = siblings.indexOf(entry);
   return {
     sidebar: entry.sidebar.sidebar,

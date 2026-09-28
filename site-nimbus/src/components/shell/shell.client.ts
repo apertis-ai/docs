@@ -110,17 +110,29 @@ if (actions && mdUrl) {
   });
 }
 
-// TOC highlight: the last heading scrolled past the navbar.
+// TOC highlight, the legacy Docusaurus rule (useTOCHighlight): the first h2/h3 at or below the navbar
+// is active if it sits in the top half of the viewport, otherwise the heading before it; past the last
+// heading, the last one. CSS shows an h2's h3 list only while it holds the active link.
 const tocLinks = $$<HTMLAnchorElement>('.doc-page__toc a');
 if (tocLinks.length) {
-  const targets = tocLinks.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter((h): h is HTMLElement => !!h);
+  const anchors = $$('article.docs-content :is(h2, h3)[id]');
+  const navbar = document.querySelector<HTMLElement>('.navbar');
+  const activeAnchor = () => {
+    const top = navbar?.clientHeight ?? 0;
+    const next = anchors.find((h) => h.getBoundingClientRect().top >= top);
+    if (!next) return anchors[anchors.length - 1] ?? null;
+    const r = next.getBoundingClientRect();
+    return r.top > 0 && r.bottom < innerHeight / 2 ? next : anchors[anchors.indexOf(next) - 1] ?? null;
+  };
   let queued = false;
   const update = () => {
     queued = false;
-    const current = targets.filter((h) => h.getBoundingClientRect().top < 120).pop() ?? targets[0];
-    for (const a of tocLinks) a.classList.toggle('active', !!current && a.hash === `#${current.id}`);
+    const current = activeAnchor();
+    for (const a of tocLinks) a.classList.toggle('active', !!current && decodeURIComponent(a.hash.slice(1)) === current.id);
   };
-  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('resize', schedule);
   update();
 }
 

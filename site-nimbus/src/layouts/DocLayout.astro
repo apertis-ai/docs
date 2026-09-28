@@ -30,6 +30,8 @@ const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).rou
 const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
 ---
 <BaseLayout doc={doc} buildId={buildId} nav={nav}>
+  <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
+  <link slot="head" rel="stylesheet" href="/_nimbus/shiki.css" />
   <div class:list={['doc-page', { 'doc-page--sidebar': nav }]}>
     {nav && <aside class="doc-page__sidebar"><Sidebar nav={nav} /></aside>}
     <main class="doc-page__main" id="main">
