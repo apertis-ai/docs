@@ -1,0 +1,15 @@
+{
+  "name": "apertis-docs-indexer",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=25"
+  },
+  "scripts": {
+    "test": "node --test --test-timeout=120000 'test/*.test.ts'"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@electric-sql/pglite-pgvector": "0.0.9"
+  }
+}
