@@ -177,6 +177,21 @@ test('page actions read the same-origin .md from the page meta and report failur
   await context.close();
 });
 
+test('without JavaScript the navigation and landing links still work and no dead page actions show', { skip }, async () => {
+  const { context, page } = await open('/api/', { ...DESKTOP, javaScriptEnabled: false });
+  assert.ok(await page.isVisible('.doc-page__sidebar a[href="/api/"]'));
+  assert.equal(await page.isVisible('[data-page-actions]'), false);
+  await page.goto(base + '/', { waitUntil: 'load' });
+  const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
+  assert.deepEqual(cards, [
+    ['/intro', '', ''], ['/installation/models', '', ''], ['/api', '', ''], ['/installation/claude-code', '', ''],
+    ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', '_blank', 'noopener noreferrer'],
+  ]);
+  const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
+  assert.deepEqual(nav, ['/', '/intro', '/api', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register']);
+  await context.close();
+});
+
 test('no GitHub raw or other-release requests and no uncaught page errors', { skip }, () => {
   assert.deepEqual(external.filter((u) => !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(u)), []);
   assert.deepEqual(errors, []);
