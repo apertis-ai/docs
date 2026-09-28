@@ -7,6 +7,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import type { ManifestDocument } from '../src/contracts/manifest.ts';
+import type { RouteInventory } from '../src/contracts/navigation.ts';
 import { manifest } from '../src/manifest/manifest.ts';
 import { buildSearchIndex, searchDocuments } from '../src/search/index-build.ts';
 
@@ -30,8 +31,12 @@ const indexedUrls = (dir: string) => fs.readdirSync(path.join(dir, 'pagefind/fra
 test('searchDocuments keeps only publish+search-eligible entries', () => {
   const docs = [doc('/a/', true, true), doc('/b/', true, false), doc('/c/', false, true)];
   assert.deepEqual(searchDocuments(docs).map((d) => d.servedPath), ['/a/']);
-  // The M1 fixture: `/` is published but not searchable, `/api/` is both.
-  assert.deepEqual(searchDocuments(manifest.documents).map((d) => d.servedPath), ['/api/']);
+  // Against the route inventory (the eligibility authority), whatever the current manifest holds.
+  const inventory: RouteInventory = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../../migration/nimbus/route-inventory.json'), 'utf8'));
+  const searchable = new Set(inventory.routes.filter((r) => r.eligibility.publish && r.eligibility.search).map((r) => r.documentId));
+  const expected = manifest.documents.filter((d) => searchable.has(d.id)).map((d) => d.servedPath);
+  assert.ok(expected.length > 0 && expected.length < manifest.documents.length, 'the manifest mixes searchable and unsearchable entries');
+  assert.deepEqual(searchDocuments(manifest.documents).map((d) => d.servedPath), expected);
 });
 
 test('the index is built from the given entries only and indexes the article, not page chrome', async () => {

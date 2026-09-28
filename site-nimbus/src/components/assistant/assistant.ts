@@ -1,7 +1,8 @@
 // Search + Ask Docs client (#9). The only `apertis-docs:open` listener and the only Cmd/Ctrl+K owner.
 // Search loads Pagefind lazily on first use; Ask Docs posts the legacy wire request to /api/ask.
 import { OPEN_EVENT } from '../../contracts/events.ts';
-import { ASK_PATH, askBody, currentPageContext, errorMessage, readAnswer, sourceLinks } from './wire.ts';
+import { searchWithVariants } from '../../search/query.ts';
+import { ASK_PATH, askBody, currentPageContext, errorMessage, isInternalHref, readAnswer, sourceLinks } from './wire.ts';
 
 type Surface = 'search' | 'ask';
 
@@ -13,6 +14,32 @@ const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?ren
 const TURNSTILE_TIMEOUT_MS = 30000;
 const SESSION_KEY = 'askai_session_id';
 const OPEN_KEY = 'askdocs_open';
+
+// sessionStorage throws when site data is blocked; fall back to memory for this page.
+const memory = new Map<string, string>();
+const store = {
+  get(key: string): string | null {
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return memory.get(key) ?? null;
+    }
+  },
+  set(key: string, value: string) {
+    try {
+      sessionStorage.setItem(key, value);
+    } catch {
+      memory.set(key, value);
+    }
+  },
+  remove(key: string) {
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      memory.delete(key);
+    }
+  },
+};
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const dialog = $<HTMLDialogElement>('apertis-assistant');
@@ -46,7 +73,7 @@ function show(next: Surface, { query, focus = true }: { query?: string; focus?: 
   }
   document.documentElement.classList.toggle('aa-scroll-lock', next === 'search');
   if (next === 'search') {
-    sessionStorage.removeItem(OPEN_KEY);
+    store.remove(OPEN_KEY);
     dialog.showModal();
     if (query !== undefined) input.value = query;
     input.focus();
@@ -54,7 +81,7 @@ function show(next: Surface, { query, focus = true }: { query?: string; focus?: 
     void loadEngine().catch(() => {});
     void runSearch();
   } else {
-    sessionStorage.setItem(OPEN_KEY, '1');
+    store.set(OPEN_KEY, '1');
     dialog.show();
     openAsk();
     if (focus) question.focus();
@@ -64,7 +91,10 @@ function show(next: Surface, { query, focus = true }: { query?: string; focus?: 
 /** Closed-state cleanup, run synchronously by hide() and again (as a no-op) by the async `close` event. */
 function closed() {
   if (!surface || dialog.open) return;
-  if (surface === 'ask') sessionStorage.removeItem(OPEN_KEY);
+  if (surface === 'ask') {
+    store.remove(OPEN_KEY);
+    controller?.abort(); // closing the panel stops a streaming answer
+  }
   surface = null;
   document.documentElement.classList.remove('aa-scroll-lock');
   const back = opener as HTMLElement | null;
@@ -107,6 +137,10 @@ window.addEventListener('keydown', (e) => {
 
 // ---------------------------------------------------------------- search
 
+interface PagefindResult {
+  id: string;
+  data(): Promise<PagefindResultData>;
+}
 interface PagefindResultData {
   url: string;
   excerpt: string;
@@ -114,7 +148,7 @@ interface PagefindResultData {
 }
 interface Pagefind {
   init(): Promise<void>;
-  search(q: string): Promise<{ results: { data(): Promise<PagefindResultData> }[] } | null>;
+  search(q: string): Promise<{ results: PagefindResult[] } | null>;
 }
 
 let engine: Promise<Pagefind> | null = null;
@@ -199,9 +233,15 @@ async function runSearch() {
     if (seq === searchSeq) renderResults([], 'The search index could not be loaded. Check your connection and type again to retry.');
     return;
   }
-  const found = await pf.search(q);
-  if (seq !== searchSeq || !found) return;
-  const list = await Promise.all(found.results.slice(0, MAX_RESULTS).map((r) => r.data()));
+  let list: PagefindResultData[];
+  try {
+    const found = await searchWithVariants(q, async (v) => (await pf.search(v))?.results ?? []);
+    if (seq !== searchSeq) return;
+    list = await Promise.all(found.slice(0, MAX_RESULTS).map((r) => r.data()));
+  } catch {
+    if (seq === searchSeq) renderResults([], 'The search could not be completed. Check your connection and try again.');
+    return;
+  }
   if (seq !== searchSeq) return;
   renderResults(list, list.length ? '' : `No results for “${q}”`);
 }
@@ -243,12 +283,14 @@ declare global {
 const newSessionId = () => typeof crypto.randomUUID === 'function'
   ? crypto.randomUUID()
   : Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
-const sessionId = sessionStorage.getItem(SESSION_KEY) ?? newSessionId();
-sessionStorage.setItem(SESSION_KEY, sessionId);
+const sessionId = store.get(SESSION_KEY) ?? newSessionId();
+store.set(SESSION_KEY, sessionId);
 const messagesKey = `askdocs_messages_${sessionId}`;
+/** A turn that was still streaming when saved or loaded did not finish. */
+const settled = (list: Message[]) => list.map((m) => (m.state === 'streaming' ? { ...m, state: 'interrupted' as const } : m));
 let messages: Message[] = [];
 try {
-  messages = JSON.parse(sessionStorage.getItem(messagesKey) ?? '[]');
+  messages = settled(JSON.parse(store.get(messagesKey) ?? '[]'));
 } catch {
   messages = [];
 }
@@ -258,6 +300,7 @@ let widgetId: string | null = null;
 let turnstileStarted = false;
 let verifyFailed = false;
 let streaming = false;
+let controller: AbortController | null = null;
 
 function setAskStatus(text: string, kind: 'info' | 'error' = 'info') {
   askStatus.textContent = text;
@@ -278,6 +321,7 @@ function verificationFailed(detail: string) {
 function startTurnstile() {
   if (turnstileStarted) return;
   turnstileStarted = true;
+  verifyFailed = false;
   setAskStatus('Verifying your browser before you can send…');
   const timer = setTimeout(() => {
     if (!token && !verifyFailed) verificationFailed('the verification check (Cloudflare Turnstile) did not respond.');
@@ -287,7 +331,9 @@ function startTurnstile() {
   script.async = true;
   script.onerror = () => {
     clearTimeout(timer);
-    verificationFailed('the verification check (Cloudflare Turnstile) could not be loaded.');
+    script.remove();
+    turnstileStarted = false; // the next open retries
+    verificationFailed('the verification check (Cloudflare Turnstile) could not be loaded. Close and reopen Ask Docs to retry, or reload the page.');
   };
   script.onload = () => {
     const ts = window.turnstile;
@@ -324,7 +370,7 @@ function answerNodes(text: string): Node[] {
   let last = 0;
   for (const m of text.matchAll(/\[([^\]]+)\]\(([^)\s]+)\)/g)) {
     const href = m[2];
-    if (!((href.startsWith('/') && !href.startsWith('//')) || href.startsWith('https://'))) continue;
+    if (!(isInternalHref(href) || href.startsWith('https://'))) continue;
     out.push(document.createTextNode(text.slice(last, m.index)));
     const a = document.createElement('a');
     a.href = href;
@@ -371,7 +417,7 @@ function renderMessages() {
 }
 
 function saveMessages() {
-  sessionStorage.setItem(messagesKey, JSON.stringify(messages));
+  store.set(messagesKey, JSON.stringify(settled(messages)));
 }
 
 function refreshContext() {
@@ -396,13 +442,15 @@ async function send(text: string) {
   const context = currentPageContext(document.title, location);
   const answer: Message = { role: 'assistant', content: '', state: 'streaming' };
   messages.push({ role: 'user', content: text }, answer);
+  saveMessages();
   renderMessages();
-  const bubble = messagesEl.lastElementChild as HTMLElement;
+  const abort = (controller = new AbortController());
   try {
     const res = await fetch(ASK_PATH, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(askBody(text, sessionId, turnstileToken, context)),
+      signal: abort.signal,
     });
     if (!res.ok || !res.body) {
       answer.state = 'error';
@@ -410,17 +458,19 @@ async function send(text: string) {
     } else {
       answer.state = await readAnswer(res.body, (delta) => {
         answer.content += delta;
-        bubble.replaceChildren(...answerNodes(answer.content));
+        // Requeried per delta: reopening the panel re-renders the list. The streaming turn is always last.
+        messagesEl.lastElementChild?.replaceChildren(...answerNodes(answer.content));
       });
     }
   } catch {
-    if (answer.content) answer.state = 'interrupted';
+    if (answer.content || abort.signal.aborted) answer.state = 'interrupted';
     else {
       answer.state = 'error';
       answer.content = 'Ask Docs could not be reached. Check your connection and try again.';
     }
   } finally {
     streaming = false;
+    controller = null;
     saveMessages();
     renderMessages();
     if (widgetId) window.turnstile?.reset(widgetId);
@@ -442,11 +492,13 @@ question.addEventListener('keydown', (e) => {
 });
 clearButton.addEventListener('click', () => {
   messages = [];
-  sessionStorage.removeItem(messagesKey);
+  store.remove(messagesKey);
   renderMessages();
 });
 window.addEventListener('hashchange', refreshContext);
 window.addEventListener('popstate', refreshContext);
+// Leaving mid-stream keeps the question and the partial answer (as interrupted).
+window.addEventListener('pagehide', saveMessages);
 
 // The panel stays open across page loads within the session; its context is the new page.
-if (sessionStorage.getItem(OPEN_KEY)) show('ask', { focus: false });
+if (store.get(OPEN_KEY)) show('ask', { focus: false });

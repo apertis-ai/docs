@@ -79,11 +79,22 @@ export async function errorMessage(res: Response): Promise<string> {
   return `Ask Docs could not answer (HTTP ${res.status})${detail ? `: ${detail}` : '.'}`;
 }
 
+/** A root-relative same-origin path. Rejects `//host`, backslash tricks such as `/\\host` (URL parsers treat `\\` as `/`) and schemes. */
+export function isInternalHref(href: string): boolean {
+  if (!href.startsWith('/') || href.includes('\\')) return false;
+  const origin = 'https://docs.invalid';
+  try {
+    return new URL(href, origin).origin === origin;
+  } catch {
+    return false;
+  }
+}
+
 /** Internal documentation links in an answer (`[title](/path)`), unique by href, as source pills. */
 export function sourceLinks(answer: string): { title: string; href: string }[] {
   const seen = new Map<string, string>();
   for (const [, title, href] of answer.matchAll(/\[([^\]]+)\]\(([^)\s]+)\)/g)) {
-    if (href.startsWith('/') && !href.startsWith('//') && !seen.has(href)) seen.set(href, title);
+    if (isInternalHref(href) && !seen.has(href)) seen.set(href, title);
   }
   return [...seen].map(([href, title]) => ({ title, href }));
 }
