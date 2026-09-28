@@ -68,7 +68,9 @@ overloads stay exactly as they are until M7/M9 decide the transition.
   - `service_role` may only SELECT the tables and run the indexer functions.
 - **Reads.** `search_docs_generation` is the only read path.
   - It serves the active `ready` generation of the environment whose reader secret matches.
-  - An unknown environment or a wrong secret raises `42501`.
+  - A null secret, a secret shorter than 32 characters, an unknown environment or a wrong secret raises `42501`. The length check runs before hashing.
+  - `match_count` must be at least 1 and is capped at 20; `similarity_threshold` must lie in [-1, 1]. Anything else raises `22023`.
+  - `docs_generation_set_reader` refuses the SHA-256 of the empty string.
   - A missing active generation raises `P0002`.
   - An active generation that is not ready, or belongs to another environment, raises `P0003`.
   - The similarity semantics are those of the legacy three-argument `search_docs`. It is an exact scan over one generation, with no HNSW (see the `ponytail:` note in the migration).
@@ -140,8 +142,9 @@ deletes or garbage-collects a generation.
 
 1. Generate a secret of 32 characters or more, for example `openssl rand -hex 32`.
 2. Store it only as the Pages secret.
-3. Register its hash: `select docs_generation_set_reader('preview', '<sha256 hex of the secret>');`
-4. Compute that hash with `printf %s "$ASK_GENERATION_READER_TOKEN" | shasum -a 256`.
+3. Compute its hash in the same shell. The `:?` stops with an error when the variable is unset or empty, and `cut` keeps only the hex:
+   `printf %s "${ASK_GENERATION_READER_TOKEN:?}" | shasum -a 256 | cut -d' ' -f1`
+4. Register the hash: `select docs_generation_set_reader('preview', '<64-hex hash>');`. The database refuses the hash of the empty string.
 
 **Roll back**
 

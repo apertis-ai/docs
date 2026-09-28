@@ -109,3 +109,56 @@ test('rollback restores the replica catalog exactly and refuses while generation
   await assert.rejects(db.exec(ROLLBACK), /refusing to roll back/)
   assert.equal(await catalogDigest(db), migrated)
 })
+
+test('as a non-superuser owner with Supabase default privileges: applies once, grants exactly the intended privileges, operator functions are owner-only', async () => {
+  const db = await replica({ migrated: false })
+  await db.exec(`
+    create role owner_ns nologin nosuperuser;
+    grant create, usage on schema public to owner_ns;
+    grant usage on schema extensions to owner_ns;
+    grant anon, authenticated, service_role to owner_ns;
+    alter default privileges for role owner_ns in schema public grant all on tables to anon, authenticated, service_role;
+    alter default privileges for role owner_ns in schema public grant all on sequences to anon, authenticated, service_role;
+    alter default privileges for role owner_ns in schema public grant all on functions to anon, authenticated, service_role;`)
+  const asOwner = (sql: string, params: unknown[] = []) => db.transaction(async (tx) => {
+    await tx.exec('set local role owner_ns')
+    return params.length ? (await tx.query<any>(sql, params)).rows : (await tx.exec(sql), [])
+  })
+  await asOwner(MIGRATION)
+  await assert.rejects(asOwner(MIGRATION), (e: any) => e.code === '42P07')
+
+  const rel = (await db.query<{ relname: string; relacl: string | null }>(`select relname, relacl::text from pg_class where relname like 'docs\\_generation%' and relkind in ('r', 'S') order by 1`)).rows
+  assert.deepEqual(rel, [
+    { relname: 'docs_generation_chunks', relacl: '{owner_ns=arwdDxtm/owner_ns,service_role=r/owner_ns}' },
+    { relname: 'docs_generation_documents', relacl: '{owner_ns=arwdDxtm/owner_ns,service_role=r/owner_ns}' },
+    { relname: 'docs_generation_slots', relacl: '{owner_ns=arwdDxtm/owner_ns,service_role=r/owner_ns}' },
+    { relname: 'docs_generations', relacl: '{owner_ns=arwdDxtm/owner_ns,service_role=r/owner_ns}' },
+    { relname: 'docs_generations_id_seq', relacl: '{owner_ns=rwU/owner_ns}' },
+  ])
+  const pro = (await db.query<{ proname: string; proacl: string }>(`select proname, proacl::text from pg_proc where proowner = 'owner_ns'::regrole order by 1`)).rows
+  const writer = '{owner_ns=X/owner_ns,service_role=X/owner_ns}'
+  const owner = '{owner_ns=X/owner_ns}'
+  assert.deepEqual(Object.fromEntries(pro.map((p) => [p.proname, p.proacl])), {
+    docs_embedding_cache_lookup: writer,
+    docs_generation_activate: owner,
+    docs_generation_begin: writer,
+    docs_generation_claim: owner,
+    docs_generation_fail: writer,
+    docs_generation_finish: writer,
+    docs_generation_put_document: writer,
+    docs_generation_set_reader: owner,
+    search_docs_generation: '{owner_ns=X/owner_ns,anon=X/owner_ns,authenticated=X/owner_ns,service_role=X/owner_ns}',
+  })
+
+  const set = `select docs_generation_set_reader('preview', '${'d'.repeat(64)}')`
+  await asOwner(set)
+  for (const role of ROLES) await assert.rejects(asRole(db, role, set), /permission denied/, role)
+  await assert.rejects(asOwner(`select * from docs_generation_activate('preview', 1)`), /is not a ready generation/)
+  for (const role of ROLES) await assert.rejects(asRole(db, role, `select * from docs_generation_activate('preview', 1)`), /permission denied/, role)
+})
+
+test('rollback locks all four tables before its emptiness check, so no begin can slip in before the drops', () => {
+  const statements = ROLLBACK.replace(/^--.*$/gm, '').split(/;\s*\n/).map((s) => s.trim()).filter(Boolean)
+  assert.match(statements[0], /^lock table public\.docs_generations, public\.docs_generation_documents, public\.docs_generation_chunks,\s+public\.docs_generation_slots in access exclusive mode$/)
+  assert.match(statements[1], /^do \$\$/)
+})

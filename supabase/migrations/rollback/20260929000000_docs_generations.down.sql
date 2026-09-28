@@ -2,7 +2,11 @@
 -- (psql --single-transaction -v ON_ERROR_STOP=1 -f ...).
 -- Generations are retained for rollback and never garbage-collected here: this refuses to run while any
 -- generation or slot exists. Removing retained generations needs a separately approved retention decision.
+-- The lock comes first, so no concurrent docs_generation_begin can insert between the check and the drops.
 -- The legacy tables and both public.search_docs overloads are not touched.
+
+lock table public.docs_generations, public.docs_generation_documents, public.docs_generation_chunks,
+  public.docs_generation_slots in access exclusive mode;
 
 do $$
 begin

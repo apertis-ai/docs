@@ -44,9 +44,13 @@ export function jinaEmbedder(apiKey: string, o: { fetch?: typeof fetch; timeoutM
           await res.body?.cancel()
           throw new Error(`Jina answered ${res.status}`)
         }
-        const data = (await res.json()) as { data?: Array<{ embedding?: unknown }> }
-        const vectors = data.data?.map((d) => d.embedding)
-        if (!Array.isArray(vectors) || vectors.length !== texts.length ||
+        const data = (await res.json()) as { data?: Array<{ index?: unknown; embedding?: unknown }> }
+        // Place each embedding by its response index, which must be exactly 0..n-1: a mis-ordered vector
+        // would otherwise be stored, and cached, under another chunk's text.
+        const items = Array.isArray(data.data) ? [...data.data].sort((a, b) => Number(a.index) - Number(b.index)) : null
+        if (!items || !items.every((d, i) => d.index === i)) throw new Error('Jina response index is not 0..n-1')
+        const vectors = items.map((d) => d.embedding)
+        if (vectors.length !== texts.length ||
             !vectors.every((v) => Array.isArray(v) && v.length === dimensions && v.every((x) => typeof x === 'number' && Number.isFinite(x)))) {
           throw new Error('Jina response has the wrong count or dimensions')
         }

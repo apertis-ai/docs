@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto'
 import { test } from 'node:test'
 import { RetrievalError, createRetrieval } from '../../assistant/retrieval.ts'
 import { plan, run } from '../indexer.ts'
-import { asRole, fakeEmbedder, fakeVector, pgliteStore, postgrestFetch, replica } from './db.ts'
+import { asRole, fakeEmbedder, fakeVector, pgliteStore, postgrestFetch, replica, vectorLiteral } from './db.ts'
 import { fixture, page } from './fixture.ts'
 
 const URL_ = 'https://replica.test'
@@ -108,4 +108,34 @@ test('legacy mode through the same seam still reads the legacy tables with the t
   assert.equal(rows[0].url_path, '/getting-started/quick-start')
   assert.equal(rows[0].content, 'Quick Start\n\nlegacy text one')
   assert.deepEqual(fetch.calls.map((c) => [c.name, Object.keys(c.body)]), [['search_docs', ['query_embedding', 'match_count', 'similarity_threshold']]])
+})
+
+test('the reader refuses empty, null or short secrets even when their hash is registered, and bounds its arguments', async () => {
+  const { db } = await setup()
+  const EMPTY = hash('')
+  await assert.rejects(db.query(`select docs_generation_set_reader('preview', $1)`, [EMPTY]), /empty secret/)
+  const call = (token: string | null, matchCount: number | null = 5, threshold: number | null = 0.3) =>
+    asRole(db, 'anon', `select * from search_docs_generation($1::extensions.vector, $2, $3, 'preview', $4)`, [vectorLiteral(fakeVector(ALPHA)), matchCount, threshold, token])
+  const refused = async (p: Promise<unknown>, code: string, why: string) => {
+    await assert.rejects(p, (e: any) => e.code === code, why)
+  }
+  // Force the hashes the operator functions refuse, as superuser, to reach the reader's own checks.
+  for (const token of ['', 'short-secret']) {
+    await db.query(`update docs_generation_slots set reader_token_sha256 = $1 where environment = 'preview'`, [hash(token)])
+    await refused(call(token), '42501', JSON.stringify(token))
+  }
+  await db.query(`update docs_generation_slots set reader_token_sha256 = $1 where environment = 'preview'`, [EMPTY])
+  await refused(call(null), '42501', 'null token')
+
+  await db.query(`select docs_generation_set_reader('preview', $1)`, [hash(T_PREVIEW)])
+  assert.equal((await call(T_PREVIEW)).length, 1)
+  for (const n of [null, 0, -1]) await refused(call(T_PREVIEW, n), '22023', `match_count ${n}`)
+  for (const t of [null, Number.NaN, -1.5, 1.5]) await refused(call(T_PREVIEW, 5, t), '22023', `similarity_threshold ${t}`)
+  // A huge match_count is capped at 20 rows: the preview generation is re-pointed at a 30-chunk one.
+  const big = fixture([{ id: 'default:big', path: '/big', title: 'Big', body: page('Big', ...Array.from({ length: 29 }, (_, i): [string, string] => [`Part ${i}`, `Text ${i}.`])) }], 'big')
+  const r = await run(plan(big.manifest, big.dist), { environment: 'preview', store: pgliteStore(db), embedder: fakeEmbedder() })
+  assert.equal(r.chunks.written, 30)
+  await db.query(`select * from docs_generation_activate('preview', $1)`, [r.generationId])
+  assert.equal((await call(T_PREVIEW, 1_000_000, -1)).length, 20)
+  assert.equal((await call(T_PREVIEW, 7, -1)).length, 7)
 })

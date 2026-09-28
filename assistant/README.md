@@ -51,8 +51,9 @@ const res = await withGlobalFetch(p.fetch, async () => {
 | `TURNSTILE_SECRET_KEY` | Turnstile siteverify |
 | `JINA_API_KEY` | Query embedding with `jina-embeddings-v4`, 1024 dimensions, `retrieval.query` |
 | `APERTIS_API_KEY`, `APERTIS_BASE_URL`, `APERTIS_MODEL` | Streamed chat completion |
-| `ASK_RETRIEVAL_SOURCE` | **New.** Selects the retrieval source. The only accepted value today is `legacy`. |
-| `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Required when `ASK_RETRIEVAL_SOURCE=legacy` |
+| `ASK_RETRIEVAL_SOURCE` | **New.** Selects the retrieval source: `legacy` or `generation` (#11, see below). Any other value fails closed. |
+| `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Required for both sources |
+| `ASK_GENERATION_ENVIRONMENT`, `ASK_GENERATION_READER_TOKEN` | Required when `ASK_RETRIEVAL_SOURCE=generation` |
 
 If any required binding is missing, every POST answers `500 {"error":"Server configuration error"}`.
 The same happens when `ASK_RETRIEVAL_SOURCE` is missing or has an unknown value. This check runs before
@@ -161,7 +162,8 @@ in `indexer/README.md`.
 - **Configuration.** A missing or invalid binding throws `RetrievalConfigError` when the retrieval is created. The handler then answers the usual `500 {"error":"Server configuration error"}` before any provider call.
 - **Selection.** The database resolves the active generation itself. No request field, header, cookie or query parameter reaches the call, and there is no generation-id argument at all.
 - **Refusals.** These all throw `RetrievalError` with the database code:
-  - an unknown environment or a wrong secret (`42501`);
+  - a null or short secret (under 32 characters), an unknown environment or a wrong secret (`42501`), checked in the database too;
+  - a `match_count` below 1 or a `similarity_threshold` outside [-1, 1] (`22023`); `match_count` is capped at 20;
   - no active generation (`P0002`);
   - an active generation that is not ready or belongs to another environment (`P0003`).
 
