@@ -123,10 +123,15 @@ test('the manifest loader reads the one canonical manifest location', () => {
   assert.deepEqual(loadedManifest, onDisk);
 });
 
-test('the fixture manifest matches the inventory; its only gap is the unconverted /api/index.md', () => {
-  const fixture = loadedManifest;
-  assert.deepEqual(fixture.documents.map((d: { servedPath: string }) => d.servedPath), ['/', '/api/']);
-  assert.deepEqual(check(fixture, {}), ['api:index: markdown /api/index.md missing from build output']);
+test('the committed manifest covers exactly the PoC set and matches the inventory apart from build output', () => {
+  const poc: string[] = readJson('migration/nimbus/route-fixtures.json').pocRoutes;
+  const served = loadedManifest.documents.map((d) => d.servedPath).sort();
+  assert.deepEqual(served, poc.map((p) => (p === '/' ? p : `${p}/`)).sort());
+  // Without a build output, the only violations are the Markdown artifacts (full check: dist.check.ts).
+  const expected = loadedManifest.documents
+    .filter((d) => d.markdown)
+    .map((d) => `${d.id}: markdown ${d.markdown!.path} missing from build output`);
+  assert.deepEqual(check(loadedManifest, {}).sort(), expected.sort());
 });
 
 test('openSearch/openAskDocs dispatch the one apertis-docs:open event', () => {
