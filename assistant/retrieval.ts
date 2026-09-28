@@ -2,6 +2,7 @@
 // configuration: createRetrieval never sees the request, so no body field, header, cookie or query
 // parameter can influence which data is read.
 import { createClient } from '@supabase/supabase-js'
+import { generationSearchDocs } from './retrieval-generation.ts'
 
 export interface RetrievalRow {
   title: string
@@ -22,6 +23,10 @@ export interface RetrievalEnv {
   ASK_RETRIEVAL_SOURCE?: string
   SUPABASE_URL?: string
   SUPABASE_ANON_KEY?: string
+  /** #11, generation mode: the environment whose active ready generation is served. */
+  ASK_GENERATION_ENVIRONMENT?: string
+  /** #11, generation mode: that environment's reader secret (the database stores only its SHA-256). */
+  ASK_GENERATION_READER_TOKEN?: string
 }
 
 export class RetrievalConfigError extends Error {}
@@ -37,9 +42,10 @@ export function createRetrieval(env: RetrievalEnv, fetchImpl?: typeof fetch): Re
   switch (env.ASK_RETRIEVAL_SOURCE) {
     case 'legacy':
       return legacySearchDocs(env, fetchImpl)
-    // #11 seam: add `case 'generation':` returning a generation-aware Retrieval built from its own
-    // server-side bindings. It must throw RetrievalConfigError when those bindings are missing and must
-    // never fall back to 'legacy'.
+    // #11: the environment's active ready generation; throws RetrievalConfigError without its bindings
+    // and never falls back to 'legacy'.
+    case 'generation':
+      return generationSearchDocs(env, fetchImpl)
     default:
       throw new RetrievalConfigError('ASK_RETRIEVAL_SOURCE is missing or unknown')
   }
