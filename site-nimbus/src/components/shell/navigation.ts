@@ -73,3 +73,19 @@ export function pageNavigation(nav: Navigation, docId: string): PageNavigation |
     next: siblings[i + 1] ?? null,
   };
 }
+
+export interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+/** "On this page": h2 entries with their h3s nested; an h3 before any h2 stands alone. */
+export function tocTree(headings: TocHeading[]): { h: TocHeading; children: TocHeading[] }[] {
+  const tree: { h: TocHeading; children: TocHeading[] }[] = [];
+  for (const h of headings.filter((h) => h.depth === 2 || h.depth === 3)) {
+    if (h.depth === 2 || !tree.length) tree.push({ h, children: [] });
+    else tree[tree.length - 1].children.push(h);
+  }
+  return tree;
+}
