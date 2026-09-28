@@ -230,7 +230,7 @@ test('the drawer really locks page scrolling at 390x844 (wheel and touch)', { sk
 test('code blocks are full width and their tokens are coloured in both themes', { skip }, async () => {
   const { context, page } = await open(CHAT);
   for (const theme of ['light', 'dark']) {
-    await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, theme);
+    await page.evaluate((t: string) => { document.documentElement.dataset.theme = t; }, theme);
     const r = await page.evaluate(() => {
       const art = document.querySelector('article.docs-content')!;
       const pre = art.querySelector('pre.astro-code')!;
@@ -239,7 +239,7 @@ test('code blocks are full width and their tokens are coloured in both themes', 
       const a = art.getBoundingClientRect(), p = pre.getBoundingClientRect();
       return { body, tokens: [...tokens], left: p.left - a.left, right: a.right - p.right };
     });
-    assert.ok(r.tokens.filter((c) => c !== r.body).length >= 2, `${theme}: tokens ${r.tokens} vs body ${r.body}`);
+    assert.ok(r.tokens.filter((c: string) => c !== r.body).length >= 2, `${theme}: tokens ${r.tokens} vs body ${r.body}`);
     assert.ok(Math.abs(r.left) <= 1 && Math.abs(r.right) <= 1, `${theme}: code inset ${r.left}/${r.right}`);
   }
   await context.close();
@@ -258,12 +258,12 @@ test('admonitions carry the legacy per-type styling in both themes', { skip }, a
     caution: ['rgb(77, 56, 0)', 'rgb(255, 248, 230)'], danger: ['rgb(75, 17, 19)', 'rgb(255, 235, 236)'],
   };
   assert.ok((await page.$$('article aside.admonition')).length >= 2, 'the page has converted admonitions');
-  await page.evaluate((types) => {
+  await page.evaluate((types: string[]) => {
     const art = document.querySelector('article')!;
     for (const t of types) art.insertAdjacentHTML('beforeend', `<aside class="admonition admonition-${t}" data-probe><p class="admonition-title">${t}</p><p>Body</p></aside>`);
   }, Object.keys(border));
   for (const [i, theme] of ['light', 'dark'].entries()) {
-    await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, theme);
+    await page.evaluate((t: string) => { document.documentElement.dataset.theme = t; }, theme);
     const got = await page.$$eval('aside[data-probe]', (els: HTMLElement[]) => els.map((el) => {
       const cs = getComputedStyle(el);
       return [el.className.replace('admonition admonition-', ''), cs.borderLeftColor, cs.borderLeftWidth, cs.backgroundImage !== 'none',
@@ -283,8 +283,8 @@ test('wide tables scroll inside the content column and keep legacy column sizing
     return { spill: Math.round(r.right - a.right), scroll: t.scrollWidth > t.clientWidth + 1, overflow: getComputedStyle(t).overflowX };
   }));
   const narrow = await tables();
-  assert.deepEqual(narrow.filter((t) => t.spill > 0), [], 'no table crosses into the TOC column');
-  assert.ok(narrow.some((t) => t.scroll && t.overflow === 'auto'), 'the widest table scrolls horizontally');
+  assert.deepEqual(narrow.filter((t: { spill: number }) => t.spill > 0), [], 'no table crosses into the TOC column');
+  assert.ok(narrow.some((t: { scroll: boolean; overflow: string }) => t.scroll && t.overflow === "auto"), 'the widest table scrolls horizontally');
   await page.goto(base + CHAT, { waitUntil: 'load' });
   await page.setViewportSize({ width: 1440, height: 900 });
   const first = await page.$eval('article table', (t: HTMLElement) => ({
@@ -315,7 +315,7 @@ test('the desktop TOC follows the legacy rule: h3s show only under the active h2
     scrollTo(0, y(hs[i]) - at);
     return hs[i - 1].id;
   });
-  await page.waitForFunction((id) => (document.querySelector('.doc-page__toc a.active') as HTMLAnchorElement | null)?.hash === `#${id}`, expected);
+  await page.waitForFunction((id: string) => (document.querySelector('.doc-page__toc a.active') as HTMLAnchorElement | null)?.hash === `#${id}`, expected);
   await page.evaluate(() => document.getElementById('request-timeout')!.scrollIntoView());
   await page.waitForFunction(() => document.querySelector('.doc-page__toc a.active')?.textContent?.trim() === 'Request Timeout');
   assert.deepEqual(await visible(), ['HTTP Request', 'Optional Headers', 'Optional Parameters', 'Context Compression', 'Request Timeout']);
