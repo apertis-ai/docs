@@ -1,0 +1,33 @@
+---
+// Legacy footer link set (docusaurus.config.js themeConfig.footer).
+const columns = [
+  { title: 'Services', links: [
+    ['Apertis', 'https://api.apertis.ai'],
+    ['Chat', 'https://chat.apertis.ai'],
+    ['Research', 'https://apertis.ai/research'],
+    ['Status', 'https://status.apertis.ai'],
+  ] },
+  { title: 'Contact Us', links: [
+    ['Email', 'mailto:hi@apertis.ai'],
+    ['Facebook', 'https://www.facebook.com/stimaai/'],
+    ['Instagram', 'https://www.instagram.com/stimatech'],
+    ['LinkedIn', 'https://www.linkedin.com/company/apertis-ai'],
+    ['GitHub', 'https://github.com/apertis-ai'],
+  ] },
+];
+---
+<footer class="footer">
+  <div class="footer__columns">
+    {columns.map((c) => (
+      <div>
+        <p class="footer__title">{c.title}</p>
+        <ul>
+          {c.links.map(([label, href]) => (
+            <li>{href.startsWith('mailto:') ? <a href={href}>{label}</a> : <a href={href} target="_blank" rel="noopener noreferrer">{label}</a>}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <p class="footer__copyright">Apertis AI © 2024-2026 STIMA AI LLC. ALL RIGHTS RESERVED.</p>
+</footer>
