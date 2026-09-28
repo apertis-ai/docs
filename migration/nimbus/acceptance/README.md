@@ -72,35 +72,54 @@ This workflow is the only path that produces `isolated-real` evidence. It has no
 
 **Preconditions.** An operator must set up all of the following:
 
-- The GitHub Environment `nimbus-isolated`, with required reviewers and these secrets:
-  - `NIMBUS_ISOLATED_DATABASE_URL`
-  - `NIMBUS_ISOLATED_SUPABASE_URL`
-  - `NIMBUS_ISOLATED_SUPABASE_SERVICE_KEY`
-  - `NIMBUS_ISOLATED_JINA_API_KEY`
+- The GitHub Environment `nimbus-isolated`, with required reviewers. It must restrict deployment
+  branches to protected branches, so no unreviewed branch can reach its secrets. It holds:
+  - the secrets `NIMBUS_ISOLATED_DATABASE_URL`, `NIMBUS_ISOLATED_SUPABASE_URL`,
+    `NIMBUS_ISOLATED_SUPABASE_SERVICE_KEY` and `NIMBUS_ISOLATED_JINA_API_KEY`;
+  - the non-secret variables `NIMBUS_ISOLATED_HOST` (the one allowed target host) and
+    `NIMBUS_PRODUCTION_PROJECT_REF` (the production Supabase project ref, which is denied).
 - An isolated Supabase project.
 - An isolated, deployment-shaped preview, configured as in `indexer/README.md` "Operator contract"
-  step 8. Its hostname must be allowed for Turnstile.
+  step 8. Its hostname must be allowed for Turnstile, with the real (not a test) sitekey.
 
 **Dispatch inputs:**
 
-- `target_url`: https, not loopback, not production.
+- `target_url`: https; its host must equal `NIMBUS_ISOLATED_HOST`.
 - `generation_environment`: never `production`.
+- `preview_generation_environment`: the preview's `ASK_GENERATION_ENVIRONMENT` binding, confirmed by
+  the operator. It must equal `generation_environment`, and both are recorded.
 - `apply_migration`: optional.
-- `activate_generation`: optional.
+- `activate_generation` (default true), or `generation_already_active` as an explicit confirmation.
+  One of the two is required.
 
 **What the workflow does:**
 
-1. Fails closed before anything else when the target or any secret is missing, or when `indexer/` is
-   absent.
+Every step runs under `bash -euo pipefail`.
+
+1. Checks out, then fails closed before anything else (`scripts/nimbus/isolated-preflight.mjs`) when:
+   - the target, a secret or a variable is missing;
+   - the target host is not exactly `NIMBUS_ISOLATED_HOST` (a trailing dot is ignored);
+   - the target is a production host from `legacy-rollback.json` (`docs.apertis.ai`,
+     `docs.stima.tech`, `docs-2r1.pages.dev` and its deployment subdomains), an `apertis.ai` host,
+     `0.0.0.0` or loopback;
+   - `DATABASE_URL` and `SUPABASE_URL` are not the same Supabase project, or that project is
+     `NIMBUS_PRODUCTION_PROJECT_REF`;
+   - the generation environments differ, or neither activation nor the confirmation is given;
+   - `indexer/` is absent.
 2. Builds the candidate.
 3. Runs the #11 dry run, then creates a generation, then validates it (receipt and SQL state).
-4. Optionally applies the migration and activates the generation, both in the isolated project only.
-5. Runs `acceptance.mjs --only real-assistant,real-turnstile,real-indexing` against the target. That
-   run:
-   - asks one question through the real UI and the real Turnstile widget;
-   - checks the streamed frames, `[DONE]` and the rendered citations;
-   - requires every citation to resolve to a `rag`-eligible manifest page and to a document of the
-     receipt's generation.
+4. Optionally applies the migration. Activates the generation in the isolated project unless the
+   operator confirmed it is already active.
+5. Runs `acceptance.mjs --only real-assistant,real-turnstile,real-indexing` against the target
+   (judged by `scripts/nimbus/real-evidence.mjs`). Each entry PASSes only when:
+   - the preview's `apertis-docs:build` meta equals the candidate's `buildId` (else FAIL);
+   - the two generation environments are stated and equal;
+   - `docs_generation_slots`, read after the probe, names the receipt's generation as active (a
+     mismatch is FAIL; unreadable is BLOCKED);
+   - for Turnstile: the observed sitekey is not a Cloudflare test key, the token is not the dummy
+     token, and `/api/ask` answered 200;
+   - for the answer: frames stream to `[DONE]`, and every citation is a `rag`-eligible manifest page
+     and a document of the receipt's generation.
 6. Uploads the receipts and records. They carry no keys or tokens.
 
 Its concurrency group never cancels a running job, so a generation is never left half-created.
@@ -142,8 +161,9 @@ Each mutant runs its gate three times:
 2. with the regression injected, where it must fail with output that names the injection;
 3. after restore, where it must pass again.
 
-It prints `DETECTED` or `MISSED` for each mutant, and `--out` writes the result as JSON. This is
-acceptance criterion 1.
+It prints `DETECTED` or `MISSED` for each mutant, and `--out` writes the result as JSON with the HEAD
+commit and manifest `buildId` it ran against; the acceptance `gate-mutants` entry fails when either
+differs from the candidate. This is acceptance criterion 1.
 
 | Class | Injection | Gate | Where |
 | --- | --- | --- | --- |
@@ -152,6 +172,10 @@ acceptance criterion 1.
 | exclusion | `help/ideas.md` (outside the PoC manifest), `api/ask/index.html`, or an openspec proposal written into `dist` | `test:dist` | in place, removed in `finally`, file listing verified |
 | activation | one forbidden pattern per scanned root; removed activation text; removed navbar link | activation guard | hermetic temp copy |
 | wire | `turnstileToken` renamed in the fixture's request body, or in the `bad-turnstile` case | `m4-wire` (client) or the assistant replay (server) | in place, restored and verified by hash |
+| policy | default shell without pipefail/errexit, unpinned action, `pull_request_target`, write permission, a dropped path filter, environment, preflight or fail-closed variable, README without the protected-branch rule | `workflow-policy.mjs` | temp copy of the workflows and README |
+| preflight | target host not allowlisted, production or `pages.dev` production host, `0.0.0.0`, allowlist unset, database/Supabase URL in different projects, production project, production ref unset, environment mismatch, no activation or confirmation, http | `isolated-preflight.mjs` | synthetic, secret-free environment |
+| real | preview serving another or no buildId, another/none/unreadable active generation, preview environment mismatch, citation outside the generation, Turnstile test sitekey, dummy token, unobserved sitekey, unready generation | `real-evidence.mjs` | synthetic facts |
+| perfgate | missing page, profile or run, no samples, candidate build mismatch or unrecorded, legacy server change, extra page, byte and timing exceedance | `paired-perf.mjs gate` | synthetic samples at the recorded baseline |
 
 The served mutants need `--port` to be free. Locally, stop your preview first. They never mutate a
 tracked `site-nimbus` file or the inventory, because either change would move `buildId` and fail the
@@ -197,8 +221,8 @@ document of that generation.
 ## Paired performance (`scripts/nimbus/paired-perf.mjs`)
 
 ```sh
-PLAYWRIGHT=<...> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --out perf.json [--page /p/ ...]
-node scripts/nimbus/paired-perf.mjs gate perf.json [shard2.json ...] --out merged.json   # re-gates raw samples, no browser
+PLAYWRIGHT=<...> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --build-id <candidate buildId> --out perf.json [--page /p/ ...]
+node scripts/nimbus/paired-perf.mjs gate perf.json [shard2.json ...] --build-id <candidate buildId> --out merged.json   # re-gates raw samples, no browser
 ```
 
 **Sampling.** Every sample is one `measure.mjs perf <base> --runs 1 --page <p>` process, so the #5
@@ -213,6 +237,11 @@ site measured first flips every round. Both are served on the same machine in th
 - `unreadableResponses` must be 0 in every sample.
 - The paired legacy byte medians must equal the recorded baseline, which proves the legacy server is
   the baseline build.
+- The samples must cover exactly `budgets.protocol.pages`, both profiles and 5 runs per side. Empty or
+  partial sample sets fail.
+- Before every sample, each side's `/` is read: the candidate's `apertis-docs:build` meta must equal
+  `--build-id` in every candidate sample (acceptance passes the manifest's), and the legacy samples
+  must all serve one main bundle.
 
 **Output.** The result carries medians, the methodology, every raw sample with its 1-minute load
 average, and the failures. The exit status is 0 only when every page and profile is within budget.
