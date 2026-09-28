@@ -18,7 +18,7 @@ Run these in `site-nimbus/`. They require Node >= 22.18 and npm (lockfile v3).
 | `npm test` | Contract unit tests (`node --test`, native TypeScript type stripping) |
 | `npm run preview` | Serves `dist/` Pages-style with the repo-root `functions/` (see below) |
 | `PREVIEW_URL=<origin> npm run test:routes` | M1 routing proof against a running preview |
-| `npm run test:dist` | Publication hygiene of `dist/` (run after `build`) |
+| `npm run test:dist` | Publication hygiene of `dist/` (run after `build`): file allowlist, no maps or raw MDX, no values from any root or `site-nimbus` `.env*`/`.dev.vars*` (except `*.example`), no internal secret names |
 
 `preview` changes to the repository root and runs the pinned
 `wrangler pages dev site-nimbus/dist --compatibility-date=2024-01-01`. That makes `POST /api/ask`
@@ -79,18 +79,56 @@ Transitive packages resolved by the lockfile include `vite` 8.3.1, `@astrojs/mdx
 
 | File | Exports |
 | --- | --- |
-| `src/contracts/manifest.ts` | `ManifestV1`, `ManifestDocument`, `Eligibility`, `MarkdownArtifact`, `ELIGIBILITY_KEYS`, `MANIFEST_SITE`, `RESERVED_RUNTIME_PATH`, `markdownPathFor()` |
-| `src/contracts/page.ts` | `PAGE_META` (`apertis-docs:id` / `:build` / `:markdown`), `PageContext`, `pageContext()` |
+| `src/contracts/manifest.ts` | `ManifestV1`, `ManifestDocument`, `Eligibility`, `MarkdownArtifact`, `ELIGIBILITY_KEYS`, `MANIFEST_SITE`, `MANIFEST_PATH`, `RESERVED_RUNTIME_PATH`, `markdownPathFor()` |
+| `src/contracts/page.ts` | `PAGE_META` (`apertis-docs:id` / `:build` / `:markdown`), `TITLE_SUFFIX` (` \| Apertis Documentation`), `PageContext`, `pageContext()` |
 | `src/contracts/events.ts` | `OPEN_EVENT` (`apertis-docs:open`), `OpenSurfaceDetail`, `openSearch(query?)`, `openAskDocs()`, `WindowEventMap` augmentation |
-| `src/contracts/navigation.ts` | `SidebarId`, `SidebarPlacement`, `InventoryRoute`, `NavigationEntry` |
-| `src/contracts/validate-manifest.ts` | `validateManifest(manifest, { inventory, outDir })`. Node only, never import it from client code |
+| `src/contracts/navigation.ts` | `RouteInventory` (the whole inventory file), `InventoryRoute`, `LiveObservation`, `InventoryKind` / `INVENTORY_KINDS`, `MANIFEST_KINDS` (`doc`, `page`, `blog-post`), `InventoryDisposition` / `INVENTORY_DISPOSITIONS`, `SidebarId`, `SidebarPlacement`, `NavigationEntry` |
+| `src/contracts/validate-manifest.ts` | `validateManifest(manifest, { inventory, outDir })`. Node only; never import it from client code. It returns errors and never throws |
 
-`src/fixtures/manifest.json` holds the `/` and `/api/` entries from
-`migration/nimbus/fixtures/manifest-v1.example.json`, with placeholder hashes and a synthetic
-`buildId`. #7 replaces it with the generated manifest. It is a build-time input and is never
-published. `src/components/DocumentHead.astro` renders the title, canonical link and
-`apertis-docs:*` metas from a manifest entry.
+### Manifest location
+
+The manifest has one location: `MANIFEST_PATH` = `src/manifest/manifest.json`, relative to
+`site-nimbus/`. Its only loader is `src/manifest/manifest.ts`, which exports `manifest` and
+`documentAt(servedPath)`.
+
+- Until #7 writes the generated manifest there, the file is the M1 fixture: the `/` and `/api/`
+  entries from `migration/nimbus/fixtures/manifest-v1.example.json`, with placeholder hashes and a
+  synthetic `buildId`.
+- It is a build-time input and is never published unfiltered.
+
+### What `validateManifest` checks
+
+- `id`, `servedPath` and `canonicalUrl` are each unique.
+- Every entry comes from an inventory row of kind `doc`, `page` or `blog-post`, and its eligibility
+  equals that row.
+- `canonicalUrl` equals the row's `live.canonical`.
+- `title` equals the row's `live.title` with `TITLE_SUFFIX` removed.
+- No entry maps to `/api/ask`.
+- `markdown.path` follows the `<canonical>.md` rule, and the file exists in the build output with
+  the recorded hash.
 
 The fixture has one known gap. `api:index` is `agent`-eligible, so the `/api/` page advertises
 `apertis-docs:markdown=/api/index.md`, but M1 emits no Markdown. `validateManifest` reports exactly
 that one missing artifact until #7 generates it.
+
+### Rules for the next packets
+
+- **Heads:** `src/components/DocumentHead.astro` renders only the document identity: `<title>`
+  (manifest title + `TITLE_SUFFIX`), canonical and the `apertis-docs:*` metas. The page or layout
+  head owns charset and viewport.
+  - Do not use Nimbus's `NimbusHead` alongside it. `NimbusHead` emits its own canonical from
+    `Astro.url.pathname`, which keeps the trailing slash and contradicts the inventory's no-slash
+    canonicals. It also emits a `<link rel="sitemap" href="/sitemap-index.xml">`, which this site
+    does not publish.
+- **API route:** `src/pages/api/index.astro` is an M1 fixture shell. #7 replaces it when it mounts
+  the content collection routes; keep `/api/ask` unshadowed.
+- **Markdown paths:** Nimbus's built-in Markdown route (`src/pages/[...slug]/index.md.ts` in the
+  scaffold, `markdownRoute()`) serves `/<slug>/index.md`. That differs from the manifest rule
+  `<canonical path>.md` (for example `/getting-started/quick-start.md`, with `/index.md` only for
+  slash canonicals). #7 must emit the manifest paths.
+- **Routing check:** `test:routes` asserts that `POST /api/ask` returns
+  `500 {"error":"Server configuration error"}`. That holds only while no root `.dev.vars` exists.
+  With secrets present (#10/#12), assert on the function's 400 validation errors instead.
+- **Duplicate definitions:** outside `site-nimbus/`, `functions/api/ask.ts` and
+  `src/components/UnifiedSearchModal/assistantUtils.ts` still declare their own legacy
+  `PageContext`. #9 and #10 should import `src/contracts/page.ts` instead.
