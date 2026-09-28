@@ -54,6 +54,15 @@ test('every output file derives from a publishable manifest entry or is referenc
   const pages = manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
   const html = [...pages, '404.html'];
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too.
+  for (let i = 0; i < referenced.length; i++) {
+    if (!referenced[i].endsWith('.js') || !files.includes(referenced[i])) continue;
+    const dir = path.posix.dirname(referenced[i]);
+    for (const m of read(referenced[i]).matchAll(/(?:from|import\()\s*["'`](\.\.?\/[^"'`]+)["'`]/g)) {
+      const dep = path.posix.join(dir, m[1]);
+      if (!referenced.includes(dep)) referenced.push(dep);
+    }
+  }
   // #7: clean Markdown artifacts at their manifest paths (agent-eligible entries only).
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
   const allowed = new Set([...html, ...referenced, ...markdown, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
@@ -214,7 +223,9 @@ test('m4: search fragments carry no shell chrome (navbar/sidebar labels) beyond 
       .map((a) => text(a[1]).replace(/\s+/g, ' ').trim())
       .filter((l) => l.length > 2))];
     const content = byUrl.get(d.servedPath) ?? '';
-    const extra = labels.filter((l) => count(content, l) > count(article.replace(/\s+/g, ' '), l));
+    // Compare without whitespace: inline tags (e.g. <code> in a heading) become spaces in `text()` but not in Pagefind content.
+    const squash = (s: string) => s.replace(/\s+/g, '');
+    const extra = labels.filter((l) => count(squash(content), squash(l)) > count(squash(article), squash(l)));
     assert.deepEqual(extra, [], `${d.servedPath}: shell labels in the index`);
   }
 });
