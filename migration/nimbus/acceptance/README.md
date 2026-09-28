@@ -128,8 +128,8 @@ Every PR #3 root, rule and requirement is unchanged:
 - The Quick Start activation text in the converted render source and the clean Markdown, and in the
   built artifact when one exists.
 - Create account and Log in in the candidate shell.
-- When built, Create account and Log in in every rendered `<header>`. `dist/404.html` renders no shell,
-  so it has no navbar to check.
+- When built, Create account and Log in in the `<header>` of every rendered page. Only `dist/404.html`
+  is exempt: like the legacy 404 served at baseline, it renders no shell.
 
 `gate-mutants.mjs --only activation` proves that an injected pattern in each root fails the guard with
 the file named.

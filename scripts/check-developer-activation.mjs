@@ -136,11 +136,10 @@ if (hasCandidate) {
   for (const value of ['https://apertis.ai/register', 'https://apertis.ai/login']) {
     if (!shell.includes(value)) failures.push(`${CANDIDATE}/src/**/*.astro: missing required activation content: ${value}`);
   }
-  // When built, every rendered navbar (<header>) carries both links, and the home page renders one.
-  // ponytail: dist/404.html renders no shell at all, so it has no navbar to check.
-  for (const file of candidateFiles.filter((f) => f.startsWith(CANDIDATE_DIST) && f.endsWith('.html'))) {
+  // When built, every rendered page's navbar (<header>) carries both links. Only 404.html is exempt:
+  // like the legacy 404 served at baseline, it renders no shell.
+  for (const file of candidateFiles.filter((f) => f.startsWith(CANDIDATE_DIST) && f.endsWith('.html') && f !== `${CANDIDATE_DIST}/404.html`)) {
     const header = fs.readFileSync(path.join(ROOT, file), 'utf8').match(/<header\b[\s\S]*?<\/header>/)?.[0];
-    if (header === undefined && file !== `${CANDIDATE_DIST}/index.html`) continue;
     for (const value of ['https://apertis.ai/register', 'https://apertis.ai/login']) {
       if (!header?.includes(value)) failures.push(`${file} navbar: missing required activation content: ${value}`);
     }
