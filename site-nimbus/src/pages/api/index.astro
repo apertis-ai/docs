@@ -1,0 +1,18 @@
+---
+import DocumentHead from '../../components/DocumentHead.astro';
+import { documentAt, manifest } from '../../fixtures/manifest.ts';
+
+const doc = documentAt('/api/');
+---
+<!doctype html>
+<html lang="en">
+  <head><DocumentHead doc={doc} buildId={manifest.buildId} /></head>
+  <body>
+    <main>
+      <article>
+        <h1>{doc.title}</h1>
+        <p>Nimbus candidate fixture shell. The API overview arrives with the converted pages.</p>
+      </article>
+    </main>
+  </body>
+</html>

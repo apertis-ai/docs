@@ -1,0 +1,19 @@
+---
+import DocumentHead from '../components/DocumentHead.astro';
+import { documentAt, manifest } from '../fixtures/manifest.ts';
+
+const doc = documentAt('/');
+---
+<!doctype html>
+<html lang="en">
+  <head><DocumentHead doc={doc} buildId={manifest.buildId} /></head>
+  <body>
+    <main>
+      <article>
+        <h1>Apertis Documentation</h1>
+        <p>Nimbus candidate fixture shell. Content arrives with the converted pages.</p>
+        <p><a href="/api/">API Reference</a></p>
+      </article>
+    </main>
+  </body>
+</html>
