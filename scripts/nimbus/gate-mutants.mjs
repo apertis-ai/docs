@@ -103,9 +103,10 @@ async function exclusion() {
   const before = listing();
   const expose = (rel, text) => ({ inject: () => { fs.mkdirSync(path.dirname(path.join(DIST, rel)), { recursive: true }); fs.writeFileSync(path.join(DIST, rel), text); },
     restore: () => { fs.rmSync(path.join(DIST, rel)); for (let d = path.dirname(rel); d !== '.'; d = path.dirname(d)) { const abs = path.join(DIST, d); if (fs.readdirSync(abs).length) break; fs.rmdirSync(abs); } } });
-  // /help/ideas is published in the inventory but outside the PoC manifest: not eligible for this candidate.
+  // /blog/first-blog-post is retired by the decision on #4 (#13): never publishable. (Until #13 this case
+  // used /help/ideas, which the full-corpus manifest now publishes.)
   const cases = [
-    ['non-PoC document Markdown published (help/ideas.md)', expose('help/ideas.md', fs.readFileSync(path.join(ROOT, 'docs/help/ideas.md'), 'utf8')), /help\/ideas\.md/],
+    ['retired document Markdown published (blog/first-blog-post.md)', expose('blog/first-blog-post.md', fs.readFileSync(path.join(ROOT, 'blog/2019-05-28-first-blog-post.md'), 'utf8')), /blog\/first-blog-post\.md/],
     ['reserved runtime path emitted (api/ask/index.html)', expose('api/ask/index.html', '<!doctype html><title>shadow</title>'), /api\/ask\/index\.html/],
     ['planning material emitted (openspec proposal)', expose('openspec/proposal.md', fs.readFileSync(path.join(ROOT, 'openspec/changes/nimbus-migration-contracts/proposal.md'), 'utf8')), /openspec\/proposal\.md/],
   ];

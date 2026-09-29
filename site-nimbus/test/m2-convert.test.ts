@@ -7,15 +7,17 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { ConversionError, buildHashOf, convert, convertDocument, mainTextSha256 } from '../converter/convert.ts';
+import { ConversionError, buildHashOf, convert, convertDocument, mainTextSha256, readInventory } from '../converter/convert.ts';
 import { finalize } from '../converter/integration.ts';
-import type { InventoryRoute, RouteInventory } from '../src/contracts/navigation.ts';
+import type { InventoryRoute } from '../src/contracts/navigation.ts';
 
 const site = path.resolve(import.meta.dirname, '..');
 const repoRoot = path.resolve(site, '..');
-const inventory: InventoryRoute[] = (JSON.parse(
-  fs.readFileSync(path.join(repoRoot, 'migration/nimbus/route-inventory.json'), 'utf8'),
-) as RouteInventory).routes;
+// The converter's own read (live titles decoded), as convert() uses by default.
+const inventory: InventoryRoute[] = readInventory(repoRoot);
+// #13: every preserved doc/page row is converted; docs are agent-eligible and get an artifact.
+const preserved = inventory.filter((r) => r.disposition === 'preserve' && ['doc', 'page', 'blog-post'].includes(r.kind) && r.documentId);
+const artifacts = preserved.filter((r) => r.eligibility.agent).length;
 const row = (id: string) => inventory.find((r) => r.documentId === id)!;
 const ctx = { inventory, repoRoot };
 
@@ -108,7 +110,8 @@ test('converting twice is byte-identical, and a rerun leaves no stale output', (
   convert({ outRoot: b });
   convert({ outRoot: b });
   assert.deepEqual(tree(b, OUT), tree(a, OUT));
-  assert.equal(Object.keys(tree(a, ['src/content/public'])).filter((f) => f.endsWith('.md')).length, 11);
+  assert.equal(Object.keys(tree(a, ['src/content/public'])).filter((f) => f.endsWith('.md')).length, artifacts);
+  assert.equal(artifacts, 78);
 });
 
 test('the committed generated output equals a fresh conversion (never hand-edited)', () => {
@@ -124,10 +127,12 @@ test('the committed generated output equals a fresh conversion (never hand-edite
   assert.deepEqual(strip(read(site)), strip(read(out)));
 });
 
-test('the manifest covers all 12 PoC documents with the spec buildId form', () => {
+test('the manifest covers every preserved document (78 docs + the homepage) with the spec buildId form', () => {
   const m = convert({ outRoot: tmp() });
-  assert.deepEqual(m.documents.map((d) => d.id).sort(), inventory.filter((r) => r.poc && r.documentId).map((r) => r.documentId).sort());
-  assert.equal(m.documents.length, 12);
+  assert.deepEqual(m.documents.map((d) => d.id).sort(), preserved.map((r) => r.documentId).sort());
+  assert.equal(m.documents.length, 79);
+  // The PoC documents are a subset.
+  for (const r of inventory.filter((x) => x.poc && x.documentId)) assert.ok(m.documents.some((d) => d.id === r.documentId), r.documentId!);
   assert.match(m.sourceSha, /^[0-9a-f]{40}$/);
   assert.match(m.buildId, new RegExp(`^${m.sourceSha}\\.[0-9a-f]{12}$`));
   const home = m.documents.find((d) => d.id === 'page:index')!;

@@ -12,6 +12,7 @@ import { PAGE_META, TITLE_SUFFIX, pageContext } from '../src/contracts/page.ts';
 import {
   INVENTORY_DISPOSITIONS,
   INVENTORY_KINDS,
+  MANIFEST_KINDS,
   type InventoryRoute,
   type LiveObservation,
   type RouteInventory,
@@ -123,10 +124,12 @@ test('the manifest loader reads the one canonical manifest location', () => {
   assert.deepEqual(loadedManifest, onDisk);
 });
 
-test('the committed manifest covers exactly the PoC set and matches the inventory apart from build output', () => {
+test('the committed manifest covers exactly the preserved doc/page set (#13) and matches the inventory apart from build output', () => {
   const poc: string[] = readJson('migration/nimbus/route-fixtures.json').pocRoutes;
   const served = loadedManifest.documents.map((d) => d.servedPath).sort();
-  assert.deepEqual(served, poc.map((p) => (p === '/' ? p : `${p}/`)).sort());
+  const preserved = inventory.filter((r) => r.disposition === 'preserve' && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
+  assert.deepEqual(served, preserved.map((r) => { const p = new URL(r.live!.canonical!).pathname; return p.endsWith('/') ? p : `${p}/`; }).sort());
+  for (const p of poc) assert.ok(served.includes(p === '/' ? p : `${p}/`), p);
   // Without a build output, the only violations are the Markdown artifacts (full check: dist.check.ts).
   const expected = loadedManifest.documents
     .filter((d) => d.markdown)
