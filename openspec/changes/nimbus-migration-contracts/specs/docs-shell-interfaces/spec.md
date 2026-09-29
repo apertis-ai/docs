@@ -48,3 +48,32 @@ A production client bundle SHALL NOT contain a simulated or canned Ask Docs answ
 #### Scenario: Local development host
 - **WHEN** the candidate runs on localhost without a backend
 - **THEN** Ask Docs shows the server's error or configuration response instead of a fabricated answer
+
+### Requirement: Reading layout and page header
+The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent, Inter, and system monospace. It SHALL NOT use another brand's typefaces, marks or navigation motifs.
+
+**Palette.** The candidate SHALL use a warm paper background with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
+
+**Measure.** Article prose SHALL NOT exceed about 70ch. Tables and code blocks MAY use the full content column.
+
+**Page header.** Each document page SHALL open with a header block:
+- a category tag, which is the sidebar category of the page;
+- the title;
+- a one-sentence description, taken from front-matter `description` when present, else the first paragraph;
+- a meta row with the last-updated date and an estimated reading time;
+- the page actions.
+
+A full-width hairline SHALL separate the header block from the body. The date is the author date of the last legacy commit that touched the source file. The converter computes it deterministically from `sourceSha`, and the build never calls git.
+
+**Mobile.** On mobile the title block SHALL come before the page actions and the "On this page" disclosure.
+
+**Table of contents.** The table of contents SHALL show a reading-progress indicator. The indicator SHALL cause no layout shift, SHALL respect `prefers-reduced-motion`, and SHALL NOT scroll-jack.
+
+#### Scenario: Reader opens a document on a phone
+- **WHEN** `/getting-started/quick-start/` is opened at 390×844
+- **THEN** the category tag, title, description and meta row are the first content below the header
+- **AND** the page actions and the "On this page" disclosure follow them
+
+#### Scenario: Contrast
+- **WHEN** the theme tokens are checked in light and dark
+- **THEN** body text is at least 7:1, and muted text and links are at least 4.5:1, against their backgrounds
