@@ -11,7 +11,7 @@
 // secret, no internal hostname and no home or temp path. BLOCKED means the proof could not be taken
 // here; it is never counted as passed. isolated-real entries are BLOCKED unless their operator-configured
 // isolated preview is named: NIMBUS_ISOLATED_URL (real Turnstile keys) for real-turnstile, and
-// NIMBUS_ISOLATED_TESTKEY_URL (Cloudflare's always-pass test secret, same build and generation) for
+// NIMBUS_ISOLATED_ALWAYS_PASS_URL (Cloudflare's always-pass test secret, same build and generation) for
 // real-assistant and real-indexing (see scripts/nimbus/real-evidence.mjs and nimbus-isolated.yml).
 // Exit status: 0 when no entry FAILs, 1 when any does, 2 on a usage or identity error.
 import fs from 'node:fs';
@@ -40,7 +40,7 @@ const previewGenerationEnvironment = opt('preview-generation-environment');
 const only = opt('only')?.split(',');
 const outFile = opt('out');
 const isolated = process.env.NIMBUS_ISOLATED_URL?.replace(/\/$/, '');
-const testkeyIsolated = process.env.NIMBUS_ISOLATED_TESTKEY_URL?.replace(/\/$/, '');
+const testkeyIsolated = process.env.NIMBUS_ISOLATED_ALWAYS_PASS_URL?.replace(/\/$/, '');
 const artifacts = path.resolve(opt('artifacts') ?? fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-acceptance-')));
 fs.mkdirSync(artifacts, { recursive: true });
 if (!sha) { console.error('usage: acceptance.mjs --sha <candidate commit> [--preview <origin>] [...]'); process.exit(2); }
@@ -307,7 +307,7 @@ const CUSTOM = {
   async real(entry) {
     const turnstileEntry = entry.id === 'real-turnstile';
     const target = turnstileEntry ? isolated : testkeyIsolated;
-    const variable = turnstileEntry ? 'NIMBUS_ISOLATED_URL' : 'NIMBUS_ISOLATED_TESTKEY_URL';
+    const variable = turnstileEntry ? 'NIMBUS_ISOLATED_URL' : 'NIMBUS_ISOLATED_ALWAYS_PASS_URL';
     if (!target) return { status: 'BLOCKED', reason: `no isolated environment configured (${variable}); mock/contract evidence cannot close this entry`, steps: [] };
     if (/^(localhost|0\.0\.0\.0|127\.|\[?::1)/.test(new URL(target).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
     // Every real entry names the exact corpus: the generation receipt of the isolated run.
@@ -401,6 +401,13 @@ async function realProbe() {
         keyed.render = (el, o) => t.render(el, { ...o, sitekey: key });
         Object.defineProperty(window, 'turnstile', { value: keyed, configurable: true, writable: true });
       }, true);
+      // Playwright cannot read a streamed response body, so the page keeps a copy of the /api/ask stream.
+      const realFetch = window.fetch;
+      window.fetch = async (input, init) => {
+        const res = await realFetch(input, init);
+        if (new URL(String(input), location.href).pathname === '/api/ask') window.__askBody = res.clone().text();
+        return res;
+      };
     }, ALWAYS_PASS_SITEKEY);
     let body = '';
     page.on('request', (req) => {
@@ -427,7 +434,7 @@ async function realProbe() {
     const res = await answered;
     record.status = res.status();
     record.contentType = res.headers()['content-type'];
-    body = await res.text().catch(() => '');
+    body = await page.evaluate(() => window.__askBody ?? '').catch(() => '');
     await page.waitForFunction(() => { const m = [...document.querySelectorAll('.aa-msg[data-role="assistant"]')].at(-1); return m && m.dataset.state !== 'streaming'; }, null, { timeout: 120000 });
     const last = page.locator('.aa-msg[data-role="assistant"]').last();
     record.renderedState = (await last.getAttribute('data-state')) ?? 'done';

@@ -7,7 +7,7 @@
 //   judged there without a browser token: the real sitekey is served, and the real handler rejects a
 //   request without a token (400) and a forged token through Cloudflare siteverify (403,
 //   invalid-input-response).
-// - the test-key preview (NIMBUS_ISOLATED_TESTKEY_URL) has Cloudflare's always-pass test secret. The
+// - the test-key preview (NIMBUS_ISOLATED_ALWAYS_PASS_URL) has Cloudflare's always-pass test secret. The
 //   harness renders the widget with the always-pass test sitekey, so real-assistant and real-indexing
 //   drive the real handler, Jina, the isolated Supabase generation and the Apertis completion end to
 //   end. There the dummy token is required, which labels the path instead of hiding it.
