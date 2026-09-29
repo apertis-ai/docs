@@ -281,15 +281,20 @@ yields NO-GO until the isolated run passes.
 
 ## Reuse by #13 (full corpus) and #14 (release)
 
-**#13:**
+**#13:** three matrix entries widen the PoC gates over the full corpus, added rather than replacing any
+PoC entry:
 
-- Run the same gates. `route-fixtures.mjs check` without `--scope poc` covers every inventory route,
-  and `pocCoverageLimits` goes away.
-- Run `measure.mjs search` without `--scope poc` (24 queries).
-- Extend `paired-perf.mjs run --page` over #13's page set. The byte budgets need recorded baselines for
-  those pages first.
-- Widen `matrix.json` entries by adding steps, never by removing named tests.
+- `route-fixtures-full-corpus` runs `route-fixtures.mjs check` without `--scope poc`: every inventory
+  route (228/228), and `pocCoverageLimits` does not apply outside the PoC scope.
+- `search-relevance-full-corpus` runs `measure.mjs search` without `--scope poc` (all 24 queries,
+  `search-queries.json`). Ranking over the wider corpus is a separate repair (#9); this entry may FAIL
+  until that lands, and it is reported, not silently accepted.
+- `performance-budgets-full-corpus` runs `paired-perf.mjs gate --set full` over `budgets.json`
+  `fullCorpus.pages`. `fullCorpus.baseline` is `null` until the legacy full-corpus byte baseline is
+  recorded; until then this entry is BLOCKED (no `--perf-full` supplied to `acceptance.mjs`) or FAIL
+  (supplied but every page fails "no recorded byte baseline"), never PASS.
 - The guard already scans whatever `site-nimbus/src` and `dist` contain.
+- `acceptance.mjs` takes `--perf-full <result.json> ...` alongside `--perf` to gate this entry.
 
 **#14:**
 
