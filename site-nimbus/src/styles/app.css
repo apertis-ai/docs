@@ -37,6 +37,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --text-xs: var(--fs-xs);
+  --text-sm: var(--fs-ui);
+  --text-base: var(--fs-base);
+  --text-lg: var(--fs-lg);
+  --text-xl: var(--fs-xl);
   --font-sans: var(--font);
   --font-mono: var(--mono);
 }
