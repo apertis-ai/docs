@@ -2,7 +2,8 @@
 // containment, Escape, the overlay click and the wheel/touch scroll lock (body[data-scroll-locked]) are
 // Radix's. The menu button is server-rendered in the header; shell.client.ts forwards its clicks through
 // the bridge, so a click before this island hydrates still opens it. Closing is instant (no exit
-// animation), like the native drawer it replaces, so focus returns at once.
+// animation), like the native drawer it replaces, so focus returns at once. It layers above the sticky
+// header (z-index 100).
 import { useEffect, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { ArrowUpRight, Moon, Sun, X } from 'lucide-react';
@@ -51,8 +52,8 @@ export default function NavSheet({ sidebar, current }: Props) {
         id="shell-drawer"
         showCloseButton={false}
         aria-label="Navigation"
-        className="w-[min(83vw,360px)] gap-0 p-0 sm:max-w-[360px] data-[state=closed]:animate-none!"
-        overlayProps={{ className: 'data-[state=closed]:animate-none!', onClick: () => close() }}
+        className="z-[200] w-[min(83vw,360px)] gap-0 p-0 sm:max-w-[360px] data-[state=closed]:animate-none!"
+        overlayProps={{ className: 'z-[200] data-[state=closed]:animate-none!', onClick: () => close() }}
         onCloseAutoFocus={(e) => { e.preventDefault(); opener()?.focus(); }}
       >
         <SheetTitle className="sr-only">Navigation</SheetTitle>
