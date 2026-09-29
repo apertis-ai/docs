@@ -9,15 +9,17 @@
 // BLOCKED, with the evidence class, the commands and their exit status, the candidate commit, the
 // manifest and served buildId, the environment and artifact identities (hashes). Records carry no
 // secret, no internal hostname and no home or temp path. BLOCKED means the proof could not be taken
-// here; it is never counted as passed. isolated-real entries are BLOCKED unless NIMBUS_ISOLATED_URL
-// names an operator-configured isolated preview (see .github/workflows/nimbus-isolated.yml).
+// here; it is never counted as passed. isolated-real entries are BLOCKED unless their operator-configured
+// isolated preview is named: NIMBUS_ISOLATED_URL (real Turnstile keys) for real-turnstile, and
+// NIMBUS_ISOLATED_TESTKEY_URL (Cloudflare's always-pass test secret, same build and generation) for
+// real-assistant and real-indexing (see scripts/nimbus/real-evidence.mjs and nimbus-isolated.yml).
 // Exit status: 0 when no entry FAILs, 1 when any does, 2 on a usage or identity error.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { DUMMY_TOKEN, judgeReal } from './real-evidence.mjs';
+import { ALWAYS_PASS_SITEKEY, DUMMY_TOKEN, judgeReal } from './real-evidence.mjs';
 import { checkWorkflows } from './workflow-policy.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
@@ -38,6 +40,7 @@ const previewGenerationEnvironment = opt('preview-generation-environment');
 const only = opt('only')?.split(',');
 const outFile = opt('out');
 const isolated = process.env.NIMBUS_ISOLATED_URL?.replace(/\/$/, '');
+const testkeyIsolated = process.env.NIMBUS_ISOLATED_TESTKEY_URL?.replace(/\/$/, '');
 const artifacts = path.resolve(opt('artifacts') ?? fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-acceptance-')));
 fs.mkdirSync(artifacts, { recursive: true });
 if (!sha) { console.error('usage: acceptance.mjs --sha <candidate commit> [--preview <origin>] [...]'); process.exit(2); }
@@ -101,6 +104,7 @@ const environment = {
   preview: preview ? redact(preview) : null,
   browserChannel: process.env.PLAYWRIGHT_CHANNEL ?? 'caller default (system Chrome)',
   isolated: isolated ? redact(isolated) : null,
+  testkeyIsolated: testkeyIsolated ? redact(testkeyIsolated) : null,
 };
 
 // ---- command runners ---------------------------------------------------------------------------------
@@ -301,20 +305,28 @@ const CUSTOM = {
     return { status: failures.length ? 'FAIL' : 'PASS', reason: failures.join('; ') || `${files.length} nimbus workflows: no pull_request_target, contents: read, fetch-depth 0, no secrets in PR gates, dispatch-only isolated path bound to its environment, legacy indexing workflow byte-identical`, steps: [{ command: 'workflow policy (YAML parse)', files: files.map((f) => ({ file: f, sha256: sha256(fs.readFileSync(path.join(dir, f))) })) }] };
   },
   async real(entry) {
-    if (!isolated) return { status: 'BLOCKED', reason: 'no isolated environment configured (NIMBUS_ISOLATED_URL); mock/contract evidence cannot close this entry', steps: [] };
-    if (/^(localhost|0\.0\.0\.0|127\.|\[?::1)/.test(new URL(isolated).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
+    const turnstileEntry = entry.id === 'real-turnstile';
+    const target = turnstileEntry ? isolated : testkeyIsolated;
+    const variable = turnstileEntry ? 'NIMBUS_ISOLATED_URL' : 'NIMBUS_ISOLATED_TESTKEY_URL';
+    if (!target) return { status: 'BLOCKED', reason: `no isolated environment configured (${variable}); mock/contract evidence cannot close this entry`, steps: [] };
+    if (/^(localhost|0\.0\.0\.0|127\.|\[?::1)/.test(new URL(target).hostname)) return { status: 'FAIL', reason: 'real evidence must not come from a loopback host', steps: [] };
     // Every real entry names the exact corpus: the generation receipt of the isolated run.
     if (!receiptFile) return { status: 'BLOCKED', reason: 'no generation receipt (--indexer-receipt); real evidence must name the generation it retrieved from', steps: [] };
     const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
-    const isolatedBuildId = await fetch(isolated + '/').then((res) => res.text()).then(buildMeta, () => null);
-    const probe = await realProbe();
+    const servedBuild = (origin) => (origin ? fetch(origin + '/').then((res) => res.text()).then(buildMeta, () => null) : null);
+    const [servedBuildId, testkeyServedBuildId] = await Promise.all([servedBuild(isolated), servedBuild(testkeyIsolated)]);
+    const enforcement = turnstileEntry ? await enforcementProbe() : null;
+    const probe = turnstileEntry ? { ok: false, sources: [], record: {}, reason: '' } : await realProbe();
     const active = activeGeneration(generationEnvironment); // read after the probe
-    const verdict = judgeReal(entry.id, { manifestBuildId: manifest.buildId, servedBuildId: isolatedBuildId, receipt, generationEnvironment, previewGenerationEnvironment, activeGenerationId: active.id, probe });
+    const verdict = judgeReal(entry.id, { manifestBuildId: manifest.buildId, servedBuildId, testkeyServedBuildId, receipt, generationEnvironment, previewGenerationEnvironment, activeGenerationId: active.id, enforcement: enforcement?.facts, probe });
+    const observed = turnstileEntry ? enforcement.reason : probe.reason;
     return {
       status: verdict.status,
-      reason: `generation ${receipt.generationId}; ${probe.reason}${verdict.reasons.length ? `; ${verdict.reasons.join('; ')}` : ''}`,
-      steps: [{ command: 'real probe (Playwright) against the isolated preview + generation receipt + docs_generation_slots', generationId: receipt.generationId, receiptSha256: sha256(fs.readFileSync(receiptFile)),
-        isolatedServedBuildId: isolatedBuildId, generationEnvironment: generationEnvironment ?? null, previewGenerationEnvironment: previewGenerationEnvironment ?? null, activeGenerationId: active.id, activeGenerationNote: active.why ?? null, probe: probe.record }],
+      reason: `generation ${receipt.generationId}; ${observed}${verdict.reasons.length ? `; ${verdict.reasons.join('; ')}` : ''}`,
+      steps: [{ command: turnstileEntry ? 'Turnstile enforcement probe (sitekey served, /api/ask without and with a forged token) against the real-key isolated preview + generation receipt + docs_generation_slots' : 'real probe (Playwright, always-pass test sitekey) against the test-key isolated preview + generation receipt + docs_generation_slots',
+        generationId: receipt.generationId, receiptSha256: sha256(fs.readFileSync(receiptFile)),
+        isolatedServedBuildId: servedBuildId, testkeyServedBuildId, generationEnvironment: generationEnvironment ?? null, previewGenerationEnvironment: previewGenerationEnvironment ?? null, activeGenerationId: active.id, activeGenerationNote: active.why ?? null,
+        ...(turnstileEntry ? { enforcement: enforcement.facts } : { probe: probe.record }) }],
     };
   },
 };
@@ -330,16 +342,66 @@ function activeGeneration(environment) {
   return /^\d+$/.test(v) ? { id: Number(v) } : { id: 'none', why: 'no active generation for this environment' };
 }
 
-// One real question through the candidate UI on the isolated preview: Turnstile (real widget),
-// /api/ask (real handler, real providers, configured generation), streamed frames, rendered citations.
+// Turnstile enforcement on the real-key preview, without a browser token: the sitekey the page renders
+// the widget with, and the real handler's answers to a request without a token and with a forged one.
+let enforcementResult;
+async function enforcementProbe() {
+  if (enforcementResult) return enforcementResult;
+  const facts = {};
+  const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
+  const browser = await chromium.launch();
+  try {
+    const page = await (await browser.newContext()).newPage();
+    page.on('request', (req) => {
+      const u = new URL(req.url());
+      const key = u.hostname === 'challenges.cloudflare.com' && u.pathname.match(/\/([0-3]x[0-9A-Za-z_-]{10,})(\/|$)/)?.[1];
+      if (key) facts.sitekey ??= key;
+    });
+    await page.goto(isolated + '/getting-started/quick-start/', { waitUntil: 'load', timeout: 60000 });
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
+    await page.waitForRequest((req) => new URL(req.url()).hostname === 'challenges.cloudflare.com' && /\/[0-3]x[0-9A-Za-z_-]{10,}(\/|$)/.test(new URL(req.url()).pathname), { timeout: 30000 }).catch(() => {});
+  } catch (e) {
+    facts.sitekeyError = redact(e.message).slice(0, 200);
+  } finally {
+    await browser.close();
+  }
+  const ask = async (extra) => {
+    const res = await fetch(isolated + '/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ question: 'How do I create an API key?', sessionId: `acceptance-${Date.now()}`, ...extra }) });
+    const body = await res.json().catch(() => ({}));
+    return { status: res.status, error: body.error, codes: body.codes };
+  };
+  facts.missing = await ask({});
+  facts.forged = await ask({ turnstileToken: `forged-${crypto.randomBytes(24).toString('hex')}` });
+  enforcementResult = { facts, reason: `real-key sitekey ${facts.sitekey ?? 'not observed'}; no token: ${facts.missing.status} ${JSON.stringify(facts.missing.error)}; forged token: ${facts.forged.status} ${JSON.stringify(facts.forged.error)} ${JSON.stringify(facts.forged.codes ?? [])}` };
+  return enforcementResult;
+}
+
+// One real question through the candidate UI on the test-key isolated preview: the Turnstile widget with
+// Cloudflare's always-pass test sitekey (real widget script, dummy token, real siteverify with the
+// always-pass secret), /api/ask (real handler, real providers, configured generation), streamed frames,
+// rendered citations.
 let probeResult;
 async function realProbe() {
   if (probeResult) return probeResult;
   const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
   const browser = await chromium.launch();
-  const record = { url: redact(isolated), path: '/getting-started/quick-start/' };
+  const record = { url: redact(testkeyIsolated), path: '/getting-started/quick-start/' };
   try {
     const page = await (await browser.newContext()).newPage();
+    // The candidate renders the widget with the production sitekey, which is bound to production hosts.
+    // A capture listener on document (a load event never reaches window) runs before the loader's own
+    // onload and hands it a turnstile object whose render() uses the always-pass test sitekey.
+    await page.addInitScript((key) => {
+      document.addEventListener('load', (e) => {
+        const t = window.turnstile;
+        if (!(e.target instanceof HTMLScriptElement) || !t || t.__keyed) return;
+        const keyed = { __keyed: true };
+        for (const k of Object.keys(t)) keyed[k] = typeof t[k] === 'function' ? t[k].bind(t) : t[k];
+        keyed.render = (el, o) => t.render(el, { ...o, sitekey: key });
+        Object.defineProperty(window, 'turnstile', { value: keyed, configurable: true, writable: true });
+      }, true);
+    }, ALWAYS_PASS_SITEKEY);
     let body = '';
     page.on('request', (req) => {
       const u = new URL(req.url());
@@ -356,7 +418,7 @@ async function realProbe() {
     // A later step can fail first (for example Turnstile never enabling Send); the browser then closes and
     // this wait rejects. It is awaited below; this only keeps that rejection from crashing the harness.
     answered.catch(() => {});
-    await page.goto(isolated + record.path, { waitUntil: 'load', timeout: 60000 });
+    await page.goto(testkeyIsolated + record.path, { waitUntil: 'load', timeout: 60000 });
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
     await page.locator('#aa-send').waitFor({ state: 'visible', timeout: 30000 });
     await page.fill('#aa-question', 'How do I create an API key?');
@@ -374,7 +436,7 @@ async function realProbe() {
     record.frames = { total: frames.length, content: frames.filter((l) => /"content"\s*:\s*"[^"]/.test(l)).length, done: frames.at(-1) === 'data: [DONE]' };
     const served = new Set(manifest.documents.filter((d) => d.eligibility.rag).map((d) => new URL(d.canonicalUrl).pathname));
     record.citations = sources.map((s) => ({ href: s, known: served.has(s.replace(/[#?].*$/, '')) || served.has(s.replace(/[#?].*$/, '').replace(/(.)\/$/, '$1')) }));
-    const ok = record.tokenSent && !record.dummyToken && record.status === 200 && /text\/event-stream/.test(record.contentType ?? '') && record.frames.content > 0 && record.frames.done && sources.length > 0 && record.citations.every((c) => c.known);
+    const ok = record.status === 200 && /text\/event-stream/.test(record.contentType ?? '') && record.frames.content > 0 && record.frames.done && sources.length > 0 && record.citations.every((c) => c.known);
     probeResult = { ok, sources, record, reason: `status ${record.status}, ${record.frames.content} content frames, [DONE] ${record.frames.done}, ${sources.length} citations (${record.citations.filter((c) => c.known).length} to rag-eligible manifest pages); server-side embedding and retrieval are evidenced by the cited generation, not observed here` };
   } catch (e) {
     probeResult = { ok: false, sources: [], record, reason: redact(e.message).slice(0, 300) };
