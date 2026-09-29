@@ -68,6 +68,15 @@ button { font: inherit; color: inherit; }
   padding-inline: var(--gutter);
 }
 
+/* Document pages keep the full-width sidebar/content/TOC grid (below); there the header and footer share
+   that grid's outer edges instead: the sidebar's content left (40 px) and the TOC's content right. */
+[data-frame='docs'] .shell-container {
+  max-width: calc(var(--sidebar-width) + 828px + 273px);
+  margin-left: 0;
+  padding-left: 40px;
+  padding-right: 20px;
+}
+
 .icon-button { color: var(--ink); }
 .icon-moon, [data-theme='dark'] .icon-sun { display: none; }
 [data-theme='dark'] .icon-moon { display: block; }
@@ -165,7 +174,7 @@ button { font: inherit; color: inherit; }
   min-height: calc(100vh - var(--navbar-height));
 }
 .doc-page--sidebar {
-  grid-template-columns: var(--sidebar-width) minmax(0, 828px) 273px;
+  grid-template-columns: var(--sidebar-width) minmax(0, 828px) 273px; /* also [data-frame='docs'] above */
   justify-content: start;
 }
 
@@ -348,6 +357,8 @@ button { font: inherit; color: inherit; }
 .page-actions__primary { gap: 8px; padding: 0 12px; border-radius: 6px 0 0 6px; font-size: var(--fs-ui); font-weight: 500; }
 .page-actions__toggle { width: 36px; margin-left: -1px; border-radius: 0 6px 6px 0; }
 .page-actions__primary:hover, .page-actions__toggle:hover, .page-actions__toggle[aria-expanded='true'] { background: var(--hover); }
+/* Keyboard focus in the menu: an ink bar, like the selected search result. */
+.page-actions__menu [role='menuitem']:focus { box-shadow: inset 2px 0 0 var(--ink); }
 .docs-content .page-actions__status { max-width: 360px; margin: 6px 0 0; color: var(--muted); font-size: var(--fs-sm); line-height: 18px; }
 .page-actions__status:empty { display: none; }
 .page-actions__status[data-state='error'] { color: var(--error); }
@@ -629,7 +640,9 @@ html.aa-scroll-lock { overflow: hidden; }
 .aa-status:empty { display: none; }
 .aa-results { margin: 0; padding: 6px; list-style: none; overflow-y: auto; }
 .aa-results li { border-radius: 6px; }
-.aa-results li[aria-selected='true'] { background: var(--hover); }
+/* The selection is an ink bar (>= 3:1 on the card), not only the faint hover fill. */
+.aa-results li[aria-selected='true'] { background: var(--hover); box-shadow: inset 2px 0 0 var(--ink); }
+.aa [data-slot='command-input-wrapper']:focus-within { outline: 2px solid var(--ink); outline-offset: -2px; }
 .aa-results a { display: block; padding: 8px 10px; color: inherit; text-decoration: none; }
 .aa-results .aa-title { display: block; color: var(--ink); font-weight: 600; }
 .aa-results .aa-path { display: block; color: var(--muted); font: var(--fs-xs)/1.5 var(--mono); }
@@ -702,6 +715,7 @@ html.aa-scroll-lock { overflow: hidden; }
   .doc-page, .doc-page--sidebar { display: block; }
   .doc-page__sidebar, .doc-page__toc { display: none; }
   .doc-page__main { padding: 20px 20px 48px; }
+  [data-frame='docs'] .shell-container { max-width: none; padding-inline: 20px; }
   .doc-header__meta { flex-direction: column; align-items: stretch; gap: 20px; margin-top: 24px; }
   .page-actions__split { display: flex; }
   .page-actions__primary { flex: 1; }

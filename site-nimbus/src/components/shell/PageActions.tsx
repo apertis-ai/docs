@@ -1,8 +1,7 @@
 // Page actions (openspec docs-shell-interfaces "Same-release Markdown actions"): Copy as Markdown and a
 // shadcn DropdownMenu with the AI-tool links, Copy content URL and View as Markdown. Every action uses
 // `<this origin><apertis-docs:markdown path>` (page-actions.ts). The menu is non-modal, so the page keeps
-// scrolling. While it is closed its links stay in the DOM (hidden), so they carry their hrefs at all times;
-// Radix unmounts a closed menu, and a force-mounted one would still claim Escape from the search dialog.
+// scrolling; Radix mounts it only while open.
 // Server-rendered hidden: without JavaScript, or before hydration, no dead action is shown.
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Copy, FileText, Link, MessageSquare, Sparkles, SquareArrowOutUpRight, Box } from 'lucide-react';
@@ -91,7 +90,6 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
           <DropdownMenuItem asChild className={item}>{anchor(links[3])}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {!open && <div className="page-actions__menu" hidden>{links.map(anchor)}</div>}
       <p className="page-actions__status" role="status" aria-live="polite" data-state={status ? (status.ok ? 'ok' : 'error') : undefined}>{status?.message}</p>
     </div>
   );
