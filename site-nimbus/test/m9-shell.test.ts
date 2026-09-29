@@ -407,3 +407,18 @@ test('the mobile TOC states the native <details> state it hydrates into', { skip
   assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), 'true');
   await context.close();
 });
+
+test('one search control on the homepage: no header search at 1440 and 1024, the hero search and Cmd/Ctrl+K open search; other pages keep the header search', { skip }, async () => {
+  for (const view of [VIEWS[1440], VIEWS[1024]]) {
+    const { context, page } = await open('/', view);
+    assert.equal(await page.isVisible('.navbar__search'), false, `no header search on / at ${JSON.stringify(view)}`);
+    assert.equal(await page.locator('main [data-open-surface="search"]:visible').count(), 1, 'exactly one visible search control in the homepage');
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.locator('dialog[open] #aa-q').waitFor();
+    assert.equal(await page.evaluate(() => document.activeElement?.id), 'aa-q');
+    await context.close();
+    const other = await open('/getting-started/quick-start/', view);
+    assert.equal(await other.page.isVisible('.navbar__search'), true, 'document pages keep the header search');
+    await other.context.close();
+  }
+});

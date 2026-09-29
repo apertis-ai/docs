@@ -13,6 +13,8 @@ interface Props {
   sidebar: SidebarId | null;
 }
 const { sidebar } = Astro.props;
+// The homepage hero carries the one search control there; the header omits its own (Cmd/Ctrl+K still opens search).
+const home = Astro.url.pathname === '/';
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 const links = [
   { label: 'Docs', href: '/intro', current: sidebar === 'tutorialSidebar' },
@@ -20,7 +22,7 @@ const links = [
   { label: 'Release Notes', href: 'https://apertis.ai/changelog', current: false, external: true },
 ];
 ---
-<header class="navbar">
+<header class:list={["navbar", { "navbar--home": home }]}>
   <div class="shell-container navbar__inner">
     <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="24" height="24" /><span>Apertis Docs</span></a>
     <nav class="navbar__links" aria-label="Main">
@@ -29,11 +31,11 @@ const links = [
       ))}
     </nav>
     <div class="navbar__right">
-      <button type="button" class="navbar__search" data-open-surface="search" aria-label="Search documentation" aria-keyshortcuts="Meta+K Control+K">
+      {!home && <button type="button" class="navbar__search" data-open-surface="search" aria-label="Search documentation" aria-keyshortcuts="Meta+K Control+K">
         <Search className="size-4" aria-hidden="true" />
         <span>Search</span>
         <kbd>⌘K</kbd>
-      </button>
+      </button>}
       <button type="button" data-slot="button" class={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'icon-button')} data-theme-toggle aria-label="Switch to dark mode">
         <Sun className="icon-sun size-[18px]" aria-hidden="true" />
         <Moon className="icon-moon size-[18px]" aria-hidden="true" />
