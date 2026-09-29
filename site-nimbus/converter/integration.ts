@@ -17,7 +17,7 @@ import type { AstroIntegration } from 'astro';
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
-import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, mainTextSha256, readInventory, writeManifest } from './convert.ts';
+import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
 
 /**
  * `check` (on when CI is set or M2_CHECK=1): never rewrite the committed manifest; fail if the build
@@ -56,7 +56,8 @@ export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }
     fs.writeFileSync(path.join(outDir, rel), body);
   }
   sortShikiCss(outDir);
-  const errors = validateManifest(manifest, { inventory, outDir });
+  // Raw rows: the validator decodes the recorded titles itself, so nothing is decoded twice.
+  const errors = validateManifest(manifest, { inventory: readRawInventory(REPO_ROOT), outDir });
   errors.push(...shikiClassErrors(outDir));
   for (const reserved of ['api/ask', 'api/ask/index.html', 'api/ask.html']) {
     if (fs.existsSync(path.join(outDir, reserved))) errors.push(`dist: ${reserved} shadows the reserved runtime path`);
@@ -119,8 +120,7 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
     'sitemap.xml': `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xml(u)}</loc></url>\n`).join('')}</urlset>\n`,
   };
   const served = (p: string) => [`${p}.html`, `${p}/index.html`, p].some((f) => fs.existsSync(path.join(outDir, f)) && fs.statSync(path.join(outDir, f)).isFile());
-  // `retired` is not yet in INVENTORY_DISPOSITIONS (src/contracts, lead-owned): compared as a string until it is.
-  const rules = inventory.filter((r) => (r.disposition as string) === 'retired' && served(r.path))
+  const rules = inventory.filter((r) => r.disposition === 'retired' && served(r.path))
     .flatMap((r) => [r.path, `${r.path}/`, `${r.path}.html`].map((from) => `${from} ${RETIRED_TARGET} 200`));
   if (served(RETIRED_TARGET)) throw new Error(`m2: ${RETIRED_TARGET} must not exist in dist`);
   if (rules.length) files._redirects = `# Retired routes (decision on #4) answer 404: rewritten to a path nothing serves.\n${rules.join('\n')}\n`;

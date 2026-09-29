@@ -39,7 +39,8 @@ const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
 const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
 if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
 const entry = await getEntry('docs', doc.servedPath.slice(1, -1));
-const header = pageHeaderParts(await Astro.slots.render('default'), entry?.data.description);
+if (!entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
+const header = pageHeaderParts(await Astro.slots.render('default'), entry.data.description);
 const category = nav?.trail[0];
 const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 ---

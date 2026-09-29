@@ -355,8 +355,12 @@ export function writeManifest(root: string, manifest: ManifestV1) {
  * `Reasoning &amp; Extended Thinking`), while manifest and page titles are text. Every converter and
  * phase-2 reader goes through here, so the title check, the manifest and validateManifest see one value.
  */
+/** The inventory rows exactly as recorded (raw <title> HTML); validateManifest decodes what it compares. */
+export const readRawInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
+  (JSON.parse(fs.readFileSync(path.join(repoRoot, INVENTORY_PATH), 'utf8')) as RouteInventory).routes;
+
 export const readInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
-  (JSON.parse(fs.readFileSync(path.join(repoRoot, INVENTORY_PATH), 'utf8')) as RouteInventory).routes
+  readRawInventory(repoRoot)
     .map((r) => (r.live?.title ? { ...r, live: { ...r.live, title: decodeEntities(r.live.title) } } : r));
 
 export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot) }:
