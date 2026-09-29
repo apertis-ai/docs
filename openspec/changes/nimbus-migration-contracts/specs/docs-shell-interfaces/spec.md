@@ -49,10 +49,49 @@ A production client bundle SHALL NOT contain a simulated or canned Ask Docs answ
 - **WHEN** the candidate runs on localhost without a backend
 - **THEN** Ask Docs shows the server's error or configuration response instead of a fabricated answer
 
-### Requirement: Reading layout and page header
-The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent, Inter, and system monospace. It SHALL NOT use another brand's typefaces, marks or navigation motifs.
+### Requirement: Shell alignment, header, footer and homepage
+The operator decided on 2026-09-29 (recorded on #4) that the homepage, header and footer are redesigned. The goal is a layout that is uncrowded and aligned. The structure follows the operator's reference, the Claude Platform Docs homepage. Only its structure is used, never its typefaces, marks or navigation motifs.
 
-**Palette.** The candidate SHALL use a warm paper background with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
+**Alignment.** The header, the homepage sections and the footer SHALL share one content container, with a maximum width of about 1280 px and a fixed side gutter. Their left and right content edges SHALL coincide at every viewport width.
+
+**Header.** The header SHALL be about 64 px tall and SHALL have a hairline bottom border. From left to right it contains:
+- the logo and product name;
+- the navbar items from "Preserved reader-facing shell";
+- a compact search trigger that shows the Cmd/Ctrl+K hint;
+- the theme switch;
+- Log in, as a quiet action;
+- Create account, as the primary action.
+
+At narrow widths the navigation SHALL move into a sheet that is opened from a menu button.
+
+**Homepage.** The homepage SHALL open with a left-aligned two-column hero:
+- the left column holds a heading, a short lead, one search control and three neutral quick links (Quickstart, API keys, API reference);
+- the right column holds a code sample with tabs (cURL, Python, Node.js), taken from the Quick Start page.
+
+Below the hero, sections follow one rhythm: a small eyebrow, a heading, a one-line description, then the content, with generous and consistent spacing between sections. The homepage feature cards and their destinations, including the external Playground card, remain reachable.
+
+**Footer.** The footer SHALL have a brand column (logo, a short line and social links as labelled icons) and grouped link columns. Together they carry the footer link set from "Preserved reader-facing shell". Column headings use muted sentence case.
+
+**Components.** Shell, homepage, search and Ask Docs controls SHALL be built from shadcn/ui components:
+- style new-york, neutral base, CSS variables and lucide icons;
+- vendored as source, and styled with Tailwind v4;
+- every shadcn token maps to the one token file, so no shadcn token has an independent value;
+- components that need no interaction SHALL render at build time without client JavaScript.
+
+The surface open event, the keyboard contract, the search and Ask Docs behaviour, and the Ask Docs wire contract do not change.
+
+#### Scenario: Aligned edges
+- **WHEN** the homepage is rendered at 1440, 1024 and 390 px wide
+- **THEN** the left content edge of the header, of every homepage section and of the footer is the same x position
+
+#### Scenario: Restrained accent
+- **WHEN** the homepage, a document page, the search dialog and Ask Docs are rendered in both themes
+- **THEN** no button, chip, badge, input or surface is filled or outlined with the teal accent at rest
+
+### Requirement: Reading layout and page header
+The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent (restrained as in **Palette**), Inter, and system monospace. It SHALL NOT use another brand's typefaces, marks or navigation motifs.
+
+**Palette.** The operator revised the palette on 2026-09-29 (recorded on #4). The candidate SHALL use neutral surfaces (a near-white page with white cards and hairline borders in light; near-black in dark) with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. The Apertis teal SHALL appear only in the logo, focus rings and link hover or active states. It SHALL NOT fill buttons, chips, badges, inputs or surfaces. Primary actions SHALL use an inverted neutral fill: dark on light, light on dark. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
 
 **Measure.** Article prose SHALL NOT exceed about 70ch. Tables and code blocks MAY use the full content column.
 
