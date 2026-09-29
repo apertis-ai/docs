@@ -245,8 +245,14 @@ const CUSTOM = {
     const receipt = path.join(artifacts, 'indexer-dry-run.json');
     const { step } = exec('indexer-dry-run', process.execPath, ['indexer/index.ts', '--environment', 'preview', '--dry-run', '--receipt', receipt], ROOT);
     const r = JSON.parse(fs.readFileSync(receipt, 'utf8'));
+    // An invalid manifest plan (PlanError) is a real, reportable outcome, not a harness bug: the
+    // receipt then carries only {ok:false, error, problems}, with no documents/items/chunks at all.
+    if (!r.ok || !r.documents) {
+      step.result = { receiptSha256: sha256(fs.readFileSync(receipt)), error: r.error, problems: r.problems };
+      return { status: 'FAIL', reason: `${r.error ?? 'indexer dry run did not produce a valid receipt'}${r.problems?.length ? `: ${r.problems.join('; ')}` : ''}`, steps: [step] };
+    }
     const rag = manifest.documents.filter((d) => d.eligibility.rag).length;
-    const ok = step.exitCode === 0 && r.ok && r.buildId === manifest.buildId && r.documents.planned === rag && r.documents.planned + r.documents.excluded === manifest.documents.length && r.items.length === rag;
+    const ok = step.exitCode === 0 && r.buildId === manifest.buildId && r.documents.planned === rag && r.documents.planned + r.documents.excluded === manifest.documents.length && r.items.length === rag;
     step.result = { receiptSha256: sha256(fs.readFileSync(receipt)), buildId: r.buildId, planned: r.documents.planned, excluded: r.documents.excluded, chunks: r.chunks.planned };
     return { status: ok ? 'PASS' : 'FAIL', reason: `${r.items.length} items, ${r.documents.excluded} excluded, ${r.chunks.planned} chunks planned for ${r.buildId}`, steps: [step] };
   },
