@@ -353,6 +353,9 @@ async function realProbe() {
       }
     });
     const answered = page.waitForResponse((res) => res.request().method() === 'POST' && new URL(res.url()).pathname === '/api/ask', { timeout: 120000 });
+    // A later step can fail first (for example Turnstile never enabling Send); the browser then closes and
+    // this wait rejects. It is awaited below; this only keeps that rejection from crashing the harness.
+    answered.catch(() => {});
     await page.goto(isolated + record.path, { waitUntil: 'load', timeout: 60000 });
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
     await page.locator('#aa-send').waitFor({ state: 'visible', timeout: 30000 });
