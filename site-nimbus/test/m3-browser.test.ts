@@ -191,7 +191,12 @@ test('page actions read the same-origin .md from the page meta and report failur
   assert.equal(await page.getAttribute('.page-actions__toggle', 'aria-expanded'), 'false');
 
   const prompt = encodeURIComponent(`Load the contents of ${md} into this chat's context so we can discuss it.`);
-  const hrefs = await page.$$eval('.page-actions__menu a', (as: HTMLAnchorElement[]) => as.map((a) => [a.dataset.action, a.getAttribute('href'), a.target, a.rel]));
+  // The links as the reader gets them: inside the open menu (Radix mounts it only while open).
+  await page.click('.page-actions__toggle');
+  await page.locator('[role="menu"]').waitFor();
+  const hrefs = await page.$$eval('[role="menu"] a', (as: HTMLAnchorElement[]) => as.map((a) => [a.dataset.action, a.getAttribute('href'), a.target, a.rel]));
+  await page.keyboard.press('Escape');
+  await page.locator('[role="menu"]').waitFor({ state: 'detached' });
   assert.deepEqual(hrefs, [
     ['claude', `https://claude.ai/new?q=${prompt}`, '_blank', 'noopener noreferrer'],
     ['chatgpt', `https://chatgpt.com/?hints=search&prompt=${prompt}`, '_blank', 'noopener noreferrer'],

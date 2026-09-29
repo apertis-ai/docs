@@ -131,6 +131,19 @@ test('restrained accent: no button, chip, badge, input or surface is filled or o
       }
       await context.close();
     }
+    // 390 px: with the navigation sheet open, and with the page-actions menu open.
+    const mobile = await open('/getting-started/quick-start/', VIEWS[390], theme);
+    await mobile.page.click('[data-drawer-open]');
+    await mobile.page.locator('#shell-drawer').waitFor();
+    await mobile.page.mouse.move(0, 0);
+    assert.deepEqual(await mobile.page.evaluate(tealAtRest), [], `${theme} 390 navigation sheet`);
+    await mobile.page.keyboard.press('Escape');
+    await mobile.page.locator('#shell-drawer').waitFor({ state: 'detached' });
+    await mobile.page.click('.page-actions__toggle');
+    await mobile.page.locator('[role="menu"]').waitFor();
+    await mobile.page.mouse.move(0, 0);
+    assert.deepEqual(await mobile.page.evaluate(tealAtRest), [], `${theme} 390 page-actions menu`);
+    await mobile.context.close();
   }
 });
 
@@ -149,8 +162,11 @@ test('the hero code tabs switch between cURL, Python and Node.js without JS erro
     assert.match(text, /sk-your-api-key/, `${tab} placeholder key`);
     assert.ok(text.includes(model), `${tab} uses the Quick Start model ${model}`);
     assert.ok(await page.locator('[data-hero-code] [role="tabpanel"]:visible pre.astro-code span[style*="--shiki"]').count() > 3, `${tab} is highlighted at build time`);
-    await page.click('[data-hero-code] button[aria-label="Copy code"]');
-    await page.waitForFunction(() => /Copied/.test(document.querySelector('[data-hero-code] button[aria-label="Copy code"]')?.textContent ?? ''));
+    // The copy button's name is its visible label, and a live region announces the result.
+    assert.equal(await page.getAttribute('[data-hero-copy]', 'aria-label'), null);
+    await page.click('[data-hero-copy]');
+    await page.waitForFunction(() => /Copied/.test(document.querySelector('[data-hero-copy]')?.textContent ?? ''));
+    assert.match(await page.textContent('[data-hero-code] [role="status"]') ?? '', /copied/i);
     assert.equal((await page.evaluate(() => navigator.clipboard.readText())).trim(), text.trim(), `${tab} copy`);
   }
   assert.deepEqual(errors, []);
@@ -212,7 +228,175 @@ test('no prefers-color-scheme in any shipped stylesheet: dark only through the s
     .filter((l) => l.href.startsWith(location.origin)).map((l) => fetch(l.href).then((r) => r.text())))).join('\n'));
   assert.ok(css.length > 1000);
   assert.doesNotMatch(css, /prefers-color-scheme/);
+  // Tailwind scans only the component sources: no utility generated from words in the docs prose.
+  assert.deepEqual([...new Set(css.match(/(?:^|[}\s,])\.(container|invisible|visible|uppercase|italic|underline)(?=[{\s,:])/g) ?? [])], []);
   assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), 'light');
   assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 250, 250)');
+  await context.close();
+});
+
+// ---- repair round (lead L1, review R1-R10) ---------------------------------------------------------
+
+test('document pages: the header shares the docs grid gutter (logo = sidebar text left, right cluster = TOC content right) at 1440 and 1024', { skip }, async () => {
+  for (const width of [1440, 1024] as const) {
+    const { context, page } = await open('/getting-started/quick-start/', VIEWS[width]);
+    const e = await page.evaluate(() => {
+      const r = (el: Element) => el.getBoundingClientRect();
+      const link = document.querySelector('.doc-page__sidebar .sidebar__link')!;
+      const range = document.createRange();
+      range.selectNodeContents(link);
+      const toc = document.querySelector('.doc-page__toc')!;
+      const row = [...document.querySelector('.navbar__inner')!.children].filter((c) => (c as HTMLElement).offsetParent);
+      return {
+        logo: r(document.querySelector('.navbar .brand')!).left,
+        sidebarText: range.getBoundingClientRect().left,
+        headerRight: r(row[row.length - 1]).right,
+        tocRight: r(toc).right - parseFloat(getComputedStyle(toc).paddingRight),
+      };
+    });
+    assert.ok(Math.abs(e.logo - e.sidebarText) <= 1, `${width}: logo ${e.logo} vs sidebar text ${e.sidebarText}`);
+    assert.ok(Math.abs(e.headerRight - e.tocRight) <= 1, `${width}: header right ${e.headerRight} vs TOC content right ${e.tocRight}`);
+    console.log(`# docs alignment ${width}: left ${Math.round(e.logo)} right ${Math.round(e.headerRight)}`);
+    await context.close();
+  }
+});
+
+/** Contrast of `fg` (blended over `bg` by its alpha) against `bg`, both CSS colours, resolved through a canvas. */
+const contrastIn = () => {
+  const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+  const rgba = (c: string) => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = '#000'; ctx.fillStyle = c; ctx.fillRect(0, 0, 1, 1); return [...ctx.getImageData(0, 0, 1, 1).data]; };
+  const lum = (c: number[]) => { const [r, g, b] = c.map((v) => v / 255).map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  // The strongest focus/selection indicator of `el` (outline, or any box-shadow colour) against `surface`.
+  (window as unknown as { __indicator: (el: Element, surface: string) => number }).__indicator = (el, surface) => {
+    const cs = getComputedStyle(el);
+    const bg = rgba(surface);
+    const colours: string[] = [];
+    if (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) >= 1) colours.push(cs.outlineColor);
+    if (cs.boxShadow !== 'none') colours.push(...(cs.boxShadow.match(/rgba?\([^)]*\)|okl(?:ch|ab)\([^)]*\)|lab\([^)]*\)|color\([^)]*\)/g) ?? []));
+    return Math.max(0, ...colours.map((c) => {
+      const [r, g, b, a] = rgba(c);
+      const f = [r, g, b].map((v, i) => Math.round((v * a + bg[i] * (255 - a)) / 255));
+      const [x, y] = [lum(f), lum(bg)].sort((p, q) => q - p);
+      return (x + 0.05) / (y + 0.05);
+    }));
+  };
+};
+
+test('the selected search result and the focused page-actions item have a >= 3:1 indicator, in both themes', { skip }, async () => {
+  for (const theme of ['light', 'dark']) {
+    const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440], theme);
+    await page.evaluate(contrastIn);
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search', query: 'chat completions' } })));
+    await page.locator('#aa-results [role="option"][aria-selected="true"]').waitFor({ timeout: 15000 });
+    await page.keyboard.press('ArrowDown');
+    const result = await page.evaluate(() => (window as any).__indicator(document.querySelector('#aa-results [aria-selected="true"]'), getComputedStyle(document.getElementById('apertis-assistant')!).backgroundColor));
+    assert.ok(result >= 3, `${theme}: selected result indicator ${result.toFixed(2)}:1`);
+    await page.keyboard.press('Escape');
+    await page.focus('.page-actions__toggle');
+    await page.keyboard.press('Enter');
+    await page.locator('[role="menu"]').waitFor();
+    await page.keyboard.press('ArrowDown');
+    const item = await page.evaluate(() => {
+      const el = document.activeElement!;
+      return el.getAttribute('role') === 'menuitem' ? (window as any).__indicator(el, getComputedStyle(el.closest('[role="menu"]')!).backgroundColor) : -1;
+    });
+    assert.ok(item >= 3, `${theme}: focused menu item indicator ${item}`);
+    await context.close();
+  }
+});
+
+test('keyboard focus is visible (>= 3:1) on header buttons, the hero code panel and the search field (light)', { skip }, async () => {
+  const { context, page } = await open('/');
+  await page.evaluate(contrastIn);
+  const tabTo = async (selector: string) => {
+    for (let i = 0; i < 40; i++) {
+      await page.keyboard.press('Tab');
+      if (await page.evaluate((s: string) => document.activeElement?.matches(s) ?? false, selector)) return;
+    }
+    assert.fail(`Tab never reached ${selector}`);
+  };
+  const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  // Measure the settled indicator, not a transition's first frame.
+  const settle = (s: string) => page.waitForFunction((q: string) => document.querySelector(q)!.getAnimations().length === 0, s);
+  for (const sel of ['.navbar__right [data-theme-toggle]', '.navbar__login', '.navbar__signup', '[data-hero-code] [role="tabpanel"]']) {
+    await tabTo(sel);
+    await settle(sel);
+    const ratio = await page.evaluate(([s, b]: string[]) => (window as any).__indicator(document.querySelector(s), b), [sel, await bg()]);
+    assert.ok(ratio >= 3, `${sel}: focus indicator ${ratio.toFixed(2)}:1`);
+  }
+  await page.keyboard.press('ControlOrMeta+k');
+  await page.locator('dialog[open] #aa-q').waitFor();
+  const field = await page.evaluate(() => (window as any).__indicator(document.querySelector('[data-slot="command-input-wrapper"]'), getComputedStyle(document.getElementById('apertis-assistant')!).backgroundColor));
+  assert.ok(field >= 3, `search field focus frame ${field.toFixed(2)}:1`);
+  await context.close();
+});
+
+test('Ask Docs open on a phone: the menu opens the navigation sheet on top, and Escape closes only the sheet', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[390]);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
+  await page.locator('dialog[open] #aa-ask').waitFor();
+  await page.click('[data-drawer-open]');
+  await page.locator('#shell-drawer').waitFor();
+  // Hit-test once the slide-in has finished.
+  await page.waitForFunction(() => document.querySelector('#shell-drawer')!.getAnimations().length === 0);
+  const top = await page.evaluate(() => {
+    const r = document.querySelector('#shell-drawer')!.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return !!hit && document.querySelector('#shell-drawer')!.contains(hit);
+  });
+  assert.ok(top, 'the sheet is topmost at its centre');
+  await page.keyboard.press('Escape');
+  await page.locator('#shell-drawer').waitFor({ state: 'detached' });
+  assert.ok(await page.isVisible('dialog[open] #aa-ask'), 'Ask Docs stays open');
+  await context.close();
+});
+
+test('Cmd/Ctrl+K with the navigation sheet open closes the sheet; search is not hidden from assistive tech and has focus', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[390]);
+  await page.click('[data-drawer-open]');
+  await page.locator('#shell-drawer').waitFor();
+  await page.keyboard.press('ControlOrMeta+k');
+  await page.locator('dialog[open] #aa-q').waitFor();
+  assert.equal(await page.locator('#shell-drawer').count(), 0, 'the sheet closed');
+  assert.equal(await page.evaluate(() => !!document.getElementById('apertis-assistant')!.closest('[aria-hidden="true"]')), false, 'no aria-hidden ancestor');
+  assert.equal(await page.evaluate(() => document.body.hasAttribute('data-scroll-locked')), false, 'the sheet scroll lock is released');
+  await page.waitForFunction(() => document.activeElement?.id === 'aa-q', null, { timeout: 2000 });
+  await context.close();
+});
+
+test('the menu button: aria-controls only while the sheet exists; a click before NavSheet hydrates still opens it', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[390]);
+  assert.equal(await page.getAttribute('[data-drawer-open]', 'aria-controls'), null);
+  await page.click('[data-drawer-open]');
+  await page.locator('#shell-drawer').waitFor();
+  assert.equal(await page.getAttribute('[data-drawer-open]', 'aria-controls'), 'shell-drawer');
+  await context.close();
+  // Hold the NavSheet chunk: the click lands on the server-rendered button and is handed over.
+  const held = await browser.newContext(VIEWS[390]);
+  let release!: () => void;
+  const gate = new Promise<void>((r) => { release = r; });
+  await held.route(/\/_astro\/NavSheet\.[^/]*\.js$/, async (route: any) => { await gate; await route.fallback(); });
+  const p = await held.newPage();
+  await p.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
+  await p.click('[data-drawer-open]');
+  await p.waitForTimeout(300);
+  assert.equal(await p.locator('#shell-drawer').count(), 0, 'not open before hydration');
+  release();
+  await p.locator('#shell-drawer').waitFor({ timeout: 10000 });
+  await held.close();
+});
+
+test('the mobile TOC states the native <details> state it hydrates into', { skip }, async () => {
+  const context = await browser.newContext(VIEWS[390]);
+  let release!: () => void;
+  const gate = new Promise<void>((r) => { release = r; });
+  await context.route(/\/_astro\/TocMobile\.[^/]*\.js$/, async (route: any) => { await gate; await route.fallback(); });
+  const page = await context.newPage();
+  await page.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
+  await page.click('article .toc-mobile > summary');
+  assert.equal(await page.evaluate(() => (document.querySelector('article .toc-mobile') as HTMLDetailsElement).open), true);
+  release();
+  await page.waitForSelector('article .toc-mobile > summary[aria-expanded]', { state: 'attached', timeout: 10000 });
+  assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), 'true');
   await context.close();
 });
