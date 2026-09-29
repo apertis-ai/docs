@@ -36,7 +36,8 @@ const { doc, buildId, nav = null } = Astro.props;
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
     <slot name="head" />
   </head>
-  <body>
+  <!-- Document pages frame the header and footer on the docs grid (shell.css [data-frame='docs']). -->
+  <body data-frame={nav ? 'docs' : undefined}>
     <a class="skip-link" href="#main">Skip to main content</a>
     <Navbar sidebar={nav?.sidebar ?? null} />
     <NavSheet client:idle current={nav?.sidebar ?? null}>

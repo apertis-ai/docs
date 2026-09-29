@@ -34,11 +34,12 @@ export default function HeroCode(props: Props) {
         <TabsList variant="line" aria-label="Request samples" className="h-9">
           {SAMPLES.map((s) => <TabsTrigger key={s.id} value={s.id} className="px-2.5">{s.label}</TabsTrigger>)}
         </TabsList>
-        <button type="button" onClick={copy} data-slot="button" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'text-muted-foreground')} aria-label="Copy code">
+        <button type="button" onClick={copy} data-slot="button" data-hero-copy className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'text-muted-foreground')}>
           {copied === 'ok' ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
           <span>{copied === 'ok' ? 'Copied' : copied === 'error' ? 'Copy blocked' : 'Copy'}</span>
         </button>
       </div>
+      <span role="status" aria-live="polite" className="sr-only">{copied === 'ok' ? 'Code copied to the clipboard.' : copied === 'error' ? 'Copying is blocked in this browser.' : ''}</span>
       {SAMPLES.map((s) => <TabsContent key={s.id} value={s.id} className="hero-code__panel">{props[s.id]}</TabsContent>)}
     </Tabs>
   );

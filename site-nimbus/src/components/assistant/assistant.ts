@@ -171,7 +171,8 @@ export function initAssistant(): void {
     }
     // Modal search closes on Escape natively (cancel). The non-modal Ask panel closes on Escape
     // except while typing in its composer.
-    if (e.key === 'Escape' && surface === 'ask' && e.target !== question) {
+    // An Escape a layer above already handled (the navigation sheet over the panel) is not ours.
+    if (e.key === 'Escape' && surface === 'ask' && e.target !== question && !e.defaultPrevented) {
       e.preventDefault();
       hide();
     }

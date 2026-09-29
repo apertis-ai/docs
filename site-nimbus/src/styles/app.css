@@ -4,7 +4,12 @@
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import './shell.css' layer(base);
-@import 'tailwindcss/utilities.css' layer(utilities);
+/* Explicit sources: Tailwind scans only the files that hold class names, never the docs Markdown, the
+   converter or tests (their prose would emit utilities such as .container or .collapse). */
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@source '../components';
+@source '../layouts';
+@source '../pages';
 @import 'tw-animate-css';
 
 /* dark: follows the theme switch (data-theme on <html>), never the OS setting. */
