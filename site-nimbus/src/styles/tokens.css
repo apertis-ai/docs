@@ -33,6 +33,22 @@
   --shadow: 0 12px 32px rgba(10, 10, 10, 0.08), 0 1px 2px rgba(10, 10, 10, 0.04);
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  /* The one type scale (Inter and the system monospace; no web font beyond Inter). The reading sizes
+     (17 body, 35/25/20 headings, 30/23 on mobile) are the ones m3-browser pins. */
+  --fs-2xs: 11px; /* mono labels */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-ui: 14px; /* controls, navigation */
+  --fs-md: 15px;
+  --fs-base: 16px; /* inputs (no iOS zoom), sheet links */
+  --fs-body: 17px; /* prose */
+  --fs-lg: 18px;
+  --fs-xl: 20px; /* h3 */
+  --fs-2xl: 23px; /* h2 on mobile */
+  --fs-3xl: 25px; /* h2 */
+  --fs-4xl: 30px; /* h1 on mobile, homepage h2 */
+  --fs-5xl: 35px; /* h1 */
+  --fs-6xl: 48px; /* homepage hero */
   --radius: 8px;
   --border: var(--line); /* the shadcn hairline name, scoped to [data-slot] in app.css */
   color-scheme: light;
