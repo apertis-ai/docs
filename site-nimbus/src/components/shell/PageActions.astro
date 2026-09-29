@@ -1,7 +1,8 @@
 ---
 // Copy/View as Markdown and the AI-tool links (openspec docs-shell-interfaces "Same-release Markdown
 // actions"). Rendered only for pages with a Markdown artifact; shell.client.ts reads the
-// `apertis-docs:markdown` meta and fills the absolute same-origin URLs.
+// `apertis-docs:markdown` meta and fills the absolute same-origin URLs, View included: the actions sit in
+// the page header inside <article>, which must carry only the body's links (and they are hidden without JS).
 interface Props {
   markdownPath: string;
 }
@@ -29,7 +30,7 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
     <hr />
     <button type="button" data-action="copy-markdown"><Fragment set:html={copy} /><span>Copy as Markdown</span></button>
     <button type="button" data-action="copy-url"><Fragment set:html={link} /><span>Copy content URL</span></button>
-    <a data-action="view" href={markdownPath} {...ext}><Fragment set:html={file} /><span>View as Markdown</span><Fragment set:html={out} /></a>
+    <a data-action="view" data-markdown-path={markdownPath} {...ext}><Fragment set:html={file} /><span>View as Markdown</span><Fragment set:html={out} /></a>
   </div>
   <p class="page-actions__status" role="status" aria-live="polite"></p>
 </div>
