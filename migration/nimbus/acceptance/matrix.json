@@ -1,6 +1,6 @@
 {
   "issue": 12,
-  "scope": "PoC: the 12 frozen pages of nimbus-migration-acceptance. #13 reuses every entry against the full corpus (route-fixtures without --scope poc, measure.mjs search without --scope poc, paired-perf over its own page set).",
+  "scope": "PoC: the 12 frozen pages of nimbus-migration-acceptance. #13 widens by adding three full-corpus entries (route-fixtures-full-corpus, search-relevance-full-corpus, performance-budgets-full-corpus), reusing the PoC entries' gates without --scope poc; every PoC entry stays as it was.",
   "statusRule": "PASS only when every step ran and passed: node --test steps need ran > 0, fail = 0, skipped = 0 and cancelled = 0, and every named test pattern must match at least one passing test. BLOCKED means the proof could not be taken in this environment and is never counted as passed. Any FAIL step makes the entry FAIL.",
   "evidenceClasses": {
     "contract": "fixtures, stubs, mocked services",
@@ -25,6 +25,8 @@
       { "suite": "dist", "match": ["every output file derives from a publishable manifest entry", "no source maps, raw MDX, planning material", "the search index holds exactly the publish\\+search-eligible", "the generated manifest validates against dist and is never published", "no environment secret values", "decompressed search index carries no internals"] },
       { "suite": "unit", "match": ["rows that are not publish-eligible get no render source or artifact"] } ] },
     { "id": "search-relevance-poc", "title": "All 14 PoC queries hit in the top 3 through Cmd/Ctrl+K, with keyboard focus", "class": "local-build", "steps": [{ "custom": "search" }] },
+    { "id": "route-fixtures-full-corpus", "title": "#13: every inventory route (228/228, no --scope): status, redirect, canonical and anchors", "class": "local-build", "steps": [{ "custom": "fixturesFull" }] },
+    { "id": "search-relevance-full-corpus", "title": "#13: all 24 queries (no --scope) hit in the top 3 through Cmd/Ctrl+K, with keyboard focus; ranking over the wider corpus is #9's repair, not this entry's", "class": "local-build", "steps": [{ "custom": "searchFull" }] },
     { "id": "shell-and-page-actions", "title": "Sidebar, surfaces, page actions, TOC, H1, prev/next, no-JS, no external requests", "class": "local-build", "steps": [
       { "suite": "m3", "match": ["the /api/ sidebar renders the inventory apiSidebar placement", "triggers dispatch apertis-docs:open", "page actions read the same-origin .md", "without JavaScript the navigation", "the desktop TOC follows the legacy rule", "exactly one H1", "prev/next only link converted pages", "no GitHub raw or other-release requests"] } ] },
     { "id": "mobile-light-dark-keyboard", "title": "Mobile drawer and sheet, light/dark themes, keyboard search and Ask Docs", "class": "local-build", "steps": [
@@ -57,6 +59,7 @@
     { "id": "gate-mutants", "title": "The gates detect injected route, anchor, exclusion, activation and ask-wire regressions", "class": "local-build", "steps": [{ "custom": "mutants" }] },
     { "id": "workflow-policy", "title": "PR gates are least-privileged and non-mutating; the isolated path is dispatch-only and environment-gated", "class": "contract", "steps": [{ "custom": "workflowPolicy" }] },
     { "id": "performance-budgets", "title": "Frozen byte budgets and paired timing budgets, 12 pages x 2 profiles x 5 runs", "class": "local-build", "steps": [{ "custom": "perf" }] },
+    { "id": "performance-budgets-full-corpus", "title": "#13: paired timing budgets over the full published page set (--set full); BLOCKED or FAIL, never PASS, until budgets.json fullCorpus.baseline is recorded", "class": "local-build", "steps": [{ "custom": "perfFull" }] },
     { "id": "real-assistant", "title": "Real Ask Docs: Turnstile, embedding, generation-selected retrieval, streaming, valid citations", "class": "isolated-real", "steps": [{ "custom": "real" }] },
     { "id": "real-turnstile", "title": "Real Turnstile token accepted by the real handler", "class": "isolated-real", "steps": [{ "custom": "real" }] },
     { "id": "real-indexing", "title": "Real generation created, validated, and cited by the real assistant", "class": "isolated-real", "steps": [{ "custom": "real" }] }
