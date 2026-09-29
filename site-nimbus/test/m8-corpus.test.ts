@@ -8,7 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { buildHashOf, convertDocument, decodeEntities, readInventory } from '../converter/convert.ts';
-import { RETIRED_TARGET, publicationFiles, shikiClassErrors } from '../converter/integration.ts';
+import { RETIRED_TARGET, publicationFiles, shikiClassErrors, sortShikiCss } from '../converter/integration.ts';
 import { buildNavigation, pageNavigation } from '../src/components/shell/navigation.ts';
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
 import type { InventoryRoute, RouteInventory } from '../src/contracts/navigation.ts';
@@ -128,4 +128,21 @@ test('a page using a Shiki class missing from _nimbus/shiki.css is reported (unc
   assert.deepEqual(shikiClassErrors(out), ['dist: a/index.html uses nb-shiki-ccc333, not defined in _nimbus/shiki.css']);
   fs.rmSync(path.join(out, '_nimbus/shiki.css'));
   assert.equal(shikiClassErrors(out).length, 1);
+});
+
+test('_nimbus/shiki.css rules are sorted by class, so cold builds are byte-identical whatever the render order', () => {
+  const out = tmp();
+  fs.mkdirSync(path.join(out, '_nimbus'));
+  const file = path.join(out, '_nimbus/shiki.css');
+  const [a, b, c] = ['.nb-shiki-aa1{}', '.nb-shiki-bb2{--shiki-light:#000; overflow-x: auto;}', '.nb-shiki-cc3{--shiki-dark:#fff}'];
+  fs.writeFileSync(file, `${c}${a}${b}\n`);
+  sortShikiCss(out);
+  assert.equal(fs.readFileSync(file, 'utf8'), `${a}${b}${c}\n`);
+  fs.writeFileSync(file, `${b}${c}${a}\n`);
+  sortShikiCss(out);
+  assert.equal(fs.readFileSync(file, 'utf8'), `${a}${b}${c}\n`);
+  // Anything but the flat one-rule-per-class form is left untouched.
+  fs.writeFileSync(file, '@media (x) { .nb-shiki-bb2{} }\n');
+  sortShikiCss(out);
+  assert.equal(fs.readFileSync(file, 'utf8'), '@media (x) { .nb-shiki-bb2{} }\n');
 });
