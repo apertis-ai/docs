@@ -139,27 +139,52 @@ that one missing artifact until #7 generates it.
 
 | File | Role |
 | --- | --- |
-| `src/layouts/BaseLayout.astro` | `<html>`/`<head>` (charset, viewport, `DocumentHead`, favicon, theme bootstrap, Google Fonts as legacy), navbar, mobile drawer, footer, Ask Docs trigger, the one `<AssistantRoot />`, the one client entry |
-| `src/layouts/DocLayout.astro` | Props unchanged (`doc`, `buildId`, `headings?`). Adds sidebar, breadcrumbs (mobile), page actions, `<article class="docs-content">` holding only the body, prev/next and the TOC |
+| `src/layouts/BaseLayout.astro` | `<html>`/`<head>` (charset, viewport, `DocumentHead`, favicon, theme bootstrap, Google Fonts Inter only), navbar, mobile drawer, footer, Ask Docs trigger, the one `<AssistantRoot />`, the one client entry |
+| `src/layouts/DocLayout.astro` | Props unchanged (`doc`, `buildId`, `headings?`). Adds sidebar, breadcrumbs (mobile), `<article class="docs-content">` (page header, mobile "On this page", hairline, body), prev/next and the TOC with reading progress |
+| `src/components/shell/page-header.ts` | `pageHeaderParts(html, frontDescription?)`: the body's H1 and the one-sentence description; `displayDate()` |
 | `src/pages/index.astro` | Landing page ported from `src/pages/index.js` + `index.module.css` (`page:index`); uses `BaseLayout` and has no `<article>`, as at baseline |
 | `src/components/shell/navigation.ts` | `buildNavigation(inventory, documents)` / `pageNavigation(nav, docId)`: the two sidebars from the inventory `sidebar` fields; build-time only |
 | `src/components/shell/page-actions.ts` | `markdownUrl(origin, metaPath)` (same-origin `.md` only) and the AI-tool URLs |
 | `src/components/shell/*.astro` | `Navbar`, `Sidebar` + recursive `SidebarTree`, `Toc`, `PageActions`, `Footer` |
 | `src/components/shell/shell.client.ts` | Triggers, theme switch, drawer, page actions, TOC highlight, Nimbus code-copy and heading anchors |
-| `src/styles/shell.css`, `src/styles/landing.css` | Semantic port of `src/css/custom.css` and the landing CSS module |
+| `src/styles/tokens.css` | The colour tokens: one light set (default) and one dark set under `[data-theme='dark']` |
+| `src/styles/shell.css`, `src/styles/landing.css` | Shell and landing styles on the tokens (reading layout) |
 
 - **Triggers.** The navbar search box, the homepage hero search and the floating Ask Docs button call `openSearch()` / `openAskDocs()` from `src/contracts/events.ts`. The shell binds no keyboard shortcut and reads no other component's DOM.
 - **Theme.** `data-theme` on `<html>`, light by default, stored under the legacy `theme` localStorage key, never taken from `prefers-color-scheme`. Only CSS reads it.
 - **Page actions.** Rendered only when the manifest entry has `markdown`. The client reads `<meta name="apertis-docs:markdown">` and builds `location.origin + path`. Copy as Markdown fetches that URL. A failed fetch or blocked clipboard shows a message and copies nothing, with no fallback to rendered text. The actions are hidden without JavaScript.
 - **Code, admonitions, tables.**
-  - DocLayout links `/_nimbus/shiki.css`; Nimbus emits Shiki tokens as `--shiki-light` / `--shiki-dark` variables, and `shell.css` maps them per theme. `figure` margins are zeroed, so code spans the full content width.
-  - `aside.admonition.admonition-<type>` uses the legacy Infima colours: note = secondary (blue), tip = success, info, warning and caution = warning, danger. There are no icons, because #7 emits none.
-  - Tables are `display: block; width: fit-content; max-width: 100%; overflow-x: auto`. They size like the legacy auto layout and scroll inside their own box at every width.
-  - At 1440 px on chat-completions, legacy also wraps the `X-Timeout` cell onto two lines: column widths 104/69/617, against 102/67/621 here.
-- **TOC.** The highlight is the legacy Docusaurus `useTOCHighlight` rule: the first h2/h3 at or below the navbar is active if it sits in the top half of the viewport, otherwise the heading before it; past the last heading, the last one.
+  - DocLayout links `/_nimbus/shiki.css`; Nimbus emits Shiki tokens as `--shiki-light` / `--shiki-dark` variables, and `shell.css` maps them per theme. The GitHub light/dark token colours are clamped with relative colour (`oklch(from … min(l, 0.5) …)` light, `max(l, 0.74)` dark) so every token class stays ≥ 4.5:1 on the code panel. `figure` margins are zeroed, so code spans the full content width.
+  - `aside.admonition.admonition-<type>`: panel, hairline, a 3 px stripe and a mono title in the type colour (`--adm-note|tip|info|warning|danger`; caution = warning). There are no icons, because #7 emits none.
+  - Tables are `display: block; width: fit-content; max-width: 100%; overflow-x: auto`. They size with the auto layout, may use the full content column, and scroll inside their own box at every width.
+- **TOC.** The highlight is the legacy Docusaurus `useTOCHighlight` rule: the first h2/h3 at or below the navbar is active if it sits in the top half of the viewport, otherwise the heading before it; past the last heading, the last one. Above the first heading the first heading is active (the page header is taller than legacy's H1; legacy would highlight nothing there).
+  - Entries carry a `└` glyph (CSS). Under the list, a 2 px reading-progress bar and a fixed-width percentage show how far the article has scrolled past the navbar (100% when its end is in view). The existing rAF scroll handler sets only a `transform` and the label, so nothing shifts and nothing scrolls; the fill's transition is dropped under `prefers-reduced-motion`. Hidden without JavaScript.
   - As in legacy `custom.css`, the desktop TOC shows an h2's h3 list only while that h2 or one of its h3s is active. That is why legacy chat-completions shows three items at the top of the page, while `/api/` shows Quick Links' h3s.
-  - The mobile "On this page" list shows every h2 and h3.
+  - The mobile "On this page" list shows every h2 and h3. It is a `<details>` whose `<summary>` has a chevron and mirrors its state in `aria-expanded`.
 - **Mobile (≤ 996 px).** The navbar collapses to menu + brand. The drawer is a modal `<dialog>`, which provides focus containment, Escape and focus return; Nimbus `lockScroll` locks the page. Tables in `.docs-content` scroll inside their own box. The Ask Docs button becomes icon-only at ≤ 640 px.
+
+### Reading layout (operator decision on #4, 2026-09-29)
+
+openspec docs-shell-interfaces "Reading layout and page header". Everything in "Preserved reader-facing shell" is unchanged.
+
+- **Tokens** (`tokens.css`, checked by `m3r-tokens`):
+
+  | Token | Light | Dark | Use |
+  | --- | --- | --- | --- |
+  | `--bg` | `#faf8f3` | `#1b1a17` | paper |
+  | `--panel` | `#f2efe7` | `#24221e` | code, table headers, admonitions |
+  | `--ink` | `#1c1b18` | `#f2efe8` | headings, UI text |
+  | `--body` | `#34322d` | `#dcd8cd` | prose |
+  | `--desc` | `#4a4740` | `#c4bfb3` | page description |
+  | `--muted` | `#6b675e` | `#a39e92` | labels, meta, TOC |
+  | `--link` / `--accent` | `#0f766e` | `#14b8a6` | Apertis teal (the brand `#0d9488` is 3.7:1 on paper, so light links use its darker step) |
+
+- **Type.** Inter (the existing Google Fonts link, now without JetBrains Mono) and `ui-monospace, 'SF Mono', Menlo, …`; no other web fonts. Body 17 px / 1.65; prose children of the article stop at `--measure: 68ch`, code and tables use the full column. h1 35 px / 600, h2 25 px, h3 20 px, all sans. Mono uppercase labels (11.5 px, 0.08em) for the category tag, meta labels, sidebar categories, the TOC title, table headers and the search `kbd`.
+- **Page header** (every DocLayout page, inside `<article>`): category tag (the first entry of the inventory sidebar `trail`; none for `/api/` and pages without a sidebar), the body's H1, the description, a meta row (`Updated`, `Reading time`, then the page actions), and a hairline before the body. On mobile: breadcrumb, header, actions, "On this page", hairline, body.
+  - **Description.** Front-matter `description` when present (1 document). Otherwise the first sentence of the first top-level paragraph. When that paragraph is the lead (the first block after the H1), the sentence is moved out of it into the header, so the body does not repeat it; the header copy stays in the search index. When the body opens with code, a heading or a list, the sentence is copied and marked `data-pagefind-ignore`. The split happens only in top-level text, so links and code stay whole.
+  - **Updated / Reading time** come from `converter/convert.ts` into `src/content/docs/page-meta.json` (keyed by document id): the author date (`%aI`) of the last commit touching the source file up to `sourceSha`, and prose words outside fenced code / 200, rounded up. The build never calls git. Not front matter: Nimbus's docs schema rejects unknown keys and `src/content.config.ts` is not part of #8. The date shows the author's calendar day (`Mar 1, 2025`), independent of the build machine's timezone.
+  - Header chrome (tag, meta row with the actions, the mobile TOC) carries `data-pagefind-ignore`. The View as Markdown link gets its `href` from the client only, so the article's static links are still exactly the body's.
+- **Assistant (#9).** `shell.css` maps `--aa-*` and a few hard-coded colours to the tokens (styling hooks only), so search and Ask Docs follow the theme.
 
 ### Nimbus parts used
 
@@ -188,7 +213,7 @@ that one missing artifact until #7 generates it.
 ### How #7's pages plug in
 
 - **Render call.** Render `<DocLayout doc={documentAt(servedPath)} buildId={manifest.buildId} headings={headings}>` with the body in the slot. `headings` come from Astro `render()`: depth 2 and 3 feed the TOC. Heading `id`s must be the inventory `headingIds`.
-- **H1 placement.** Put the H1 as the first child of the body. On desktop the page actions sit to its right, outside `<article>`, so fixture link and hash checks see only the body.
+- **H1 placement.** Put the H1 as the first child of the body (the converter guarantees it; DocLayout fails the build otherwise). DocLayout moves it into the page header at the top of `<article>`, where the search index expects it.
 - **Sidebar.** Entries come from `src/manifest/manifest.json`: label is `sidebar.label ?? title`, href is `servedPath`.
   - Until a row has a manifest entry, the sidebar falls back to the inventory's live title and served path. This is PoC-only; remove it once the manifest covers every row.
   - Documents with `sidebar: null` (for example `/help/ideas`) render with no sidebar and no entry, but stay published.
@@ -201,7 +226,10 @@ that one missing artifact until #7 generates it.
 
 ### Checks
 
-- `npm test` includes `test/m3-shell.test.ts`: navigation from the inventory and the same-origin Markdown URL rules.
+- `npm test` includes `test/m3-shell.test.ts` (navigation from the inventory and the same-origin Markdown URL rules) and the reading-layout tests:
+  - `test/m3r-tokens.test.ts`: WCAG ratios from `tokens.css`, both themes (body, heading and description ≥ 7:1; muted, links, error and admonition labels ≥ 4.5:1 on paper and panel), warm paper, no `prefers-color-scheme`;
+  - `test/m3r-meta.test.ts`: `page-meta.json` equals `git log -1 --format=%aI <sourceSha> -- <sourcePath>` per document, reading time, byte-identical reconversion;
+  - `test/m3r-header.test.ts`: H1 and description extraction (move, copy, front matter, inline markup, dates).
 - `PREVIEW_URL=http://127.0.0.1:<port> PLAYWRIGHT=<path to playwright/index.mjs> npm run test:m3-browser` checks, with system Chrome:
   - the /api/ sidebar against the inventory
   - theme default and persistence
@@ -211,9 +239,12 @@ that one missing artifact until #7 generates it.
   - on #7's real pages:
     - the drawer's scroll lock holds under wheel and touch
     - code tokens are coloured in both themes and full width
-    - admonition styles for every type in both themes
-    - wide tables scroll inside the content column, with legacy column sizes
+    - admonition token styles for every type in both themes
+    - wide tables scroll inside the content column, with auto-layout column sizes
     - the legacy TOC rule
+    - the page header: content and order at 1440 and 390, the actions in the desktop meta row, the hairline, no repeated description, Pagefind ignores
+    - reading type (17 px / 1.65, ≤ 70ch prose, h1–h3 sizes, code line-height) and Shiki token contrast for every class in `_nimbus/shiki.css`
+    - TOC reading progress: moves, no layout shift, no scrolling, reduced motion
     - exactly one H1, and TOC links equal to the h2/h3 ids
     - prev/next only to converted pages
   - no-JS navigation
