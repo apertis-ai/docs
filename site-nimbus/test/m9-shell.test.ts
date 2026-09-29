@@ -422,3 +422,13 @@ test('one search control on the homepage: no header search at 1440 and 1024, the
     await other.context.close();
   }
 });
+
+test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
+  const { context, page } = await open('/');
+  const labels: string[] = await page.$$eval('main a', (as: HTMLAnchorElement[]) => as.map((a) => (a.textContent ?? '').replace(/\s+/g, ' ').trim()).filter(Boolean));
+  const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'Playground', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
+  const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
+  assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
+  assert.ok(labels.includes('Chat completions') && labels.includes('Quick start'), 'renamed labels present');
+  await context.close();
+});
