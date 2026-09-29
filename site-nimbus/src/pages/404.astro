@@ -1,0 +1,19 @@
+---
+// Emitted as dist/404.html: Pages then answers unknown paths with a real 404 instead of SPA fallback.
+import { TITLE_SUFFIX } from '../contracts/page.ts';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{'Page Not Found' + TITLE_SUFFIX}</title>
+  </head>
+  <body>
+    <main>
+      <h1>Page Not Found</h1>
+      <p><a href="/">Back to the documentation</a></p>
+    </main>
+  </body>
+</html>

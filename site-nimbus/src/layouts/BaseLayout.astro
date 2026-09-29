@@ -1,0 +1,69 @@
+---
+// The page frame shared by every page: head, navbar, mobile drawer, footer, the Ask Docs trigger and
+// the one <AssistantRoot />. DocLayout adds the docs chrome; the landing page uses this directly.
+import DocumentHead from '../components/DocumentHead.astro';
+import AssistantRoot from '../components/assistant/AssistantRoot.astro';
+import Navbar from '../components/shell/Navbar.astro';
+import Footer from '../components/shell/Footer.astro';
+import Sidebar from '../components/shell/Sidebar.astro';
+import type { ManifestDocument } from '../contracts/manifest.ts';
+import type { PageNavigation } from '../components/shell/navigation.ts';
+
+interface Props {
+  doc: ManifestDocument;
+  buildId: string;
+  nav?: PageNavigation | null;
+}
+const { doc, buildId, nav = null } = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <DocumentHead doc={doc} buildId={buildId} />
+    <link rel="icon" href="/img/favicon.ico" />
+    <!-- Light by default, the reader's switch wins, never prefers-color-scheme (same key as the legacy site). -->
+    <script is:inline>document.documentElement.classList.add('js');try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <Navbar sidebar={nav?.sidebar ?? null} />
+    <dialog class="drawer" id="shell-drawer" aria-label="Navigation">
+      <div class="drawer__head">
+        <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="24" height="24" /><span>Apertis Docs</span></a>
+        <button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark mode">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button type="button" class="icon-button drawer__close" data-drawer-close aria-label="Close navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="drawer__body">
+        {nav && <Sidebar nav={nav} />}
+        <ul class="drawer__menu">
+          <li><a href="/intro">Docs</a></li>
+          <li><a href="/api">API Reference</a></li>
+          <li><a href="https://apertis.ai/changelog" target="_blank" rel="noopener noreferrer">Release Notes</a></li>
+          <li><a href="https://apertis.ai/login" target="_blank" rel="noopener noreferrer">Log in</a></li>
+          <li><a href="https://apertis.ai/register" target="_blank" rel="noopener noreferrer">Create account</a></li>
+        </ul>
+      </div>
+    </dialog>
+    <slot />
+    <Footer />
+    <button type="button" class="ask-docs-trigger" data-open-surface="ask" aria-label="Ask Docs">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>
+      <span>Ask Docs</span>
+    </button>
+    <AssistantRoot />
+    <script>
+      import '../components/shell/shell.client.ts';
+    </script>
+  </body>
+</html>
