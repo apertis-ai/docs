@@ -90,7 +90,9 @@ export function validateManifest(
         errors.push(`${at}: canonicalUrl ${d.canonicalUrl} differs from inventory live.canonical ${row.live?.canonical}`);
       }
       const liveTitle = row.live?.title;
-      const expectedTitle = liveTitle?.endsWith(TITLE_SUFFIX) ? liveTitle.slice(0, -TITLE_SUFFIX.length) : liveTitle;
+      // #5 recorded the raw <title> HTML; the manifest title is the rendered text.
+      const liveText = liveTitle == null ? liveTitle : decodeEntities(liveTitle);
+      const expectedTitle = liveText?.endsWith(TITLE_SUFFIX) ? liveText.slice(0, -TITLE_SUFFIX.length) : liveText;
       if (d.title !== expectedTitle) errors.push(`${at}: title ${JSON.stringify(d.title)} should be ${JSON.stringify(expectedTitle)}`);
     }
 
@@ -115,4 +117,15 @@ export function validateManifest(
     if (actual !== markdown.sha256) errors.push(`${at}: markdown ${markdown.path} sha256 ${actual} != recorded ${markdown.sha256}`);
   });
   return errors;
+}
+
+/** Decodes the character references Astro and the legacy build emit; an unknown named entity throws instead of yielding wrong text. */
+export function decodeEntities(s: string): string {
+  // ponytail: numeric references + the named entities seen in this corpus; add names as they appear.
+  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (_, e: string) => {
+    if (e[0] === '#') return String.fromCodePoint(e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10));
+    if (!(e in named)) throw new Error(`unknown HTML entity &${e};`);
+    return named[e];
+  });
 }

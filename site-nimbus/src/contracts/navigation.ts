@@ -12,6 +12,8 @@ export const MANIFEST_KINDS = ['doc', 'page', 'blog-post'] as const satisfies re
 
 export const INVENTORY_DISPOSITIONS = [
   'preserve', 'preserve-pending-decision', 'absent-at-baseline', 'reserved-runtime', 'legacy-implementation-artifact',
+  // Retired by a recorded decision (`decision`): answers 404 and is in no publication channel.
+  'retired',
 ] as const;
 export type InventoryDisposition = (typeof INVENTORY_DISPOSITIONS)[number];
 
@@ -57,6 +59,8 @@ export interface InventoryRoute {
   listed: boolean;
   disposition: InventoryDisposition;
   note?: string;
+  /** URL of the recorded decision that set a `retired` disposition. */
+  decision?: string;
   eligibility: Eligibility;
   /** Legacy (Docusaurus) search and retrieval behavior, for delta reporting. */
   legacy: { search: boolean; rag: boolean };

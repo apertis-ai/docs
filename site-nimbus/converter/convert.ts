@@ -12,6 +12,8 @@ import path from 'node:path';
 import { markdownPathFor, type ManifestDocument, type ManifestV1 } from '../src/contracts/manifest.ts';
 import { MANIFEST_KINDS, type InventoryRoute, type RouteInventory } from '../src/contracts/navigation.ts';
 import { TITLE_SUFFIX } from '../src/contracts/page.ts';
+import { decodeEntities } from '../src/contracts/validate-manifest.ts';
+export { decodeEntities };
 
 export const SITE_ROOT = path.resolve(import.meta.dirname, '..');
 export const REPO_ROOT = path.resolve(SITE_ROOT, '..');
@@ -266,16 +268,6 @@ export function mainTextSha256(html: string): string {
   return sha256(Buffer.from(text.replace(/\s+/g, ' ').trim(), 'utf8'));
 }
 
-/** Decodes the character references Astro and the legacy build emit; an unknown named entity throws instead of yielding wrong text. */
-export function decodeEntities(s: string): string {
-  // ponytail: numeric references + the named entities seen in this corpus; add names as they appear.
-  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
-  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (_, e: string) => {
-    if (e[0] === '#') return String.fromCodePoint(e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10));
-    if (!(e in named)) throw new Error(`unknown HTML entity &${e};`);
-    return named[e];
-  });
-}
 
 const git = (repoRoot: string, args: string[]) => execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8' }).trim();
 
