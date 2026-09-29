@@ -57,7 +57,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const generated = inventory.routes.filter((r: InventoryRoute) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical)
     .map((r: InventoryRoute) => `${r.path.slice(1)}/index.html`);
   const html = [...pages, ...generated, '404.html'];
-  const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Astro islands reference their component and renderer chunks from <astro-island> attributes.
+  const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too.
   for (let i = 0; i < referenced.length; i++) {
     if (!referenced[i].endsWith('.js') || !files.includes(referenced[i])) continue;

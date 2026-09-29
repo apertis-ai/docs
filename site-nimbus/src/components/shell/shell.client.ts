@@ -1,8 +1,8 @@
-import '../../styles/shell.css';
-// Shell behavior, one entry for every page: surface triggers, theme switch, mobile drawer, page
+// Shell behavior, one entry for every page: surface triggers, theme switch, navigation sheet hand-off, page
 // actions, TOC highlight, and Nimbus's code-copy buttons and heading anchors.
 // Search and Ask Docs open only through the contract event; this file binds no keyboard shortcut.
-import { codeCopy, headingAnchors, lockScroll, makeDisclosure, unlockScroll } from '@cloudflare/nimbus-docs/client';
+import { codeCopy, headingAnchors, makeDisclosure } from '@cloudflare/nimbus-docs/client';
+import { send } from '../../lib/bridge.ts';
 import { openAskDocs, openSearch } from '../../contracts/events.ts';
 import { PAGE_META } from '../../contracts/page.ts';
 import { aiToolUrls, markdownUrl } from './page-actions.ts';
@@ -14,40 +14,24 @@ for (const el of $$('[data-open-surface]')) {
   el.addEventListener('click', () => (el.dataset.openSurface === 'ask' ? openAskDocs() : openSearch()));
 }
 
-// Theme: light default, the reader's choice persists under the legacy `theme` key. Styling only.
+// Theme: light default, the reader's choice persists under the legacy `theme` key. Styling only. Delegated,
+// so the switch inside the navigation sheet (mounted later) works too.
 const root = document.documentElement;
 function syncThemeButtons() {
   const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
   for (const b of $$('[data-theme-toggle]')) b.setAttribute('aria-label', `Switch to ${next} mode`);
 }
-for (const b of $$('[data-theme-toggle]')) {
-  b.addEventListener('click', () => {
-    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch { /* storage blocked: session-only */ }
-    syncThemeButtons();
-  });
-}
+document.addEventListener('click', (e) => {
+  if (!(e.target as Element).closest?.('[data-theme-toggle]')) return;
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('theme', root.dataset.theme); } catch { /* storage blocked: session-only */ }
+  syncThemeButtons();
+});
 syncThemeButtons();
 
-// Mobile drawer: a modal <dialog> gives focus containment, Escape and focus return natively.
-const drawer = document.querySelector<HTMLDialogElement>('#shell-drawer');
-const drawerOpener = document.querySelector<HTMLElement>('[data-drawer-open]');
-if (drawer && drawerOpener) {
-  drawerOpener.addEventListener('click', () => {
-    drawer.showModal();
-    lockScroll();
-    drawerOpener.setAttribute('aria-expanded', 'true');
-    drawer.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: 'center' });
-  });
-  drawer.addEventListener('close', () => {
-    unlockScroll();
-    drawerOpener.setAttribute('aria-expanded', 'false');
-  });
-  drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
-  for (const b of $$('[data-drawer-close]', drawer)) b.addEventListener('click', () => drawer.close());
-  // Leaving the mobile breakpoint with the drawer open would leave the page locked.
-  matchMedia('(min-width: 997px)').addEventListener('change', (e) => { if (e.matches && drawer.open) drawer.close(); });
-}
+// Navigation sheet (NavSheet.tsx, hydrated on idle): the header's menu button hands its click over the
+// bridge, so a click before hydration still opens the sheet.
+for (const b of $$('[data-drawer-open]')) b.addEventListener('click', () => send('nav'));
 
 // Page actions: every action reads this deployment's Markdown artifact from the page meta.
 const actions = document.querySelector<HTMLElement>('[data-page-actions]');
@@ -163,5 +147,6 @@ for (const d of $$<HTMLDetailsElement>('details.toc-mobile')) {
   sync();
 }
 
-codeCopy();
+// Code copy buttons belong to document code blocks; the homepage sample has its own.
+if (document.querySelector('article.docs-content')) codeCopy();
 headingAnchors();

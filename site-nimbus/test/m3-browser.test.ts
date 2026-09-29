@@ -84,8 +84,8 @@ test('light is the default, prefers-color-scheme is ignored, and the switch pers
   assert.equal(await theme(), 'dark');
   await page.goto(base + '/', { waitUntil: 'load' });
   assert.equal(await theme(), 'dark');
-  // Reading layout (#8): the dark token --bg #1b1a17 (was the legacy #121212).
-  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(27, 26, 23)');
+  // Palette revised on 2026-09-29 (#4): the dark token --bg is the neutral #121212 (was the warm #1b1a17).
+  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(18, 18, 18)');
   await page.reload();
   assert.equal(await theme(), 'dark');
   await page.click('.navbar__right [data-theme-toggle]');
@@ -209,11 +209,14 @@ test('without JavaScript the navigation and landing links still work and no dead
   assert.ok(await page.$('article .toc-mobile > summary'));
   assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), null);
   await page.goto(base + '/', { waitUntil: 'load' });
+  // The redesigned homepage (2026-09-29, #4) regroups the six feature-card destinations into the journey
+  // section, so their order follows it; the six links, targets and rels are unchanged.
   const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(cards, [
+  const byHref = (a: string[], b: string[]) => a[0].localeCompare(b[0]);
+  assert.deepEqual(cards.sort(byHref), [
     ['/intro', '', ''], ['/installation/models', '', ''], ['/api', '', ''], ['/installation/claude-code', '', ''],
     ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', '_blank', 'noopener noreferrer'],
-  ]);
+  ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
   assert.deepEqual(nav, ['/', '/intro', '/api', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register']);
   await context.close();
