@@ -23,6 +23,18 @@ export const INVENTORY_PATH = 'migration/nimbus/route-inventory.json';
 export const GENERATED_DOCS = 'src/content/docs';
 export const GENERATED_PUBLIC = 'src/content/public';
 const MANIFEST_FILE = 'src/manifest/manifest.json';
+/**
+ * Page header meta (#8 reading layout), keyed by document id: `updated` is the author date (`%aI`) of
+ * the last legacy commit touching the source file, as of `sourceSha`; `readingMinutes` comes from
+ * readingMinutes(). Written here so the build never calls git. It lives in src/content/docs (covered
+ * by the drift test) but is not a collection entry (the loader globs Markdown only). Not front matter:
+ * Nimbus's docs schema rejects unknown keys, and src/content.config.ts is outside this packet.
+ */
+export const PAGE_META_FILE = `${GENERATED_DOCS}/page-meta.json`;
+export interface PageMeta {
+  updated: string;
+  readingMinutes: number;
+}
 /** Standalone pages (`page:*`) are rendered by their own .astro route; they only get a manifest entry. */
 const isStandalonePage = (id: string) => id.startsWith('page:');
 
@@ -244,6 +256,19 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
   };
 }
 
+/** Words of the clean Markdown outside fenced code blocks, at 200 per minute, rounded up (at least 1). */
+export function readingMinutes(clean: string): number {
+  const prose = clean.replace(/^(?:> )?[ \t]*(`{3,}|~{3,})[\s\S]*?^(?:> )?[ \t]*\1[ \t]*$/gm, '');
+  return Math.max(1, Math.ceil(prose.split(/\s+/).filter(Boolean).length / 200));
+}
+
+/** Author date of the last commit touching `sourcePath` up to `sourceSha` (deterministic for a given sourceSha). */
+export function lastUpdatedOf(repoRoot: string, sourceSha: string, sourcePath: string): string {
+  const date = git(repoRoot, ['log', '-1', '--format=%aI', sourceSha, '--', sourcePath]);
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(date)) throw new ConversionError(`${sourcePath}: no commit up to ${sourceSha} touches it`);
+  return date;
+}
+
 function escapeHtml(s: string) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -348,6 +373,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
 
   for (const dir of [GENERATED_DOCS, GENERATED_PUBLIC]) fs.rmSync(path.join(outRoot, dir), { recursive: true, force: true });
 
+  const pageMeta: Record<string, PageMeta> = {};
   // Every preserved doc/page/blog-post row (#13). Retired rows (decision on #4) get no entry and no output.
   const rows = inventory.filter((r) => r.disposition === 'preserve' && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
   const documents: ManifestDocument[] = rows.map((row) => {
@@ -371,6 +397,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     // HTML and no artifact, so contentSha256 is the hash of the clean Markdown.
     if (!row.eligibility.publish) return { ...base, markdown: null, contentSha256: sha256(out.clean) };
     writeFile(outRoot, `${GENERATED_DOCS}${base.servedPath}index.md`, out.render);
+    pageMeta[base.id] = { updated: lastUpdatedOf(repoRoot, sourceSha, row.sourcePath!), readingMinutes: readingMinutes(out.clean) };
     for (const a of out.assets) {
       const dest = path.join(outRoot, GENERATED_PUBLIC, a.publicPath);
       if (!fs.existsSync(dest)) writeFile(outRoot, `${GENERATED_PUBLIC}${a.publicPath}`, fs.readFileSync(path.join(repoRoot, a.file)));
@@ -381,6 +408,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     return { ...base, markdown: md, contentSha256: md.sha256 };
   });
 
+  writeFile(outRoot, PAGE_META_FILE, `${JSON.stringify(pageMeta, null, 2)}\n`);
   const manifest: ManifestV1 = { manifestVersion: 1, site: 'https://docs.apertis.ai', sourceSha, buildId, documents };
   writeManifest(outRoot, manifest);
   return manifest;
