@@ -55,6 +55,7 @@ export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }
     if (fs.existsSync(path.join(outDir, rel))) throw new Error(`m2: ${rel} is already emitted by the build; refusing to overwrite`);
     fs.writeFileSync(path.join(outDir, rel), body);
   }
+  sortShikiCss(outDir);
   const errors = validateManifest(manifest, { inventory, outDir });
   errors.push(...shikiClassErrors(outDir));
   for (const reserved of ['api/ask', 'api/ask/index.html', 'api/ask.html']) {
@@ -81,6 +82,20 @@ export function shikiClassErrors(outDir: string): string[] {
     if (missing.length) errors.push(`dist: ${path.relative(outDir, file)} uses ${missing.join(', ')}, not defined in _nimbus/shiki.css`);
   }
   return errors;
+}
+
+/**
+ * Nimbus writes `_nimbus/shiki.css` rules in the order Shiki registered them, which varies with
+ * parallel rendering on a cold build. Each rule is one unique class, so sorting them by class name
+ * changes no styling and makes the file byte-identical across builds.
+ */
+export function sortShikiCss(outDir: string): void {
+  const file = path.join(outDir, '_nimbus/shiki.css');
+  if (!fs.existsSync(file)) return;
+  const css = fs.readFileSync(file, 'utf8');
+  const rules = [...css.matchAll(/\.(nb-shiki-[a-z0-9]+)\{[^{}]*\}/g)];
+  if (!rules.length || rules.map((m) => m[0]).join('') !== css.trimEnd()) return; // not the one-line form Nimbus writes: leave it untouched
+  fs.writeFileSync(file, `${rules.sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0)).map((m) => m[0]).join('')}\n`);
 }
 
 /** Rewrite target for retired routes: a path nothing in dist serves, so Pages answers its 404. */

@@ -416,6 +416,9 @@ This was observed on `/getting-started/quick-start/`, `/help/error-codes/` and
 - `publication()` deletes the data store in `astro:config:setup` for every `astro build`, so every
   build is cold.
 - Phase 2 fails the build when a page uses an undefined Shiki class (`shikiClassErrors`).
+- On a cold build, Shiki registers its rules in parallel render order. Phase 2 therefore sorts
+  `_nimbus/shiki.css` by class name (`sortShikiCss`). Each rule is one unique class, so styling is
+  unchanged, and `test/m2-rebuild.test.ts` stays byte-identical.
 
 ### Retired placeholder routes
 
@@ -435,7 +438,7 @@ all `false`, and their fixtures expect 404.
 
 - **Source freeze SHA** (`sourceSha`): `d9aefa377ff99dbea3c094504ffbed9f99305a9f`. This is the last
   commit touching the legacy roots.
-- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.829dc1810e68`.
+- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.b9b8e352554e`.
 - **Documents:** 79 manifest documents: 78 docs with Markdown artifacts, and `page:index`.
 
 ### Full-corpus gates
