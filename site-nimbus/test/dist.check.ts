@@ -296,3 +296,15 @@ test('m8: every converted page keeps the legacy external links and images (conte
   assert.equal(converted.length, 78);
   assert.ok(links > 100 && images > 40, `${links} links, ${images} images compared`);
 });
+
+test('m8: every internal link in every converted page resolves to a built file (never a retired or missing route)', () => {
+  const builtFile = (p: string) => [p, `${p.replace(/\/$/, '')}/index.html`, `${p.replace(/\/$/, '')}.html`]
+    .some((f) => files.includes(f.replace(/^\//, '')));
+  let n = 0;
+  for (const d of converted) {
+    const hrefs = [...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="(\/[^"#?]*)/g)].map((m) => m[1]);
+    n += hrefs.length;
+    assert.deepEqual(hrefs.filter((h) => !builtFile(h)), [], `${d.id}: unresolved internal links`);
+  }
+  assert.ok(n > 100, `${n} internal links checked`);
+});
