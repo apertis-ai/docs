@@ -112,7 +112,9 @@ jobs:
     timeout-minutes: 40
     env:
       PREVIEW_URL: http://127.0.0.1:8788
-      PLAYWRIGHT_CHANNEL: bundled # Playwright's own Chromium in CI; local runs keep system Chrome
+      # Playwright's own full Chromium in new headless mode. The headless shell cannot synthesize touch
+      # scrolling, which the mobile scroll-lock check needs. Local runs keep system Chrome.
+      PLAYWRIGHT_CHANNEL: chromium
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }

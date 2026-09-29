@@ -12,6 +12,8 @@ import path from 'node:path';
 import { markdownPathFor, type ManifestDocument, type ManifestV1 } from '../src/contracts/manifest.ts';
 import { MANIFEST_KINDS, type InventoryRoute, type RouteInventory } from '../src/contracts/navigation.ts';
 import { TITLE_SUFFIX } from '../src/contracts/page.ts';
+import { decodeEntities } from '../src/contracts/validate-manifest.ts';
+export { decodeEntities };
 
 export const SITE_ROOT = path.resolve(import.meta.dirname, '..');
 export const REPO_ROOT = path.resolve(SITE_ROOT, '..');
@@ -21,6 +23,18 @@ export const INVENTORY_PATH = 'migration/nimbus/route-inventory.json';
 export const GENERATED_DOCS = 'src/content/docs';
 export const GENERATED_PUBLIC = 'src/content/public';
 const MANIFEST_FILE = 'src/manifest/manifest.json';
+/**
+ * Page header meta (#8 reading layout), keyed by document id: `updated` is the author date (`%aI`) of
+ * the last legacy commit touching the source file, as of `sourceSha`; `readingMinutes` comes from
+ * readingMinutes(). Written here so the build never calls git. It lives in src/content/docs (covered
+ * by the drift test) but is not a collection entry (the loader globs Markdown only). Not front matter:
+ * Nimbus's docs schema rejects unknown keys, and src/content.config.ts is outside this packet.
+ */
+export const PAGE_META_FILE = `${GENERATED_DOCS}/page-meta.json`;
+export interface PageMeta {
+  updated: string;
+  readingMinutes: number;
+}
 /** Standalone pages (`page:*`) are rendered by their own .astro route; they only get a manifest entry. */
 const isStandalonePage = (id: string) => id.startsWith('page:');
 
@@ -242,6 +256,19 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
   };
 }
 
+/** Words of the clean Markdown outside fenced code blocks, at 200 per minute, rounded up (at least 1). */
+export function readingMinutes(clean: string): number {
+  const prose = clean.replace(/^(?:> )?[ \t]*(`{3,}|~{3,})[\s\S]*?^(?:> )?[ \t]*\1[ \t]*$/gm, '');
+  return Math.max(1, Math.ceil(prose.split(/\s+/).filter(Boolean).length / 200));
+}
+
+/** Author date of the last commit touching `sourcePath` up to `sourceSha` (deterministic for a given sourceSha). */
+export function lastUpdatedOf(repoRoot: string, sourceSha: string, sourcePath: string): string {
+  const date = git(repoRoot, ['log', '-1', '--format=%aI', sourceSha, '--', sourcePath]);
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(date)) throw new ConversionError(`${sourcePath}: no commit up to ${sourceSha} touches it`);
+  return date;
+}
+
 function escapeHtml(s: string) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -262,16 +289,10 @@ function jsxStyle(body: string, fail: () => never): string {
 export function mainTextSha256(html: string): string {
   const m = /<main\b[^>]*>([\s\S]*)<\/main>/.exec(html);
   if (!m) throw new Error('no <main> element');
-  // ponytail: tag-strip + the entities Astro emits; an unknown named entity throws instead of hashing wrong text.
-  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
-  const text = m[1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]*>/g, '')
-    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (_, e: string) => {
-      if (e[0] === '#') return String.fromCodePoint(e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10));
-      if (!(e in named)) throw new Error(`unknown HTML entity &${e};`);
-      return named[e];
-    });
+  const text = decodeEntities(m[1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]*>/g, ''));
   return sha256(Buffer.from(text.replace(/\s+/g, ' ').trim(), 'utf8'));
 }
+
 
 const git = (repoRoot: string, args: string[]) => execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8' }).trim();
 
@@ -283,17 +304,22 @@ export function sourceShaOf(repoRoot: string): string {
   return git(repoRoot, ['log', '-1', '--format=%H', '--', ...LEGACY_ROOTS]);
 }
 
+/** site-nimbus files that cannot change dist: documentation, tests and git metadata. */
+export const NOT_BUILD_INPUTS = ['README.md', '.gitignore', 'test/'];
+
 /**
  * First 12 hex of SHA-256 over every build input: the working-tree bytes of each file `git ls-files`
- * tracks under site-nimbus/ (lockfile, converter, contracts, routes, layouts, config, tests, README)
- * plus the route inventory, sorted by repository path, each hashed as `path\0bytes\0`. Generated
- * output (src/content/**, the manifest) is excluded, and untracked files never count.
+ * tracks under site-nimbus/ (lockfile, package.json, config, converter, contracts, routes, layouts,
+ * components, styles, search) plus the route inventory, sorted by repository path, each hashed as
+ * `path\0bytes\0`. Excluded: generated output (src/content/**, the manifest), NOT_BUILD_INPUTS
+ * (README.md, .gitignore, test/**) and untracked files.
  */
 export function buildHashOf(siteRoot: string, repoRoot: string = REPO_ROOT): string {
   const site = path.relative(repoRoot, siteRoot).split(path.sep).join('/');
   const generated = (f: string) => f.startsWith(`${site}/src/content/`) || f === `${site}/${MANIFEST_FILE}`;
+  const notInput = (f: string) => NOT_BUILD_INPUTS.some((x) => (x.endsWith('/') ? f.startsWith(`${site}/${x}`) : f === `${site}/${x}`));
   const tracked = execFileSync('git', ['-C', repoRoot, 'ls-files', '-z', '--', site], { encoding: 'utf8' }).split('\0').filter(Boolean);
-  const files = [...new Set([...tracked.filter((f) => !generated(f)), INVENTORY_PATH])].sort();
+  const files = [...new Set([...tracked.filter((f) => !generated(f) && !notInput(f)), INVENTORY_PATH])].sort();
   const h = crypto.createHash('sha256');
   for (const f of files) {
     const abs = path.join(repoRoot, f);
@@ -324,8 +350,18 @@ export function writeManifest(root: string, manifest: ManifestV1) {
  * stale output. Entries without Markdown (`page:index`) keep their previous contentSha256 (all
  * zeros when none): phase 2 (converter/integration.ts, after `astro build`) sets it from the built `<main>`.
  */
-export const readInventory = (repoRoot: string = REPO_ROOT) =>
+/**
+ * The inventory rows, with `live.title` decoded: #5 recorded the raw `<title>` HTML (for example
+ * `Reasoning &amp; Extended Thinking`), while manifest and page titles are text. Every converter and
+ * phase-2 reader goes through here, so the title check, the manifest and validateManifest see one value.
+ */
+/** The inventory rows exactly as recorded (raw <title> HTML); validateManifest decodes what it compares. */
+export const readRawInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
   (JSON.parse(fs.readFileSync(path.join(repoRoot, INVENTORY_PATH), 'utf8')) as RouteInventory).routes;
+
+export const readInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
+  readRawInventory(repoRoot)
+    .map((r) => (r.live?.title ? { ...r, live: { ...r.live, title: decodeEntities(r.live.title) } } : r));
 
 export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot) }:
   { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[] } = {}): ManifestV1 {
@@ -341,8 +377,9 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
 
   for (const dir of [GENERATED_DOCS, GENERATED_PUBLIC]) fs.rmSync(path.join(outRoot, dir), { recursive: true, force: true });
 
-  // ponytail: PoC rows only; #13 widens this filter to every preserved doc/page/blog-post row.
-  const rows = inventory.filter((r) => r.poc && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
+  const pageMeta: Record<string, PageMeta> = {};
+  // Every preserved doc/page/blog-post row (#13). Retired rows (decision on #4) get no entry and no output.
+  const rows = inventory.filter((r) => r.disposition === 'preserve' && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
   const documents: ManifestDocument[] = rows.map((row) => {
     const canonicalUrl = row.live!.canonical!;
     const base = {
@@ -364,6 +401,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     // HTML and no artifact, so contentSha256 is the hash of the clean Markdown.
     if (!row.eligibility.publish) return { ...base, markdown: null, contentSha256: sha256(out.clean) };
     writeFile(outRoot, `${GENERATED_DOCS}${base.servedPath}index.md`, out.render);
+    pageMeta[base.id] = { updated: lastUpdatedOf(repoRoot, sourceSha, row.sourcePath!), readingMinutes: readingMinutes(out.clean) };
     for (const a of out.assets) {
       const dest = path.join(outRoot, GENERATED_PUBLIC, a.publicPath);
       if (!fs.existsSync(dest)) writeFile(outRoot, `${GENERATED_PUBLIC}${a.publicPath}`, fs.readFileSync(path.join(repoRoot, a.file)));
@@ -374,6 +412,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     return { ...base, markdown: md, contentSha256: md.sha256 };
   });
 
+  writeFile(outRoot, PAGE_META_FILE, `${JSON.stringify(pageMeta, null, 2)}\n`);
   const manifest: ManifestV1 = { manifestVersion: 1, site: 'https://docs.apertis.ai', sourceSha, buildId, documents };
   writeManifest(outRoot, manifest);
   return manifest;

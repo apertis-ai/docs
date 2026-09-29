@@ -63,12 +63,37 @@ of these change:
 | `gate-mutants` | `gate-mutants.mjs` (below). Afterwards the tree must be clean. | `node scripts/nimbus/gate-mutants.mjs --port <free port>` |
 | `policy` | `acceptance.mjs --only workflow-policy` | same |
 
-In CI the browser checks use Playwright's own Chromium: `PLAYWRIGHT_CHANNEL=bundled` through the
-shim. Playwright `1.63.0` is installed into `$RUNNER_TEMP`, never into the repository.
+In CI the browser checks use Playwright's own full Chromium in new headless mode: `PLAYWRIGHT_CHANNEL=chromium`
+through the shim. The headless shell (`bundled`) cannot synthesize touch scrolling, and the mobile scroll-lock
+check proves that with a control step. Playwright `1.63.0` is installed into `$RUNNER_TEMP`, never into the repository.
 
 ## Isolated real integration (`nimbus-isolated.yml`)
 
-This workflow is the only path that produces `isolated-real` evidence. It has not been run under #12.
+This workflow is the only CI path that produces `isolated-real` evidence. It has not been dispatched yet:
+it can only run from a protected branch. The same harness run by the lead against the isolated
+previews is recorded on #12.
+
+**Two previews (operator decision on #12, options b + c).** A real Turnstile widget never issues a token
+to an automated browser, headless or headed, so one preview cannot prove both halves:
+
+- The **real-key preview** (`target_url`) carries the real sitekey and secret. `real-turnstile` is
+  judged there without a browser token. It passes only when:
+  - the page renders the widget with a non-test sitekey;
+  - `/api/ask` without a token answers 400 `Missing Turnstile token`;
+  - a forged token answers 403 `Turnstile verification failed`, carrying siteverify's
+    `invalid-input-response` code.
+- The **always-pass preview** (`always_pass_target_url`) serves the same build and reads the same
+  generation environment. It uses Cloudflare's always-pass test secret
+  (`1x0000000000000000000000000000000AA`).
+  - The harness renders the real widget script with the always-pass test sitekey
+    (`1x00000000000000000000AA`). It does this through an init script, because the candidate hard-codes
+    the production sitekey.
+  - `real-assistant` and `real-indexing` then drive the real handler, Jina, the isolated Supabase
+    generation and the Apertis completion end to end.
+  - There the dummy token is required, which labels the path instead of hiding it.
+
+The only fact left to a person is that a real widget token validates. It was observed once in a real
+browser and recorded on #12 as `manual-real-browser` evidence. It is not a matrix entry.
 
 **Preconditions.** An operator must set up all of the following:
 
@@ -79,12 +104,18 @@ This workflow is the only path that produces `isolated-real` evidence. It has no
   - the non-secret variables `NIMBUS_ISOLATED_HOST` (the one allowed target host) and
     `NIMBUS_PRODUCTION_PROJECT_REF` (the production Supabase project ref, which is denied).
 - An isolated Supabase project.
-- An isolated, deployment-shaped preview, configured as in `indexer/README.md` "Operator contract"
-  step 8. Its hostname must be allowed for Turnstile, with the real (not a test) sitekey.
+- Two isolated, deployment-shaped previews of the same build, both configured as in
+  `indexer/README.md` "Operator contract" step 8:
+  - the real-key preview, whose hostname must be allowed for the real sitekey, with the real secret;
+  - the always-pass preview, whose `TURNSTILE_SECRET_KEY` is Cloudflare's always-pass test secret.
+    Every other binding is the same as the real-key preview's.
+  - The non-secret variable `NIMBUS_ISOLATED_ALWAYS_PASS_HOST` names the always-pass preview's host.
 
 **Dispatch inputs:**
 
 - `target_url`: https; its host must equal `NIMBUS_ISOLATED_HOST`.
+- `always_pass_target_url`: https; its host must equal `NIMBUS_ISOLATED_ALWAYS_PASS_HOST`, and it must
+  differ from `target_url`'s host.
 - `generation_environment`: never `production`.
 - `preview_generation_environment`: the preview's `ASK_GENERATION_ENVIRONMENT` binding, confirmed by
   the operator. It must equal `generation_environment`, and both are recorded.
@@ -98,7 +129,8 @@ Every step runs under `bash -euo pipefail`.
 
 1. Checks out, then fails closed before anything else (`scripts/nimbus/isolated-preflight.mjs`) when:
    - the target, a secret or a variable is missing;
-   - the target host is not exactly `NIMBUS_ISOLATED_HOST` (a trailing dot is ignored);
+   - a target host is not exactly its allowlisted host (a trailing dot is ignored), or the two targets
+     are the same host;
    - the target is a production host from `legacy-rollback.json` (`docs.apertis.ai`,
      `docs.stima.tech`, `docs-2r1.pages.dev` and its deployment subdomains), an `apertis.ai` host,
      `0.0.0.0` or loopback;
@@ -112,11 +144,12 @@ Every step runs under `bash -euo pipefail`.
    operator confirmed it is already active.
 5. Runs `acceptance.mjs --only real-assistant,real-turnstile,real-indexing` against the target
    (judged by `scripts/nimbus/real-evidence.mjs`). Each entry PASSes only when:
-   - the preview's `apertis-docs:build` meta equals the candidate's `buildId` (else FAIL);
+   - the entry's preview serves the candidate's `buildId` in its `apertis-docs:build` meta (else FAIL);
    - the two generation environments are stated and equal;
    - `docs_generation_slots`, read after the probe, names the receipt's generation as active (a
      mismatch is FAIL; unreadable is BLOCKED);
-   - for Turnstile: the observed sitekey is not a Cloudflare test key, the token is not the dummy
+   - for `real-turnstile` (real-key preview): the enforcement facts above;
+   - for the answer (always-pass preview): the probe used the always-pass test sitekey, sent the dummy
      token, and `/api/ask` answered 200;
    - for the answer: frames stream to `[DONE]`, and every citation is a `rag`-eligible manifest page
      and a document of the receipt's generation.
@@ -281,15 +314,20 @@ yields NO-GO until the isolated run passes.
 
 ## Reuse by #13 (full corpus) and #14 (release)
 
-**#13:**
+**#13:** three matrix entries widen the PoC gates over the full corpus, added rather than replacing any
+PoC entry:
 
-- Run the same gates. `route-fixtures.mjs check` without `--scope poc` covers every inventory route,
-  and `pocCoverageLimits` goes away.
-- Run `measure.mjs search` without `--scope poc` (24 queries).
-- Extend `paired-perf.mjs run --page` over #13's page set. The byte budgets need recorded baselines for
-  those pages first.
-- Widen `matrix.json` entries by adding steps, never by removing named tests.
+- `route-fixtures-full-corpus` runs `route-fixtures.mjs check` without `--scope poc`: every inventory
+  route (228/228), and `pocCoverageLimits` does not apply outside the PoC scope.
+- `search-relevance-full-corpus` runs `measure.mjs search` without `--scope poc` (all 24 queries,
+  `search-queries.json`). Ranking over the wider corpus is a separate repair (#9); this entry may FAIL
+  until that lands, and it is reported, not silently accepted.
+- `performance-budgets-full-corpus` runs `paired-perf.mjs gate --set full` over `budgets.json`
+  `fullCorpus.pages`. `fullCorpus.baseline` is `null` until the legacy full-corpus byte baseline is
+  recorded; until then this entry is BLOCKED (no `--perf-full` supplied to `acceptance.mjs`) or FAIL
+  (supplied but every page fails "no recorded byte baseline"), never PASS.
 - The guard already scans whatever `site-nimbus/src` and `dist` contain.
+- `acceptance.mjs` takes `--perf-full <result.json> ...` alongside `--perf` to gate this entry.
 
 **#14:**
 

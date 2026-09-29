@@ -12,6 +12,7 @@ import { PAGE_META, TITLE_SUFFIX, pageContext } from '../src/contracts/page.ts';
 import {
   INVENTORY_DISPOSITIONS,
   INVENTORY_KINDS,
+  MANIFEST_KINDS,
   type InventoryRoute,
   type LiveObservation,
   type RouteInventory,
@@ -123,10 +124,12 @@ test('the manifest loader reads the one canonical manifest location', () => {
   assert.deepEqual(loadedManifest, onDisk);
 });
 
-test('the committed manifest covers exactly the PoC set and matches the inventory apart from build output', () => {
+test('the committed manifest covers exactly the preserved doc/page set (#13) and matches the inventory apart from build output', () => {
   const poc: string[] = readJson('migration/nimbus/route-fixtures.json').pocRoutes;
   const served = loadedManifest.documents.map((d) => d.servedPath).sort();
-  assert.deepEqual(served, poc.map((p) => (p === '/' ? p : `${p}/`)).sort());
+  const preserved = inventory.filter((r) => r.disposition === 'preserve' && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
+  assert.deepEqual(served, preserved.map((r) => { const p = new URL(r.live!.canonical!).pathname; return p.endsWith('/') ? p : `${p}/`; }).sort());
+  for (const p of poc) assert.ok(served.includes(p === '/' ? p : `${p}/`), p);
   // Without a build output, the only violations are the Markdown artifacts (full check: dist.check.ts).
   const expected = loadedManifest.documents
     .filter((d) => d.markdown)
@@ -188,6 +191,25 @@ test('canonicalUrl and title must equal the inventory live observation', () => {
   const t = validManifest();
   t.documents[1] = { ...t.documents[1], title: 'API Reference | Apertis Documentation' };
   assert.ok(check(t).some((e) => e.includes('api:index') && e.includes('title')));
+});
+
+test('title compares against the rendered text of the recorded <title> (#5 kept raw HTML such as &amp;)', () => {
+  const row = inventory.find((r) => r.documentId === 'api:sdks/python-sdk/reasoning')!;
+  assert.match(row.live!.title!, /&amp;/);
+  const raw = row.live!.title!.replace(' | Apertis Documentation', '');
+  const decoded = raw.replace(/&amp;/g, '&');
+  const at = (title: string) => validateManifest({ ...validManifest(), documents: [{ ...validManifest().documents[1], id: row.documentId!, sourcePath: row.sourcePath!, servedPath: `${row.path}/`, canonicalUrl: row.live!.canonical!, eligibility: row.eligibility, title }] }, { inventory, outDir: outDir() })
+    .filter((e) => e.includes('title'));
+  assert.deepEqual(at(decoded), []);
+  assert.ok(at(raw).length === 1);
+});
+
+test('an undecodable recorded title is reported, never thrown', () => {
+  const row = inventory.find((r) => r.documentId === 'api:index')!;
+  const broken = inventory.map((r) => (r === row ? { ...r, live: { ...r.live!, title: 'API &bogus; Reference | Apertis Documentation' } } : r));
+  let errs: string[] = [];
+  assert.doesNotThrow(() => { errs = validateManifest(validManifest(), { inventory: broken, outDir: outDir() }); });
+  assert.ok(errs.some((e) => e.includes('api:index') && e.includes('unknown HTML entity')), errs.join('\n'));
 });
 
 test('malformed manifests are reported, never thrown', () => {

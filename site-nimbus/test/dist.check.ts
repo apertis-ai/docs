@@ -13,6 +13,7 @@ import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
+import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -52,7 +53,10 @@ function envValues(dirs: string[]): string[] {
 
 test('every output file derives from a publishable manifest entry or is referenced by one', () => {
   const pages = manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
-  const html = [...pages, '404.html'];
+  // #13: published inventory rows of kind `generated` with an HTML route (/search).
+  const generated = inventory.routes.filter((r: InventoryRoute) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical)
+    .map((r: InventoryRoute) => `${r.path.slice(1)}/index.html`);
+  const html = [...pages, ...generated, '404.html'];
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too.
   for (let i = 0; i < referenced.length; i++) {
@@ -65,7 +69,9 @@ test('every output file derives from a publishable manifest entry or is referenc
   }
   // #7: clean Markdown artifacts at their manifest paths (agent-eligible entries only).
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
-  const allowed = new Set([...html, ...referenced, ...markdown, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
+  // #13: root files derived from the manifest and inventory; their content is checked below.
+  const derived = ['sitemap.xml', '_redirects'];
+  const allowed = new Set([...html, ...referenced, ...markdown, ...derived, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
   for (const f of html) assert.ok(files.includes(f), `missing ${f}`);
@@ -133,7 +139,7 @@ const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
 
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
-  assert.equal(manifest.documents.length, 12);
+  assert.equal(manifest.documents.length, 79);
   // Content, not file names: Astro may name a CSS chunk after src/manifest/manifest.ts.
   const keys = ['manifestVersion', 'sourceSha', 'sourcePath', 'servedPath', 'canonicalUrl', 'contentSha256'].map((k) => `"${k}"`);
   const values = manifest.documents.flatMap((d) => [d.contentSha256, JSON.stringify(d.sourcePath)]);
@@ -180,8 +186,9 @@ test('m2: images resolve in dist, and no Docusaurus/MDX syntax survives into HTM
     const html = read(`${d.servedPath.slice(1)}index.html`);
     for (const [, src] of article(html).matchAll(/<img[^>]+src="\/([^"]+)"/g)) assert.ok(files.includes(src), `${d.id}: ${src}`);
     const md = read(d.markdown!.path.slice(1));
-    assert.doesNotMatch(article(html) + md, /^:::|<Tabs|<TabItem|\{\{/m, d.id);
     const prose = md.replace(/^(?:> )?[ \t]*(`{3,}|~{3,})[\s\S]*?^(?:> )?[ \t]*\1[ \t]*$/gm, '').replace(/`[^`\n]+`/g, '');
+    // Directives and JSX outside code (code may legitimately show `{{ ... }}` templates, as on continue).
+    assert.doesNotMatch(article(html).replace(/<pre\b[\s\S]*?<\/pre>/g, '').replace(/<code>[^<]*<\/code>/g, '') + prose, /^:::|<Tabs|<TabItem|\{\{/m, d.id);
     assert.doesNotMatch(prose, /^(import|export)\s|<[A-Za-z]/m, d.id);
     for (const [, src] of md.matchAll(/!\[[^\]]*\]\(\/([^)\s]+)\)/g)) assert.ok(files.includes(src), `${d.id}.md: ${src}`);
     const targets = [...prose.matchAll(/\]\(([^)\s]*)/g)].map((m) => m[1]);
@@ -228,4 +235,75 @@ test('m4: search fragments carry no shell chrome (navbar/sidebar labels) beyond 
     const extra = labels.filter((l) => count(squash(content), squash(l)) > count(squash(article), squash(l)));
     assert.deepEqual(extra, [], `${d.servedPath}: shell labels in the index`);
   }
+});
+
+// ---- #13 full corpus: sitemap, retired routes, publication channels ----
+const retired = routes.filter((r) => (r.disposition as string) === 'retired');
+
+test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML routes', () => {
+  const locs = [...read('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const expected = [
+    ...manifest.documents.filter((d) => d.eligibility.publish).map((d) => d.canonicalUrl),
+    ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => r.live!.canonical!),
+  ].sort();
+  assert.deepEqual(locs, expected);
+  assert.equal(locs.length, 80);
+  assert.equal(read('sitemap.xml'), publicationFiles(manifest, routes, dist)['sitemap.xml']);
+});
+
+test('m8: retired routes are in no publication channel and every path they had answers 404', () => {
+  assert.equal(retired.length, 23);
+  for (const r of retired) {
+    assert.equal(r.eligibility.publish || r.eligibility.search || r.eligibility.agent || r.eligibility.rag, false, r.path);
+    assert.equal((r as InventoryRoute & { decision?: string }).decision, 'https://github.com/apertis-ai/docs/issues/4#issuecomment-5881882328', r.path);
+    assert.equal(manifest.documents.some((d) => d.id === r.documentId), false, `${r.path} in the manifest`);
+  }
+  const rel = (p: string) => p.slice(1);
+  // Nothing in dist serves a retired path, except what _redirects rewrites to RETIRED_TARGET (the 404 page).
+  const rules = read('_redirects').split('\n').filter((l) => l && !l.startsWith('#')).map((l) => l.split(' '));
+  const rewritten = new Set(rules.map(([from]) => from));
+  for (const [, to, status] of rules) assert.deepEqual([to, status], [RETIRED_TARGET, '200']);
+  assert.equal(files.some((f) => f === rel(RETIRED_TARGET) || f.startsWith(`${rel(RETIRED_TARGET)}/`)), false);
+  for (const r of retired) {
+    const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f));
+    if (servedBy.length) for (const from of [r.path, `${r.path}/`, `${r.path}.html`]) assert.ok(rewritten.has(from), `${from} is served by ${servedBy} and not rewritten`);
+    assert.equal(files.some((f) => f.startsWith(`${rel(r.path)}/`) || f === `${rel(r.path)}.md`), false, `${r.path} emitted`);
+  }
+  assert.deepEqual([...rewritten].sort(), ['/404', '/404.html', '/404/']);
+  const text = [read('sitemap.xml'), ...fragments().map((f) => f.url)].join('\n');
+  for (const r of retired) assert.equal(text.includes(`https://docs.apertis.ai${r.path}<`) || fragments().some((f) => f.url.replace(/\/$/, '') === r.path), false, r.path);
+  assert.equal(files.some((f) => /^llms/.test(f)), false, 'llms files are not produced by this candidate');
+});
+
+test('m8: every converted page keeps the legacy external links and images (content parity)', () => {
+  const amp = (s: string) => s.replace(/&amp;/g, '&');
+  // Legacy /assets/images/<name>-<32 hex>.<ext> and the candidate /assets/images/<name>-<16 hex>.<ext> are one image.
+  const image = (src: string) => src.replace(/^\/assets\/images\/(.+)-[0-9a-f]{16,32}(\.[a-z]+)$/, '/assets/images/$1$2');
+  let links = 0, images = 0;
+  for (const d of converted) {
+    const row = routes.find((r) => r.documentId === d.id)!;
+    const body = article(read(`${d.servedPath.slice(1)}index.html`));
+    const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => amp(m[1])));
+    // Legacy extras outside the body: the "Edit this page" GitHub link and Cloudflare's email obfuscation.
+    const external = row.live!.links.filter((h) => !h.startsWith('/') && !h.startsWith('https://github.com/apertis-ai/docs/tree/main/'));
+    assert.deepEqual(external.filter((h) => !hrefs.has(h)), [], `${d.id}: external links lost`);
+    const srcs = new Set([...body.matchAll(/<img[^>]+src="([^"]+)"/g)].map((m) => image(amp(m[1]))));
+    assert.deepEqual(row.live!.images.map(image).filter((s) => !srcs.has(s)), [], `${d.id}: images lost`);
+    links += external.length;
+    images += row.live!.images.length;
+  }
+  assert.equal(converted.length, 78);
+  assert.ok(links > 100 && images > 40, `${links} links, ${images} images compared`);
+});
+
+test('m8: every internal link in every converted page resolves to a built file (never a retired or missing route)', () => {
+  const builtFile = (p: string) => [p, `${p.replace(/\/$/, '')}/index.html`, `${p.replace(/\/$/, '')}.html`]
+    .some((f) => files.includes(f.replace(/^\//, '')));
+  let n = 0;
+  for (const d of converted) {
+    const hrefs = [...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="(\/[^"#?]*)/g)].map((m) => m[1]);
+    n += hrefs.length;
+    assert.deepEqual(hrefs.filter((h) => !builtFile(h)), [], `${d.id}: unresolved internal links`);
+  }
+  assert.ok(n > 100, `${n} internal links checked`);
 });

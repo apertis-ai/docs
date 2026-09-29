@@ -293,7 +293,7 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     assert.equal(await page.evaluate(() => (document.getElementById('apertis-assistant') as HTMLDialogElement).matches(':modal')), false, 'non-blocking');
     await ask(page, 'How do I start?');
     await lastAnswer(page).locator('.aa-sources a').waitFor();
-    assert.equal(await lastAnswer(page).evaluate((el: HTMLElement) => `${el.childNodes[0].textContent}${el.childNodes[1].textContent}`), 'See Quick Start');
+    assert.equal(await lastAnswer(page).evaluate((el: HTMLElement) => { const p = el.querySelector('p')!; return `${p.childNodes[0].textContent}${(p.childNodes[1] as HTMLAnchorElement).textContent}`; }), 'See Quick Start');
     assert.equal(await lastAnswer(page).getAttribute('data-state'), 'done');
     assert.equal(await lastAnswer(page).locator('.aa-sources a').getAttribute('href'), '/getting-started/quick-start');
     const body = bodies[0] as Record<string, unknown>;
@@ -306,6 +306,48 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await ask(page, 'And then?');
     await page.waitForFunction(() => document.querySelectorAll('.aa-msg[data-state="done"]').length === 2);
     assert.notEqual((bodies[1] as Record<string, unknown>).turnstileToken, body.turnstileToken);
+    await page.context().close();
+  });
+
+  test('the answer renders its Markdown like the legacy widget, as DOM nodes and never as HTML', async () => {
+    const page = await newPage();
+    await goto(page, '/');
+    const md = [
+      '**Create a key** in `Settings`:', '',
+      '1. Open **Settings → API Keys**.', '2. Click *Create New Key*.', '',
+      '- one', '- two', '',
+      '```bash', 'curl https://api.apertis.ai/v1/models', '```', '',
+      '| Model | Use |', '|---|:--|', '| gpt-5.5 | general |', '',
+      '<img src=x onerror="window.__xss=1"> [bad](javascript:window.__xss=1) See [Quick Start](/getting-started/quick-start).',
+    ].join('\n');
+    await stubAsk(page, 200, sse(md.slice(0, 40), md.slice(40)) + DONE);
+    await openAsk(page);
+    await ask(page, 'How?');
+    const answer = lastAnswer(page);
+    await answer.locator('.aa-sources a').waitFor();
+    const shape = await answer.evaluate((el: HTMLElement) => ({
+      strong: [...el.querySelectorAll('strong')].map((n) => n.textContent),
+      em: [...el.querySelectorAll('em')].map((n) => n.textContent),
+      inlineCode: [...el.querySelectorAll(':not(pre) > code')].map((n) => n.textContent),
+      ol: [...el.querySelectorAll('ol > li')].map((n) => n.textContent),
+      ul: [...el.querySelectorAll('ul > li')].map((n) => n.textContent),
+      pre: el.querySelector('pre > code')?.textContent,
+      table: [...el.querySelectorAll('table tr')].map((r) => [...r.children].map((c) => `${c.tagName}:${c.textContent}`)),
+      links: [...el.querySelectorAll(':not(.aa-sources) > a, p a')].map((a) => a.getAttribute('href')),
+      img: el.querySelectorAll('img').length,
+      raw: /\*\*|```|\|---/.test(el.textContent ?? ''),
+    }));
+    assert.deepEqual(shape.strong, ['Create a key', 'Settings → API Keys']);
+    assert.deepEqual(shape.em, ['Create New Key']);
+    assert.deepEqual(shape.inlineCode, ['Settings']);
+    assert.deepEqual(shape.ol, ['Open Settings → API Keys.', 'Click Create New Key.']);
+    assert.deepEqual(shape.ul, ['one', 'two']);
+    assert.equal(shape.pre, 'curl https://api.apertis.ai/v1/models');
+    assert.deepEqual(shape.table, [['TH:Model', 'TH:Use'], ['TD:gpt-5.5', 'TD:general']]);
+    assert.deepEqual([...new Set(shape.links)], ['/getting-started/quick-start'], 'only safe links become anchors');
+    assert.equal(shape.img, 0, 'HTML in the answer stays text');
+    assert.equal(shape.raw, false, 'no raw Markdown syntax left');
+    assert.equal(await page.evaluate(() => (window as any).__xss), undefined);
     await page.context().close();
   });
 
@@ -579,9 +621,13 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await openAsk(page);
     await page.fill('#aa-question', 'hello');
     await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
-    await page.evaluate(() => (window as any).__ts['expired-callback']());
-    assert.equal(await page.isDisabled('#aa-send'), true, 'no sending with an expired token');
-    assert.match(await page.textContent('#aa-ask-status'), /expired/);
+    // Read the state in the same task as the callback: the stub's reset() issues a fresh token 10 ms later.
+    const expired = await page.evaluate(() => {
+      (window as any).__ts['expired-callback']();
+      return { disabled: (document.getElementById('aa-send') as HTMLButtonElement).disabled, status: document.getElementById('aa-ask-status')!.textContent };
+    });
+    assert.equal(expired.disabled, true, 'no sending with an expired token');
+    assert.match(expired.status ?? '', /expired/);
     await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
     await page.evaluate(() => (window as any).__ts['timeout-callback']());
     await page.waitForFunction(() => document.getElementById('aa-ask-status')?.dataset.kind === 'error');
@@ -610,15 +656,46 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await goto(page, '/');
     await page.evaluate(() => document.body.append(Object.assign(document.createElement('div'), { style: 'height:5000px' })));
     const cdp = await page.context().newCDPSession(page);
-    const swipe = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
+    // Two ways to swipe: raw touch events through the input pipeline, and the compositor's synthetic
+    // gesture. Which one scrolls depends on the browser build (CI's Linux Chromium ignores the synthetic
+    // gesture), so the control below picks the first that works and every later swipe reuses it.
+    const touchEvents = async () => {
+      const at = (y: number) => [{ x: 195, y, id: 1 }];
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: at(700) });
+      for (let y = 650; y >= 100; y -= 50) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(y) });
+      // Hold before lifting the finger: a release at speed starts a fling that keeps scrolling after
+      // the test resets scrollY.
+      await page.waitForTimeout(150);
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(100) });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+    const gesture = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
+    // Control: the environment must turn a swipe into a page scroll, or "did not scroll while open"
+    // below would pass vacuously.
+    let swipe: () => Promise<unknown> = touchEvents;
+    let control = false;
+    for (const candidate of [touchEvents, gesture]) {
+      await page.evaluate(() => scrollTo(0, 0));
+      await candidate();
+      control = await page.waitForFunction(() => scrollY > 0, null, { timeout: 5000 }).then(() => true, () => false);
+      if (control) { swipe = candidate; break; }
+    }
+    assert.ok(control, 'control: a touch swipe scrolls the page before the sheet opens (this browser cannot synthesize touch scrolling)');
+    await page.evaluate(() => scrollTo(0, 0));
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
     await page.locator('dialog[open] #aa-q').waitFor();
     await swipe();
     await page.waitForTimeout(300);
     assert.equal(await page.evaluate(() => scrollY), 0, 'page did not scroll while the sheet is open');
     await page.click('#aa-close');
-    await swipe();
-    await page.waitForFunction(() => scrollY > 0);
+    // After close the same gesture must scroll the page. A slow runner can drop a gesture that starts
+    // while the dialog is still closing, so the swipe repeats a bounded number of times.
+    let scrolled = false;
+    for (let i = 0; i < 5 && !scrolled; i++) {
+      await swipe();
+      scrolled = await page.waitForFunction(() => scrollY > 0, null, { timeout: 2000 }).then(() => true, () => false);
+    }
+    assert.ok(scrolled, 'the page scrolls once the sheet is closed');
     await page.context().close();
   });
 });

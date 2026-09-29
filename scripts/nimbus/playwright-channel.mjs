@@ -4,6 +4,7 @@
 //
 //   PLAYWRIGHT_MODULE=<absolute path to playwright/index.mjs>   the real Playwright (required)
 //   PLAYWRIGHT_CHANNEL=chrome | msedge | ... | bundled          `bundled` = Playwright's own Chromium
+//                                                             `chromium` = its full Chromium, new headless
 //
 // Unset PLAYWRIGHT_CHANNEL keeps each caller's channel. Only `channel` changes; every other launch
 // option and all measurement code stay the callers'.

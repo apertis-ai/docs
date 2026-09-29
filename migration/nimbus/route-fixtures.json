@@ -1,6 +1,6 @@
 {
   "baseSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
-  "inventorySha256": "dc39d8adce80497d8741e1733ded76ff551340a088dadbff3bb7072af9babceb",
+  "inventorySha256": "94c584f3e911c4eba320dddd15d76a127a909ddd6717c4a2989994f1955da8c9",
   "pocRoutes": [
     "/",
     "/getting-started/quick-start",
@@ -46,13 +46,12 @@
     {
       "path": "/404",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/404.html"
+      "status": 404
     },
     {
       "path": "/404/",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/api/",
@@ -1589,183 +1588,152 @@
     {
       "path": "/blog",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/"
+      "status": 404
     },
     {
       "path": "/blog/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog"
+      "status": 404
     },
     {
       "path": "/blog/archive",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/archive/"
+      "status": 404
     },
     {
       "path": "/blog/archive/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/archive"
+      "status": 404
     },
     {
       "path": "/blog/atom.xml",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/blog/authors",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/authors/"
+      "status": 404
     },
     {
       "path": "/blog/authors/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/authors"
+      "status": 404
     },
     {
       "path": "/blog/authors/all-sebastien-lorber-articles",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/authors/all-sebastien-lorber-articles/"
+      "status": 404
     },
     {
       "path": "/blog/authors/all-sebastien-lorber-articles/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/authors/all-sebastien-lorber-articles"
+      "status": 404
     },
     {
       "path": "/blog/authors/yangshun",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/authors/yangshun/"
+      "status": 404
     },
     {
       "path": "/blog/authors/yangshun/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/authors/yangshun"
+      "status": 404
     },
     {
       "path": "/blog/first-blog-post",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/first-blog-post/"
+      "status": 404
     },
     {
       "path": "/blog/first-blog-post/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/first-blog-post"
+      "status": 404
     },
     {
       "path": "/blog/long-blog-post",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/long-blog-post/"
+      "status": 404
     },
     {
       "path": "/blog/long-blog-post/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/long-blog-post"
+      "status": 404
     },
     {
       "path": "/blog/mdx-blog-post",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/mdx-blog-post/"
+      "status": 404
     },
     {
       "path": "/blog/mdx-blog-post/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/mdx-blog-post"
+      "status": 404
     },
     {
       "path": "/blog/rss.xml",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/blog/tags",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/tags/"
+      "status": 404
     },
     {
       "path": "/blog/tags/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/tags",
-      "anchors": [
-        "D"
-      ]
+      "status": 404
     },
     {
       "path": "/blog/tags/docusaurus",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/tags/docusaurus/"
+      "status": 404
     },
     {
       "path": "/blog/tags/docusaurus/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/tags/docusaurus"
+      "status": 404
     },
     {
       "path": "/blog/tags/facebook",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/tags/facebook/"
+      "status": 404
     },
     {
       "path": "/blog/tags/facebook/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/tags/facebook"
+      "status": 404
     },
     {
       "path": "/blog/tags/hello",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/tags/hello/"
+      "status": 404
     },
     {
       "path": "/blog/tags/hello/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/tags/hello"
+      "status": 404
     },
     {
       "path": "/blog/tags/hola",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/tags/hola/"
+      "status": 404
     },
     {
       "path": "/blog/tags/hola/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/tags/hola"
+      "status": 404
     },
     {
       "path": "/blog/welcome",
       "scope": "full",
-      "status": 308,
-      "location": "/blog/welcome/"
+      "status": 404
     },
     {
       "path": "/blog/welcome/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/blog/welcome"
+      "status": 404
     },
     {
       "path": "/category/功能",
@@ -2442,7 +2410,8 @@
     {
       "path": "/intro.md",
       "scope": "full",
-      "status": 404
+      "status": 200,
+      "note": "Introduced under the publication contract: clean Markdown artifact of default:intro (#13)."
     },
     {
       "path": "/llms.txt",
@@ -2452,14 +2421,12 @@
     {
       "path": "/markdown-page",
       "scope": "full",
-      "status": 308,
-      "location": "/markdown-page/"
+      "status": 404
     },
     {
       "path": "/markdown-page/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/markdown-page"
+      "status": 404
     },
     {
       "path": "/opensource",
@@ -2521,7 +2488,8 @@
     {
       "path": "/search-index.json",
       "scope": "full",
-      "status": 200
+      "status": 404,
+      "note": "Legacy search-plugin artifact; the inventory row allows its absence and the candidate does not emit it (#13)."
     },
     {
       "path": "/security/best-practices",
@@ -2600,14 +2568,12 @@
     {
       "path": "/test",
       "scope": "full",
-      "status": 308,
-      "location": "/test/"
+      "status": 404
     },
     {
       "path": "/test/",
       "scope": "full",
-      "status": 200,
-      "canonical": "https://docs.apertis.ai/test"
+      "status": 404
     },
     {
       "path": "/usage",
@@ -2636,22 +2602,22 @@
     {
       "path": "/blog/atom.css",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/blog/atom.xsl",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/blog/rss.css",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/blog/rss.xsl",
       "scope": "full",
-      "status": 200
+      "status": 404
     },
     {
       "path": "/fonts/LINESeedTW_TTF_Rg.ttf",

@@ -103,9 +103,10 @@ async function exclusion() {
   const before = listing();
   const expose = (rel, text) => ({ inject: () => { fs.mkdirSync(path.dirname(path.join(DIST, rel)), { recursive: true }); fs.writeFileSync(path.join(DIST, rel), text); },
     restore: () => { fs.rmSync(path.join(DIST, rel)); for (let d = path.dirname(rel); d !== '.'; d = path.dirname(d)) { const abs = path.join(DIST, d); if (fs.readdirSync(abs).length) break; fs.rmdirSync(abs); } } });
-  // /help/ideas is published in the inventory but outside the PoC manifest: not eligible for this candidate.
+  // /blog/first-blog-post is retired by the decision on #4 (#13): never publishable. (Until #13 this case
+  // used /help/ideas, which the full-corpus manifest now publishes.)
   const cases = [
-    ['non-PoC document Markdown published (help/ideas.md)', expose('help/ideas.md', fs.readFileSync(path.join(ROOT, 'docs/help/ideas.md'), 'utf8')), /help\/ideas\.md/],
+    ['retired document Markdown published (blog/first-blog-post.md)', expose('blog/first-blog-post.md', fs.readFileSync(path.join(ROOT, 'blog/2019-05-28-first-blog-post.md'), 'utf8')), /blog\/first-blog-post\.md/],
     ['reserved runtime path emitted (api/ask/index.html)', expose('api/ask/index.html', '<!doctype html><title>shadow</title>'), /api\/ask\/index\.html/],
     ['planning material emitted (openspec proposal)', expose('openspec/proposal.md', fs.readFileSync(path.join(ROOT, 'openspec/changes/nimbus-migration-contracts/proposal.md'), 'utf8')), /openspec\/proposal\.md/],
   ];
@@ -257,7 +258,8 @@ async function policy() {
 async function preflight() {
   const ref = 'abcdefghijklmnopqrst', prodRef = 'zyxwvutsrqponmlkjihg';
   const good = {
-    TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_HOST: 'nimbus-isolated.example.org.', GEN_ENV: 'preview', PREVIEW_GEN_ENV: 'preview',
+    TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_HOST: 'nimbus-isolated.example.org.',
+    ALWAYS_PASS_TARGET_URL: 'https://nimbus-isolated-always-pass.example.org/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'nimbus-isolated-always-pass.example.org', GEN_ENV: 'preview', PREVIEW_GEN_ENV: 'preview',
     ACTIVATE: 'true', ALREADY_ACTIVE: 'false', SUPABASE_URL: `https://${ref}.supabase.co`, DATABASE_URL: `postgresql://postgres.${ref}:x@aws-0-us-east-1.pooler.supabase.com:6543/postgres`,
     NIMBUS_PRODUCTION_PROJECT_REF: prodRef,
   };
@@ -276,6 +278,10 @@ async function preflight() {
     ['generation environment differs from the preview', set({ PREVIEW_GEN_ENV: 'staging' }), /differs from the preview/],
     ['neither activation nor confirmation', set({ ACTIVATE: 'false', ALREADY_ACTIVE: 'false' }), /activate_generation or an explicit/],
     ['http target', set({ TARGET_URL: 'http://nimbus-isolated.example.org/' }), /must be https/],
+    ['always-pass host not the allowlisted host', set({ ALWAYS_PASS_TARGET_URL: 'https://other.example.org/' }), /always_pass_target_url host is not the allowlisted NIMBUS_ISOLATED_ALWAYS_PASS_HOST/],
+    ['always-pass target is production', set({ ALWAYS_PASS_TARGET_URL: 'https://docs.apertis.ai/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'docs.apertis.ai' }), /always_pass_target_url host docs.apertis.ai is a production host/],
+    ['always-pass preview is the real-key preview', set({ ALWAYS_PASS_TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'nimbus-isolated.example.org' }), /must be a different host/],
+    ['always-pass target unset', set({ ALWAYS_PASS_TARGET_URL: '' }), /always_pass_target_url is not a URL/],
   ];
   for (const [name, { inject, restore }, expect] of cases) await mutant(`preflight: ${name}`, 'isolated-preflight.mjs', { check, inject, restore, expect });
 }
@@ -285,9 +291,10 @@ async function real() {
   const { judgeReal, DUMMY_TOKEN } = await import('./real-evidence.mjs');
   const buildId = JSON.parse(fs.readFileSync(path.join(SITE, 'src/manifest/manifest.json'), 'utf8')).buildId;
   const good = () => ({
-    manifestBuildId: buildId, servedBuildId: buildId, generationEnvironment: 'preview', previewGenerationEnvironment: 'preview', activeGenerationId: 42,
+    manifestBuildId: buildId, servedBuildId: buildId, testkeyServedBuildId: buildId, generationEnvironment: 'preview', previewGenerationEnvironment: 'preview', activeGenerationId: 42,
     receipt: { generationId: 42, generationState: 'ready', buildId, documents: { failed: 0, pending: 0 }, items: [{ urlPath: '/authentication/api-keys' }, { urlPath: '/getting-started/quick-start' }] },
-    probe: { ok: true, sources: ['/authentication/api-keys'], record: { sitekey: '0x4AAAAAACS2SzpYBFytHb_E', tokenSent: true, dummyToken: false, status: 200 } },
+    enforcement: { sitekey: '0x4AAAAAACS2SzpYBFytHb_E', missing: { status: 400, error: 'Missing Turnstile token' }, forged: { status: 403, error: 'Turnstile verification failed', codes: ['invalid-input-response'] } },
+    probe: { ok: true, sources: ['/authentication/api-keys'], record: { sitekey: '1x00000000000000000000AA', tokenSent: true, dummyToken: true, status: 200 } },
   });
   let facts = good();
   const entries = ['real-assistant', 'real-turnstile', 'real-indexing'];
@@ -298,17 +305,23 @@ async function real() {
   };
   const set = (fn) => ({ inject: () => { facts = good(); fn(facts); }, restore: () => { facts = good(); } });
   const cases = [
-    ['preview serves another buildId', set((f) => { f.servedBuildId = 'deadbeef.000000000000'; }), /real-assistant FAIL: isolated preview serves buildId deadbeef/],
-    ['preview build meta missing', set((f) => { f.servedBuildId = null; }), /real-indexing FAIL: isolated preview serves buildId null/],
+    ['real-key preview serves another buildId', set((f) => { f.servedBuildId = 'deadbeef.000000000000'; }), /real-turnstile FAIL: real-key isolated preview serves buildId deadbeef/],
+    ['test-key preview serves another buildId', set((f) => { f.testkeyServedBuildId = 'deadbeef.000000000000'; }), /real-assistant FAIL: test-key isolated preview serves buildId deadbeef/],
+    ['preview build meta missing', set((f) => { f.testkeyServedBuildId = null; }), /real-indexing FAIL: test-key isolated preview serves buildId null/],
     ['another generation is active', set((f) => { f.activeGenerationId = 41; }), /real-assistant FAIL: .*active generation 41 is not the receipt's 42/],
     ['no generation active', set((f) => { f.activeGenerationId = 'none'; }), /active generation none is not the receipt's 42/],
     ['active generation unreadable', set((f) => { f.activeGenerationId = null; }), /real-indexing BLOCKED: active generation could not be read/],
     ['preview reads another environment', set((f) => { f.previewGenerationEnvironment = 'staging'; }), /indexed environment preview is not the preview's staging/],
-    ['citation outside the generation', set((f) => { f.probe.sources = ['/billing/payg']; }), /real-indexing FAIL: citations .* are not all documents of the generation/],
-    ['Turnstile test sitekey', set((f) => { f.probe.record.sitekey = '1x00000000000000000000AA'; }), /real-turnstile FAIL: Turnstile test sitekey/],
-    ['Turnstile dummy token', set((f) => { f.probe.record.dummyToken = true; }), /real-turnstile FAIL: Turnstile dummy token/],
-    ['sitekey not observed', set((f) => { f.probe.record.sitekey = undefined; }), /real-turnstile BLOCKED: Turnstile sitekey not observed/],
-    ['receipt generation not ready', set((f) => { f.receipt.generationState = 'failed'; }), /real-indexing FAIL: receipt generation is not ready/],
+    ['citation outside the generation', set((f) => { f.probe.sources = ['/billing/payg']; }), /real-indexing FAIL: .*citations .* are not all documents of the generation/],
+    ['Turnstile test sitekey on the real-key preview', set((f) => { f.enforcement.sitekey = '1x00000000000000000000AA'; }), /real-turnstile FAIL: Turnstile test sitekey .* on the real-key preview/],
+    ['real-key sitekey not observed', set((f) => { f.enforcement.sitekey = undefined; }), /real-turnstile BLOCKED: Turnstile sitekey not observed on the real-key preview/],
+    ['a request without a token is answered', set((f) => { f.enforcement.missing = { status: 200 }; }), /real-turnstile FAIL: a request without a token answered 200/],
+    ['a forged token is accepted', set((f) => { f.enforcement.forged = { status: 200 }; }), /real-turnstile FAIL: a forged token answered 200/],
+    ['a forged token is rejected without siteverify', set((f) => { f.enforcement.forged.codes = []; }), /real-turnstile FAIL: a forged token was not rejected by Cloudflare siteverify/],
+    ['forged-token request not observed', set((f) => { f.enforcement.forged = undefined; }), /real-turnstile BLOCKED: no request with a forged token was observed/],
+    ['assistant probe with the real sitekey', set((f) => { f.probe.record.sitekey = '0x4AAAAAACS2SzpYBFytHb_E'; }), /real-assistant FAIL: the assistant probe used sitekey 0x4AAAAAACS2SzpYBFytHb_E/],
+    ['assistant probe without the dummy token', set((f) => { f.probe.record.dummyToken = false; }), /real-indexing FAIL: the assistant probe did not send the always-pass dummy token/],
+    ['receipt generation not ready', set((f) => { f.receipt.generationState = 'failed'; }), /real-indexing FAIL: .*receipt generation is not ready/],
   ];
   if (DUMMY_TOKEN !== 'XXXX.DUMMY.TOKEN.XXXX') throw new Error('dummy token constant changed');
   for (const [name, { inject, restore }, expect] of cases) await mutant(`real: ${name}`, 'real-evidence.mjs judgeReal', { check, inject, restore, expect });

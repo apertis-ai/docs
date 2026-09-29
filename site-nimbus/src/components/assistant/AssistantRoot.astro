@@ -99,6 +99,18 @@
   .aa-msg[data-role='assistant'] { border: 1px solid var(--aa-border); }
   .aa-msg[data-state='error'] { border-color: #fca5a5; background: #fef2f2; color: #991b1b; }
   .aa-msg a { color: var(--aa-accent); }
+  .aa-msg[data-role='assistant']:not([data-state='error']) { white-space: normal; }
+  .aa-msg > :is(p, ol, ul, pre, blockquote, h4, .aa-table) { margin: 0 0 8px; }
+  .aa-msg > :is(p, ol, ul, pre, blockquote, h4, .aa-table):last-of-type { margin-bottom: 0; }
+  .aa-msg :is(ol, ul) { padding-left: 20px; }
+  .aa-msg h4 { font-size: 14px; }
+  .aa-msg code { padding: 1px 4px; border-radius: 4px; background: #f1f5f9; font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .aa-msg pre { padding: 8px 10px; border-radius: 6px; background: #f1f5f9; overflow-x: auto; white-space: pre; }
+  .aa-msg pre code { padding: 0; background: none; }
+  .aa-msg blockquote { padding-left: 10px; border-left: 3px solid var(--aa-border); color: var(--aa-muted); }
+  .aa-table { overflow-x: auto; }
+  .aa-msg table { border-collapse: collapse; font-size: 13px; }
+  .aa-msg :is(th, td) { padding: 4px 8px; border: 1px solid var(--aa-border); text-align: left; }
   .aa-note { display: block; margin-top: 6px; color: #b45309; font-size: 12px; white-space: normal; }
   .aa-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; white-space: normal; }
   .aa-sources a { padding: 2px 8px; border: 1px solid var(--aa-border); border-radius: 999px; font-size: 12px; text-decoration: none; }
