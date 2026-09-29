@@ -30,6 +30,7 @@ const opts = (name) => { const out = []; for (let v; (v = opt(name)) !== undefin
 const sha = opt('sha');
 const preview = opt('preview')?.replace(/\/$/, '');
 const perfFiles = opts('perf');
+const perfFullFiles = opts('perf-full');
 const mutantsFile = opt('mutants');
 const receiptFile = opt('indexer-receipt');
 const generationEnvironment = opt('generation-environment');
@@ -203,6 +204,17 @@ const CUSTOM = {
     r.steps[0].result = fixtures.map((f) => ({ path: f.path, status: f.status, anchors: f.anchors?.length ?? 0, pass: !failed.has(f.path) }));
     return r;
   },
+  // #13 full corpus: every inventory route, not just the 26 tagged `poc` (228/228, `pocCoverageLimits`
+  // does not apply outside the PoC scope). Reuses the same gate, only the `--scope` flag is dropped.
+  fixturesFull() {
+    const r = exitStep('route-fixtures-full', process.execPath, ['scripts/nimbus/route-fixtures.mjs', 'check', preview ?? ''], ROOT, {}, ['preview']);
+    if (!r.steps.length) return r;
+    const log = fs.readFileSync(path.join(artifacts, r.steps[0].log), 'utf8');
+    const failed = new Set([...log.matchAll(/^- (\S+?): /gm)].map((m) => m[1]));
+    const fixtures = JSON.parse(fs.readFileSync(path.join(ROOT, 'migration/nimbus/route-fixtures.json'), 'utf8')).routes;
+    r.steps[0].result = fixtures.map((f) => ({ path: f.path, status: f.status, anchors: f.anchors?.length ?? 0, pass: !failed.has(f.path) }));
+    return r;
+  },
   guard: () => exitStep('activation-guard', process.execPath, ['scripts/check-developer-activation.mjs'], ROOT),
   typecheck: () => exitStep('typecheck', 'npm', ['run', 'typecheck'], SITE),
   search() {
@@ -217,12 +229,39 @@ const CUSTOM = {
     step.result = { passed, of: r.rows.length, keyboardFocus: r.keyboardFocus, retyped: r.retyped, failing: r.rows.filter((x) => !x.pass).map((x) => ({ q: x.q, top3: x.top3 })) };
     return { status: ok ? 'PASS' : 'FAIL', reason: `${passed}/${expected} PoC queries in the top 3, keyboardFocus ${r.keyboardFocus}`, steps: [step] };
   },
+  // #13 full corpus: all 24 queries (`search-queries.json`), not just the 14 tagged `poc`. Ranking over
+  // the wider corpus is a separate repair (#9); this entry may legitimately FAIL until that lands.
+  searchFull() {
+    const why = missing(['preview', 'playwright']);
+    if (why.length) return { status: 'BLOCKED', reason: why.map((w) => WHY[w]).join('; '), steps: [] };
+    const { step, stdout } = exec('search-full', process.execPath, ['scripts/nimbus/measure.mjs', 'search', preview], ROOT);
+    let r;
+    try { r = JSON.parse(stdout); } catch { return { status: 'FAIL', reason: 'measure.mjs search produced no result', steps: [step] }; }
+    const passed = r.rows.filter((x) => x.pass).length;
+    const expected = JSON.parse(fs.readFileSync(path.join(ROOT, 'migration/nimbus/search-queries.json'), 'utf8')).queries.length;
+    const ok = step.exitCode === 0 && r.rows.length === expected && passed === expected && r.keyboardFocus === true;
+    step.result = { passed, of: r.rows.length, keyboardFocus: r.keyboardFocus, retyped: r.retyped, failing: r.rows.filter((x) => !x.pass).map((x) => ({ q: x.q, top3: x.top3 })) };
+    return { status: ok ? 'PASS' : 'FAIL', reason: `${passed}/${expected} full-corpus queries in the top 3, keyboardFocus ${r.keyboardFocus}`, steps: [step] };
+  },
   perf() {
     if (!perfFiles.length) return { status: 'BLOCKED', reason: 'no paired-perf result supplied (--perf); run scripts/nimbus/paired-perf.mjs', steps: [] };
     const merged = path.join(artifacts, 'paired-perf-merged.json');
     const { step, log } = exec('paired-perf-gate', process.execPath, ['scripts/nimbus/paired-perf.mjs', 'gate', ...perfFiles.map((f) => path.resolve(f)), '--build-id', manifest.buildId, '--out', merged], ROOT);
     const r = JSON.parse(fs.readFileSync(merged, 'utf8'));
     step.inputsSha256 = perfFiles.map((f) => sha256(fs.readFileSync(f)));
+    step.result = { pages: r.pages.length, samples: r.samples.length, gated: r.gates.length, withinBudget: r.gates.filter((g) => g.pass).length, failures: r.failures.map(redact), window: [r.startedAt, r.finishedAt] };
+    return { status: step.exitCode === 0 ? 'PASS' : 'FAIL', reason: log.trim().split('\n').at(-1), steps: [step] };
+  },
+  // #13 full corpus (`--set full`, `budgets.json` `fullCorpus`). `paired-perf.mjs gate` already fails
+  // closed with "no recorded byte baseline" while `fullCorpus.baseline` is null, so this is BLOCKED
+  // (no --perf-full supplied) or FAIL (supplied but ungated) until that baseline is recorded; it can
+  // never PASS before then, with no special-casing needed here.
+  perfFull() {
+    if (!perfFullFiles.length) return { status: 'BLOCKED', reason: 'no full-corpus paired-perf result supplied (--perf-full); run scripts/nimbus/paired-perf.mjs ... --set full', steps: [] };
+    const merged = path.join(artifacts, 'paired-perf-full-merged.json');
+    const { step, log } = exec('paired-perf-gate-full', process.execPath, ['scripts/nimbus/paired-perf.mjs', 'gate', ...perfFullFiles.map((f) => path.resolve(f)), '--build-id', manifest.buildId, '--set', 'full', '--out', merged], ROOT);
+    const r = JSON.parse(fs.readFileSync(merged, 'utf8'));
+    step.inputsSha256 = perfFullFiles.map((f) => sha256(fs.readFileSync(f)));
     step.result = { pages: r.pages.length, samples: r.samples.length, gated: r.gates.length, withinBudget: r.gates.filter((g) => g.pass).length, failures: r.failures.map(redact), window: [r.startedAt, r.finishedAt] };
     return { status: step.exitCode === 0 ? 'PASS' : 'FAIL', reason: log.trim().split('\n').at(-1), steps: [step] };
   },
@@ -245,8 +284,14 @@ const CUSTOM = {
     const receipt = path.join(artifacts, 'indexer-dry-run.json');
     const { step } = exec('indexer-dry-run', process.execPath, ['indexer/index.ts', '--environment', 'preview', '--dry-run', '--receipt', receipt], ROOT);
     const r = JSON.parse(fs.readFileSync(receipt, 'utf8'));
+    // An invalid manifest plan (PlanError) is a real, reportable outcome, not a harness bug: the
+    // receipt then carries only {ok:false, error, problems}, with no documents/items/chunks at all.
+    if (!r.ok || !r.documents) {
+      step.result = { receiptSha256: sha256(fs.readFileSync(receipt)), error: r.error, problems: r.problems };
+      return { status: 'FAIL', reason: `${r.error ?? 'indexer dry run did not produce a valid receipt'}${r.problems?.length ? `: ${r.problems.join('; ')}` : ''}`, steps: [step] };
+    }
     const rag = manifest.documents.filter((d) => d.eligibility.rag).length;
-    const ok = step.exitCode === 0 && r.ok && r.buildId === manifest.buildId && r.documents.planned === rag && r.documents.planned + r.documents.excluded === manifest.documents.length && r.items.length === rag;
+    const ok = step.exitCode === 0 && r.buildId === manifest.buildId && r.documents.planned === rag && r.documents.planned + r.documents.excluded === manifest.documents.length && r.items.length === rag;
     step.result = { receiptSha256: sha256(fs.readFileSync(receipt)), buildId: r.buildId, planned: r.documents.planned, excluded: r.documents.excluded, chunks: r.chunks.planned };
     return { status: ok ? 'PASS' : 'FAIL', reason: `${r.items.length} items, ${r.documents.excluded} excluded, ${r.chunks.planned} chunks planned for ${r.buildId}`, steps: [step] };
   },
