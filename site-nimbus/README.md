@@ -403,6 +403,20 @@ CI=1 npm run build && npm test && npm run test:dist
 - **`sitemap.xml`:** phase 2 writes it. It holds the canonical URL of every published HTML route:
   the 79 publish-eligible manifest entries plus `/search`.
 
+### Cold content cache (build determinism)
+
+Nimbus writes `_nimbus/shiki.css` only for the code blocks Shiki highlights during the current build.
+A page rendered from Astro's content-layer cache (`node_modules/.astro/data-store.json`) can therefore
+reference `nb-shiki-*` classes that the stylesheet lacks. Its code tokens then render uncoloured, and a
+warm checkout builds different bytes than a fresh clone.
+
+This was observed on `/getting-started/quick-start/`, `/help/error-codes/` and
+`/installation/scripts/`.
+
+- `publication()` deletes the data store in `astro:config:setup` for every `astro build`, so every
+  build is cold.
+- Phase 2 fails the build when a page uses an undefined Shiki class (`shikiClassErrors`).
+
 ### Retired placeholder routes
 
 Per the [decision on #4](https://github.com/apertis-ai/docs/issues/4#issuecomment-5881882328), the 23
@@ -421,7 +435,7 @@ all `false`, and their fixtures expect 404.
 
 - **Source freeze SHA** (`sourceSha`): `d9aefa377ff99dbea3c094504ffbed9f99305a9f`. This is the last
   commit touching the legacy roots.
-- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.091e6e74079f`.
+- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.829dc1810e68`.
 - **Documents:** 79 manifest documents: 78 docs with Markdown artifacts, and `page:index`.
 
 ### Full-corpus gates

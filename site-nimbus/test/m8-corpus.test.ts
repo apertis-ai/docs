@@ -8,7 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { buildHashOf, convertDocument, decodeEntities, readInventory } from '../converter/convert.ts';
-import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
+import { RETIRED_TARGET, publicationFiles, shikiClassErrors } from '../converter/integration.ts';
 import { buildNavigation, pageNavigation } from '../src/components/shell/navigation.ts';
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
 import type { InventoryRoute, RouteInventory } from '../src/contracts/navigation.ts';
@@ -114,4 +114,18 @@ test('the full sidebars render from the manifest: every sidebar row is converted
     assert.equal(first.prev, null);
     assert.equal(last.next, null);
   }
+});
+
+test('a page using a Shiki class missing from _nimbus/shiki.css is reported (uncoloured code tokens)', () => {
+  const out = tmp();
+  fs.mkdirSync(path.join(out, '_nimbus'));
+  fs.mkdirSync(path.join(out, 'a'));
+  fs.writeFileSync(path.join(out, '_nimbus/shiki.css'), '.nb-shiki-aaa111{--shiki-light:#000}.nb-shiki-bbb222{--shiki-light:#111}\n');
+  fs.writeFileSync(path.join(out, 'a/index.html'), '<pre><span class="nb-shiki-aaa111">x</span><span class="nb-shiki-bbb222">y</span></pre>');
+  fs.writeFileSync(path.join(out, 'index.html'), '<main>no code</main>');
+  assert.deepEqual(shikiClassErrors(out), []);
+  fs.writeFileSync(path.join(out, 'a/index.html'), '<pre><span class="nb-shiki-aaa111">x</span><span class="nb-shiki-ccc333">z</span></pre>');
+  assert.deepEqual(shikiClassErrors(out), ['dist: a/index.html uses nb-shiki-ccc333, not defined in _nimbus/shiki.css']);
+  fs.rmSync(path.join(out, '_nimbus/shiki.css'));
+  assert.equal(shikiClassErrors(out).length, 1);
 });
