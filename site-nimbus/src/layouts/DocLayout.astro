@@ -1,13 +1,20 @@
 ---
 // The one page frame for every manifest document: sidebar (from the inventory `sidebar` fields),
-// breadcrumbs, page actions, the body in <article>, prev/next and the table of contents, inside
-// BaseLayout (head, navbar, drawer, footer, AssistantRoot). The Props below are the interface #7's
-// routes render against and must stay compatible. Everything but the body stays outside <article>.
+// breadcrumbs, the <article> (page header, mobile "On this page", body), prev/next and the table of
+// contents, inside BaseLayout (head, navbar, drawer, footer, AssistantRoot). The Props below are the
+// interface #7's routes render against and must stay compatible.
+// Reading layout (#8): the page header (category tag, the body's H1, description, meta row with the page
+// actions) opens the <article>, because the search index takes each page's title from the <h1> in
+// <article> (src/search/index-build.ts). Header chrome carries data-pagefind-ignore; the View link gets
+// its href from the client only, so the article's static links stay the body's links.
 import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
 import PageActions from '../components/shell/PageActions.astro';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
+import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
+import { getEntry } from 'astro:content';
+import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import type { RouteInventory } from '../contracts/navigation.ts';
 import { manifest } from '../manifest/manifest.ts';
@@ -28,6 +35,13 @@ interface Props {
 const { doc, buildId, headings = [] } = Astro.props;
 const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
 const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
+// Converter output (never git at build time): last legacy commit author date and reading time.
+const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
+if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
+const entry = await getEntry('docs', doc.servedPath.slice(1, -1));
+const header = pageHeaderParts(await Astro.slots.render('default'), entry?.data.description);
+const category = nav?.trail[0];
+const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 ---
 <BaseLayout doc={doc} buildId={buildId} nav={nav}>
   <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
@@ -44,15 +58,29 @@ const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
           </ol>
         </nav>
       )}
-      {hasToc && (
-        <details class="toc-mobile">
-          <summary>On this page</summary>
-          <Toc headings={headings} />
-        </details>
-      )}
-      {doc.markdown && <PageActions markdownPath={doc.markdown.path} />}
       <article class="docs-content">
-        <slot />
+        <header class="doc-header">
+          {category && <p class="doc-header__tag" data-pagefind-ignore>{category}</p>}
+          <Fragment set:html={header.h1} />
+          {header.description && (
+            <p class="doc-header__desc" data-pagefind-ignore={header.description.indexed ? undefined : 'all'} set:html={header.description.html} />
+          )}
+          <div class="doc-header__meta" data-pagefind-ignore="all">
+            <dl class="doc-meta">
+              <div><dt>Updated</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
+              <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
+            </dl>
+            {doc.markdown && <PageActions markdownPath={doc.markdown.path} />}
+          </div>
+        </header>
+        {hasToc && (
+          <details class="toc-mobile" data-pagefind-ignore="all">
+            <summary aria-expanded="false">On this page<Fragment set:html={chevron} /></summary>
+            <Toc headings={headings} />
+          </details>
+        )}
+        <hr class="doc-header__rule" />
+        <Fragment set:html={header.body} />
       </article>
       {nav && (nav.prev || nav.next) && (
         <nav class="pagination" aria-label="Docs pages">
@@ -65,6 +93,9 @@ const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
       <aside class="doc-page__toc" aria-label="On this page">
         <p class="doc-page__toc-title">On this page</p>
         <Toc headings={headings} />
+        <div class="toc-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="toc-progress__bar"><span class="toc-progress__fill"></span></span><span class="toc-progress__value">0%</span>
+        </div>
       </aside>
     )}
   </div>

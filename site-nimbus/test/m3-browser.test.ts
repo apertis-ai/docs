@@ -82,7 +82,8 @@ test('light is the default, prefers-color-scheme is ignored, and the switch pers
   assert.equal(await theme(), 'dark');
   await page.goto(base + '/', { waitUntil: 'load' });
   assert.equal(await theme(), 'dark');
-  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(18, 18, 18)');
+  // Reading layout (#8): the dark token --bg #1b1a17 (was the legacy #121212).
+  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(27, 26, 23)');
   await page.reload();
   assert.equal(await theme(), 'dark');
   await page.click('.navbar__right [data-theme-toggle]');
@@ -252,38 +253,41 @@ test('code blocks are full width and their tokens are coloured in both themes', 
   await context.close();
 });
 
-test('admonitions carry the legacy per-type styling in both themes', { skip }, async () => {
+test('admonitions carry per-type token styling in both themes', { skip }, async () => {
   const { context, page } = await open('/installation/claude-code/');
-  // Legacy Infima mapping: note->secondary, tip->success, info->info, warning/caution->warning, danger->danger.
-  const border: Record<string, string> = {
-    note: 'rgb(59, 130, 246)', tip: 'rgb(34, 197, 94)', info: 'rgb(6, 182, 212)',
-    warning: 'rgb(245, 158, 11)', caution: 'rgb(245, 158, 11)', danger: 'rgb(239, 68, 68)',
-  };
-  const title: Record<string, [string, string]> = {
-    note: ['rgb(71, 71, 72)', 'rgb(253, 253, 254)'], tip: ['rgb(0, 49, 0)', 'rgb(230, 246, 230)'],
-    info: ['rgb(25, 60, 71)', 'rgb(238, 249, 253)'], warning: ['rgb(77, 56, 0)', 'rgb(255, 248, 230)'],
-    caution: ['rgb(77, 56, 0)', 'rgb(255, 248, 230)'], danger: ['rgb(75, 17, 19)', 'rgb(255, 235, 236)'],
-  };
+  // Reading layout (#8) replaces the legacy Infima gradients: a panel with a hairline, a 3px stripe in the
+  // type colour and a mono uppercase title in the same colour. note, tip, info, warning = caution, danger.
+  const tokenOf: Record<string, string> = { note: 'note', tip: 'tip', info: 'info', warning: 'warning', caution: 'warning', danger: 'danger' };
   assert.ok((await page.$$('article aside.admonition')).length >= 2, 'the page has converted admonitions');
   await page.evaluate((types: string[]) => {
     const art = document.querySelector('article')!;
     for (const t of types) art.insertAdjacentHTML('beforeend', `<aside class="admonition admonition-${t}" data-probe><p class="admonition-title">${t}</p><p>Body</p></aside>`);
-  }, Object.keys(border));
-  for (const [i, theme] of ['light', 'dark'].entries()) {
+  }, Object.keys(tokenOf));
+  for (const theme of ['light', 'dark']) {
     await page.evaluate((t: string) => { document.documentElement.dataset.theme = t; }, theme);
     const got = await page.$$eval('aside[data-probe]', (els: HTMLElement[]) => els.map((el) => {
-      const cs = getComputedStyle(el);
-      return [el.className.replace('admonition admonition-', ''), cs.borderLeftColor, cs.borderLeftWidth, cs.backgroundImage !== 'none',
-        getComputedStyle(el.querySelector('.admonition-title')!).color, getComputedStyle(el.querySelector('.admonition-title')!).textTransform];
+      const cs = getComputedStyle(el), title = getComputedStyle(el.querySelector('.admonition-title')!);
+      const probe = document.createElement('i');
+      document.body.append(probe);
+      const token = (name: string) => { probe.style.color = `var(${name})`; return getComputedStyle(probe).color; };
+      const type = el.className.replace('admonition admonition-', '');
+      const r = { type, stripe: cs.borderLeftColor, width: cs.borderLeftWidth, bg: cs.backgroundColor, image: cs.backgroundImage,
+        title: title.color, transform: title.textTransform, font: title.fontFamily, panel: token('--panel'),
+        tokens: Object.fromEntries(['note', 'tip', 'info', 'warning', 'danger'].map((t) => [t, token(`--adm-${t}`)])) };
+      probe.remove();
+      return r;
     }));
-    for (const [type, color, width, gradient, titleColor, transform] of got) {
-      assert.deepEqual([color, width, gradient, titleColor, transform], [border[type], '4px', true, title[type][i], 'uppercase'], `${theme} ${type}`);
+    for (const g of got) {
+      const want = g.tokens[tokenOf[g.type]];
+      assert.deepEqual([g.stripe, g.width, g.bg, g.image, g.title, g.transform], [want, '3px', g.panel, 'none', want, 'uppercase'], `${theme} ${g.type}`);
+      assert.match(g.font, /monospace/, `${theme} ${g.type} title font`);
     }
+    assert.equal(new Set(got.map((g: { stripe: string }) => g.stripe)).size, 5, `${theme}: five distinct type colours`);
   }
   await context.close();
 });
 
-test('wide tables scroll inside the content column and keep legacy column sizing', { skip }, async () => {
+test('wide tables scroll inside the content column and size columns to their content', { skip }, async () => {
   const { context, page } = await open('/api/text-generation/messages/', { viewport: { width: 1100, height: 900 } });
   const tables = () => page.$$eval('article table', (ts: HTMLElement[]) => ts.map((t) => {
     const a = t.closest('article')!.getBoundingClientRect(), r = t.getBoundingClientRect();
@@ -297,9 +301,13 @@ test('wide tables scroll inside the content column and keep legacy column sizing
   const first = await page.$eval('article table', (t: HTMLElement) => ({
     width: Math.round(t.getBoundingClientRect().width), cols: [...t.querySelector('tr')!.children].map((c) => Math.round(c.getBoundingClientRect().width)),
   }));
-  // Legacy build at 1440: 792 px wide, columns 104/69/617 (its X-Timeout cell wraps the same way).
+  // At 1440 the table fills the 792 px content column (tables may use the full column; prose stops at the
+  // measure). Reading layout (#8) restyles the cells (mono header labels), so the legacy pixel sizes
+  // (104/69/617) no longer hold; what they stood for does: auto layout, where the short Header and Type
+  // columns shrink to their content and the description column takes the rest.
   assert.ok(Math.abs(first.width - 792) <= 2, `table width ${first.width}`);
-  [104, 69, 617].forEach((w, i) => assert.ok(Math.abs(first.cols[i] - w) <= 6, `column ${i}: ${first.cols[i]} vs ${w}`));
+  assert.equal(first.cols.length, 3);
+  assert.ok(first.cols[0] < 140 && first.cols[1] < 100 && first.cols[2] > 0.7 * first.width, `columns ${first.cols}`);
   const mobile = await open('/api/text-generation/messages/', MOBILE);
   assert.ok(await mobile.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no page overflow at 390');
   assert.ok((await mobile.page.$$eval('article table', (ts: HTMLElement[]) => ts.map((t) => t.scrollWidth > t.clientWidth))).some(Boolean));
@@ -348,6 +356,174 @@ test('prev/next only link converted pages', { skip }, async () => {
   const hrefs = await page.$$eval('.pagination a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
   assert.ok(hrefs.length > 0);
   for (const h of hrefs) assert.ok(served.has(h!), `${h} has no manifest entry`);
+  await context.close();
+});
+
+// ---- #8 reading layout (openspec docs-shell-interfaces "Reading layout and page header") ----
+const QS = '/getting-started/quick-start/';
+const pageMeta = (): Record<string, { updated: string; readingMinutes: number }> =>
+  JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/content/docs/page-meta.json'), 'utf8'));
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const shownDate = (iso: string) => { const [y, m, d] = iso.slice(0, 10).split('-').map(Number); return `${MONTHS[m - 1]} ${d}, ${y}`; };
+
+/** Top edges, in document order, of the page-header parts and what follows them. */
+const layout = (page: { evaluate: Function }) => page.evaluate(() => {
+  const q = (sel: string) => document.querySelector<HTMLElement>(sel);
+  const top = (el: Element | null) => (el && (el as HTMLElement).offsetParent !== null ? Math.round(el.getBoundingClientRect().top + scrollY) : null);
+  const hr = q('article .doc-header__rule')!;
+  const firstBody = hr.nextElementSibling;
+  return {
+    navbarBottom: Math.round(q('.navbar')!.getBoundingClientRect().bottom),
+    breadcrumbs: top(q('.breadcrumbs')), tag: top(q('article .doc-header__tag')), h1: top(q('article .doc-header h1')),
+    desc: top(q('article .doc-header__desc')), meta: top(q('article .doc-meta')), actions: top(q('article .doc-header .page-actions')),
+    toc: top(q('article .toc-mobile')), rule: top(hr), body: top(firstBody),
+    actionsBottom: Math.round(q('article .page-actions')!.getBoundingClientRect().bottom), metaBottom: Math.round(q('article .doc-meta')!.getBoundingClientRect().bottom),
+    ruleWidth: Math.round(hr.getBoundingClientRect().width), articleWidth: Math.round(q('article')!.getBoundingClientRect().width),
+    firstBodyText: firstBody?.textContent?.trim() ?? '',
+  };
+});
+
+test('every document page opens with the header block: tag, title, description, meta and actions, then a hairline', { skip }, async () => {
+  const { context, page } = await open(QS);
+  const doc = liveManifest().documents.find((d) => d.servedPath === QS)!;
+  const meta = pageMeta()[doc.id];
+  const text = (sel: string) => page.$eval(sel, (e: HTMLElement) => e.innerText.trim());
+  assert.equal(await text('article .doc-header__tag'), 'GETTING STARTED'); // CSS uppercases the inventory label
+  assert.equal(await page.$eval('article .doc-header__tag', (e: HTMLElement) => e.textContent), 'Getting Started');
+  assert.equal(await text('article .doc-header h1'), 'Quick Start');
+  const desc = await text('article .doc-header__desc');
+  assert.equal(desc, 'Get up and running with the Apertis API in under 5 minutes.');
+  assert.deepEqual(await page.$$eval('article .doc-meta dt', (d: HTMLElement[]) => d.map((e) => e.textContent)), ['Updated', 'Reading time']);
+  assert.deepEqual(await page.$$eval('article .doc-meta dd', (d: HTMLElement[]) => d.map((e) => e.textContent)), [shownDate(meta.updated), `${meta.readingMinutes} min`]);
+  assert.equal(await page.getAttribute('article .doc-meta time', 'datetime'), meta.updated);
+  const l = await layout(page);
+  assert.ok(l.tag! < l.h1! && l.h1! < l.desc! && l.desc! < l.meta! && l.meta! < l.rule! && l.rule! < l.body!, JSON.stringify(l));
+  // Desktop: the page actions share the meta row; the hairline spans the content column.
+  assert.ok(l.actions! < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
+  assert.equal(l.ruleWidth, l.articleWidth);
+  assert.equal(l.toc, null, 'the mobile TOC disclosure is hidden on desktop');
+  // The description moved out of the lead paragraph, so the body does not repeat it.
+  assert.ok(!l.firstBodyText.startsWith(desc.slice(0, 20)), `body repeats the description: ${l.firstBodyText}`);
+  assert.equal(await page.$$eval('article p', (ps: HTMLElement[]) => ps.filter((p) => p.textContent!.includes('Get up and running')).length), 1);
+  // Search indexes the title and body, not the header chrome.
+  assert.deepEqual(await page.$$eval('article .doc-header > *', (els: HTMLElement[]) => els.map((e) => [e.className || e.tagName, e.hasAttribute('data-pagefind-ignore')])),
+    [['doc-header__tag', true], ['H1', false], ['doc-header__desc', false], ['doc-header__meta', true]]);
+  // No category (the API overview has an empty sidebar trail) and no sidebar at all: no tag, the rest stays.
+  for (const p of ['/api/', '/help/ideas/']) {
+    await page.goto(base + p, { waitUntil: 'load' });
+    assert.equal(await page.$('article .doc-header__tag'), null, p);
+    assert.equal(await page.$$eval('article .doc-header h1', (h: Element[]) => h.length), 1, p);
+    assert.ok((await text('article .doc-header__desc')).length > 10, p);
+    assert.ok(await page.isVisible('article .doc-meta'), p);
+  }
+  await context.close();
+});
+
+test('on a phone the title block comes first, then the page actions and the "On this page" disclosure', { skip }, async () => {
+  const { context, page } = await open(QS, MOBILE);
+  const l = await layout(page);
+  // Below the navbar: breadcrumb, then tag, title, description and meta, then actions, disclosure, hairline, body.
+  assert.ok(l.breadcrumbs! >= l.navbarBottom && l.breadcrumbs! < l.tag!, JSON.stringify(l));
+  const order = [l.tag, l.h1, l.desc, l.meta, l.actions, l.toc, l.rule, l.body];
+  assert.ok(order.every((y) => y !== null) && order.every((y, i) => i === 0 || y! > order[i - 1]!), JSON.stringify(l));
+  assert.ok(l.actions! >= l.metaBottom, 'actions sit below the meta row');
+  const summary = 'article .toc-mobile > summary';
+  assert.equal(await page.getAttribute(summary, 'aria-expanded'), 'false');
+  assert.ok(await page.$(`${summary} svg`), 'chevron icon');
+  await page.click(summary);
+  await page.waitForFunction((s: string) => document.querySelector(s)!.getAttribute('aria-expanded') === 'true', summary);
+  assert.ok(await page.isVisible('article .toc-mobile .toc a'));
+  await page.click(summary);
+  await page.waitForFunction((s: string) => document.querySelector(s)!.getAttribute('aria-expanded') === 'false', summary);
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no horizontal overflow');
+  await context.close();
+});
+
+test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings clearly above body, code at ~1.7', { skip }, async () => {
+  const { context, page } = await open(CHAT);
+  const t = await page.evaluate(() => {
+    const art = document.querySelector('article.docs-content')!;
+    const cs = (el: Element) => getComputedStyle(el);
+    const p = [...art.querySelectorAll(':scope > p')].find((x) => x.getBoundingClientRect().width > 0)!;
+    const ch = document.createElement('span');
+    ch.style.cssText = 'display:inline-block;width:1ch';
+    p.append(ch);
+    const chPx = ch.getBoundingClientRect().width;
+    ch.remove();
+    const px = (v: string) => parseFloat(v);
+    const pre = art.querySelector('pre')!;
+    return {
+      body: px(cs(p).fontSize), lh: px(cs(p).lineHeight) / px(cs(p).fontSize), measure: px(cs(p).maxWidth) / chPx, pmax: px(cs(p).maxWidth),
+      article: art.getBoundingClientRect().width, pre: pre.getBoundingClientRect().width,
+      h1: [px(cs(art.querySelector('h1')!).fontSize), Number(cs(art.querySelector('h1')!).fontWeight), cs(art.querySelector('h1')!).fontFamily],
+      h2: [px(cs(art.querySelector('h2')!).fontSize), cs(art.querySelector('h2')!).fontFamily],
+      h3: px(cs(art.querySelector('h3')!).fontSize),
+      code: px(cs(pre).lineHeight) / px(cs(pre).fontSize), mono: cs(pre).fontFamily,
+    };
+  });
+  assert.equal(t.body, 17);
+  assert.ok(Math.abs(t.lh - 1.65) < 0.02, `line-height ${t.lh}`);
+  assert.ok(t.measure >= 60 && t.measure <= 70, `measure ${t.measure}ch`);
+  assert.ok(t.pre > t.pmax && Math.abs(t.pre - t.article) <= 1, `code uses the full column: ${t.pre} vs ${t.article}, prose ${t.pmax}`);
+  assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] >= 500 && t.h1[1] <= 600 && /Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
+  assert.ok((t.h2[0] as number) >= 1.3 * t.body && /Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
+  assert.ok(Math.abs(t.code - 1.7) < 0.05, `code line-height ${t.code}`);
+  assert.match(t.mono, /^ui-monospace/);
+  await context.close();
+});
+
+test('every Shiki token class stays >= 4.5:1 on the code panel in both themes', { skip }, async () => {
+  const { context, page } = await open(CHAT);
+  const classes = [...new Set((await (await fetch(`${base}/_nimbus/shiki.css`)).text()).match(/nb-shiki-[a-z0-9]+/g))];
+  assert.ok(classes.length > 10, `${classes.length} token classes`);
+  await page.evaluate((cls: string[]) => {
+    const pre = document.querySelector('article pre.astro-code')!.cloneNode(false) as HTMLElement;
+    pre.dataset.probe = '';
+    pre.innerHTML = `<code><span class="line">${cls.map((c) => `<span class="${c}">tok</span>`).join(' ')}</span></code>`;
+    document.querySelector('article')!.append(pre);
+  }, classes);
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate((t: string) => { document.documentElement.dataset.theme = t; }, theme);
+    const low = await page.evaluate(() => {
+      // Resolve any CSS colour (rgb, oklch from the relative-colour clamp) through a canvas pixel.
+      const ctx = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d', { willReadFrequently: true })!;
+      const rgb = (c: string) => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = c; ctx.fillRect(0, 0, 1, 1); return [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3); };
+      const lum = (c: number[]) => { const [r, g, b] = c.map((v) => v / 255).map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+      const ratio = (a: number[], b: number[]) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+      const pre = document.querySelector<HTMLElement>('pre[data-probe]')!;
+      const bg = rgb(getComputedStyle(pre).backgroundColor);
+      return [...pre.querySelectorAll('.line > span')].map((s) => [s.className, Math.round(ratio(rgb(getComputedStyle(s).color), bg) * 100) / 100] as const).filter(([, r]) => r < 4.5);
+    });
+    assert.deepEqual(low, [], `${theme}: token classes under 4.5:1`);
+  }
+  await context.close();
+});
+
+test('the TOC reading progress moves with the page, shifts nothing, never scrolls, and respects reduced motion', { skip }, async () => {
+  const { context, page } = await open(CHAT);
+  const state = () => page.evaluate(() => {
+    const aside = document.querySelector('.doc-page__toc')!.getBoundingClientRect();
+    const v = document.querySelector<HTMLElement>('.toc-progress__value')!;
+    return { value: v.textContent, now: document.querySelector('.toc-progress')!.getAttribute('aria-valuenow'), width: v.getBoundingClientRect().width,
+      title: document.querySelector('.doc-page__toc-title')!.getBoundingClientRect().top, aside: aside.width, y: scrollY };
+  });
+  const top = await state();
+  assert.equal(await page.textContent('.doc-page__toc-title'), 'On this page');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.doc-page__toc-title')!).textTransform), 'uppercase');
+  assert.deepEqual([top.value, top.now], ['0%', '0']);
+  const middle = await page.evaluate(() => { scrollTo(0, (document.documentElement.scrollHeight - innerHeight) / 2); return scrollY; });
+  await page.waitForFunction(() => !['0%', '100%'].includes(document.querySelector('.toc-progress__value')!.textContent!));
+  const mid = await state();
+  assert.equal(mid.y, middle, 'the progress never moves the page');
+  assert.ok(Math.abs(mid.width - top.width) < 0.5 && mid.aside === top.aside && mid.title === top.title, 'no layout shift in the rail');
+  await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForFunction(() => document.querySelector('.toc-progress__value')!.textContent === '100%');
+  // Glyphs: every TOC entry is drawn with the tree glyph.
+  assert.equal(await page.$eval('.doc-page__toc .toc a', (a: Element) => getComputedStyle(a, '::before').content), '"└"');
+  const reduced = await open(CHAT, { ...DESKTOP, reducedMotion: 'reduce' });
+  assert.equal(await reduced.page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
+  assert.notEqual(await page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
+  await reduced.context.close();
   await context.close();
 });
 
