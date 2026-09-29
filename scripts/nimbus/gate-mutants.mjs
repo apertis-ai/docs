@@ -258,7 +258,8 @@ async function policy() {
 async function preflight() {
   const ref = 'abcdefghijklmnopqrst', prodRef = 'zyxwvutsrqponmlkjihg';
   const good = {
-    TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_HOST: 'nimbus-isolated.example.org.', GEN_ENV: 'preview', PREVIEW_GEN_ENV: 'preview',
+    TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_HOST: 'nimbus-isolated.example.org.',
+    ALWAYS_PASS_TARGET_URL: 'https://nimbus-isolated-always-pass.example.org/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'nimbus-isolated-always-pass.example.org', GEN_ENV: 'preview', PREVIEW_GEN_ENV: 'preview',
     ACTIVATE: 'true', ALREADY_ACTIVE: 'false', SUPABASE_URL: `https://${ref}.supabase.co`, DATABASE_URL: `postgresql://postgres.${ref}:x@aws-0-us-east-1.pooler.supabase.com:6543/postgres`,
     NIMBUS_PRODUCTION_PROJECT_REF: prodRef,
   };
@@ -277,6 +278,10 @@ async function preflight() {
     ['generation environment differs from the preview', set({ PREVIEW_GEN_ENV: 'staging' }), /differs from the preview/],
     ['neither activation nor confirmation', set({ ACTIVATE: 'false', ALREADY_ACTIVE: 'false' }), /activate_generation or an explicit/],
     ['http target', set({ TARGET_URL: 'http://nimbus-isolated.example.org/' }), /must be https/],
+    ['always-pass host not the allowlisted host', set({ ALWAYS_PASS_TARGET_URL: 'https://other.example.org/' }), /always_pass_target_url host is not the allowlisted NIMBUS_ISOLATED_ALWAYS_PASS_HOST/],
+    ['always-pass target is production', set({ ALWAYS_PASS_TARGET_URL: 'https://docs.apertis.ai/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'docs.apertis.ai' }), /always_pass_target_url host docs.apertis.ai is a production host/],
+    ['always-pass preview is the real-key preview', set({ ALWAYS_PASS_TARGET_URL: 'https://nimbus-isolated.example.org/', NIMBUS_ISOLATED_ALWAYS_PASS_HOST: 'nimbus-isolated.example.org' }), /must be a different host/],
+    ['always-pass target unset', set({ ALWAYS_PASS_TARGET_URL: '' }), /always_pass_target_url is not a URL/],
   ];
   for (const [name, { inject, restore }, expect] of cases) await mutant(`preflight: ${name}`, 'isolated-preflight.mjs', { check, inject, restore, expect });
 }
