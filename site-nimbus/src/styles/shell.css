@@ -68,11 +68,12 @@ button { font: inherit; color: inherit; }
   padding-inline: var(--gutter);
 }
 
-/* Document pages keep the full-width sidebar/content/TOC grid (below); there the header and footer share
-   that grid's outer edges instead: the sidebar's content left (40 px) and the TOC's content right. */
+/* Document pages keep the sidebar/content/TOC grid (below); there the header and footer share that grid's
+   outer edges instead: the sidebar's content left (40 px) and the TOC's content right. Beyond the frame
+   width the grid, header and footer are centred together (canary review step 3). */
 [data-frame='docs'] .shell-container {
   max-width: calc(var(--sidebar-width) + 828px + 273px);
-  margin-left: 0;
+  margin-inline: auto;
   padding-left: 40px;
   padding-right: 20px;
 }
@@ -175,7 +176,7 @@ button { font: inherit; color: inherit; }
 }
 .doc-page--sidebar {
   grid-template-columns: var(--sidebar-width) minmax(0, 828px) 273px; /* also [data-frame='docs'] above */
-  justify-content: start;
+  justify-content: center;
 }
 
 .doc-page__sidebar {

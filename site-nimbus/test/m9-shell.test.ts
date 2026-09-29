@@ -432,3 +432,32 @@ test('homepage link labels use sentence case (canary step 2): only the first wor
   assert.ok(labels.includes('Chat completions') && labels.includes('Quick start'), 'renamed labels present');
   await context.close();
 });
+
+test('document pages are centred beyond the frame width (canary step 3): at 1920 the header, grid and footer share edges and equal side margins', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', { viewport: { width: 1920, height: 1080 } });
+  const e = await page.evaluate(() => {
+    const r = (el: Element) => el.getBoundingClientRect();
+    const link = document.querySelector('.doc-page__sidebar .sidebar__link')!;
+    const range = document.createRange();
+    range.selectNodeContents(link);
+    const toc = document.querySelector('.doc-page__toc')!;
+    const row = [...document.querySelector('.navbar__inner')!.children].filter((c) => (c as HTMLElement).offsetParent);
+    const sidebar = r(document.querySelector('.doc-page__sidebar')!);
+    return {
+      logo: r(document.querySelector('.navbar .brand')!).left,
+      sidebarText: range.getBoundingClientRect().left,
+      headerRight: r(row[row.length - 1]).right,
+      tocRight: r(toc).right - parseFloat(getComputedStyle(toc).paddingRight),
+      frameLeft: sidebar.left,
+      frameRight: r(toc).right,
+      footerLeft: r(document.querySelector('footer .shell-container')!).left,
+      width: innerWidth - (innerWidth - document.documentElement.clientWidth),
+    };
+  });
+  assert.ok(Math.abs(e.logo - e.sidebarText) <= 1, `logo ${e.logo} vs sidebar text ${e.sidebarText}`);
+  assert.ok(Math.abs(e.headerRight - e.tocRight) <= 1, `header right ${e.headerRight} vs TOC content right ${e.tocRight}`);
+  assert.ok(Math.abs(e.footerLeft - e.frameLeft) <= 1, `footer left ${e.footerLeft} vs frame left ${e.frameLeft}`);
+  assert.ok(Math.abs(e.frameLeft - (e.width - e.frameRight)) <= 2, `side margins ${e.frameLeft} vs ${e.width - e.frameRight}`);
+  assert.ok(e.frameLeft > 200, `the frame is centred, not left-anchored (left ${e.frameLeft})`);
+  await context.close();
+});
