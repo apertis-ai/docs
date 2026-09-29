@@ -62,9 +62,7 @@ const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
         <header class="doc-header">
           {category && <p class="doc-header__tag" data-pagefind-ignore>{category}</p>}
           <Fragment set:html={header.h1} />
-          {header.description && (
-            <p class="doc-header__desc" data-pagefind-ignore={header.description.indexed ? undefined : 'all'} set:html={header.description.html} />
-          )}
+          {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
             <dl class="doc-meta">
               <div><dt>Updated</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>

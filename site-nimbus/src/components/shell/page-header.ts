@@ -1,20 +1,21 @@
 // Page header (#8 reading layout): splits the rendered body into its H1 and the rest, and picks the
 // one-sentence description. Build-time only; works on the Markdown renderer's HTML string.
 //
-// Description rule (openspec docs-shell-interfaces "Reading layout and page header"):
+// Description rule (openspec docs-shell-interfaces "Reading layout and page header", lead review of
+// 65cc9b1):
 // - front-matter `description` when present (the body is untouched);
-// - else the first sentence of the first top-level paragraph with text:
-//   - when that paragraph is the lead (the first block after the H1), the sentence MOVES into the
-//     header, so the body does not repeat it; the rest of the paragraph stays (or it is removed when
-//     nothing is left). Links and code stay intact because the split is only in top-level text;
-//   - when the body opens with something else (code, a heading, a list), the sentence is COPIED, and
-//     the header copy is kept out of the search index so the text is indexed once.
+// - else the first sentence of the body's OPENING block, only when that block is a prose paragraph.
+//   The sentence MOVES into the header, so the body does not repeat it; the rest of the paragraph stays
+//   (or the paragraph is removed when nothing is left). Links and code stay intact because the split is
+//   only in top-level text;
+// - a sentence ending with ':' or shorter than 4 words is rejected; a later paragraph is never borrowed;
+// - otherwise there is no description (DocLayout renders no element for it).
 
 export interface PageHeaderParts {
   /** The body's H1 element, verbatim (id, icon image and inline markup kept). */
   h1: string;
-  /** Description HTML, or null when the page has no prose paragraph and no front-matter description. */
-  description: { html: string; indexed: boolean } | null;
+  /** Description HTML, or null when neither front matter nor the opening paragraph qualifies. */
+  description: string | null;
   /** The body without the H1 (and without the moved sentence). */
   body: string;
 }
@@ -74,17 +75,19 @@ export function pageHeaderParts(html: string, frontDescription?: string): PageHe
   if (!m) throw new Error('page header: the rendered body must start with its <h1> (converter/convert.ts guarantees one)');
   const h1 = m[1];
   const body = html.slice(m[0].length);
-  if (frontDescription) return { h1, description: { html: escapeHtml(frontDescription), indexed: true }, body };
-  const p = topLevelParagraphs(body).find(([, , s, e]) => text(body.slice(s, e)) !== '');
-  if (!p) return { h1, description: null, body };
+  if (frontDescription) return { h1, description: escapeHtml(frontDescription), body };
+  const none = { h1, description: null, body };
+  const p = topLevelParagraphs(body)[0];
+  if (!p || body.slice(0, p[0]).trim() !== '') return none; // the opening block is not a paragraph
   const [start, end, innerStart, innerEnd] = p;
   const inner = body.slice(innerStart, innerEnd);
   const cut = firstSentenceEnd(inner);
   const sentence = inner.slice(0, cut).trim();
-  if (body.slice(0, start).trim() !== '') return { h1, description: { html: sentence, indexed: false }, body };
+  const words = text(sentence).split(/\s+/).filter(Boolean);
+  if (words.length < 4 || text(sentence).endsWith(':')) return none;
   const rest = inner.slice(cut).trim();
   const lead = rest ? `${body.slice(start, innerStart)}${rest}${body.slice(innerEnd, end)}` : '';
-  return { h1, description: { html: sentence, indexed: true }, body: body.slice(0, start) + lead + body.slice(end) };
+  return { h1, description: sentence, body: body.slice(0, start) + lead + body.slice(end) };
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

@@ -420,6 +420,16 @@ test('every document page opens with the header block: tag, title, description, 
     assert.ok((await text('article .doc-header__desc')).length > 10, p);
     assert.ok(await page.isVisible('article .doc-meta'), p);
   }
+  // No qualifying description (the body opens with code; later paragraphs are never borrowed): no element
+  // and no gap, the meta row follows the title at its usual distance.
+  await page.goto(base + CHAT, { waitUntil: 'load' });
+  assert.equal(await page.$('article .doc-header__desc'), null);
+  const gap = await page.evaluate(() => {
+    const h1 = document.querySelector('article .doc-header h1')!.getBoundingClientRect();
+    const meta = document.querySelector<HTMLElement>('article .doc-header__meta')!;
+    return { gap: Math.round(meta.getBoundingClientRect().top - h1.bottom), margin: parseFloat(getComputedStyle(meta).marginTop) };
+  });
+  assert.equal(gap.gap, Math.round(gap.margin), JSON.stringify(gap));
   await context.close();
 });
 
@@ -532,7 +542,9 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
 });
 
 test('no GitHub raw or other-release requests and no uncaught page errors', { skip }, () => {
-  // Google Fonts (inherited from legacy) and #9's Turnstile script, loaded when the Ask surface opens.
-  assert.deepEqual(external.filter((u) => !/^https:\/\/(fonts\.(googleapis|gstatic)\.com|challenges\.cloudflare\.com\/turnstile\/)/.test(u)), []);
+  // Google Fonts (inherited from legacy) and #9's Turnstile, loaded when the Ask surface opens: its script
+  // and its own challenge-platform requests, all on the one provider host the legacy site uses.
+  const allowed = new Set(['fonts.googleapis.com', 'fonts.gstatic.com', 'challenges.cloudflare.com']);
+  assert.deepEqual(external.filter((u) => { const url = new URL(u); return url.protocol !== 'https:' || !allowed.has(url.host); }), []);
   assert.deepEqual(errors, []);
 });
