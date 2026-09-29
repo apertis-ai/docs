@@ -12,7 +12,7 @@ import { manifest } from '../src/manifest/manifest.ts';
 import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
-import { mainTextSha256, readInventory } from '../converter/convert.ts';
+import { mainTextSha256 } from '../converter/convert.ts';
 import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -133,8 +133,7 @@ test('no simulated or canned Ask Docs answer path ships (baseline defect 6)', ()
 });
 
 // ---- #7 conversion and publication manifest (run after `npm run build`) ----
-// The converter's read: live titles decoded (#5 recorded raw <title> HTML such as `&amp;`).
-const routes: InventoryRoute[] = readInventory(path.dirname(root));
+const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
 

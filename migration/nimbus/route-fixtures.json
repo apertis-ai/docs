@@ -2410,7 +2410,8 @@
     {
       "path": "/intro.md",
       "scope": "full",
-      "status": 404
+      "status": 200,
+      "note": "Introduced under the publication contract: clean Markdown artifact of default:intro (#13)."
     },
     {
       "path": "/llms.txt",
@@ -2487,7 +2488,8 @@
     {
       "path": "/search-index.json",
       "scope": "full",
-      "status": 200
+      "status": 404,
+      "note": "Legacy search-plugin artifact; the inventory row allows its absence and the candidate does not emit it (#13)."
     },
     {
       "path": "/security/best-practices",

@@ -193,6 +193,17 @@ test('canonicalUrl and title must equal the inventory live observation', () => {
   assert.ok(check(t).some((e) => e.includes('api:index') && e.includes('title')));
 });
 
+test('title compares against the rendered text of the recorded <title> (#5 kept raw HTML such as &amp;)', () => {
+  const row = inventory.find((r) => r.documentId === 'api:sdks/python-sdk/reasoning')!;
+  assert.match(row.live!.title!, /&amp;/);
+  const raw = row.live!.title!.replace(' | Apertis Documentation', '');
+  const decoded = raw.replace(/&amp;/g, '&');
+  const at = (title: string) => validateManifest({ ...validManifest(), documents: [{ ...validManifest().documents[1], id: row.documentId!, sourcePath: row.sourcePath!, servedPath: `${row.path}/`, canonicalUrl: row.live!.canonical!, eligibility: row.eligibility, title }] }, { inventory, outDir: outDir() })
+    .filter((e) => e.includes('title'));
+  assert.deepEqual(at(decoded), []);
+  assert.ok(at(raw).length === 1);
+});
+
 test('malformed manifests are reported, never thrown', () => {
   const bad: unknown[] = [
     null, 42, [], {},
