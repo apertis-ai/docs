@@ -18,8 +18,12 @@ afterEach(() => { globalThis.fetch = realFetch })
 test('dry run over the real #7 manifest and build: every rag-eligible document, canonical URLs, no credentials, no I/O', async () => {
   assert.ok(existsSync(DIST), 'site-nimbus/dist is missing: run `cd site-nimbus && npm run build` first')
   const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'))
+  // The corpus size is not pinned here: #13 widened the PoC's 11 rag-eligible documents to the
+  // full corpus. What must hold at any corpus size is that the receipt accounts for exactly the
+  // manifest's rag-eligible documents and excludes exactly the rest, checked below.
   const rag = manifest.documents.filter((d: any) => d.eligibility.rag)
-  assert.equal(rag.length, 11)
+  const excluded = manifest.documents.filter((d: any) => !d.eligibility.rag)
+  assert.ok(rag.length > 0, 'manifest has no rag-eligible documents')
 
   let fetches = 0
   globalThis.fetch = (async () => { fetches++; throw new Error('no network in a dry run') }) as typeof fetch
@@ -34,8 +38,8 @@ test('dry run over the real #7 manifest and build: every rag-eligible document, 
   assert.equal(r.buildId, manifest.buildId)
   assert.equal(r.sourceSha, manifest.sourceSha)
   assert.equal(r.generationId, null)
-  assert.deepEqual(r.documents, { planned: 11, pending: 0, complete: 0, failed: 0, excluded: 1 })
-  assert.deepEqual(r.excluded, ['page:index'])
+  assert.deepEqual(r.documents, { planned: rag.length, pending: 0, complete: 0, failed: 0, excluded: excluded.length })
+  assert.deepEqual(r.excluded, excluded.map((d: any) => d.id))
   assert.deepEqual(
     r.items.map((i: any) => [i.id, i.urlPath, i.contentSha256]),
     rag.map((d: any) => [d.id, new URL(d.canonicalUrl).pathname, d.markdown.sha256]),

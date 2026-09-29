@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto'
 
 /** Part of the embedding-cache identity: bump it whenever the chunk text for the same input can change. */
-export const CHUNKER_VERSION = 'm6-chunker-1'
+export const CHUNKER_VERSION = 'm6-chunker-2'
 export const MAX_CHARS = 1500
 
 export interface Chunk {
@@ -25,14 +25,23 @@ export const sha256 = (s: string | Uint8Array): string => createHash('sha256').u
 /** The same normalization is applied before chunking and hashing, so equal text gives equal hashes. */
 export const normalize = (s: string): string => s.normalize('NFC').replace(/\r\n?/g, '\n')
 
-/** Rendered text of an ATX heading: links, images, code spans and emphasis reduced to their text. */
+/**
+ * Rendered text of an ATX heading: links, images, code spans and emphasis reduced to their text.
+ * Code-span content is literal (never re-parsed as markdown), so it is pulled out behind a
+ * placeholder before emphasis is stripped and put back verbatim afterwards. Stripping the
+ * backticks first would expose any `_` or `*` inside the span to the emphasis regex below (for
+ * example a two-underscore identifier like `` `invalid_api_key` `` would lose its middle word).
+ */
 export function headingText(raw: string): string {
-  return raw
+  const spans: string[] = []
+  const held = raw
     .replace(/\s+#+\s*$/, '')
+    .replace(/`+([^`]*)`+/g, (_, inner) => `\0${spans.push(inner) - 1}\0`)
+  return held
     .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/`+([^`]*)`+/g, '$1')
     .replace(/(\*\*|__|\*|_|~~)(.+?)\1/g, '$2')
     .trim()
+    .replace(/\0(\d+)\0/g, (_, i) => spans[Number(i)])
 }
 
 /** github-slugger: lower-case, drop punctuation and symbols, spaces to hyphens, dedupe with -1, -2… */
