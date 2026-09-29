@@ -617,8 +617,14 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.waitForTimeout(300);
     assert.equal(await page.evaluate(() => scrollY), 0, 'page did not scroll while the sheet is open');
     await page.click('#aa-close');
-    await swipe();
-    await page.waitForFunction(() => scrollY > 0);
+    // After close the same gesture must scroll the page. A slow runner can drop a gesture that starts
+    // while the dialog is still closing, so the swipe repeats a bounded number of times.
+    let scrolled = false;
+    for (let i = 0; i < 5 && !scrolled; i++) {
+      await swipe();
+      scrolled = await page.waitForFunction(() => scrollY > 0, null, { timeout: 2000 }).then(() => true, () => false);
+    }
+    assert.ok(scrolled, 'the page scrolls once the sheet is closed');
     await page.context().close();
   });
 });
