@@ -37,8 +37,12 @@ The per-isolate in-memory counter keyed by the client-supplied `sessionId` (20 q
 - **THEN** the report states that abuse protection relies on Turnstile and the per-isolate counter only
 
 ### Requirement: Real assistant evidence
-Real assistant evidence SHALL come from a non-localhost hostname with isolated bindings and an isolated retrieval target, and SHALL show the Turnstile token verification, the Jina embedding call, the retrieval result, the streamed frames and the rendered citation for one request. Browser runs on `localhost`, `127.0.0.1` or `::1` with the legacy client never call `/api/ask` and SHALL NOT count. Mocked or fixture-replay results are contract evidence only. Production Ask Docs answers SHALL NOT be used as the parity oracle, because production retrieval serves stale pre-PR #3 content (`legacy-index-writes-fail` in `legacy-rollback.json`).
+Real assistant evidence SHALL come from a non-localhost hostname with isolated bindings and an isolated retrieval target, and SHALL show the Turnstile token verification, the Jina embedding call, the retrieval result, the streamed frames and the rendered citation for one request. Because a real Turnstile widget never issues a token to an automated browser, the two halves MAY be proven on two isolated previews of the same build that read the same generation. Turnstile enforcement is proven on the preview with the real keys: the real sitekey is served, a request without a token is rejected with 400, and a forged token is rejected with 403 through Cloudflare siteverify. The answer is proven on a preview whose only difference is Cloudflare's always-pass test secret; there the test sitekey and the dummy token SHALL be recorded as such. Browser runs on `localhost`, `127.0.0.1` or `::1` with the legacy client never call `/api/ask` and SHALL NOT count. Mocked or fixture-replay results are contract evidence only. Production Ask Docs answers SHALL NOT be used as the parity oracle, because production retrieval serves stale pre-PR #3 content (`legacy-index-writes-fail` in `legacy-rollback.json`).
 
 #### Scenario: Isolated environment unavailable
 - **WHEN** no operator-provisioned isolated bindings exist
 - **THEN** the real-assistant gate is reported BLOCKED, never PASSED
+
+#### Scenario: Turnstile and answer proven on two previews
+- **WHEN** the answer probe runs on the always-pass preview and the enforcement probe on the real-key preview
+- **THEN** the answer entries PASS only with the always-pass test sitekey and the dummy token recorded, and the Turnstile entry PASSes only with a non-test sitekey served, 400 without a token and 403 with siteverify's `invalid-input-response` for a forged token

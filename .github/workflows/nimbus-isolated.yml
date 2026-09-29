@@ -1,8 +1,14 @@
 # Nimbus isolated real-integration path (issue #12). Runs ONLY on explicit dispatch, bound to the
 # `nimbus-isolated` GitHub Environment. That environment must have required reviewers and must restrict
 # deployment branches to protected branches; it holds the isolated project's secrets and the
-# non-secret variables NIMBUS_ISOLATED_HOST and NIMBUS_PRODUCTION_PROJECT_REF. Never runs on pull
-# requests. Fails closed when a secret, a variable or the target is missing or does not match.
+# non-secret variables NIMBUS_ISOLATED_HOST, NIMBUS_ISOLATED_ALWAYS_PASS_HOST and
+# NIMBUS_PRODUCTION_PROJECT_REF. Never runs on pull requests. Fails closed when a secret, a variable or
+# a target is missing or does not match.
+#
+# Two previews serve the same build and read the same generation (operator decision on #12, because a
+# real Turnstile widget never issues a token to an automated browser): the real-key preview proves
+# Turnstile enforcement without a browser token, and the always-pass preview (Cloudflare's test secret)
+# carries the automated end-to-end answer.
 #
 # It exercises what the PR gates cannot: real Turnstile, Jina embeddings, the isolated Supabase
 # project, the #11 generation create/validate/activate in that project, and the real /api/ask on a
@@ -16,7 +22,11 @@ on:
   workflow_dispatch:
     inputs:
       target_url:
-        description: 'Origin of the isolated, operator-configured preview (https; its host must equal vars.NIMBUS_ISOLATED_HOST)'
+        description: 'Origin of the isolated preview with the real Turnstile keys (https; its host must equal vars.NIMBUS_ISOLATED_HOST)'
+        required: true
+        type: string
+      always_pass_target_url:
+        description: 'Origin of the isolated preview with the always-pass Turnstile test secret, same build and generation (https; host must equal vars.NIMBUS_ISOLATED_ALWAYS_PASS_HOST)'
         required: true
         type: string
       generation_environment:
@@ -64,11 +74,13 @@ jobs:
     environment: nimbus-isolated
     env:
       TARGET_URL: ${{ inputs.target_url }}
+      ALWAYS_PASS_TARGET_URL: ${{ inputs.always_pass_target_url }}
       GEN_ENV: ${{ inputs.generation_environment }}
       PREVIEW_GEN_ENV: ${{ inputs.preview_generation_environment }}
       ACTIVATE: ${{ inputs.activate_generation }}
       ALREADY_ACTIVE: ${{ inputs.generation_already_active }}
       NIMBUS_ISOLATED_HOST: ${{ vars.NIMBUS_ISOLATED_HOST }}
+      NIMBUS_ISOLATED_ALWAYS_PASS_HOST: ${{ vars.NIMBUS_ISOLATED_ALWAYS_PASS_HOST }}
       NIMBUS_PRODUCTION_PROJECT_REF: ${{ vars.NIMBUS_PRODUCTION_PROJECT_REF }}
       DATABASE_URL: ${{ secrets.NIMBUS_ISOLATED_DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.NIMBUS_ISOLATED_SUPABASE_URL }}
@@ -79,8 +91,9 @@ jobs:
         with: { fetch-depth: 0, persist-credentials: false }
       - name: fail closed on a missing or mismatched target, project, secret or indexer
         run: |
-          : "${TARGET_URL:?target_url is required}" "${GEN_ENV:?}" "${PREVIEW_GEN_ENV:?}"
+          : "${TARGET_URL:?target_url is required}" "${ALWAYS_PASS_TARGET_URL:?always_pass_target_url is required}" "${GEN_ENV:?}" "${PREVIEW_GEN_ENV:?}"
           : "${NIMBUS_ISOLATED_HOST:?variable NIMBUS_ISOLATED_HOST is missing}"
+          : "${NIMBUS_ISOLATED_ALWAYS_PASS_HOST:?variable NIMBUS_ISOLATED_ALWAYS_PASS_HOST is missing}"
           : "${NIMBUS_PRODUCTION_PROJECT_REF:?variable NIMBUS_PRODUCTION_PROJECT_REF is missing}"
           : "${DATABASE_URL:?secret NIMBUS_ISOLATED_DATABASE_URL is missing}"
           : "${SUPABASE_URL:?secret NIMBUS_ISOLATED_SUPABASE_URL is missing}"
@@ -123,11 +136,12 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/pw" --no-save --no-package-lock "playwright@$PLAYWRIGHT_VERSION"
           "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
-      - name: real Ask Docs, Turnstile and generation-backed retrieval on the isolated preview
+      - name: real Turnstile enforcement, real Ask Docs and generation-backed retrieval on the isolated previews
         env:
           PLAYWRIGHT: ${{ github.workspace }}/scripts/nimbus/playwright-channel.mjs
           PLAYWRIGHT_CHANNEL: bundled
           NIMBUS_ISOLATED_URL: ${{ inputs.target_url }}
+          NIMBUS_ISOLATED_ALWAYS_PASS_URL: ${{ inputs.always_pass_target_url }}
         run: |
           export PLAYWRIGHT_MODULE="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs"
           node scripts/nimbus/acceptance.mjs --sha "$GITHUB_SHA" --only real-assistant,real-turnstile,real-indexing \

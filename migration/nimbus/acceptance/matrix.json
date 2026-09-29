@@ -60,8 +60,8 @@
     { "id": "workflow-policy", "title": "PR gates are least-privileged and non-mutating; the isolated path is dispatch-only and environment-gated", "class": "contract", "steps": [{ "custom": "workflowPolicy" }] },
     { "id": "performance-budgets", "title": "Frozen byte budgets and paired timing budgets, 12 pages x 2 profiles x 5 runs", "class": "local-build", "steps": [{ "custom": "perf" }] },
     { "id": "performance-budgets-full-corpus", "title": "#13: paired timing budgets over the full published page set (--set full); BLOCKED or FAIL, never PASS, until budgets.json fullCorpus.baseline is recorded", "class": "local-build", "steps": [{ "custom": "perfFull" }] },
-    { "id": "real-assistant", "title": "Real Ask Docs: Turnstile, embedding, generation-selected retrieval, streaming, valid citations", "class": "isolated-real", "steps": [{ "custom": "real" }] },
-    { "id": "real-turnstile", "title": "Real Turnstile token accepted by the real handler", "class": "isolated-real", "steps": [{ "custom": "real" }] },
-    { "id": "real-indexing", "title": "Real generation created, validated, and cited by the real assistant", "class": "isolated-real", "steps": [{ "custom": "real" }] }
+    { "id": "real-assistant", "title": "Real Ask Docs on the always-pass preview: widget with the Cloudflare test sitekey, embedding, generation-selected retrieval, streaming, valid citations", "class": "isolated-real", "steps": [{ "custom": "real" }] },
+    { "id": "real-turnstile", "title": "Real Turnstile enforcement on the real-key preview: real sitekey served, no token 400, forged token 403 via siteverify", "class": "isolated-real", "steps": [{ "custom": "real" }] },
+    { "id": "real-indexing", "title": "Real generation created, validated, and cited by the real assistant (always-pass preview)", "class": "isolated-real", "steps": [{ "custom": "real" }] }
   ]
 }

@@ -1,7 +1,8 @@
 // Fail-closed preflight for .github/workflows/nimbus-isolated.yml (issue #12). Reads only the
 // environment, prints no secret value, exits 1 with every reason when the run must not proceed.
 //
-// Required: TARGET_URL, NIMBUS_ISOLATED_HOST (non-secret allowlist, exact host), GEN_ENV,
+// Required: TARGET_URL, NIMBUS_ISOLATED_HOST (non-secret allowlist, exact host), ALWAYS_PASS_TARGET_URL,
+// NIMBUS_ISOLATED_ALWAYS_PASS_HOST, GEN_ENV,
 // PREVIEW_GEN_ENV (the preview's ASK_GENERATION_ENVIRONMENT), ACTIVATE / ALREADY_ACTIVE,
 // DATABASE_URL, SUPABASE_URL (same Supabase project), NIMBUS_PRODUCTION_PROJECT_REF (denied).
 import fs from 'node:fs';
@@ -15,16 +16,23 @@ const host = (h) => String(h ?? '').trim().toLowerCase().replace(/\.$/, '');
 const rollback = JSON.parse(fs.readFileSync(new URL('../../migration/nimbus/legacy-rollback.json', import.meta.url), 'utf8'));
 const production = rollback.pages.domains.map(host);
 const productionPagesDev = production.filter((d) => d.endsWith('.pages.dev'));
-let target = null;
-try { target = new URL(env.TARGET_URL); } catch { failures.push('target_url is not a URL'); }
-if (target) {
-  const h = host(target.hostname);
-  if (target.protocol !== 'https:') failures.push('target_url must be https');
-  if (!env.NIMBUS_ISOLATED_HOST) failures.push('NIMBUS_ISOLATED_HOST is not set');
-  else if (h !== host(env.NIMBUS_ISOLATED_HOST)) failures.push('target host is not the allowlisted NIMBUS_ISOLATED_HOST');
-  if (production.includes(h) || productionPagesDev.some((d) => h.endsWith(`.${d}`)) || h === 'apertis.ai' || h.endsWith('.apertis.ai')) failures.push(`target host ${h} is a production host`);
-  if (/^(localhost|0\.0\.0\.0|127(\.\d+){3}|\[?::1\]?|\[?::\]?)$/.test(h)) failures.push(`target host ${h} is loopback or unspecified`);
+// Two targets (operator decision on #12): the real-key preview (TARGET_URL, NIMBUS_ISOLATED_HOST) and the
+// always-pass test-key preview (ALWAYS_PASS_TARGET_URL, NIMBUS_ISOLATED_ALWAYS_PASS_HOST). Both are checked
+// the same way, and they must be different hosts.
+function checkTarget(name, url, allowedVar) {
+  let t = null;
+  try { t = new URL(url); } catch { failures.push(`${name} is not a URL`); return null; }
+  const h = host(t.hostname);
+  if (t.protocol !== 'https:') failures.push(`${name} must be https`);
+  if (!env[allowedVar]) failures.push(`${allowedVar} is not set`);
+  else if (h !== host(env[allowedVar])) failures.push(`${name} host is not the allowlisted ${allowedVar}`);
+  if (production.includes(h) || productionPagesDev.some((d) => h.endsWith(`.${d}`)) || h === 'apertis.ai' || h.endsWith('.apertis.ai')) failures.push(`${name} host ${h} is a production host`);
+  if (/^(localhost|0\.0\.0\.0|127(\.\d+){3}|\[?::1\]?|\[?::\]?)$/.test(h)) failures.push(`${name} host ${h} is loopback or unspecified`);
+  return h;
 }
+const target = checkTarget('target_url', env.TARGET_URL, 'NIMBUS_ISOLATED_HOST');
+const alwaysPass = checkTarget('always_pass_target_url', env.ALWAYS_PASS_TARGET_URL, 'NIMBUS_ISOLATED_ALWAYS_PASS_HOST');
+if (target && alwaysPass && target === alwaysPass) failures.push('the always-pass preview must be a different host from the real-key preview');
 
 // Generation environment: valid, not production, equal to what the preview reads, and active.
 if (!/^[a-z][a-z0-9-]{0,31}$/.test(env.GEN_ENV ?? '')) failures.push('invalid generation_environment');
@@ -48,4 +56,4 @@ else if ([supabaseRef, databaseRef].includes(env.NIMBUS_PRODUCTION_PROJECT_REF.t
 
 for (const f of failures) console.error(`preflight: ${f}`);
 if (failures.length) process.exit(1);
-console.log(`preflight passed: target ${host(target.hostname)}, generation environment ${env.GEN_ENV}, isolated project confirmed`);
+console.log(`preflight passed: targets ${target} (real keys) and ${alwaysPass} (always-pass test keys), generation environment ${env.GEN_ENV}, isolated project confirmed`);
