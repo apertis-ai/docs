@@ -100,7 +100,14 @@ test('the mobile drawer opens and closes at 390x844 with focus contained and ret
   assert.equal(await page.isVisible('#shell-drawer'), false);
   const noOverflow = () => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
   assert.ok(await noOverflow(), 'no document-wide horizontal overflow');
+  // The drawer is a React island (NavSheet.tsx, client:idle): a click before hydration is handed over and
+  // opens it once hydrated, so wait for it instead of asserting on the same tick.
+  const opened = async () => {
+    await page.locator('#shell-drawer').waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.querySelector('#shell-drawer')!.contains(document.activeElement), null, { timeout: 2000 });
+  };
   await page.click('[data-drawer-open]');
+  await opened();
   assert.equal(await page.isVisible('#shell-drawer'), true);
   assert.equal(await page.getAttribute('[data-drawer-open]', 'aria-expanded'), 'true');
   assert.ok(await page.isVisible('#shell-drawer .sidebar [aria-current="page"]'));
@@ -112,9 +119,11 @@ test('the mobile drawer opens and closes at 390x844 with focus contained and ret
   // The dialog `close` event is queued after Escape; the lock must lift once it fires.
   await page.waitForFunction(() => !document.body.hasAttribute('data-scroll-locked'), null, { timeout: 2000 });
   await page.click('[data-drawer-open]');
+  await opened();
   await page.mouse.click(380, 420); // backdrop, right of the drawer panel
   assert.equal(await page.isVisible('#shell-drawer'), false);
   await page.click('[data-drawer-open]');
+  await opened();
   await page.click('#shell-drawer [data-drawer-close]');
   assert.equal(await page.isVisible('#shell-drawer'), false);
   await page.goto(base + '/', { waitUntil: 'load' });
@@ -228,6 +237,7 @@ test('the drawer really locks page scrolling at 390x844 (wheel and touch)', { sk
   const { context, page } = await open(CHAT, MOBILE);
   const y = () => page.evaluate(() => scrollY);
   await page.click('[data-drawer-open]');
+  await page.locator('#shell-drawer').waitFor({ state: 'visible' }); // a React island: opens once hydrated
   await page.mouse.move(380, 500);
   await page.mouse.wheel(0, 800);
   await page.waitForTimeout(400);
@@ -407,7 +417,8 @@ test('every document page opens with the header block: tag, title, description, 
   const l = await layout(page);
   assert.ok(l.tag! < l.h1! && l.h1! < l.desc! && l.desc! < l.meta! && l.meta! < l.rule! && l.rule! < l.body!, JSON.stringify(l));
   // Desktop: the page actions share the meta row; the hairline spans the content column.
-  assert.ok(await page.$('article .doc-header__meta > .page-actions'), 'the page actions are part of the meta row');
+  // The page actions are a React island: its <astro-island> wrapper (display: contents) sits in between.
+  assert.ok(await page.$('article .doc-header__meta > astro-island > .page-actions'), 'the page actions are part of the meta row');
   assert.ok(l.actions !== null && l.actions < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
   assert.equal(l.ruleWidth, l.articleWidth);
   assert.equal(l.toc, null, 'the mobile TOC disclosure is hidden on desktop');
@@ -447,6 +458,8 @@ test('on a phone the title block comes first, then the page actions and the "On 
   assert.ok(order.every((y) => y !== null) && order.every((y, i) => i === 0 || y! > order[i - 1]!), JSON.stringify(l));
   assert.ok(l.actions! >= l.metaBottom, 'actions sit below the meta row');
   const summary = 'article .toc-mobile > summary';
+  // The disclosure is a React island: it states aria-expanded once hydrated (never before, see the no-JS test).
+  await page.waitForSelector(`${summary}[aria-expanded]`, { state: 'attached' });
   assert.equal(await page.getAttribute(summary, 'aria-expanded'), 'false');
   assert.ok(await page.$(`${summary} svg`), 'chevron icon');
   await page.click(summary);
