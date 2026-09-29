@@ -621,9 +621,13 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await openAsk(page);
     await page.fill('#aa-question', 'hello');
     await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
-    await page.evaluate(() => (window as any).__ts['expired-callback']());
-    assert.equal(await page.isDisabled('#aa-send'), true, 'no sending with an expired token');
-    assert.match(await page.textContent('#aa-ask-status'), /expired/);
+    // Read the state in the same task as the callback: the stub's reset() issues a fresh token 10 ms later.
+    const expired = await page.evaluate(() => {
+      (window as any).__ts['expired-callback']();
+      return { disabled: (document.getElementById('aa-send') as HTMLButtonElement).disabled, status: document.getElementById('aa-ask-status')!.textContent };
+    });
+    assert.equal(expired.disabled, true, 'no sending with an expired token');
+    assert.match(expired.status ?? '', /expired/);
     await page.waitForFunction(() => !(document.getElementById('aa-send') as HTMLButtonElement).disabled);
     await page.evaluate(() => (window as any).__ts['timeout-callback']());
     await page.waitForFunction(() => document.getElementById('aa-ask-status')?.dataset.kind === 'error');
