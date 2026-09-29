@@ -63,8 +63,9 @@ of these change:
 | `gate-mutants` | `gate-mutants.mjs` (below). Afterwards the tree must be clean. | `node scripts/nimbus/gate-mutants.mjs --port <free port>` |
 | `policy` | `acceptance.mjs --only workflow-policy` | same |
 
-In CI the browser checks use Playwright's own Chromium: `PLAYWRIGHT_CHANNEL=bundled` through the
-shim. Playwright `1.63.0` is installed into `$RUNNER_TEMP`, never into the repository.
+In CI the browser checks use Playwright's own full Chromium in new headless mode: `PLAYWRIGHT_CHANNEL=chromium`
+through the shim. The headless shell (`bundled`) cannot synthesize touch scrolling, and the mobile scroll-lock
+check proves that with a control step. Playwright `1.63.0` is installed into `$RUNNER_TEMP`, never into the repository.
 
 ## Isolated real integration (`nimbus-isolated.yml`)
 
