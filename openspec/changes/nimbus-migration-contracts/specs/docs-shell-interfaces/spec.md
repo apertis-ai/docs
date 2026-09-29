@@ -57,7 +57,7 @@ The operator decided on 2026-09-29 (recorded on #4) that the homepage, header an
 **Header.** The header SHALL be about 64 px tall and SHALL have a hairline bottom border. From left to right it contains:
 - the logo and product name;
 - the navbar items from "Preserved reader-facing shell";
-- a compact search trigger that shows the Cmd/Ctrl+K hint;
+- a compact search trigger that shows the Cmd/Ctrl+K hint, except on the homepage, where the hero carries the one search control (the operator accepted this in the canary review on 2026-09-29);
 - the theme switch;
 - Log in, as a quiet action;
 - Create account, as the primary action.
