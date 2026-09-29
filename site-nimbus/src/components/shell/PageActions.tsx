@@ -83,7 +83,7 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
             <ChevronDown className="size-4" aria-hidden="true" />
           </DropdownMenuTrigger>
         </div>
-        <DropdownMenuContent align="end" className="page-actions__menu w-56 data-[state=closed]:animate-none!">
+        <DropdownMenuContent align="end" className="page-actions__menu z-[150] w-56 data-[state=closed]:animate-none!">
           {links.slice(0, 3).map((l) => <DropdownMenuItem key={l.action} asChild className={item}>{anchor(l)}</DropdownMenuItem>)}
           <DropdownMenuSeparator />
           <DropdownMenuItem className={item} data-action="copy-markdown" onSelect={() => void copyMarkdown()}><Copy aria-hidden="true" /><span>Copy as Markdown</span></DropdownMenuItem>
