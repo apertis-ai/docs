@@ -312,7 +312,7 @@ test('wide tables scroll inside the content column and size columns to their con
   // columns shrink to their content and the description column takes the rest.
   assert.ok(Math.abs(first.width - 792) <= 2, `table width ${first.width}`);
   assert.equal(first.cols.length, 3);
-  assert.ok(first.cols[0] < 140 && first.cols[1] < 100 && first.cols[2] > 0.7 * first.width, `columns ${first.cols}`);
+  assert.ok(first.cols[0] >= 40 && first.cols[0] < 140 && first.cols[1] >= 30 && first.cols[1] < 100 && first.cols[2] > 0.7 * first.width, `columns ${first.cols}`);
   const mobile = await open('/api/text-generation/messages/', MOBILE);
   assert.ok(await mobile.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no page overflow at 390');
   assert.ok((await mobile.page.$$eval('article table', (ts: HTMLElement[]) => ts.map((t) => t.scrollWidth > t.clientWidth))).some(Boolean));

@@ -235,7 +235,7 @@ async function runSearch() {
   }
   let list: PagefindResultData[];
   try {
-    const found = await searchWithVariants(q, async (v) => (await pf.search(v))?.results ?? []);
+    const found = await searchWithVariants(q, async (v) => (await pf.search(v))?.results ?? [], () => seq === searchSeq);
     if (seq !== searchSeq) return;
     list = await Promise.all(found.slice(0, MAX_RESULTS).map((r) => r.data()));
   } catch {

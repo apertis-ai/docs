@@ -91,7 +91,12 @@ export function validateManifest(
       }
       const liveTitle = row.live?.title;
       // #5 recorded the raw <title> HTML; the manifest title is the rendered text.
-      const liveText = liveTitle == null ? liveTitle : decodeEntities(liveTitle);
+      let liveText: string | null | undefined = liveTitle;
+      try {
+        liveText = liveTitle == null ? liveTitle : decodeEntities(liveTitle);
+      } catch (e) {
+        errors.push(`${at}: inventory live.title ${JSON.stringify(liveTitle)}: ${(e as Error).message}`);
+      }
       const expectedTitle = liveText?.endsWith(TITLE_SUFFIX) ? liveText.slice(0, -TITLE_SUFFIX.length) : liveText;
       if (d.title !== expectedTitle) errors.push(`${at}: title ${JSON.stringify(d.title)} should be ${JSON.stringify(expectedTitle)}`);
     }

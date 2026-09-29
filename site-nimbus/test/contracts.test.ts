@@ -204,6 +204,14 @@ test('title compares against the rendered text of the recorded <title> (#5 kept 
   assert.ok(at(raw).length === 1);
 });
 
+test('an undecodable recorded title is reported, never thrown', () => {
+  const row = inventory.find((r) => r.documentId === 'api:index')!;
+  const broken = inventory.map((r) => (r === row ? { ...r, live: { ...r.live!, title: 'API &bogus; Reference | Apertis Documentation' } } : r));
+  let errs: string[] = [];
+  assert.doesNotThrow(() => { errs = validateManifest(validManifest(), { inventory: broken, outDir: outDir() }); });
+  assert.ok(errs.some((e) => e.includes('api:index') && e.includes('unknown HTML entity')), errs.join('\n'));
+});
+
 test('malformed manifests are reported, never thrown', () => {
   const bad: unknown[] = [
     null, 42, [], {},

@@ -60,3 +60,13 @@ test('a result that fails to load fails the search instead of being ranked silen
   const broken = { id: 'x', score: 1, data: () => Promise.reject(new Error('fragment aborted')) };
   await assert.rejects(searchWithVariants('api key', async () => [broken]), /fragment aborted/);
 });
+
+test('a superseded search loads no fragments (Pagefind caches and mutates them per page)', async () => {
+  let loads = 0;
+  const hit = (id: string) => ({ id, score: 1, data: async () => { loads++; return { url: `/${id}/`, meta: { title: id } }; } });
+  const ids = (await searchWithVariants('api key', async () => [hit('a'), hit('b')], () => false)).map((r) => r.id);
+  assert.equal(loads, 0);
+  assert.deepEqual(ids, ['a', 'b']);
+  await searchWithVariants('api key', async () => [hit('a'), hit('b')], () => true);
+  assert.equal(loads, 2);
+});

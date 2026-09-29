@@ -43,7 +43,12 @@ function naming(query: string[], page: Awaited<ReturnType<NonNullable<Hit['data'
 }
 
 /** Runs every variant, keeps each page once at its best score, orders by score, then re-ranks the top RERANK. */
-export async function searchWithVariants<R extends Hit>(query: string, run: (q: string) => Promise<R[]>): Promise<R[]> {
+export async function searchWithVariants<R extends Hit>(
+  query: string,
+  run: (q: string) => Promise<R[]>,
+  /** False once a newer keystroke superseded this search: it then loads no fragments (Pagefind caches and mutates them per page). */
+  isCurrent: () => boolean = () => true,
+): Promise<R[]> {
   const best = new Map<string, R>();
   for (const q of queryVariants(query)) {
     for (const r of await run(q)) {
@@ -53,7 +58,7 @@ export async function searchWithVariants<R extends Hit>(query: string, run: (q: 
   }
   const merged = [...best.values()].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   const q = [...new Set(words(query))];
-  if (!q.length) return merged;
+  if (!q.length || !isCurrent()) return merged;
   const top = merged.slice(0, RERANK);
   const named = await Promise.all(top.map(async (r) => (r.data ? naming(q, await r.data()) : 0)));
   const order = top.map((r, i) => ({ r, n: named[i] })).sort((a, b) => b.n - a.n).map((x) => x.r);
