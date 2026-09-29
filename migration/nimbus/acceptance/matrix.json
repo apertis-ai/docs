@@ -19,7 +19,7 @@
       { "suite": "dist", "match": ["HTML and clean Markdown carry the same code blocks", "article links are root-absolute and equal the legacy internal link set", "keeps its inventory heading ids", "entries without Markdown hash their built <main> text"] },
       { "suite": "unit", "match": ["the committed generated output equals a fresh conversion", "converting twice is byte-identical"] } ] },
     { "id": "code-and-asset-rendering", "title": "Code blocks, admonitions, tables and images render", "class": "local-build", "steps": [
-      { "suite": "m3", "match": ["code blocks are full width and their tokens are coloured in both themes", "admonitions carry the legacy per-type styling", "wide tables scroll inside the content column"] },
+      { "suite": "m3", "match": ["code blocks are full width and their tokens are coloured in both themes", "admonitions carry per-type token styling in both themes", "wide tables scroll inside the content column"] },
       { "suite": "dist", "match": ["images resolve in dist"] } ] },
     { "id": "publication-exclusions", "title": "Only eligible manifest entries and referenced assets are public; no internals or secrets", "class": "local-build", "steps": [
       { "suite": "dist", "match": ["every output file derives from a publishable manifest entry", "no source maps, raw MDX, planning material", "the search index holds exactly the publish\\+search-eligible", "the generated manifest validates against dist and is never published", "no environment secret values", "decompressed search index carries no internals"] },
