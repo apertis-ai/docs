@@ -1,7 +1,8 @@
 // Search-relevance and performance measurement for the Docusaurus -> Nimbus migration (issue #5).
 //
 //   PLAYWRIGHT=<path to playwright/index.mjs> node scripts/nimbus/measure.mjs search <baseUrl> [--scope poc|full]
-//   PLAYWRIGHT=<path to playwright/index.mjs> node scripts/nimbus/measure.mjs perf   <baseUrl> [--runs 5] [--page /path/]
+//   PLAYWRIGHT=<path to playwright/index.mjs> node scripts/nimbus/measure.mjs perf   <baseUrl> [--runs 5] [--page /path/] [--set poc|full]
+//   (`--set full` measures budgets.fullCorpus.pages, the #13 full published page set; default is the PoC protocol.pages)
 //
 // Both modes drive the reader-facing surface: search opens with Cmd/Ctrl+K, takes typed input,
 // and navigates with ArrowDown/Enter, so the same protocol measures the legacy site and a
@@ -168,7 +169,10 @@ async function perf() {
   const browser = await chromium.launch({ channel: 'chrome' });
   const out = {};
   for (const profile of Object.keys(budgets.protocol.profiles)) {
-    for (const path of budgets.protocol.pages.filter((x) => !opt('page') || x === opt('page'))) {
+    const set = opt('set', 'poc');
+    if (!['poc', 'full'].includes(set)) throw new Error(`--set ${set}: expected poc or full`);
+    const pages = set === 'full' ? budgets.fullCorpus.pages : budgets.protocol.pages;
+    for (const path of pages.filter((x) => !opt('page') || x === opt('page'))) {
       const samples = [];
       for (let i = 0; i < runs; i++) samples.push(await measurePage(browser, path, profile));
       const med = Object.fromEntries(Object.keys(samples[0]).map((k) => [k, median(samples.map((s) => s[k]))]));
