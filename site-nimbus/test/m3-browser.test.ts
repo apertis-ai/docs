@@ -203,6 +203,9 @@ test('without JavaScript the navigation and landing links still work and no dead
   const { context, page } = await open('/api/', { ...DESKTOP, javaScriptEnabled: false });
   assert.ok(await page.isVisible('.doc-page__sidebar a[href="/api/"]'));
   assert.equal(await page.isVisible('[data-page-actions]'), false);
+  // The mobile TOC disclosure states nothing in ARIA that JavaScript would have to keep current.
+  assert.ok(await page.$('article .toc-mobile > summary'));
+  assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), null);
   await page.goto(base + '/', { waitUntil: 'load' });
   const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
   assert.deepEqual(cards, [
