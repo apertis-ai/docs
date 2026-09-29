@@ -489,14 +489,30 @@ all `false`, and their fixtures expect 404.
   - Every query that contains separator punctuation (anything except letters, digits, whitespace,
     `_` and `-`) is also searched with that punctuation as word breaks. For example,
     `chat/completions` is also searched as `chat completions`.
-  - Literal matches keep their rank, and part matches follow without duplicates.
   - The rule is general: it applies the same way to every query and page. There is no query list,
     no per-page keyword and no index change. Queries without such punctuation (`ANTHROPIC_BASE_URL`,
-    `createApertis`, `ai-sdk-provider`, `base url`) run exactly as before.
+    `createApertis`, `ai-sdk-provider`, `base url`) run as one variant.
   - Proved by `test/m4-query.test.ts`. `test/m4-e2e.test.ts` reproduces the real failure on a
     synthetic index: the target shows the path only inside a URL in code, while another page has the
     literal token.
-- **Ranking:** Pagefind's defaults, not tuned to `search-queries.json`.
+- **Ranking (`src/search/query.ts`, full-corpus repair):** the index keeps Pagefind's default
+  weights (headings weighted, title searchable). Two general rules order the results:
+  - **Variants merge by score.** Each page appears once, at the best Pagefind score any variant gave
+    it. The PoC rule "literal matches rank first" let pages that merely mention a path literally
+    (`chat/completions` in a curl URL) outrank the endpoint's own page on the full corpus.
+  - **The top 10 re-rank by how much of the query names the page.** A query word found in the
+    page's title or URL path counts 1, a word found only in a heading counts ½, divided by the
+    number of query words. Words split on anything but letters and digits, so `base_url` names
+    "base url". Pagefind score breaks ties. This counters Pagefind's prefix matching (`base`
+    matches `base64`, `pip` matches `pipeline`) and pages that mention a term often without being
+    about it.
+  - 10 is the dialog's visible count, whose fragments the dialog loads anyway. Results below the top
+    10 keep their score order and are not loaded. Because the fragments now load before the dialog
+    knows whether a newer keystroke superseded the search, superseded searches also load theirs.
+    The search payload for `api key` rose from 211,347 / 185,975 B (gzip, `/` mobile / an API
+    page) to 230,697 / 230,697 B, within the 626,895 B legacy median.
+  - A fragment that fails to load still fails the search, so the dialog shows its error.
+  - Proved by `test/m4-query.test.ts`, one case per rule, each killed by reverting that rule.
 - **Chrome in the index:** Pagefind already skips `<nav>`. `test:dist` checks that no other link
   label outside `<article>` reaches the index. The check is skipped until #8's shell exists.
 - **Measured result** (`measure.mjs search --scope poc` on the PoC corpus, candidate served locally,
@@ -508,6 +524,14 @@ all `false`, and their fixtures expect 404.
   - The other 13 queries have the same rank as before (1, or 2 for `/v1/messages` and `base url`).
   - The legacy baseline is 7/14.
   - #12 owns the gate.
+- **Measured result on the full corpus** (78 documents, `measure.mjs search`, all 24 queries,
+  candidate served locally):
+  - Before the ranking rules (2c3088e): 20/24, PoC subset 11/14. Failing: `chat/completions`,
+    `/v1/messages`, `base url`, `pip install apertis`.
+  - After them: 24/24, and `--scope poc` 14/14, with `keyboardFocus: true`.
+  - `/v1/messages` and `pip install apertis` now rank the target first. `chat/completions`,
+    `base url`, `api key` and `create API key` rank it second. `streaming`, `embeddings`, `rerank`
+    and `web search` rank it second behind the Python SDK page on the same topic, as before.
 
 ### Dialog and keyboard contract (`src/components/assistant/`)
 
