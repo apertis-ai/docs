@@ -155,9 +155,12 @@ if (tocLinks.length) {
   read();
 }
 
-// Mobile "On this page" disclosure: expose its state on the summary.
+// Mobile "On this page" disclosure: expose its state on the summary (set here, so without JS the
+// native <details> state is the only one).
 for (const d of $$<HTMLDetailsElement>('details.toc-mobile')) {
-  d.addEventListener('toggle', () => d.querySelector('summary')!.setAttribute('aria-expanded', String(d.open)));
+  const sync = () => d.querySelector('summary')!.setAttribute('aria-expanded', String(d.open));
+  d.addEventListener('toggle', sync);
+  sync();
 }
 
 codeCopy();
