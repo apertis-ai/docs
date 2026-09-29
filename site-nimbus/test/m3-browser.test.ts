@@ -399,7 +399,8 @@ test('every document page opens with the header block: tag, title, description, 
   const l = await layout(page);
   assert.ok(l.tag! < l.h1! && l.h1! < l.desc! && l.desc! < l.meta! && l.meta! < l.rule! && l.rule! < l.body!, JSON.stringify(l));
   // Desktop: the page actions share the meta row; the hairline spans the content column.
-  assert.ok(l.actions! < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
+  assert.ok(await page.$('article .doc-header__meta > .page-actions'), 'the page actions are part of the meta row');
+  assert.ok(l.actions !== null && l.actions < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
   assert.equal(l.ruleWidth, l.articleWidth);
   assert.equal(l.toc, null, 'the mobile TOC disclosure is hidden on desktop');
   // The description moved out of the lead paragraph, so the body does not repeat it.
