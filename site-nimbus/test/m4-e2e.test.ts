@@ -610,11 +610,30 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await goto(page, '/');
     await page.evaluate(() => document.body.append(Object.assign(document.createElement('div'), { style: 'height:5000px' })));
     const cdp = await page.context().newCDPSession(page);
-    const swipe = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
-    // Control: the environment must turn this gesture into a page scroll, or "did not scroll while open"
+    // Two ways to swipe: raw touch events through the input pipeline, and the compositor's synthetic
+    // gesture. Which one scrolls depends on the browser build (CI's Linux Chromium ignores the synthetic
+    // gesture), so the control below picks the first that works and every later swipe reuses it.
+    const touchEvents = async () => {
+      const at = (y: number) => [{ x: 195, y, id: 1 }];
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: at(700) });
+      for (let y = 650; y >= 100; y -= 50) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(y) });
+      // Hold before lifting the finger: a release at speed starts a fling that keeps scrolling after
+      // the test resets scrollY.
+      await page.waitForTimeout(150);
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(100) });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+    const gesture = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
+    // Control: the environment must turn a swipe into a page scroll, or "did not scroll while open"
     // below would pass vacuously.
-    await swipe();
-    const control = await page.waitForFunction(() => scrollY > 0, null, { timeout: 5000 }).then(() => true, () => false);
+    let swipe: () => Promise<unknown> = touchEvents;
+    let control = false;
+    for (const candidate of [touchEvents, gesture]) {
+      await page.evaluate(() => scrollTo(0, 0));
+      await candidate();
+      control = await page.waitForFunction(() => scrollY > 0, null, { timeout: 5000 }).then(() => true, () => false);
+      if (control) { swipe = candidate; break; }
+    }
     assert.ok(control, 'control: a touch swipe scrolls the page before the sheet opens (this browser cannot synthesize touch scrolling)');
     await page.evaluate(() => scrollTo(0, 0));
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
