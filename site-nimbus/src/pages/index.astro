@@ -32,7 +32,7 @@ const themes = { light: 'github-light', dark: 'github-dark' } as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
 const quickLinks = [
-  { label: 'Quickstart', href: '/getting-started/quick-start/' },
+  { label: 'Quick start', href: '/getting-started/quick-start/' },
   { label: 'API keys', href: '/authentication/api-keys/' },
   { label: 'API reference', href: '/api/' },
 ];
@@ -41,7 +41,7 @@ const quickLinks = [
 const paths = [
   {
     icon: CodeIcon, title: 'API', description: 'Integrate with our SDK. Compatible with OpenAI and Anthropic client libraries.',
-    links: [['Chat Completion', '/api/text-generation/chat-completions/'], ['Messages API', '/api/text-generation/messages/'], ['Python SDK', '/api/sdks/python-sdk/']],
+    links: [['Chat completions', '/api/text-generation/chat-completions/'], ['Messages API', '/api/text-generation/messages/'], ['Python SDK', '/api/sdks/python-sdk/']],
   },
   {
     icon: Bot, title: 'Coding agents', description: 'Purpose-built for Claude Code, Cursor, Cline, and other coding tools.',
@@ -49,7 +49,7 @@ const paths = [
   },
   {
     icon: CreditCard, title: 'Pricing & plans', description: 'Subscription plans with fixed quota per request, or pay-as-you-go per token.',
-    links: [['Subscription Plans', '/billing/subscription-plans/'], ['Pay As You Go', '/billing/payg/'], ['Rate Limits', '/billing/rate-limits/']],
+    links: [['Subscription plans', '/billing/subscription-plans/'], ['Pay-as-you-go', '/billing/payg/'], ['Rate limits', '/billing/rate-limits/']],
   },
 ];
 
@@ -58,14 +58,14 @@ const journey = [
   {
     step: 'Get started', tiles: [
       { icon: BookOpen, label: 'Introduction', href: '/intro', feature: true },
-      { icon: Rocket, label: 'Quick Start', href: '/getting-started/quick-start/' },
-      { icon: KeyRound, label: 'API Keys', href: '/authentication/api-keys/' },
+      { icon: Rocket, label: 'Quick start', href: '/getting-started/quick-start/' },
+      { icon: KeyRound, label: 'API keys', href: '/authentication/api-keys/' },
       { icon: Layers, label: 'Browse models', href: '/installation/models', feature: true },
     ],
   },
   {
     step: 'Build', tiles: [
-      { icon: CodeIcon, label: 'API Reference', href: '/api', feature: true },
+      { icon: CodeIcon, label: 'API reference', href: '/api', feature: true },
       { icon: SquareTerminal, label: 'Coding agents', href: '/installation/claude-code', feature: true },
       { icon: Zap, label: 'Streaming', href: '/api/text-generation/streaming/' },
       { icon: Play, label: 'Playground', href: 'https://playground.apertis.ai', feature: true, external: true },
@@ -74,9 +74,9 @@ const journey = [
   {
     step: 'Operate', tiles: [
       { icon: CreditCard, label: 'Subscription plans', href: '/billing/subscription-plans', feature: true },
-      { icon: Gauge, label: 'Quota Management', href: '/billing/quota-management/' },
-      { icon: Activity, label: 'Error Codes', href: '/help/error-codes/' },
-      { icon: Shield, label: 'Best Practices', href: '/security/best-practices/' },
+      { icon: Gauge, label: 'Quota management', href: '/billing/quota-management/' },
+      { icon: Activity, label: 'Error codes', href: '/help/error-codes/' },
+      { icon: Shield, label: 'Best practices', href: '/security/best-practices/' },
     ],
   },
 ];
