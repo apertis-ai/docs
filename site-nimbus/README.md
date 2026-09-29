@@ -233,9 +233,10 @@ npm run m2:regenerate   # = node converter/convert.ts (phase 1) && npm run build
 Commit what it changes. Generated files are never edited by hand. A test regenerates them and fails
 on any drift.
 
-**Every committed change to a `site-nimbus` input needs a regenerated manifest.** `buildId` hashes
-every tracked file under `site-nimbus/`, so this applies to the converter, contracts, routes,
-layouts, config, tests, the README and the lockfile. It also applies to the route inventory.
+**Every committed change to a `site-nimbus` build input needs a regenerated manifest.** `buildId`
+hashes every tracked file under `site-nimbus/` except `README.md`, `.gitignore` and `test/**` (#13),
+so this applies to the converter, contracts, routes, layouts, components, styles, config and the
+lockfile. It also applies to the route inventory.
 
 - Run `npm run m2:regenerate` and commit `src/manifest/manifest.json` together with the change.
 - Otherwise the drift test (`test/m2-convert.test.ts`) fails.
@@ -247,7 +248,7 @@ layouts, config, tests, the README and the lockfile. It also applies to the rout
 | `converter/integration.ts` | Phase 2 (Astro integration registered in `astro.config.ts`) |
 | `src/content/docs/<servedPath>index.md` | Render sources: the Nimbus `docs` collection (`src/content.config.ts`) |
 | `src/content/public/**` | Clean Markdown artifacts at `markdown.path`, plus bundled images; copied verbatim into `dist/` |
-| `src/manifest/manifest.json` | Manifest v1 for the 12 PoC documents |
+| `src/manifest/manifest.json` | Manifest v1 for every preserved document (12 at #7, 79 since #13) |
 | `src/pages/[...slug].astro` | One route for every converted document, rendered in `DocLayout` with `headings`. It replaces the `/api/` fixture shell |
 
 Phase 1 wipes its output directories before each run. That way a deleted or renamed source leaves
@@ -348,6 +349,9 @@ The full manifest is a build input only. It is never copied to `dist/`.
   - `migration/nimbus/route-inventory.json`.
   - Generated output (`src/content/**`, `src/manifest/manifest.json`) is excluded. Untracked files
     (such as `.DS_Store` or `.evidence/`) never count.
+  - Files that cannot change `dist/` are excluded (`NOT_BUILD_INPUTS` in `converter/convert.ts`):
+    `README.md`, `.gitignore` and `test/**` (#13). Editing them leaves `buildId` unchanged;
+    `test/m8-corpus.test.ts` proves both directions.
   - Paths are repository-relative, sorted, and each hashed as `path\0bytes\0`.
 
 ### Extending to the full corpus (#13)
@@ -360,6 +364,78 @@ The full manifest is a build input only. It is never copied to `dist/`.
    already hashed by phase 2.
 4. Replace the `/`-only `live.links` parity with full-corpus link and anchor checks. Out-of-PoC
    targets are then in the set, so `pocCoverageLimits` goes away.
+
+## #13 — Full corpus
+
+### Authoring-source ownership
+
+- The legacy sources stay the **single authoring source**: `docs/`, `docs-api/`, `src/pages/`,
+  `static/` and the sidebars. Edit content there, never under `site-nimbus/`.
+- Everything under `src/content/**` and `src/manifest/manifest.json` is **generated**. The drift test
+  (`test/m2-convert.test.ts`) fails on any hand edit, and a `CI=1` build fails on a stale manifest.
+- The route inventory (`migration/nimbus/route-inventory.json`) stays the route and navigation
+  authority. A route changes only through its row and a recorded decision on #4.
+
+### Regenerate the full corpus
+
+Run this in `site-nimbus/` after any legacy content edit (commit it first: `sourceSha` refuses
+uncommitted changes under the legacy roots) or any build-input change:
+
+```sh
+npm run m2:regenerate            # convert every preserved doc/page row, then build (phase 2 finalizes)
+git add src/content src/manifest/manifest.json   # commit the generated output with the change
+CI=1 npm run build && npm test && npm run test:dist
+```
+
+- **Rows converted:** every inventory row with disposition `preserve` and kind `doc`, `page` or
+  `blog-post`: the 78 docs and `page:index`. The PoC `r.poc` filter is gone.
+- **Constructs:** the full corpus needed no new construct. The loud failures listed under #7 still
+  apply, so a new construct in a legacy edit stops the conversion with `file:line: construct`.
+- **Titles:** `readInventory()` decodes the HTML character references #5 recorded in `live.title`
+  (`Reasoning &amp; Extended Thinking`). The converter's title check, the manifest title and phase
+  2's `validateManifest` all read that decoded value. Unknown named entities throw.
+- **Navigation:** both sidebars render entirely from manifest entries. `test/m8-corpus.test.ts`
+  asserts that no sidebar row uses the PoC fallback in `buildNavigation`. The code path remains only
+  for #8's unit fixtures. `listed: false` rows (`/help/ideas`) stay published with no sidebar.
+- **`/search`** (`generated:/search`): `src/pages/search.astro` serves `/search/`. It opens the
+  search dialog on load and passes `?q=` to it. Its identity comes from the inventory row, it is not
+  a manifest document, and it is never indexed.
+- **`sitemap.xml`:** phase 2 writes it. It holds the canonical URL of every published HTML route:
+  the 79 publish-eligible manifest entries plus `/search`.
+
+### Retired placeholder routes
+
+Per the [decision on #4](https://github.com/apertis-ai/docs/issues/4#issuecomment-5881882328), the 23
+`preserve-pending-decision` rows (`/blog/**` with its feeds and stylesheets, `/test`,
+`/markdown-page` and `/404`) have disposition `retired` and a `decision` link. Their eligibility is
+all `false`, and their fixtures expect 404.
+
+- None of them is converted or emitted. They are absent from the manifest, the sitemap, Pagefind and
+  the Markdown artifacts. No `llms*` file is produced at all.
+- `dist/404.html` would still answer `/404` with 200, so phase 2 writes `dist/_redirects`, which
+  rewrites `/404`, `/404/` and `/404.html` to `/__retired`. Nothing serves that path, so Pages
+  answers with the normal 404 page and status 404. Unknown paths keep the normal 404 page.
+- Rollback: restore the rows to `preserve-pending-decision` and regenerate.
+
+### Identity at the end of #13
+
+- **Source freeze SHA** (`sourceSha`): `d9aefa377ff99dbea3c094504ffbed9f99305a9f`. This is the last
+  commit touching the legacy roots.
+- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.091e6e74079f`.
+- **Documents:** 79 manifest documents: 78 docs with Markdown artifacts, and `page:index`.
+
+### Full-corpus gates
+
+- `route-fixtures.mjs check <preview>` with no `--scope`.
+- `measure.mjs search <preview>` with no `--scope` (24 queries).
+- `paired-perf.mjs run|gate --set full` over `budgets.json` `fullCorpus.pages`. The legacy byte
+  baseline for those pages is recorded in the `fullCorpus.baseline` section, and the #5 PoC numbers
+  are unchanged.
+- `test:dist` m8 cases:
+  - the sitemap;
+  - retired routes in no channel;
+  - legacy external links and images kept on every converted page;
+  - internal links and anchors (the existing m2 cases, now over all 78 docs).
 
 ## Search and Ask Docs (#9)
 
