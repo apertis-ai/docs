@@ -146,3 +146,9 @@ test('_nimbus/shiki.css rules are sorted by class, so cold builds are byte-ident
   sortShikiCss(out);
   assert.equal(fs.readFileSync(file, 'utf8'), '@media (x) { .nb-shiki-bb2{} }\n');
 });
+
+test('m8: every generated content file is committable (no .gitignore rule hides generated content)', () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const hidden = execFileSync('git', ['ls-files', '--others', '--ignored', '--exclude-standard', 'src/content'], { cwd: root, encoding: 'utf8' }).trim();
+  assert.equal(hidden, '', `ignored generated content (a clean checkout cannot build):\n${hidden}`);
+});

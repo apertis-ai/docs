@@ -7,3 +7,5 @@ dist/
 .dev.vars
 .dev.vars.*
 .nimbus/
+# The root .gitignore ignores every `scripts/` directory; generated content keeps its own (#13).
+!/src/content/**/scripts/
