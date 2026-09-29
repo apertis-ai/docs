@@ -611,6 +611,12 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.evaluate(() => document.body.append(Object.assign(document.createElement('div'), { style: 'height:5000px' })));
     const cdp = await page.context().newCDPSession(page);
     const swipe = () => cdp.send('Input.synthesizeScrollGesture', { x: 195, y: 200, yDistance: -600, gestureSourceType: 'touch', speed: 2000 });
+    // Control: the environment must turn this gesture into a page scroll, or "did not scroll while open"
+    // below would pass vacuously.
+    await swipe();
+    const control = await page.waitForFunction(() => scrollY > 0, null, { timeout: 5000 }).then(() => true, () => false);
+    assert.ok(control, 'control: a touch swipe scrolls the page before the sheet opens (this browser cannot synthesize touch scrolling)');
+    await page.evaluate(() => scrollTo(0, 0));
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
     await page.locator('dialog[open] #aa-q').waitFor();
     await swipe();
