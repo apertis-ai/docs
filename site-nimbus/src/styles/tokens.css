@@ -1,0 +1,59 @@
+/* Apertis reading-layout tokens (#8, openspec docs-shell-interfaces "Reading layout and page header").
+   One light set (the default) and one dark set, selected only by data-theme on <html> (the shell's theme
+   switch); never by prefers-color-scheme. Contrast is checked by test/m3r-tokens.test.ts:
+   --ink, --body and --desc >= 7:1 on --bg; --muted, --link and the admonition accents >= 4.5:1 on --bg
+   and --panel. Colours are #rrggbb so the test can read them. */
+:root {
+  --bg: #faf8f3;
+  --panel: #f2efe7;
+  --ink: #1c1b18;
+  --body: #34322d;
+  --desc: #4a4740;
+  --muted: #6b675e;
+  --line: rgba(28, 27, 24, 0.14);
+  --line-strong: rgba(28, 27, 24, 0.26);
+  --hover: rgba(28, 27, 24, 0.05);
+  /* Apertis teal: #0d9488 is the brand; links use its darker step to reach 4.5:1 on paper. */
+  --accent: #0f766e;
+  --accent-brand: #0d9488;
+  --accent-soft: rgba(13, 148, 136, 0.1);
+  --link: #0f766e;
+  --on-accent: #ffffff;
+  --error: #b42318;
+  --adm-note: #1d4ed8;
+  --adm-tip: #166534;
+  --adm-info: #0e7490;
+  --adm-warning: #92400e;
+  --adm-danger: #b91c1c;
+  --navbar-bg: rgba(250, 248, 243, 0.88);
+  --shadow: 0 10px 30px rgba(28, 27, 24, 0.1);
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #1b1a17;
+  --panel: #24221e;
+  --ink: #f2efe8;
+  --body: #dcd8cd;
+  --desc: #c4bfb3;
+  --muted: #a39e92;
+  --line: rgba(242, 239, 232, 0.14);
+  --line-strong: rgba(242, 239, 232, 0.26);
+  --hover: rgba(242, 239, 232, 0.06);
+  --accent: #14b8a6;
+  --accent-brand: #14b8a6;
+  --accent-soft: rgba(20, 184, 166, 0.14);
+  --link: #14b8a6;
+  --on-accent: #0b2a26;
+  --error: #fda29b;
+  --adm-note: #93c5fd;
+  --adm-tip: #86efac;
+  --adm-info: #67e8f9;
+  --adm-warning: #fcd34d;
+  --adm-danger: #fca5a5;
+  --navbar-bg: rgba(27, 26, 23, 0.88);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}

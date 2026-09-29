@@ -1,19 +1,30 @@
 ---
 // Emitted as dist/404.html: Pages then answers unknown paths with a real 404 instead of SPA fallback.
+// No shell, as before; only the reading-layout tokens and the reader's stored theme.
 import { TITLE_SUFFIX } from '../contracts/page.ts';
+import '../styles/tokens.css';
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>{'Page Not Found' + TITLE_SUFFIX}</title>
+    <script is:inline>try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
   </head>
   <body>
     <main>
+      <p class="code">404</p>
       <h1>Page Not Found</h1>
       <p><a href="/">Back to the documentation</a></p>
     </main>
   </body>
 </html>
+<style is:global>
+  body { margin: 0; background: var(--bg); color: var(--body); font: 17px/1.65 var(--font); }
+  main { max-width: 68ch; margin: 18vh auto 0; padding: 0 24px; }
+  .code { margin: 0 0 12px; color: var(--muted); font: 500 12px/16px var(--mono); letter-spacing: 0.08em; }
+  h1 { margin: 0 0 12px; color: var(--ink); font-size: 35px; font-weight: 600; line-height: 1.2; }
+  a { color: var(--link); text-underline-offset: 3px; }
+</style>
