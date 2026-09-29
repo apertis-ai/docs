@@ -3,6 +3,8 @@
 //   2. set contentSha256 of every published entry without Markdown (page:index) from its built <main>
 //      (under CI or M2_CHECK=1 a difference fails the build instead: the committed manifest is stale);
 //   3. write sitemap.xml and the retired-route _redirects (publicationFiles);
+//      every build starts from a cleared content-layer cache, and a page that uses a Shiki class
+//      missing from _nimbus/shiki.css fails the build (shikiClassErrors);
 //   4. fail the build unless validateManifest(manifest, { inventory, outDir: dist }) returns [] and
 //      nothing is emitted at /api/ask.
 // No HTML embeds contentSha256 (test:dist checks), so step 2 never invalidates the pages just built:
@@ -54,11 +56,31 @@ export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }
     fs.writeFileSync(path.join(outDir, rel), body);
   }
   const errors = validateManifest(manifest, { inventory, outDir });
+  errors.push(...shikiClassErrors(outDir));
   for (const reserved of ['api/ask', 'api/ask/index.html', 'api/ask.html']) {
     if (fs.existsSync(path.join(outDir, reserved))) errors.push(`dist: ${reserved} shadows the reserved runtime path`);
   }
   if (errors.length) throw new Error(`m2: manifest validation failed:\n${errors.join('\n')}`);
   return log;
+}
+
+/**
+ * Every `nb-shiki-*` class a built page uses must be defined in Nimbus's `_nimbus/shiki.css`, or its
+ * code tokens render uncoloured. Nimbus writes only the classes highlighted during this build, so a
+ * page rendered from Astro's content cache can reference classes the stylesheet lacks (#13 finding;
+ * `publication()` clears that cache before every build).
+ */
+export function shikiClassErrors(outDir: string): string[] {
+  const html = fs.readdirSync(outDir, { recursive: true, withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.html')).map((e) => path.join(e.parentPath, e.name));
+  const css = path.join(outDir, '_nimbus/shiki.css');
+  const defined = new Set(fs.existsSync(css) ? [...fs.readFileSync(css, 'utf8').matchAll(/\.(nb-shiki-[a-z0-9]+)\{/g)].map((m) => m[1]) : []);
+  const errors: string[] = [];
+  for (const file of html) {
+    const missing = [...new Set([...fs.readFileSync(file, 'utf8').matchAll(/\b(nb-shiki-[a-z0-9]+)\b/g)].map((m) => m[1]))].filter((c) => !defined.has(c));
+    if (missing.length) errors.push(`dist: ${path.relative(outDir, file)} uses ${missing.join(', ')}, not defined in _nimbus/shiki.css`);
+  }
+  return errors;
 }
 
 /** Rewrite target for retired routes: a path nothing in dist serves, so Pages answers its 404. */
@@ -94,6 +116,14 @@ export default function publication(): AstroIntegration {
   return {
     name: 'apertis-m2-publication',
     hooks: {
+      // A cold content layer for every build: cached entries skip Shiki, so their token classes
+      // would be missing from _nimbus/shiki.css (shikiClassErrors) and the build would differ
+      // between a fresh clone and a warm checkout.
+      'astro:config:setup': ({ command, config, logger }) => {
+        if (command !== 'build') return;
+        fs.rmSync(new URL('data-store.json', config.cacheDir), { force: true });
+        logger.info('content layer cache cleared for a deterministic build');
+      },
       'astro:build:done': ({ dir, logger }) => {
         const check = Boolean(process.env.CI) || process.env.M2_CHECK === '1';
         for (const line of finalize(fileURLToPath(dir), SITE_ROOT, { check })) logger.info(line);
