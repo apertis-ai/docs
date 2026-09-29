@@ -340,6 +340,9 @@ test('Ask Docs open on a phone: the menu opens the navigation sheet on top, and 
   // Hit-test once the slide-in has finished.
   await page.waitForFunction(() => document.querySelector('#shell-drawer')!.getAnimations().length === 0);
   const top = await page.evaluate(() => {
+    // Radix sets pointer-events: none on everything outside the modal sheet, and hit-testing skips such
+    // elements; let the Ask Docs panel take hits again so this tests the visual stacking.
+    document.getElementById('apertis-assistant')!.style.pointerEvents = 'auto';
     const r = document.querySelector('#shell-drawer')!.getBoundingClientRect();
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     return !!hit && document.querySelector('#shell-drawer')!.contains(hit);
@@ -365,6 +368,10 @@ test('Cmd/Ctrl+K with the navigation sheet open closes the sheet; search is not 
 });
 
 test('the menu button: aria-controls only while the sheet exists; a click before NavSheet hydrates still opens it', { skip }, async () => {
+  // Server-rendered (no JavaScript yet): the sheet does not exist, so nothing to control.
+  const html = await (await fetch(base + '/getting-started/quick-start/')).text();
+  const button = /<button[^>]*data-drawer-open[^>]*>/.exec(html)?.[0] ?? '';
+  assert.ok(button && !/aria-controls/.test(button), `server-rendered menu button: ${button}`);
   const { context, page } = await open('/getting-started/quick-start/', VIEWS[390]);
   assert.equal(await page.getAttribute('[data-drawer-open]', 'aria-controls'), null);
   await page.click('[data-drawer-open]');
