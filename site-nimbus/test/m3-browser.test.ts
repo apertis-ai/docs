@@ -46,6 +46,8 @@ async function open(pathname: string, options: object = DESKTOP) {
   page.on('request', (r: { url(): string }) => { if (!r.url().startsWith(base!)) external.push(r.url()); });
   page.on('pageerror', (e: Error) => errors.push(`${pathname}: ${e.message}`));
   await page.goto(base + pathname, { waitUntil: 'load' });
+  // Layout measurements depend on the web font; on a loaded machine it can arrive after `load`.
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
   return { context, page };
 }
 const opens = (page: { evaluate: Function }) => page.evaluate(() => (window as unknown as { __opens: unknown[] }).__opens);
@@ -545,6 +547,8 @@ test('no GitHub raw or other-release requests and no uncaught page errors', { sk
   // Google Fonts (inherited from legacy) and #9's Turnstile, loaded when the Ask surface opens: its script
   // and its own challenge-platform requests, all on the one provider host the legacy site uses.
   const allowed = new Set(['fonts.googleapis.com', 'fonts.gstatic.com', 'challenges.cloudflare.com']);
-  assert.deepEqual(external.filter((u) => { const url = new URL(u); return url.protocol !== 'https:' || !allowed.has(url.host); }), []);
+  // A `blob:` URL (Turnstile's worker) belongs to the origin that created it: judge that origin.
+  const origin = (u: string) => { const url = new URL(u); return url.protocol === 'blob:' ? new URL(url.pathname) : url; };
+  assert.deepEqual(external.filter((u) => { const url = origin(u); return url.protocol !== 'https:' || !allowed.has(url.host); }), []);
   assert.deepEqual(errors, []);
 });
