@@ -1,10 +1,11 @@
-// Page actions (openspec docs-shell-interfaces "Same-release Markdown actions"): Copy as Markdown and a
-// shadcn DropdownMenu with the AI-tool links, Copy content URL and View as Markdown. Every action uses
+// Page actions (openspec docs-shell-interfaces "Same-release Markdown actions"): a "Copy page" split button
+// (Copy as Markdown) and a shadcn DropdownMenu whose items carry a title and a one-line description, as in
+// the Claude Docs page actions: Copy page, Copy content URL, View as Markdown and the AI-tool links. Every action uses
 // `<this origin><apertis-docs:markdown path>` (page-actions.ts). The menu is non-modal, so the page keeps
 // scrolling; Radix mounts it only while open.
 // Server-rendered hidden: without JavaScript, or before hydration, no dead action is shown.
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Copy, FileText, Link, MessageSquare, Sparkles, SquareArrowOutUpRight, Box } from 'lucide-react';
+import { ArrowUpRight, Box, ChevronDown, Copy, FileText, Link, MessageSquare, Sparkles } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { PAGE_META } from '../../contracts/page.ts';
 import { aiToolUrls, markdownUrl } from './page-actions.ts';
@@ -16,7 +17,7 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
   const [url, setUrl] = useState<string | null | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>(null);
-  const [label, setLabel] = useState('Copy as Markdown');
+  const [label, setLabel] = useState('Copy page');
   const reset = useRef<number | undefined>(undefined);
 
   useEffect(() => {
@@ -25,9 +26,9 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
 
   const report = (message: string, ok: boolean, short?: string) => {
     setStatus({ message, ok });
-    setLabel(short ?? 'Copy as Markdown');
+    setLabel(short ?? 'Copy page');
     clearTimeout(reset.current);
-    if (ok) reset.current = window.setTimeout(() => { setStatus(null); setLabel('Copy as Markdown'); }, 1800);
+    if (ok) reset.current = window.setTimeout(() => { setStatus(null); setLabel('Copy page'); }, 1800);
   };
   const clipboard = async (text: string) => {
     try {
@@ -59,18 +60,22 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
   // No same-origin Markdown URL: no actions at all.
   if (url === null) return null;
   const tools = url ? aiToolUrls(url) : null;
-  const item = 'gap-2.5 text-sm text-foreground';
-  const links = [
-    { action: 'claude', href: tools?.claude, label: 'Ask Claude', Icon: Sparkles },
-    { action: 'chatgpt', href: tools?.chatgpt, label: 'Ask ChatGPT', Icon: MessageSquare },
-    { action: 'cursor', href: tools?.cursor, label: 'Open in Cursor', Icon: Box },
-    { action: 'view', href: url ?? undefined, label: 'View as Markdown', Icon: FileText },
-  ];
-  const anchor = ({ action, href, label, Icon }: (typeof links)[number]) => (
-    <a key={action} data-action={action} href={href} {...ext}>
-      <Icon aria-hidden="true" /><span>{label}</span><SquareArrowOutUpRight className="ml-auto size-3.5" aria-hidden="true" />
-    </a>
+  const item = 'items-start gap-3 py-2 text-foreground';
+  const body = (title: string, desc: string, Icon: typeof Copy, external = false) => (
+    <>
+      <span className="page-actions__icon" aria-hidden="true"><Icon /></span>
+      <span className="grid gap-0.5">
+        <span data-item-title className="flex items-center gap-1 text-sm font-medium">{title}{external && <ArrowUpRight className="size-3.5 text-muted-foreground" aria-hidden="true" />}</span>
+        <span data-item-desc className="text-xs text-muted-foreground">{desc}</span>
+      </span>
+    </>
   );
+  const links = [
+    { action: 'view', href: url ?? undefined, title: 'View as Markdown', desc: 'View this page as plain text', Icon: FileText },
+    { action: 'claude', href: tools?.claude, title: 'Ask Claude', desc: 'Ask questions about this page', Icon: Sparkles },
+    { action: 'chatgpt', href: tools?.chatgpt, title: 'Ask ChatGPT', desc: 'Ask questions about this page', Icon: MessageSquare },
+    { action: 'cursor', href: tools?.cursor, title: 'Open in Cursor', desc: 'Load this page into Cursor', Icon: Box },
+  ];
   return (
     <div className="page-actions" data-page-actions data-ready={url ? '' : undefined}>
       <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
@@ -82,12 +87,14 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
             <ChevronDown className="size-4" aria-hidden="true" />
           </DropdownMenuTrigger>
         </div>
-        <DropdownMenuContent align="end" className="page-actions__menu z-[150] w-56 data-[state=closed]:animate-none!">
-          {links.slice(0, 3).map((l) => <DropdownMenuItem key={l.action} asChild className={item}>{anchor(l)}</DropdownMenuItem>)}
+        <DropdownMenuContent align="end" className="page-actions__menu z-[150] w-72 data-[state=closed]:animate-none!">
+          <DropdownMenuItem className={item} data-action="copy-markdown" onSelect={() => void copyMarkdown()}>{body('Copy page', 'Copy page as Markdown for LLMs', Copy)}</DropdownMenuItem>
+          <DropdownMenuItem className={item} data-action="copy-url" onSelect={() => void copyUrl()}>{body('Copy content URL', 'Copy the Markdown link for this page', Link)}</DropdownMenuItem>
+          <DropdownMenuItem asChild className={item}><a data-action="view" href={links[0].href} {...ext}>{body(links[0].title, links[0].desc, links[0].Icon, true)}</a></DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className={item} data-action="copy-markdown" onSelect={() => void copyMarkdown()}><Copy aria-hidden="true" /><span>Copy as Markdown</span></DropdownMenuItem>
-          <DropdownMenuItem className={item} data-action="copy-url" onSelect={() => void copyUrl()}><Link aria-hidden="true" /><span>Copy content URL</span></DropdownMenuItem>
-          <DropdownMenuItem asChild className={item}>{anchor(links[3])}</DropdownMenuItem>
+          {links.slice(1).map((l) => (
+            <DropdownMenuItem key={l.action} asChild className={item}><a data-action={l.action} href={l.href} {...ext}>{body(l.title, l.desc, l.Icon, true)}</a></DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
       <p className="page-actions__status" role="status" aria-live="polite" data-state={status ? (status.ok ? 'ok' : 'error') : undefined}>{status?.message}</p>

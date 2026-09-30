@@ -197,11 +197,12 @@ test('page actions read the same-origin .md from the page meta and report failur
   const hrefs = await page.$$eval('[role="menu"] a', (as: HTMLAnchorElement[]) => as.map((a) => [a.dataset.action, a.getAttribute('href'), a.target, a.rel]));
   await page.keyboard.press('Escape');
   await page.locator('[role="menu"]').waitFor({ state: 'detached' });
+  // Claude Docs order (canary step 4): View as Markdown with the copy actions, then the AI tools.
   assert.deepEqual(hrefs, [
+    ['view', md, '_blank', 'noopener noreferrer'],
     ['claude', `https://claude.ai/new?q=${prompt}`, '_blank', 'noopener noreferrer'],
     ['chatgpt', `https://chatgpt.com/?hints=search&prompt=${prompt}`, '_blank', 'noopener noreferrer'],
     ['cursor', `https://cursor.com/link/prompt?text=${prompt}`, '_blank', 'noopener noreferrer'],
-    ['view', md, '_blank', 'noopener noreferrer'],
   ]);
   await page.click('.page-actions__toggle');
   const [popup] = await Promise.all([context.waitForEvent('page'), page.click('.page-actions__menu [data-action="view"]')]);
@@ -421,10 +422,11 @@ test('every document page opens with the header block: tag, title, description, 
   assert.equal(await page.getAttribute('article .doc-meta time', 'datetime'), meta.updated);
   const l = await layout(page);
   assert.ok(l.tag! < l.h1! && l.h1! < l.desc! && l.desc! < l.meta! && l.meta! < l.rule! && l.rule! < l.body!, JSON.stringify(l));
-  // Desktop: the page actions share the meta row; the hairline spans the content column.
+  // Desktop: the page actions sit at the right of the title row (the Claude Docs pattern, canary step 4 on
+  // 2026-09-30; m9-shell checks the alignment), above the meta row; the hairline spans the content column.
   // The page actions are a React island: its <astro-island> wrapper (display: contents) sits in between.
-  assert.ok(await page.$('article .doc-header__meta > astro-island > .page-actions'), 'the page actions are part of the meta row');
-  assert.ok(l.actions !== null && l.actions < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
+  assert.ok(await page.$('article .doc-header > .doc-header__actions > astro-island > .page-actions'), 'the page actions have their own header slot');
+  assert.ok(l.actions !== null && l.actionsBottom < l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
   assert.equal(l.ruleWidth, l.articleWidth);
   assert.equal(l.toc, null, 'the mobile TOC disclosure is hidden on desktop');
   // The description moved out of the lead paragraph, so the body does not repeat it.
@@ -432,7 +434,7 @@ test('every document page opens with the header block: tag, title, description, 
   assert.equal(await page.$$eval('article p', (ps: HTMLElement[]) => ps.filter((p) => p.textContent!.includes('Get up and running')).length), 1);
   // Search indexes the title and body, not the header chrome.
   assert.deepEqual(await page.$$eval('article .doc-header > *', (els: HTMLElement[]) => els.map((e) => [e.className || e.tagName, e.hasAttribute('data-pagefind-ignore')])),
-    [['doc-header__tag', true], ['H1', false], ['doc-header__desc', false], ['doc-header__meta', true]]);
+    [['doc-header__tag', true], ['H1', false], ['doc-header__desc', false], ['doc-header__meta', true], ['doc-header__actions', true]]);
   // No category (the API overview has an empty sidebar trail) and no sidebar at all: no tag, the rest stays.
   for (const p of ['/api/', '/help/ideas/']) {
     await page.goto(base + p, { waitUntil: 'load' });

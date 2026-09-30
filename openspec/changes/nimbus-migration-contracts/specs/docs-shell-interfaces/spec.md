@@ -22,7 +22,7 @@ Every published page SHALL expose `<meta name="apertis-docs:id">`, `<meta name="
 - **THEN** the context chip and the next request's `pageContext` name the new page
 
 ### Requirement: Same-release Markdown actions
-Page actions SHALL offer Copy as Markdown, Copy content URL, View as Markdown, Ask Claude (`https://claude.ai/new?q=`), Ask ChatGPT (`https://chatgpt.com/?hints=search&prompt=`) and Open in Cursor (`https://cursor.com/link/prompt?text=`), with prompts `Load the contents of <url> into this chat's context so we can discuss it.`. Every action SHALL use the same deployment's absolute Markdown URL (`<origin><markdown path>`), never GitHub `main` or any other release. A failed Markdown fetch SHALL be reported to the reader instead of silently copying rendered text.
+Page actions SHALL offer Copy as Markdown, Copy content URL, View as Markdown, Ask Claude (`https://claude.ai/new?q=`), Ask ChatGPT (`https://chatgpt.com/?hints=search&prompt=`) and Open in Cursor (`https://cursor.com/link/prompt?text=`), with prompts `Load the contents of <url> into this chat's context so we can discuss it.`. Every action SHALL use the same deployment's absolute Markdown URL (`<origin><markdown path>`), never GitHub `main` or any other release. A failed Markdown fetch SHALL be reported to the reader instead of silently copying rendered text. The actions follow the Claude Docs page-actions pattern (operator, canary review on 2026-09-30): one bordered split button labelled Copy page (Copy as Markdown) with a menu chevron, at the right of the title row on wide screens and after the meta row on a phone; every menu item shows a title and a one-line description.
 
 #### Scenario: Preview deployment
 - **WHEN** a reader on a preview deployment chooses Copy as Markdown
