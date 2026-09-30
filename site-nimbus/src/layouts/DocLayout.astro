@@ -69,8 +69,12 @@ const category = nav?.trail[0];
               <div><dt>Updated</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
             </dl>
-            {doc.markdown && <PageActions client:idle markdownPath={doc.markdown.path} />}
           </div>
+          {doc.markdown && (
+            <div class="doc-header__actions" data-pagefind-ignore="all">
+              <PageActions client:idle markdownPath={doc.markdown.path} />
+            </div>
+          )}
         </header>
         {hasToc && (
           <TocMobile client:visible>

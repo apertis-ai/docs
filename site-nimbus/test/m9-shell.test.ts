@@ -461,3 +461,49 @@ test('document pages are centred beyond the frame width (canary step 3): at 1920
   assert.ok(e.frameLeft > 200, `the frame is centred, not left-anchored (left ${e.frameLeft})`);
   await context.close();
 });
+
+test('page actions follow the Claude Docs pattern (canary step 4): one bordered split button in the title row on desktop, after the meta row on mobile; menu items carry a title and a description', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
+  await page.locator('.page-actions[data-ready]').waitFor();
+  const d = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+    const cs = (s: string) => getComputedStyle(document.querySelector(s)!);
+    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), art = document.querySelector('.docs-content')!;
+    const artRight = art.getBoundingClientRect().right - parseFloat(getComputedStyle(art).paddingRight);
+    return {
+      h1Mid: h1.top + h1.height / 2, splitMid: split.top + split.height / 2, splitRight: split.right, artRight,
+      groupBorder: cs('.page-actions__split').borderTopWidth, primaryBorder: cs('.page-actions__primary').borderTopWidth, toggleBorder: cs('.page-actions__toggle').borderTopWidth,
+      divider: cs('.page-actions__toggle').borderLeftWidth,
+      heights: [r('.page-actions__primary').height, r('.page-actions__toggle').height],
+      label: document.querySelector('[data-copy-label]')!.textContent,
+    };
+  });
+  assert.ok(Math.abs(d.h1Mid - d.splitMid) <= 12, `split button sits in the title row (h1 mid ${d.h1Mid}, split mid ${d.splitMid})`);
+  assert.ok(Math.abs(d.splitRight - d.artRight) <= 1, `split button ends at the content edge (${d.splitRight} vs ${d.artRight})`);
+  assert.equal(d.groupBorder, '1px', 'the group carries the one outer border');
+  assert.deepEqual([d.primaryBorder, d.toggleBorder], ['0px', '0px'], 'the halves have no outer border of their own');
+  assert.equal(d.divider, '1px', 'a hairline divides the halves');
+  assert.equal(d.heights[0], d.heights[1], 'both halves have the same height');
+  assert.equal(d.label, 'Copy page');
+  await page.click('.page-actions__toggle');
+  const items = await page.$$eval('[role=menu] [role=menuitem]', (els: HTMLElement[]) => els.map((e): [string | null | undefined, string | null | undefined] => [e.querySelector('[data-item-title]')?.textContent, e.querySelector('[data-item-desc]')?.textContent]));
+  assert.ok(items.length >= 6 && items.every(([t, s]: (string | null | undefined)[]) => t && s), `every menu item has a title and a description: ${JSON.stringify(items)}`);
+  // A status message floats over the description as an opaque card (canary: it overlapped the text).
+  await page.keyboard.press('Escape');
+  const status = await page.evaluate(() => {
+    const el = document.querySelector<HTMLElement>('.page-actions__status')!;
+    el.textContent = 'Copying is blocked in this browser. Use View as Markdown to open the file instead.';
+    el.dataset.state = 'error';
+    const cs = getComputedStyle(el);
+    return { bg: cs.backgroundColor, position: cs.position, right: el.getBoundingClientRect().right, split: document.querySelector('.page-actions__split')!.getBoundingClientRect().right };
+  });
+  assert.equal(status.position, 'absolute');
+  assert.ok(!/rgba\(0, 0, 0, 0\)|transparent/.test(status.bg), `status card is opaque: ${status.bg}`);
+  assert.equal(Math.round(status.right), Math.round(status.split), 'status card aligns to the button edge');
+  await context.close();
+  const m = await open('/getting-started/quick-start/', VIEWS[390]);
+  await m.page.locator('.page-actions[data-ready]').waitFor();
+  const order = await m.page.evaluate(() => [document.querySelector('.doc-meta')!.getBoundingClientRect().bottom, document.querySelector('.page-actions__split')!.getBoundingClientRect().top]);
+  assert.ok(order[1] >= order[0], `mobile: page actions after the meta row (${order})`);
+  await m.context.close();
+});

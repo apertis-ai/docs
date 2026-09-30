@@ -313,16 +313,14 @@ button { font: inherit; color: inherit; }
 .breadcrumbs a { display: inline-flex; color: var(--muted); }
 .breadcrumbs [aria-current='page'] { color: var(--ink); font-weight: 500; }
 
-/* Page header: category tag, title, description, meta row with the page actions, then a hairline. */
-.doc-header { display: flex; flex-direction: column; align-items: flex-start; }
-.docs-content .doc-header__tag {
-  margin: 0 0 16px;
-  padding: 3px 8px;
-  border: 1px solid var(--line-strong);
-  border-radius: 4px;
-  color: var(--muted);
-  font-size: var(--fs-2xs);
-}
+/* Page header: category tag, title, description, meta row, then a hairline. The page actions follow the
+   meta row in the DOM (the phone order) and sit at the right of the title row on wider screens, as in
+   the Claude Docs page header. */
+.doc-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; justify-items: start; }
+.doc-header > * { grid-column: 1 / -1; }
+.doc-header > h1 { grid-column: 1; }
+.doc-header__actions { grid-column: 2; grid-row: 1; align-self: center; justify-self: end; }
+.doc-header:has(> .doc-header__tag) > .doc-header__actions { grid-row: 2; }
 .docs-content .doc-header h1 { margin: 0; }
 .docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
 .doc-header__meta {
@@ -331,7 +329,7 @@ button { font: inherit; color: inherit; }
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px 32px;
-  width: 100%;
+  justify-self: stretch;
   margin-top: 28px;
 }
 .doc-meta { display: flex; gap: 40px; margin: 0; }
@@ -343,24 +341,63 @@ button { font: inherit; color: inherit; }
 /* Hidden (space kept) until the island is ready: no dead action without JavaScript or before hydration. */
 .page-actions { position: relative; visibility: hidden; }
 .page-actions[data-ready] { visibility: visible; }
-.page-actions__split { display: inline-flex; align-items: center; color: var(--ink); }
+.page-actions__split {
+  display: inline-flex;
+  align-items: stretch;
+  height: 32px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
 .page-actions__primary, .page-actions__toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
-  border: 1px solid var(--line-strong);
-  background: var(--card);
+  border: 0;
+  background: transparent;
   color: inherit;
   cursor: pointer;
   transition: background-color 0.16s ease;
 }
-.page-actions__primary { gap: 8px; padding: 0 12px; border-radius: 6px 0 0 6px; font-size: var(--fs-ui); font-weight: 500; }
-.page-actions__toggle { width: 36px; margin-left: -1px; border-radius: 0 6px 6px 0; }
+.page-actions__primary { gap: 8px; padding: 0 12px; font-size: var(--fs-ui); font-weight: 500; }
+/* Scoped to the split: app.css resets every [data-slot] border (same layer, later, same specificity). */
+.page-actions__split > .page-actions__toggle { width: 32px; border-left: 1px solid var(--line-strong); }
 .page-actions__primary:hover, .page-actions__toggle:hover, .page-actions__toggle[aria-expanded='true'] { background: var(--hover); }
+/* Menu items: an icon tile, then the title and a one-line description. */
+.page-actions__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+}
 /* Keyboard focus in the menu: an ink bar, like the selected search result. */
 .page-actions__menu [role='menuitem']:focus { box-shadow: inset 2px 0 0 var(--ink); }
-.docs-content .page-actions__status { max-width: 360px; margin: 6px 0 0; color: var(--muted); font-size: var(--fs-sm); line-height: 18px; }
+/* The status floats under the split button as a small card, so it never overlaps the description text. */
+.docs-content .page-actions__status {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: 320px;
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.08);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  line-height: 18px;
+}
 .page-actions__status:empty { display: none; }
 .page-actions__status[data-state='error'] { color: var(--error); }
 
@@ -717,9 +754,12 @@ html.aa-scroll-lock { overflow: hidden; }
   .doc-page__sidebar, .doc-page__toc { display: none; }
   .doc-page__main { padding: 20px 20px 48px; }
   [data-frame='docs'] .shell-container { max-width: none; padding-inline: 20px; }
-  .doc-header__meta { flex-direction: column; align-items: stretch; gap: 20px; margin-top: 24px; }
+  .doc-header { display: block; }
+  .doc-header__meta { margin-top: 24px; }
+  .doc-header__actions { margin-top: 20px; }
   .page-actions__split { display: flex; }
   .page-actions__primary { flex: 1; }
+  .docs-content .page-actions__status { position: static; width: auto; }
   .doc-header__rule { margin: 24px 0 28px; }
   :is(.toc-mobile, astro-island:has(> .toc-mobile)) + .doc-header__rule { margin-top: 0; }
   .doc-header { margin-bottom: 20px; }
