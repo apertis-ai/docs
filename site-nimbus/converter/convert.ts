@@ -13,6 +13,7 @@ import { markdownPathFor, type ManifestDocument, type ManifestV1 } from '../src/
 import { MANIFEST_KINDS, type InventoryRoute, type RouteInventory } from '../src/contracts/navigation.ts';
 import { TITLE_SUFFIX } from '../src/contracts/page.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
+import { articleCanonical, articleMarkdown, articlePath, assertNoInventoryCollision, readArticles } from './articles.ts';
 export { decodeEntities };
 
 export const SITE_ROOT = path.resolve(import.meta.dirname, '..');
@@ -363,8 +364,8 @@ export const readInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
   readRawInventory(repoRoot)
     .map((r) => (r.live?.title ? { ...r, live: { ...r.live, title: decodeEntities(r.live.title) } } : r));
 
-export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot) }:
-  { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[] } = {}): ManifestV1 {
+export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot), siteRoot = SITE_ROOT }:
+  { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[]; siteRoot?: string } = {}): ManifestV1 {
   const ctx = { inventory, repoRoot };
   const sourceSha = sourceShaOf(repoRoot);
   const buildId = `${sourceSha}.${buildHashOf(SITE_ROOT, repoRoot)}`;
@@ -411,6 +412,21 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     writeFile(outRoot, `${GENERATED_PUBLIC}${md.path}`, out.clean);
     return { ...base, markdown: md, contentSha256: md.sha256 };
   });
+
+  // Native articles (converter/articles.ts), after the legacy corpus: drafts yield nothing at all.
+  const articles = readArticles(siteRoot);
+  assertNoInventoryCollision(articles, inventory);
+  for (const a of articles.filter((x) => !x.draft)) {
+    const clean = articleMarkdown(a);
+    const canonicalUrl = articleCanonical(a.slug);
+    const md = { path: markdownPathFor(canonicalUrl), sha256: sha256(clean) };
+    writeFile(outRoot, `${GENERATED_PUBLIC}${md.path}`, clean);
+    pageMeta[`blog:${a.slug}`] = { updated: a.date, readingMinutes: readingMinutes(clean) };
+    documents.push({
+      id: `blog:${a.slug}`, sourcePath: a.sourcePath, servedPath: articlePath(a.slug), canonicalUrl, title: a.title,
+      eligibility: { publish: true, search: true, agent: true, rag: true }, markdown: md, contentSha256: md.sha256,
+    });
+  }
 
   writeFile(outRoot, PAGE_META_FILE, `${JSON.stringify(pageMeta, null, 2)}\n`);
   const manifest: ManifestV1 = { manifestVersion: 1, site: 'https://docs.apertis.ai', sourceSha, buildId, documents };

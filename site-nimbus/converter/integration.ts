@@ -17,6 +17,7 @@ import type { AstroIntegration } from 'astro';
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
+import { isNativeArticle } from '../src/contracts/articles.ts';
 import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
 
 /**
@@ -109,6 +110,9 @@ export const RETIRED_TARGET = '/__retired';
  * - `_redirects`: retired rows (decision on #4) must answer 404. A retired path that a dist file
  *   would still serve (only `/404`, by `404.html`) is rewritten to RETIRED_TARGET, which answers the
  *   normal 404 page with status 404. Cloudflare Pages `_redirects` has no 404/410 status of its own.
+ *   One supersession (operator, 2026-09-30): once a native article is published, the blog index at
+ *   `/blog/` lists the native articles, so the retired legacy `/blog` row no longer rewrites it. Every
+ *   other retired `/blog/**` path stays 404; native slugs can never name one (converter/articles.ts).
  */
 export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
   const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -120,7 +124,8 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
     'sitemap.xml': `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xml(u)}</loc></url>\n`).join('')}</urlset>\n`,
   };
   const served = (p: string) => [`${p}.html`, `${p}/index.html`, p].some((f) => fs.existsSync(path.join(outDir, f)) && fs.statSync(path.join(outDir, f)).isFile());
-  const rules = inventory.filter((r) => r.disposition === 'retired' && served(r.path))
+  const nativeIndex = manifest.documents.some(isNativeArticle);
+  const rules = inventory.filter((r) => r.disposition === 'retired' && served(r.path) && !(nativeIndex && r.path === '/blog'))
     .flatMap((r) => [r.path, `${r.path}/`, `${r.path}.html`].map((from) => `${from} ${RETIRED_TARGET} 200`));
   if (served(RETIRED_TARGET)) throw new Error(`m2: ${RETIRED_TARGET} must not exist in dist`);
   if (rules.length) files._redirects = `# Retired routes (decision on #4) answer 404: rewritten to a path nothing serves.\n${rules.join('\n')}\n`;

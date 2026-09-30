@@ -61,3 +61,29 @@ The live template blog (`/blog/**`, feeds), `/test`, `/markdown-page` and the `/
 #### Scenario: Full-corpus conversion without a decision
 - **WHEN** #13 runs and no retirement decision exists
 - **THEN** these routes are preserved with their observed status and redirect behavior
+
+### Requirement: Native articles
+The operator decided on 2026-09-30 (canary review) that the candidate carries articles beside the docs, after the claude.dev blog: `/blog/<slug>/` for each article and a `/blog/` index, with the homepage and footer linking them only once the first article is published. Articles are written for the candidate, not converted from the legacy tree:
+- each is `site-nimbus/src/articles/<slug>.md`, plain Markdown with front matter `title`, `description`, `date` (YYYY-MM-DD), `author`, `category` and optional `draft`; the body has no H1 and no MDX, and anything else fails the conversion;
+- a published article is the manifest entry `blog:<slug>` at `/blog/<slug>/`, identified as native by its source path (the manifest v1 shape is unchanged), eligible for HTML, search, the clean Markdown artifact and retrieval, and listed in the sitemap;
+- a draft yields nothing: no manifest entry, page, artifact, sitemap URL or search record;
+- the route inventory is never edited and records no native article. A slug whose path or id any inventory row names (the retired legacy blog posts, tags, authors, archive and feeds) SHALL fail the conversion;
+- once an article is published, the `/blog/` index supersedes the retired legacy `/blog` row (and only it): the retirement rewrite no longer applies there. Every other retired `/blog/**` path keeps answering 404.
+
+The candidate emits no `llms*` outputs at all, so articles have none either.
+
+#### Scenario: No published article
+- **WHEN** the candidate is built with no article, or only drafts
+- **THEN** the manifest, `_redirects`, sitemap, search index, homepage, header and footer are those of the build without the articles feature, and `/blog` and `/blog/` answer 404
+
+#### Scenario: Draft
+- **WHEN** an article has `draft: true`
+- **THEN** its text appears in no built file and it has no manifest entry
+
+#### Scenario: Published article
+- **WHEN** an article without `draft` is built
+- **THEN** `/blog/<slug>/` renders the document page header with its category, author, published date and reading time, `/blog/` lists it newest first, and its Markdown artifact, sitemap URL, search record and retrieval chunks exist
+
+#### Scenario: Slug of a retired route
+- **WHEN** an article's slug names a retired legacy blog route, such as `welcome`
+- **THEN** the conversion fails and names the file
