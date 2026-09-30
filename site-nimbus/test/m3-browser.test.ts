@@ -233,7 +233,8 @@ test('without JavaScript the navigation and landing links still work and no dead
     ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', '_blank', 'noopener noreferrer'],
   ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
-  assert.deepEqual(nav, ['/', '/intro', '/api', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register']);
+  // Two header rows (canary step 5a): logo and account actions, then the section tabs.
+  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', 'https://apertis.ai/changelog']);
   await context.close();
 });
 
@@ -504,8 +505,9 @@ test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings cle
   assert.ok(Math.abs(t.lh - 1.65) < 0.02, `line-height ${t.lh}`);
   assert.ok(t.measure >= 60 && t.measure <= 70, `measure ${t.measure}ch`);
   assert.ok(t.pre > t.pmax && Math.abs(t.pre - t.article) <= 1, `code uses the full column: ${t.pre} vs ${t.article}, prose ${t.pmax}`);
-  assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] >= 500 && t.h1[1] <= 600 && /Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
-  assert.ok((t.h2[0] as number) >= 1.3 * t.body && /Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
+  // Titles and h2 in the LINE Seed display face at 400 (canary step 5a, 2026-09-30); Inter stays the text face.
+  assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] === 400 && /^"?LINE Seed"?, Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
+  assert.ok((t.h2[0] as number) >= 1.3 * t.body && /^"?LINE Seed"?, Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
   assert.ok(Math.abs(t.code - 1.7) < 0.05, `code line-height ${t.code}`);
   assert.match(t.mono, /^ui-monospace/);
   await context.close();

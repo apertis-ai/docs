@@ -1,10 +1,11 @@
 ---
-// Header per openspec docs-shell-interfaces "Shell alignment, header, footer and homepage": logo and name,
-// the navbar items of "Preserved reader-facing shell", a compact search trigger with the Cmd/Ctrl+K hint,
-// the theme switch, a thin separator, Log in (quiet) and Create account (primary). Server-rendered; the
-// search trigger only dispatches `apertis-docs:open` (shell.client.ts), Cmd/Ctrl+K belongs to #9. Below
-// 1024 px the links move into the navigation sheet (NavSheet.tsx), opened by the menu button here.
-import { Menu, Moon, Search, Sun } from 'lucide-react';
+// Header per openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", in two rows as
+// in the Claude Docs header. Top row: logo and name, a centred search trigger with the Cmd/Ctrl+K hint,
+// the theme switch, a thin separator, Log in (quiet) and Create account (primary). Second row: the navbar
+// items of "Preserved reader-facing shell" as section tabs, the current one underlined. Server-rendered;
+// the search trigger only dispatches `apertis-docs:open` (shell.client.ts), Cmd/Ctrl+K belongs to #9.
+// Below 1024 px the tab row and the account actions move into the navigation sheet (NavSheet.tsx).
+import { ArrowUpRight, Menu, Moon, Search, Sun } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { SidebarId } from '../../contracts/navigation.ts';
@@ -25,17 +26,14 @@ const links = [
 <header class:list={["navbar", { "navbar--home": home }]}>
   <div class="shell-container navbar__inner">
     <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="24" height="24" /><span>Apertis Docs</span></a>
-    <nav class="navbar__links" aria-label="Main">
-      {links.map((l) => (
-        <a href={l.href} class:list={{ active: l.current }} aria-current={l.current ? 'true' : undefined} {...(l.external ? external : {})}>{l.label}</a>
-      ))}
-    </nav>
-    <div class="navbar__right">
+    <div class="navbar__center">
       {!home && <button type="button" class="navbar__search" data-open-surface="search" aria-label="Search documentation" aria-keyshortcuts="Meta+K Control+K">
         <Search className="size-4" aria-hidden="true" />
         <span>Search</span>
         <kbd>⌘K</kbd>
       </button>}
+    </div>
+    <div class="navbar__right">
       <button type="button" data-slot="button" class={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'icon-button')} data-theme-toggle aria-label="Switch to dark mode">
         <Sun className="icon-sun size-[18px]" aria-hidden="true" />
         <Moon className="icon-moon size-[18px]" aria-hidden="true" />
@@ -52,5 +50,12 @@ const links = [
         <Menu className="size-5" aria-hidden="true" />
       </button>
     </div>
+  </div>
+  <div class="shell-container navbar__tabs">
+    <nav class="navbar__links" aria-label="Main">
+      {links.map((l) => (
+        <a href={l.href} class:list={{ active: l.current }} aria-current={l.current ? 'true' : undefined} {...(l.external ? external : {})}>{l.label}{l.external && <ArrowUpRight className="size-3.5" aria-hidden="true" />}</a>
+      ))}
+    </nav>
   </div>
 </header>

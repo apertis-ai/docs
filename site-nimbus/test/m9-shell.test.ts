@@ -189,9 +189,10 @@ test('the footer carries exactly the pre-redesign footer link set, regrouped, wi
 
 test('the navbar destinations are unchanged in the header and in the navigation sheet', { skip }, async () => {
   const { context, page } = await open('/api/');
-  assert.deepEqual(await page.$$eval('header.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href'))), ['/', ...NAV]);
+  // Reading order of the two header rows (canary step 5a): logo and account actions, then the section tabs.
+  assert.deepEqual(await page.$$eval('header.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href'))), ['/', ...NAV.slice(3), ...NAV.slice(0, 3)]);
   const ext = await page.$$eval('header.navbar a[target]', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(ext, NAV.slice(2).map((h) => [h, ...EXT]));
+  assert.deepEqual(ext, [...NAV.slice(3), NAV[2]].map((h) => [h, ...EXT]));
   await context.close();
   const mobile = await open('/api/', VIEWS[390]);
   await mobile.page.click('[data-drawer-open]');
@@ -505,5 +506,52 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await m.page.locator('.page-actions[data-ready]').waitFor();
   const order = await m.page.evaluate(() => [document.querySelector('.doc-meta')!.getBoundingClientRect().bottom, document.querySelector('.page-actions__split')!.getBoundingClientRect().top]);
   assert.ok(order[1] >= order[0], `mobile: page actions after the meta row (${order})`);
+  await m.context.close();
+});
+
+test('two-row header and LINE Seed display face (canary step 5a): centred search, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
+  await page.evaluate(() => document.fonts.ready);
+  const h = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+    const inner = document.querySelector('.navbar__inner')!;
+    const cs = getComputedStyle(inner);
+    const ib = inner.getBoundingClientRect();
+    const tabs = [...document.querySelectorAll<HTMLAnchorElement>('.navbar__tabs .navbar__links a')];
+    const active = document.querySelector('.navbar__tabs a.active')!;
+    const h1 = getComputedStyle(document.querySelector('.docs-content h1')!);
+    const h2 = getComputedStyle(document.querySelector('.docs-content h2')!);
+    return {
+      header: r('.navbar').height, top: r('.navbar__inner').bottom, tabsTop: r('.navbar__tabs').top,
+      tabs: tabs.map((a) => a.getAttribute('href')), active: active.getAttribute('href'), underline: getComputedStyle(active).boxShadow,
+      firstTab: tabs[0].getBoundingClientRect().left, brand: r('.navbar .brand').left,
+      search: (r('.navbar__search').left + r('.navbar__search').right) / 2, centre: (ib.left + parseFloat(cs.paddingLeft) + ib.right - parseFloat(cs.paddingRight)) / 2,
+      h1: [h1.fontFamily, h1.fontWeight], h2: [h2.fontFamily, h2.fontWeight],
+      loaded: document.fonts.check('400 16px "LINE Seed"'),
+      faces: performance.getEntriesByType('resource').filter((e) => /LINESeed/.test(e.name)).map((e) => (e as PerformanceResourceTiming).encodedBodySize || (e as PerformanceResourceTiming).transferSize),
+    };
+  });
+  assert.equal(h.header, 100);
+  assert.ok(h.tabsTop >= h.top, `tabs are a second row (${h.tabsTop} vs ${h.top})`);
+  assert.deepEqual(h.tabs, NAV.slice(0, 3));
+  assert.equal(h.active, '/intro');
+  assert.match(h.underline, /inset 0px -2px 0px|0px -2px 0px 0px inset/, `current tab underlined: ${h.underline}`);
+  assert.ok(Math.abs(h.firstTab - h.brand) <= 1, `tabs start at the logo edge (${h.firstTab} vs ${h.brand})`);
+  assert.ok(Math.abs(h.search - h.centre) <= 1, `search is centred (${h.search} vs ${h.centre})`);
+  for (const [family, weight] of [h.h1, h.h2]) {
+    assert.match(family, /^"?LINE Seed"?,/);
+    assert.equal(weight, '400', 'display text is never faux-bolded');
+  }
+  assert.ok(h.loaded, 'LINE Seed loaded');
+  assert.equal(h.faces.length, 1, `one LINE Seed file (the Latin subset): ${h.faces}`);
+  // A hash link lands below the taller header.
+  await page.goto(base + '/getting-started/quick-start/#prerequisites', { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  const land = await page.evaluate(() => [document.getElementById('prerequisites')!.getBoundingClientRect().top, document.querySelector('.navbar')!.getBoundingClientRect().bottom]);
+  assert.ok(land[0] >= land[1], `anchor heading ${land[0]} is not under the header (${land[1]})`);
+  await context.close();
+  const m = await open('/getting-started/quick-start/', VIEWS[390]);
+  const phone = await m.page.evaluate(() => ({ header: document.querySelector('.navbar')!.getBoundingClientRect().height, tabs: getComputedStyle(document.querySelector('.navbar__tabs')!).display }));
+  assert.deepEqual(phone, { header: 57, tabs: 'none' }, 'one header row on a phone; the tabs live in the navigation sheet');
   await m.context.close();
 });

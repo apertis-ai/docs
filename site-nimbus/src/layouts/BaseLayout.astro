@@ -3,6 +3,7 @@
 // the one <AssistantRoot />. DocLayout adds the docs chrome; the landing page uses this directly.
 // app.css is the one stylesheet entry (Tailwind, shadcn tokens, shell and reading layout).
 import '../styles/app.css';
+import lineSeed from '../fonts/LINESeedTW_Rg-latin.woff2?url';
 import { Sparkles } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -34,6 +35,8 @@ const { doc, buildId, nav = null } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <!-- The display face (page titles, h2, homepage headings): preloaded so titles do not swap late. -->
+    <link rel="preload" href={lineSeed} as="font" type="font/woff2" crossorigin />
     <slot name="head" />
   </head>
   <!-- Document pages frame the header and footer on the docs grid (shell.css [data-frame='docs']). -->
