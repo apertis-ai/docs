@@ -152,6 +152,9 @@ test('the hero code tabs switch between cURL, Python and Node.js without JS erro
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
   const panel = () => page.locator('[data-hero-code] [role="tabpanel"]:visible').innerText();
   assert.match(await panel(), /curl https:\/\/api\.apertis\.ai\/v1\/chat\/completions/);
+  // Below the hero since canary step 5b: the island hydrates when scrolled into view (client:visible).
+  await page.locator('[data-hero-code]').scrollIntoViewIfNeeded();
+  await page.locator('astro-island:not([ssr]) [data-hero-code]').waitFor();
   const quick = fs.readFileSync(path.resolve(import.meta.dirname, '../src/content/public/getting-started/quick-start.md'), 'utf8');
   const model = /"model": "([^"]+)"/.exec(quick)![1];
   for (const [tab, expected] of [['Python', /from openai import OpenAI[\s\S]*base_url="https:\/\/api\.apertis\.ai\/v1"/], ['Node.js', /import OpenAI from 'openai'[\s\S]*baseURL: 'https:\/\/api\.apertis\.ai\/v1'/], ['cURL', /curl /]] as const) {
@@ -207,7 +210,7 @@ test('static parts are server-rendered without hydration; homepage links all res
   const { context, page } = await open('/');
   const islands = await page.$$eval('astro-island', (els: Element[]) => els.map((e) => (e.getAttribute('component-url') ?? '').replace(/^.*\/|\..*$/g, '')).sort());
   assert.deepEqual(islands, ['HeroCode', 'NavSheet']);
-  const hydrated = await page.$$eval('header.navbar, .hero__copy, .hero__search, .paths, .path-card, .journey, .tile, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
+  const hydrated = await page.$$eval('header.navbar, .hero, .intent, .first-call__copy, .paths, .path-card, .journey, .tile, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
     els.filter((e) => e.closest('astro-island') || e.querySelector('astro-island')).map((e) => e.className));
   assert.deepEqual(hydrated, []);
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
@@ -409,11 +412,12 @@ test('the mobile TOC states the native <details> state it hydrates into', { skip
   await context.close();
 });
 
-test('one search control on the homepage: no header search at 1440 and 1024, the hero search and Cmd/Ctrl+K open search; other pages keep the header search', { skip }, async () => {
+test('one search control on the homepage (canary step 5b reverses step 1): the header search, as on every page; the hero has none; Cmd/Ctrl+K opens search', { skip }, async () => {
   for (const view of [VIEWS[1440], VIEWS[1024]]) {
     const { context, page } = await open('/', view);
-    assert.equal(await page.isVisible('.navbar__search'), false, `no header search on / at ${JSON.stringify(view)}`);
-    assert.equal(await page.locator('main [data-open-surface="search"]:visible').count(), 1, 'exactly one visible search control in the homepage');
+    assert.equal(await page.isVisible('.navbar__search'), true, `header search on / at ${JSON.stringify(view)}`);
+    assert.equal(await page.locator('[data-open-surface="search"]:visible').count(), 1, 'exactly one visible search control on the homepage');
+    assert.equal(await page.locator('main [data-open-surface="search"]').count(), 0, 'no search control in the homepage body');
     await page.keyboard.press('ControlOrMeta+k');
     await page.locator('dialog[open] #aa-q').waitFor();
     assert.equal(await page.evaluate(() => document.activeElement?.id), 'aa-q');
@@ -426,7 +430,11 @@ test('one search control on the homepage: no header search at 1440 and 1024, the
 
 test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
   const { context, page } = await open('/');
-  const labels: string[] = await page.$$eval('main a', (as: HTMLAnchorElement[]) => as.map((a) => (a.textContent ?? '').replace(/\s+/g, ' ').trim()).filter(Boolean));
+  // An intent pill carries two labels (the task, then the page); each is checked on its own.
+  const labels: string[] = await page.$$eval('main a', (as: HTMLAnchorElement[]) => as.flatMap((a) => {
+    const parts = a.querySelectorAll('.intent__task, .intent__page');
+    return (parts.length ? [...parts] : [a]).map((e) => (e.textContent ?? '').replace(/\s+/g, ' ').trim());
+  }).filter(Boolean));
   const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'Playground', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
   const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
   assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
@@ -489,6 +497,9 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await page.click('.page-actions__toggle');
   const items = await page.$$eval('[role=menu] [role=menuitem]', (els: HTMLElement[]) => els.map((e): [string | null | undefined, string | null | undefined] => [e.querySelector('[data-item-title]')?.textContent, e.querySelector('[data-item-desc]')?.textContent]));
   assert.ok(items.length >= 6 && items.every(([t, s]: (string | null | undefined)[]) => t && s), `every menu item has a title and a description: ${JSON.stringify(items)}`);
+  // The AI tools carry their brand marks from lobe icons (static SVG, as stima-api's public pages).
+  const marks = await page.$$eval('[role=menu] a[data-action]', (as: HTMLAnchorElement[]) => Object.fromEntries(as.map((a) => [a.dataset.action, a.querySelector('.page-actions__icon svg title')?.textContent ?? null])));
+  assert.deepEqual([marks.claude, marks.chatgpt, marks.cursor], ['Claude', 'OpenAI', 'Cursor']);
   // A status message floats over the description as an opaque card (canary: it overlapped the text).
   await page.keyboard.press('Escape');
   const status = await page.evaluate(() => {
@@ -554,4 +565,50 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
   const phone = await m.page.evaluate(() => ({ header: document.querySelector('.navbar')!.getBoundingClientRect().height, tabs: getComputedStyle(document.querySelector('.navbar__tabs')!).display }));
   assert.deepEqual(phone, { header: 57, tabs: 'none' }, 'one header row on a phone; the tabs live in the navigation sheet');
   await m.context.close();
+});
+
+test('homepage hero after the Claude Docs homepage (canary step 5b): a centred question in LINE Seed, six intent pills to published pages, the console line and Browse all docs', { skip }, async () => {
+  const { context, page } = await open('/', VIEWS[1440]);
+  const h = await page.evaluate(() => {
+    const hero = document.querySelector('.hero')!;
+    const r = (el: Element) => el.getBoundingClientRect();
+    const title = hero.querySelector('h1')!;
+    const pills = [...hero.querySelectorAll<HTMLAnchorElement>('.hero__intents a.intent')];
+    const mid = (el: Element) => (r(el).left + r(el).right) / 2;
+    return {
+      eyebrow: hero.querySelector('.hero__eyebrow')?.textContent, title: title.textContent, font: getComputedStyle(title).fontFamily, weight: getComputedStyle(title).fontWeight,
+      centred: [mid(title), mid(hero.querySelector('.hero__intents')!), mid(hero)].map(Math.round),
+      pills: pills.map((a): (string | null | undefined)[] => [a.querySelector('.intent__task')?.textContent, a.querySelector('.intent__page')?.textContent, a.getAttribute('href')]),
+      rows: [...new Set(pills.map((a) => Math.round(r(a).top)))].length,
+      note: hero.querySelector('.hero__note a')?.getAttribute('href'),
+      browse: hero.querySelector('.hero__browse a')?.getAttribute('href'),
+      band: getComputedStyle(hero).backgroundColor, page: getComputedStyle(document.body).backgroundColor,
+      radius: pills.map((a) => parseFloat(getComputedStyle(a).borderTopLeftRadius) >= r(a).height / 2 - 1),
+      pillBg: getComputedStyle(pills[0]).backgroundColor,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  assert.equal(h.eyebrow, 'Apertis documentation');
+  assert.equal(h.title, 'What do you want to build with Apertis?');
+  assert.match(h.font, /^"?LINE Seed"?,/);
+  assert.equal(h.weight, '400');
+  assert.ok(Math.max(...h.centred) - Math.min(...h.centred) <= 1, `title, pills and band share a centre: ${h.centred}`);
+  assert.equal(h.pills.length, 6);
+  assert.ok(h.pills.every(([t, p, href]: (string | null | undefined)[]) => t && p && href?.startsWith('/')), JSON.stringify(h.pills));
+  assert.equal(h.rows, 2, 'three pills per row at 1440');
+  assert.equal(h.note, 'https://apertis.ai/setting?tab=keys');
+  assert.equal(h.browse, '#paths');
+  assert.notEqual(h.band, h.page, 'the hero sits on its own band');
+  assert.ok(h.radius.every(Boolean), `pills are fully rounded: ${h.radius}`);
+  assert.equal(h.pillBg, h.band, 'pills share the band fill');
+  // The band and its hairline span the viewport, painted by box-shadows (no scrollable overflow; checked above).
+  const band = await page.evaluate(() => { const cs = getComputedStyle(document.querySelector('.hero')!); return [cs.boxShadow, cs.clipPath]; });
+  assert.match(band[0], /0px 0px 0px \d+px, .* 0px 1px 0px \d+px$/, `band and hairline shadows: ${band[0]}`);
+  assert.match(band[1], /^inset\(0px -\d+px -1px\)$/, `clip keeps the hairline: ${band[1]}`);
+  assert.equal(h.overflow, 0, 'the full-bleed band does not overflow');
+  for (const [, , href] of h.pills) {
+    const res = await page.request.get(base + href!);
+    assert.equal(res.status(), 200, `${href} is published`);
+  }
+  await context.close();
 });

@@ -5,12 +5,19 @@
 // scrolling; Radix mounts it only while open.
 // Server-rendered hidden: without JavaScript, or before hydration, no dead action is shown.
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Box, ChevronDown, Copy, FileText, Link, MessageSquare, Sparkles } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Copy, FileText, Link } from 'lucide-react';
+// Brand marks from lobe icons, as in stima-api's public pages: the dependency-free static SVG package,
+// inlined at build time. Claude in colour, OpenAI and Cursor in mono (currentColor).
+import claudeSvg from '@lobehub/icons-static-svg/icons/claude-color.svg?raw';
+import openaiSvg from '@lobehub/icons-static-svg/icons/openai.svg?raw';
+import cursorSvg from '@lobehub/icons-static-svg/icons/cursor.svg?raw';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { PAGE_META } from '../../contracts/page.ts';
 import { aiToolUrls, markdownUrl } from './page-actions.ts';
 
 type Status = { message: string; ok: boolean } | null;
+const mark = (svg: string) => () => <span className="contents" dangerouslySetInnerHTML={{ __html: svg }} />;
+const Claude = mark(claudeSvg), OpenAI = mark(openaiSvg), Cursor = mark(cursorSvg);
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
 
 export default function PageActions({ markdownPath }: { markdownPath: string }) {
@@ -61,7 +68,7 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
   if (url === null) return null;
   const tools = url ? aiToolUrls(url) : null;
   const item = 'items-start gap-3 py-2 text-foreground';
-  const body = (title: string, desc: string, Icon: typeof Copy, external = false) => (
+  const body = (title: string, desc: string, Icon: typeof Copy | typeof Claude, external = false) => (
     <>
       <span className="page-actions__icon" aria-hidden="true"><Icon /></span>
       <span className="grid gap-0.5">
@@ -72,9 +79,9 @@ export default function PageActions({ markdownPath }: { markdownPath: string }) 
   );
   const links = [
     { action: 'view', href: url ?? undefined, title: 'View as Markdown', desc: 'View this page as plain text', Icon: FileText },
-    { action: 'claude', href: tools?.claude, title: 'Ask Claude', desc: 'Ask questions about this page', Icon: Sparkles },
-    { action: 'chatgpt', href: tools?.chatgpt, title: 'Ask ChatGPT', desc: 'Ask questions about this page', Icon: MessageSquare },
-    { action: 'cursor', href: tools?.cursor, title: 'Open in Cursor', desc: 'Load this page into Cursor', Icon: Box },
+    { action: 'claude', href: tools?.claude, title: 'Ask Claude', desc: 'Ask questions about this page', Icon: Claude },
+    { action: 'chatgpt', href: tools?.chatgpt, title: 'Ask ChatGPT', desc: 'Ask questions about this page', Icon: OpenAI },
+    { action: 'cursor', href: tools?.cursor, title: 'Open in Cursor', desc: 'Load this page into Cursor', Icon: Cursor },
   ];
   return (
     <div className="page-actions" data-page-actions data-ready={url ? '' : undefined}>

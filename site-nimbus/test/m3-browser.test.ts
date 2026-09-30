@@ -145,7 +145,7 @@ test('triggers dispatch apertis-docs:open with the right surface; the shell bind
   assert.equal((await opens(page)).length, before);
   await page.keyboard.press('Escape');
   await page.goto(base + '/', { waitUntil: 'load' });
-  await page.click('.hero__search');
+  await page.click('.navbar__search'); // canary step 5b: the homepage search is the header's
   assert.deepEqual(await opens(page), [{ surface: 'search' }]);
   await context.close();
 });
