@@ -20,6 +20,7 @@
   "dependencies": {
     "@astrojs/react": "6.0.1",
     "@cloudflare/nimbus-docs": "0.15.0",
+    "@lobehub/icons-static-svg": "1.95.1",
     "@tailwindcss/vite": "4.3.3",
     "astro": "7.3.1",
     "class-variance-authority": "0.7.1",

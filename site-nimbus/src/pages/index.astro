@@ -1,13 +1,15 @@
 ---
-// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage"): a
-// left-aligned two-column hero (search, three quick links, the Quick Start request in tabs), then two
-// sections in one rhythm (eyebrow, heading, one line, content). Copy is reused from the legacy landing
-// page and the docs; every destination of the six legacy feature cards stays linked (`.feature-card`).
-// Everything here is server-rendered; only the code tabs hydrate.
+// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage"), after the
+// Claude Docs homepage: a centred hero band (eyebrow, a question in the display face, six intent pills that
+// each name a task and the page that answers it, a console line and "Browse all docs"), then sections in one
+// rhythm (eyebrow, heading, one line, content): the first request (the Quick Start request in tabs), paths
+// and the journey. Search is the header's. Copy is reused from the legacy landing page and the docs; every
+// destination of the six legacy feature cards stays linked (`.feature-card`). Everything here is
+// server-rendered; only the code tabs hydrate.
 import { Code } from 'astro:components';
 import {
   Activity, ArrowRight, ArrowUpRight, BookOpen, Bot, Code as CodeIcon, CreditCard, Gauge, KeyRound, Layers, Play,
-  Rocket, Search, Shield, SquareTerminal, Zap,
+  ArrowDown, Rocket, Shield, SquareTerminal, Zap,
 } from 'lucide-react';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroCode from '../components/home/HeroCode.tsx';
@@ -31,6 +33,15 @@ const sources = { curl: fenced('Using cURL', 'bash'), python: fenced('Using Pyth
 const themes = { light: 'github-light', dark: 'github-dark' } as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
+// Intent pills: a task in the reader's words, then the page that answers it.
+const intents = [
+  { task: 'Make my first API call', page: 'Quick start', href: '/getting-started/quick-start/' },
+  { task: 'Connect my coding assistant', page: 'Coding assistants', href: '/installation/claude-code/' },
+  { task: 'Pick the right model', page: 'Models', href: '/installation/models/' },
+  { task: 'Choose a plan', page: 'Subscription plans', href: '/billing/subscription-plans/' },
+  { task: 'Manage keys and access', page: 'API keys', href: '/authentication/api-keys/' },
+  { task: 'Look up an endpoint', page: 'API reference', href: '/api/' },
+];
 const quickLinks = [
   { label: 'Quick start', href: '/getting-started/quick-start/' },
   { label: 'API keys', href: '/authentication/api-keys/' },
@@ -84,15 +95,27 @@ const journey = [
 <BaseLayout doc={doc} buildId={manifest.buildId}>
   <main class="landing" id="main">
     <section class="shell-container hero" aria-labelledby="hero-title">
-      <div class="hero__copy">
-        <p class="eyebrow">Apertis Documentation</p>
-        <h1 class="hero__title" id="hero-title">Build with Apertis</h1>
-        <p class="hero__sub">One API key for models across leading providers. Smart routing, auto-failover, and free prompt caching built in.</p>
-        <button type="button" class="hero__search" data-open-surface="search">
-          <Search className="size-4" aria-hidden="true" />
-          <span>Search docs or ask AI...</span>
-          <kbd>⌘K</kbd>
-        </button>
+      <p class="hero__eyebrow">Apertis documentation</p>
+      <h1 class="hero__title" id="hero-title">What do you want to build with Apertis?</h1>
+      <ul class="hero__intents" aria-label="Start from a task">
+        {intents.map((i) => (
+          <li>
+            <a data-slot="button" class={cn(buttonVariants({ variant: 'outline' }), 'intent h-auto rounded-full bg-card')} href={i.href}>
+              <span class="intent__task">{i.task}</span>
+              <span class="intent__page">{i.page}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="hero__note">To create an API key or check your usage, open the <a href="https://apertis.ai/setting?tab=keys" {...ext}>Apertis console</a>.</p>
+      <p class="hero__browse"><a data-slot="button" class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'bg-card')} href="#paths">Browse all docs<ArrowDown className="size-3.5" aria-hidden="true" /></a></p>
+    </section>
+
+    <section class="shell-container home-section first-call" aria-labelledby="first-call-title">
+      <div class="first-call__copy">
+        <p class="eyebrow">Quick start</p>
+        <h2 id="first-call-title">Make your first request</h2>
+        <p class="home-section__desc">One API key for models across leading providers. Smart routing, auto-failover, and free prompt caching built in.</p>
         <ul class="hero__quick" aria-label="Quick links">
           {quickLinks.map((l) => (
             <li><a data-slot="button" class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'bg-card')} href={l.href}>{l.label}<ArrowRight className="size-3.5" aria-hidden="true" /></a></li>
@@ -108,7 +131,7 @@ const journey = [
       </Card>
     </section>
 
-    <section class="shell-container home-section" aria-labelledby="paths-title">
+    <section class="shell-container home-section" id="paths" aria-labelledby="paths-title">
       <p class="eyebrow">Paths</p>
       <h2 id="paths-title">Choose how you build</h2>
       <p class="home-section__desc">Access OpenAI, Anthropic, Google, Meta, and more through a single API key.</p>

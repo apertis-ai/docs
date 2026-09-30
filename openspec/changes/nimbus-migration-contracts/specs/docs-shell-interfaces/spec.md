@@ -56,7 +56,7 @@ The operator decided on 2026-09-29 (recorded on #4) that the homepage, header an
 
 **Header.** The header SHALL have two rows, about 100 px in all, and a hairline bottom border (operator, canary review on 2026-09-30). The top row contains, from left to right:
 - the logo and product name;
-- a search trigger, centred, that shows the Cmd/Ctrl+K hint, except on the homepage, where the hero carries the one search control (the operator accepted this in the canary review on 2026-09-29);
+- a search trigger, centred, that shows the Cmd/Ctrl+K hint, on every page including the homepage (the operator moved the homepage search from the hero back to the header in the canary review on 2026-09-30, reversing the 2026-09-29 exception);
 - the theme switch;
 - Log in, as a quiet action;
 - Create account, as the primary action.
@@ -65,9 +65,12 @@ The second row holds the navbar items from "Preserved reader-facing shell" as se
 
 At narrow widths the header SHALL be one row, and the tabs and account actions SHALL move into a sheet that is opened from a menu button.
 
-**Homepage.** The homepage SHALL open with a left-aligned two-column hero:
-- the left column holds a heading, a short lead, one search control and three neutral quick links (Quickstart, API keys, API reference);
-- the right column holds a code sample with tabs (cURL, Python, Node.js), taken from the Quick Start page.
+**Homepage.** The homepage SHALL open with a centred hero on its own band, after the Claude Docs homepage (operator, canary review on 2026-09-30):
+- a small eyebrow and a question as the heading, in the display face;
+- six intent pills, each naming a reader's task and the published page that answers it;
+- a line pointing to the Apertis console, and a "Browse all docs" link to the sections below.
+
+The hero holds no search control; search is the header's. The first section below it holds the first request: a short lead, three neutral quick links (Quick start, API keys, API reference) and a code sample with tabs (cURL, Python, Node.js), taken from the Quick Start page.
 
 Below the hero, sections follow one rhythm: a small eyebrow, a heading, a one-line description, then the content, with generous and consistent spacing between sections. The homepage feature cards and their destinations, including the external Playground card, remain reachable.
 

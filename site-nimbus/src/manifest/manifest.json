@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
   "sourceSha": "d9aefa377ff99dbea3c094504ffbed9f99305a9f",
-  "buildId": "d9aefa377ff99dbea3c094504ffbed9f99305a9f.173e912e4b53",
+  "buildId": "d9aefa377ff99dbea3c094504ffbed9f99305a9f.2f7e6e9c77c4",
   "documents": [
     {
       "id": "page:index",
@@ -17,7 +17,7 @@
         "rag": false
       },
       "markdown": null,
-      "contentSha256": "4ecb30f087e863c962ed82161be1c688b85762409180a6c9106cce1eaa028ee0"
+      "contentSha256": "86dd37579a37425aea31df39e91dda4bd51afb0ad0af4b4ef8dc902c9ef476fb"
     },
     {
       "id": "api:index",
