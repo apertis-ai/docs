@@ -107,6 +107,8 @@ async function exclusion() {
   // used /help/ideas, which the full-corpus manifest now publishes.)
   const cases = [
     ['retired document Markdown published (blog/first-blog-post.md)', expose('blog/first-blog-post.md', fs.readFileSync(path.join(ROOT, 'blog/2019-05-28-first-blog-post.md'), 'utf8')), /blog\/first-blog-post\.md/],
+    // A native draft (site-nimbus/src/articles, draft: true) is never published: no page, no artifact.
+    ['native draft article emitted (blog/unfinished-draft/index.md)', expose('blog/unfinished-draft/index.md', fs.readFileSync(path.join(SITE, 'test/fixtures/articles/published/src/articles/unfinished-draft.md'), 'utf8')), /blog\/unfinished-draft\/index\.md/],
     ['reserved runtime path emitted (api/ask/index.html)', expose('api/ask/index.html', '<!doctype html><title>shadow</title>'), /api\/ask\/index\.html/],
     ['planning material emitted (openspec proposal)', expose('openspec/proposal.md', fs.readFileSync(path.join(ROOT, 'openspec/changes/nimbus-migration-contracts/proposal.md'), 'utf8')), /openspec\/proposal\.md/],
   ];

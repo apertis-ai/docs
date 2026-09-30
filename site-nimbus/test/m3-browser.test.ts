@@ -497,7 +497,7 @@ test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings cle
       article: art.getBoundingClientRect().width, pre: pre.getBoundingClientRect().width,
       h1: [px(cs(art.querySelector('h1')!).fontSize), Number(cs(art.querySelector('h1')!).fontWeight), cs(art.querySelector('h1')!).fontFamily],
       h2: [px(cs(art.querySelector('h2')!).fontSize), cs(art.querySelector('h2')!).fontFamily],
-      h3: px(cs(art.querySelector('h3')!).fontSize),
+      h3: px(cs(art.querySelector('h3')!).fontSize), h3face: [cs(art.querySelector('h3')!).fontFamily, cs(art.querySelector('h3')!).fontWeight],
       code: px(cs(pre).lineHeight) / px(cs(pre).fontSize), mono: cs(pre).fontFamily,
     };
   });
@@ -505,9 +505,11 @@ test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings cle
   assert.ok(Math.abs(t.lh - 1.65) < 0.02, `line-height ${t.lh}`);
   assert.ok(t.measure >= 60 && t.measure <= 70, `measure ${t.measure}ch`);
   assert.ok(t.pre > t.pmax && Math.abs(t.pre - t.article) <= 1, `code uses the full column: ${t.pre} vs ${t.article}, prose ${t.pmax}`);
-  // Titles and h2 in the LINE Seed display face at 400 (canary step 5a, 2026-09-30); Inter stays the text face.
+  // Titles, h2 and h3 in the LINE Seed display face at 400 (canary steps 5a and 5b, 2026-09-30): an Inter
+  // 600 h3 read heavier than the h2 above it. Inter stays the text face (h4 and below, body).
   assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] === 400 && /^"?LINE Seed"?, Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
   assert.ok((t.h2[0] as number) >= 1.3 * t.body && /^"?LINE Seed"?, Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
+  assert.ok(/^"?LINE Seed"?, Inter/.test(t.h3face[0]) && t.h3face[1] === '400', `h3 ${t.h3face}`);
   assert.ok(Math.abs(t.code - 1.7) < 0.05, `code line-height ${t.code}`);
   assert.match(t.mono, /^ui-monospace/);
   await context.close();

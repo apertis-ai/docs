@@ -5,8 +5,8 @@
 @import './tokens.css';
 
 /* LINE Seed (the Apertis brand face; SIL OFL 1.1, see src/fonts/LINESeed-OFL.txt) for display text only.
-   Only a Regular Latin subset ships (20 kB), cut with fontTools from apertis.ai's LINESeedTW_TTF_Rg.ttf to
-   the 136 code points of apertis.ai's Latin subset, keeping every name record: OFL requires each copy to
+   Only a Regular Latin subset ships (19,968 bytes), the same file apertis.ai serves: cut with fontTools from
+   LINESeedTW_TTF_Rg.ttf to the 136 code points of its Latin subset, keeping every name record: OFL requires each copy to
    carry the copyright notice and the licence, and the font's own name records carry both. Display text
    is set at 400, never faux-bolded. */
 @font-face {
@@ -423,7 +423,7 @@ button { font: inherit; color: inherit; }
 .docs-content > :where(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6, aside), .doc-header__desc { max-width: var(--measure); }
 .docs-content h1 { margin: 0 0 32px; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
 .docs-content h2 { margin: 2.4em 0 0.7em; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; line-height: 1.3; letter-spacing: -0.005em; }
-.docs-content h3 { margin: 1.9em 0 0.6em; color: var(--ink); font-size: var(--fs-xl); font-weight: 600; line-height: 1.4; }
+.docs-content h3 { margin: 1.9em 0 0.6em; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 400; line-height: 1.4; }
 .docs-content h4 { margin: 1.6em 0 0.5em; color: var(--ink); font-size: var(--fs-body); font-weight: 600; }
 .docs-content .doc-header__rule + h2, .docs-content .doc-header__rule + h3 { margin-top: 0; }
 .docs-content p { margin: 0 0 1.1em; }
@@ -624,6 +624,29 @@ button { font: inherit; color: inherit; }
 .home-section h2 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
 .home-section__desc { margin: 8px 0 32px; color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
 
+/* Native articles (claude.dev blog index pattern): dated rows with hairlines; the /blog/ index puts a
+   short intro column beside the list. */
+.article-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.article-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.article-row:hover .article-row__title { color: var(--teal); }
+.article-row__date, .article-row__time { color: var(--muted); font: var(--fs-sm)/20px var(--mono); white-space: nowrap; }
+.article-row__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: var(--fs-md); font-weight: 500; transition: color 0.16s ease; }
+.article-row__category { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); font: var(--fs-2xs)/16px var(--mono); }
+.home-section__more { margin: 20px 0 0; }
+.home-section__more a { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-size: var(--fs-ui); font-weight: 500; }
+.home-section__more a:hover { color: var(--teal); }
+.blog-index { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 56px; padding-block: 72px 24px; }
+.blog-index__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
+.blog-index__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+
 .paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .path-card h3 { margin: 0; color: var(--ink); font-size: var(--fs-body); font-weight: 600; line-height: 1.4; }
 .path-card__desc { margin: 0; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
@@ -760,6 +783,7 @@ html.aa-scroll-lock { overflow: hidden; }
   .journey__tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-section { padding-top: 72px; }
   .footer__inner { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .blog-index { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; }
 }
 
 @media (max-width: 996px) {
@@ -798,6 +822,8 @@ html.aa-scroll-lock { overflow: hidden; }
   .hero__title { font-size: var(--fs-5xl); }
   .hero__intents { grid-template-columns: minmax(0, 1fr); }
   .journey__tiles { grid-template-columns: minmax(0, 1fr); }
+  .article-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; }
+  .article-row__date { grid-column: 1 / -1; }
   .home-section { padding-top: 64px; }
   .home-section h2 { font-size: var(--fs-3xl); }
   .footer { margin-top: 64px; }

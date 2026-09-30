@@ -465,6 +465,28 @@ all `false`, and their fixtures expect 404.
   answers with the normal 404 page and status 404. Unknown paths keep the normal 404 page.
 - Rollback: restore the rows to `preserve-pending-decision` and regenerate.
 
+### Native articles (`/blog/`)
+
+Articles are written for this site, not converted: `src/articles/<slug>.md` (openspec
+docs-routing-publication "Native articles"). None is committed yet, so nothing below is emitted and
+`/blog` still answers 404.
+
+- Front matter: `title`, `description`, `date` (YYYY-MM-DD), `author`, `category`, optional
+  `draft: true`. Plain Markdown, no H1 (the title is the H1), no MDX. `converter/articles.ts`
+  refuses anything else, and any slug an inventory row already names (the retired legacy blog).
+- `node converter/convert.ts` turns each published article into the manifest entry `blog:<slug>`
+  (all four eligibilities, source path under `site-nimbus/src/articles/`) and its artifact
+  `/blog/<slug>/index.md`. A draft produces nothing. Articles are build inputs, so a new or edited
+  article moves the buildId: `git add` it before `npm run m2:regenerate`.
+- `src/pages/blog/[...path].astro` renders `/blog/<slug>/` (the document page header with category,
+  author, published date and reading time) and the `/blog/` index. The homepage "Latest articles"
+  section and the footer Blog link appear with the first article. From then on the retired `/blog`
+  row no longer rewrites `/blog/`; every other retired `/blog/**` path stays 404.
+- Checks: `test/m9-articles.test.ts` (converter, fixtures in `test/fixtures/articles`) and
+  `test/m9-articles-build.test.ts`, which builds the fixtures in a throwaway copy of the repository
+  and runs `test/dist.check.ts` and the indexer plan there. `NIMBUS_ARTICLES_BUILD_KEEP=1` keeps the
+  copy for review.
+
 ### Identity at the end of #13
 
 - **Source freeze SHA** (`sourceSha`): `d9aefa377ff99dbea3c094504ffbed9f99305a9f`. This is the last

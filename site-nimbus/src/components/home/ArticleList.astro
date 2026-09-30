@@ -1,0 +1,31 @@
+---
+// Published native articles, newest first, as dated rows (the claude.dev blog index pattern): date,
+// title with its category, reading time. `limit` trims the list (the homepage shows three).
+import { getCollection } from 'astro:content';
+import pageMetaFile from '../../content/docs/page-meta.json' with { type: 'json' };
+import { isNativeArticle } from '../../contracts/articles.ts';
+import { manifest } from '../../manifest/manifest.ts';
+import { displayDate } from '../shell/page-header.ts';
+
+interface Props {
+  limit?: number;
+}
+const { limit } = Astro.props;
+const meta = pageMetaFile as Record<string, { updated: string; readingMinutes: number }>;
+const data = new Map((await getCollection('articles')).map((e) => [e.id, e.data as { category: string }]));
+const rows = manifest.documents.filter(isNativeArticle)
+  .map((d) => ({ doc: d, date: meta[d.id].updated, minutes: meta[d.id].readingMinutes, category: data.get(d.servedPath.slice(6, -1))!.category }))
+  .sort((a, b) => (a.date === b.date ? (a.doc.id < b.doc.id ? -1 : 1) : a.date < b.date ? 1 : -1))
+  .slice(0, limit);
+---
+<ol class="article-list">
+  {rows.map((r) => (
+    <li>
+      <a class="article-row" href={r.doc.servedPath}>
+        <time class="article-row__date" datetime={r.date}>{displayDate(r.date)}</time>
+        <span class="article-row__title">{r.doc.title}<span class="article-row__category">{r.category}</span></span>
+        <span class="article-row__time">{r.minutes} min</span>
+      </a>
+    </li>
+  ))}
+</ol>

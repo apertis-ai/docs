@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroCode from '../components/home/HeroCode.tsx';
+import ArticleList from '../components/home/ArticleList.astro';
+import { isNativeArticle } from '../contracts/articles.ts';
 import { Card } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -21,6 +23,8 @@ import { documentAt, manifest } from '../manifest/manifest.ts';
 import quickStart from '../content/public/getting-started/quick-start.md?raw';
 
 const doc = documentAt('/');
+// The Latest articles section appears once a native article is published (none yet: no section).
+const hasArticles = manifest.documents.some(isNativeArticle);
 
 // The hero sample is the Quick Start request, read from its clean Markdown so the two never drift.
 function fenced(heading: string, lang: string): string {
@@ -172,5 +176,15 @@ const journey = [
         ))}
       </ol>
     </section>
+
+    {hasArticles && (
+      <section class="shell-container home-section" aria-labelledby="articles-title">
+        <p class="eyebrow">Blog</p>
+        <h2 id="articles-title">Latest articles</h2>
+        <p class="home-section__desc">Guides, updates and field notes from the team building Apertis.</p>
+        <ArticleList limit={3} />
+        <p class="home-section__more"><a href="/blog/">All articles<ArrowRight className="size-3.5" aria-hidden="true" /></a></p>
+      </section>
+    )}
   </main>
 </BaseLayout>
