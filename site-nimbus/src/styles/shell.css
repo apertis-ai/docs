@@ -4,8 +4,21 @@
    only. Loaded through app.css in the base layer, below the Tailwind utilities of the shadcn parts. */
 @import './tokens.css';
 
+/* LINE Seed (the Apertis brand face, from stima-api; SIL OFL 1.1, see src/fonts/LINESeed-OFL.txt) for display
+   text only. Only the Regular Latin subset ships (19.6 kB); display text is set at 400, never faux-bolded. */
+@font-face {
+  font-family: 'LINE Seed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/LINESeedTW_Rg-latin.woff2') format('woff2');
+  unicode-range: U+0000-024F, U+0250-02AF, U+1E00-1EFF, U+2000-22FF, U+25A0-25FF, U+FB00-FB06, U+FEFF, U+FFFD;
+}
+
 :root {
-  --navbar-height: 64px;
+  /* Two header rows (Claude Docs pattern): 56 px top row, 43 px tab row, 1 px hairline. */
+  --navbar-top: 56px;
+  --navbar-height: 100px;
   --sidebar-width: 324px;
   --measure: 68ch;
   /* The one content container: header, homepage sections and footer share its edges. */
@@ -22,6 +35,7 @@ html {
 
 body {
   margin: 0;
+  font-synthesis-weight: none;
   background: var(--bg);
   color: var(--body);
   font-family: var(--font);
@@ -82,7 +96,8 @@ button { font: inherit; color: inherit; }
 .icon-moon, [data-theme='dark'] .icon-sun { display: none; }
 [data-theme='dark'] .icon-moon { display: block; }
 
-/* Header: sticky, translucent, hairline bottom; its content sits in the shared container. */
+/* Header: sticky, translucent, hairline bottom, two rows; its content sits in the shared container.
+   Top row: logo left, search centred, actions right. Second row: section tabs, the current one underlined. */
 .navbar {
   position: sticky;
   top: 0;
@@ -93,7 +108,7 @@ button { font: inherit; color: inherit; }
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
-.navbar__inner { display: flex; align-items: center; height: 100%; }
+.navbar__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; height: var(--navbar-top); }
 
 .brand {
   display: inline-flex;
@@ -106,32 +121,31 @@ button { font: inherit; color: inherit; }
   white-space: nowrap;
 }
 .brand img { display: block; width: 24px; height: 24px; }
-.navbar .brand { margin-right: 32px; }
+.navbar .brand { justify-self: start; }
+.navbar__center { display: flex; justify-content: center; }
 
-.navbar__links { display: flex; align-items: center; gap: 4px; }
+.navbar__tabs { height: calc(var(--navbar-height) - var(--navbar-top) - 1px); }
+.navbar__links { display: flex; align-items: stretch; gap: 28px; height: 100%; }
 .navbar__links a {
   display: inline-flex;
   align-items: center;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 6px;
+  gap: 4px;
   color: var(--muted);
   font-size: var(--fs-ui);
   font-weight: 500;
-  transition: color 0.16s ease;
+  transition: color 0.16s ease, box-shadow 0.16s ease;
 }
 .navbar__links a:hover { color: var(--ink); }
-.navbar__links a.active { color: var(--ink); }
+.navbar__links a.active { color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); }
 
-.navbar__right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.navbar__right { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 .navbar__sep { width: 1px; height: 20px; margin: 0 4px; background: var(--line); }
-.navbar__right .navbar__search { margin-right: 4px; }
 
 .navbar__search {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  width: 200px;
+  width: 280px;
   height: 32px;
   padding: 0 6px 0 10px;
   border: 1px solid var(--line-strong);
@@ -404,8 +418,8 @@ button { font: inherit; color: inherit; }
 /* Docs content: the article fills the column; prose keeps a reading measure, code and tables do not. */
 .docs-content { max-width: 792px; color: var(--body); font-size: var(--fs-body); line-height: 1.65; }
 .docs-content > :where(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6, aside), .doc-header__desc { max-width: var(--measure); }
-.docs-content h1 { margin: 0 0 32px; color: var(--ink); font-size: var(--fs-5xl); font-weight: 600; line-height: 1.2; letter-spacing: -0.012em; }
-.docs-content h2 { margin: 2.4em 0 0.7em; color: var(--ink); font-size: var(--fs-3xl); font-weight: 600; line-height: 1.3; letter-spacing: -0.006em; }
+.docs-content h1 { margin: 0 0 32px; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+.docs-content h2 { margin: 2.4em 0 0.7em; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; line-height: 1.3; letter-spacing: -0.005em; }
 .docs-content h3 { margin: 1.9em 0 0.6em; color: var(--ink); font-size: var(--fs-xl); font-weight: 600; line-height: 1.4; }
 .docs-content h4 { margin: 1.6em 0 0.5em; color: var(--ink); font-size: var(--fs-body); font-weight: 600; }
 .docs-content .doc-header__rule + h2, .docs-content .doc-header__rule + h3 { margin-top: 0; }
@@ -577,7 +591,7 @@ button { font: inherit; color: inherit; }
   gap: 56px;
   padding-block: 88px 0;
 }
-.hero__title { margin: 0; color: var(--ink); font-size: var(--fs-6xl); font-weight: 600; line-height: 1.1; letter-spacing: -0.025em; }
+.hero__title { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-6xl); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
 .hero__sub { max-width: 44ch; margin: 16px 0 28px; color: var(--desc); font-size: var(--fs-lg); line-height: 1.6; }
 .hero__search {
   display: flex;
@@ -609,7 +623,7 @@ button { font: inherit; color: inherit; }
 }
 
 .home-section { padding-top: 96px; }
-.home-section h2 { margin: 0; color: var(--ink); font-size: var(--fs-4xl); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
+.home-section h2 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
 .home-section__desc { margin: 8px 0 32px; color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
 
 .paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -732,12 +746,15 @@ html.aa-scroll-lock { overflow: hidden; }
 }
 
 @media (max-width: 1279px) {
-  .navbar__search { width: 168px; }
+  .navbar__search { width: 220px; }
 }
 
 /* Below 1024 px the header links, search box and account actions move into the navigation sheet. */
 @media (max-width: 1023px) {
-  .navbar__links, .navbar__right { display: none; }
+  /* One header row: the tab row and the account actions live in the navigation sheet. */
+  :root { --navbar-height: 57px; }
+  .navbar__inner { display: flex; }
+  .navbar__tabs, .navbar__center, .navbar__right { display: none; }
   .navbar__compact { display: flex; }
   .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-top: 64px; }
   .paths { grid-template-columns: minmax(0, 1fr); }

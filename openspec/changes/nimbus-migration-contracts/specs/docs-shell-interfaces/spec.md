@@ -50,19 +50,20 @@ A production client bundle SHALL NOT contain a simulated or canned Ask Docs answ
 - **THEN** Ask Docs shows the server's error or configuration response instead of a fabricated answer
 
 ### Requirement: Shell alignment, header, footer and homepage
-The operator decided on 2026-09-29 (recorded on #4) that the homepage, header and footer are redesigned. The goal is a layout that is uncrowded and aligned. The structure follows the operator's reference, the Claude Platform Docs homepage. Only its structure is used, never its typefaces, marks or navigation motifs.
+The operator decided on 2026-09-29 (recorded on #4) that the homepage, header and footer are redesigned. The goal is a layout that is uncrowded and aligned. The structure follows the operator's reference, the Claude Platform Docs homepage. Its structure is used, and, by operator decision in the canary review on 2026-09-30, its two-row header with section tabs; never its typefaces or marks.
 
 **Alignment.** The header, the homepage sections and the footer SHALL share one content container, with a maximum width of about 1280 px and a fixed side gutter. Their left and right content edges SHALL coincide at every viewport width.
 
-**Header.** The header SHALL be about 64 px tall and SHALL have a hairline bottom border. From left to right it contains:
+**Header.** The header SHALL have two rows, about 100 px in all, and a hairline bottom border (operator, canary review on 2026-09-30). The top row contains, from left to right:
 - the logo and product name;
-- the navbar items from "Preserved reader-facing shell";
-- a compact search trigger that shows the Cmd/Ctrl+K hint, except on the homepage, where the hero carries the one search control (the operator accepted this in the canary review on 2026-09-29);
+- a search trigger, centred, that shows the Cmd/Ctrl+K hint, except on the homepage, where the hero carries the one search control (the operator accepted this in the canary review on 2026-09-29);
 - the theme switch;
 - Log in, as a quiet action;
 - Create account, as the primary action.
 
-At narrow widths the navigation SHALL move into a sheet that is opened from a menu button.
+The second row holds the navbar items from "Preserved reader-facing shell" as section tabs that start at the logo edge; the current one is underlined in ink.
+
+At narrow widths the header SHALL be one row, and the tabs and account actions SHALL move into a sheet that is opened from a menu button.
 
 **Homepage.** The homepage SHALL open with a left-aligned two-column hero:
 - the left column holds a heading, a short lead, one search control and three neutral quick links (Quickstart, API keys, API reference);
@@ -89,7 +90,7 @@ The surface open event, the keyboard contract, the search and Ask Docs behaviour
 - **THEN** no button, chip, badge, input or surface is filled or outlined with the teal accent at rest
 
 ### Requirement: Reading layout and page header
-The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent (restrained as in **Palette**), Inter, and system monospace. It SHALL NOT use another brand's typefaces, marks or navigation motifs.
+The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent (restrained as in **Palette**), Inter for text, and system monospace. Page titles, article h2 and homepage headings SHALL use the Apertis brand face LINE Seed at weight 400, never synthesised bold (operator, canary review on 2026-09-30). It is taken from stima-api, licensed SIL OFL 1.1 with its licence committed beside it, and only the Regular Latin subset ships. The candidate SHALL NOT use another brand's typefaces or marks.
 
 **Palette.** The operator revised the palette on 2026-09-29 (recorded on #4). The candidate SHALL use neutral surfaces (a near-white page with white cards and hairline borders in light; near-black in dark) with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. The Apertis teal SHALL appear only in the logo, focus rings and link hover or active states. It SHALL NOT fill buttons, chips, badges, inputs or surfaces. Primary actions SHALL use an inverted neutral fill: dark on light, light on dark. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
 
