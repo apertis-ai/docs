@@ -13,6 +13,8 @@ import path from 'node:path';
 const site = path.resolve(import.meta.dirname, '..');
 const repo = path.resolve(site, '..');
 const SKIP = new Set(['.git', '.evidence', 'dist']);
+// Copy-on-write where the platform has it: `cp -c` is APFS (macOS); GNU cp (CI) reflinks when it can.
+const CP = process.platform === 'darwin' ? ['-c', '-R'] : ['-R', '--reflink=auto'];
 /** Runs a command; a failure carries its output, which stdio 'pipe' would otherwise hide. */
 function run(cmd: string, args: string[], opts: { cwd: string; env: NodeJS.ProcessEnv }) {
   try {
@@ -25,11 +27,10 @@ function run(cmd: string, args: string[], opts: { cwd: string; env: NodeJS.Proce
 
 function cloneRepo(): string {
   const dest = fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-articles-build-'));
-  // Copy-on-write clones: node_modules and the legacy tree cost no space.
-  for (const entry of fs.readdirSync(repo).filter((e) => !SKIP.has(e))) execFileSync('cp', ['-c', '-R', path.join(repo, entry), dest]);
+  for (const entry of fs.readdirSync(repo).filter((e) => !SKIP.has(e))) execFileSync('cp', [...CP, path.join(repo, entry), dest]);
   for (const entry of fs.readdirSync(site).filter((e) => !SKIP.has(e) && e !== 'node_modules')) {
     fs.rmSync(path.join(dest, 'site-nimbus', entry), { recursive: true, force: true });
-    execFileSync('cp', ['-c', '-R', path.join(site, entry), path.join(dest, 'site-nimbus')]);
+    execFileSync('cp', [...CP, path.join(site, entry), path.join(dest, 'site-nimbus')]);
   }
   fs.rmSync(path.join(dest, 'site-nimbus/dist'), { recursive: true, force: true });
   fs.cpSync(path.join(site, 'test/fixtures/articles/published/src/articles'), path.join(dest, 'site-nimbus/src/articles'), { recursive: true });
