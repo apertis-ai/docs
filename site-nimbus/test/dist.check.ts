@@ -59,9 +59,15 @@ test('every output file derives from a publishable manifest entry or is referenc
   const html = [...pages, ...generated, '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
-  // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too.
+  // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
+  // and so is every root-absolute url() in a referenced stylesheet (the display font is not preloaded).
   for (let i = 0; i < referenced.length; i++) {
-    if (!referenced[i].endsWith('.js') || !files.includes(referenced[i])) continue;
+    if (!files.includes(referenced[i])) continue;
+    if (referenced[i].endsWith('.css')) {
+      for (const m of read(referenced[i]).matchAll(/url\(\s*["']?\/([^"')#?]+)/g)) if (!referenced.includes(m[1])) referenced.push(m[1]);
+      continue;
+    }
+    if (!referenced[i].endsWith('.js')) continue;
     const dir = path.posix.dirname(referenced[i]);
     for (const m of read(referenced[i]).matchAll(/(?:from|import\()\s*["'`](\.\.?\/[^"'`]+)["'`]/g)) {
       const dep = path.posix.join(dir, m[1]);
