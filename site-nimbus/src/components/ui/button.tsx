@@ -1,4 +1,4 @@
-// Vendored shadcn Button. Focus: a solid 2px teal outline (>= 3:1 on both themes) instead of the
+// Vendored shadcn Button. Focus: a solid 2px ink outline (>= 3:1 on both themes) instead of the
 // translucent ring-ring/50 (about 2.1:1 in light), which also needed a border ghost buttons lack.
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"

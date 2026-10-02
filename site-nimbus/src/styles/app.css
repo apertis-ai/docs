@@ -34,10 +34,9 @@
   --color-destructive: var(--error);
   --color-border: var(--line);
   --color-input: var(--line-strong);
-  --color-ring: var(--teal);
+  --color-ring: var(--ink);
   --color-body: var(--body);
   --color-desc: var(--desc);
-  --color-teal: var(--teal);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

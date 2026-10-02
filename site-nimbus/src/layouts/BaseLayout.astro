@@ -28,7 +28,9 @@ const { doc, buildId, nav = null } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <DocumentHead doc={doc} buildId={buildId} />
-    <link rel="icon" href="/img/favicon.ico" />
+    <!-- The monochrome mark (brand teal removed 2026-10-02); the legacy .ico stays for browsers without SVG icons. -->
+    <link rel="icon" href="/img/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='108' fill='%230a0a0a'/%3E%3Cpath d='M298 108 L412 412 L350 412 L298 300 L232 300 L152 412 Z' fill='%23fafafa' opacity='.45'/%3E%3Cpath d='M244 108 L366 412 L300 412 L256 308 L190 308 L108 412 Z' fill='%23fafafa'/%3E%3Cpolygon points='190,308 206,266 318,266 300,308' fill='%230a0a0a'/%3E%3C/svg%3E" />
     <!-- Light by default, the reader's switch wins, never prefers-color-scheme (same key as the legacy site). -->
     <script is:inline>document.documentElement.classList.add('js');try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
