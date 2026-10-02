@@ -126,10 +126,11 @@ function exec(label, cmd, argv, cwd, env = {}) {
 const SUITES = {
   routes: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/routes.check.ts'], env: browserEnv, needs: ['preview'] },
   dist: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/dist.check.ts'] },
-  unit: { cwd: SITE, argv: ['--test', '--test-reporter=spec', ...fs.readdirSync(path.join(SITE, 'test')).filter((f) => f.endsWith('.test.ts') && !['m3-browser.test.ts', 'm4-e2e.test.ts'].includes(f)).sort().map((f) => `test/${f}`)] },
+  unit: { cwd: SITE, argv: ['--test', '--test-reporter=spec', ...fs.readdirSync(path.join(SITE, 'test')).filter((f) => f.endsWith('.test.ts') && !['m3-browser.test.ts', 'm4-e2e.test.ts', 'm9-shell.test.ts'].includes(f)).sort().map((f) => `test/${f}`)] },
   wire: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/m4-wire.test.ts'] },
   m3: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/m3-browser.test.ts'], env: browserEnv, needs: ['preview', 'playwright'] },
   m4: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/m4-e2e.test.ts'], env: browserEnv, needs: ['preview', 'playwright'] },
+  m9: { cwd: SITE, argv: ['--test', '--test-reporter=spec', 'test/m9-shell.test.ts'], env: browserEnv, needs: ['preview', 'playwright'] },
   assistantContract: { cwd: ROOT, argv: ['--test', '--test-reporter=spec', '--test-timeout=10000', 'assistant/test/contract.test.ts'] },
   assistantCompat: { cwd: ROOT, argv: ['--test', '--test-reporter=spec', '--test-timeout=10000', 'assistant/test/compat.test.ts'] },
   assistantFailure: { cwd: ROOT, argv: ['--test', '--test-reporter=spec', '--test-timeout=10000', 'assistant/test/failure.test.ts'] },

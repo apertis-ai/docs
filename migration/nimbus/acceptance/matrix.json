@@ -27,8 +27,9 @@
     { "id": "search-relevance-poc", "title": "All 14 PoC queries hit in the top 3 through Cmd/Ctrl+K, with keyboard focus", "class": "local-build", "steps": [{ "custom": "search" }] },
     { "id": "route-fixtures-full-corpus", "title": "#13: every inventory route (228/228, no --scope): status, redirect, canonical and anchors", "class": "local-build", "steps": [{ "custom": "fixturesFull" }] },
     { "id": "search-relevance-full-corpus", "title": "#13: all 24 queries (no --scope) hit in the top 3 through Cmd/Ctrl+K, with keyboard focus; ranking over the wider corpus is #9's repair, not this entry's", "class": "local-build", "steps": [{ "custom": "searchFull" }] },
-    { "id": "shell-and-page-actions", "title": "Sidebar, surfaces, page actions, TOC, H1, prev/next, no-JS, no external requests", "class": "local-build", "steps": [
-      { "suite": "m3", "match": ["the /api/ sidebar renders the inventory apiSidebar placement", "triggers dispatch apertis-docs:open", "page actions read the same-origin .md", "without JavaScript the navigation", "the desktop TOC follows the legacy rule", "exactly one H1", "prev/next only link converted pages", "no GitHub raw or other-release requests"] } ] },
+    { "id": "shell-and-page-actions", "title": "Sidebar, surfaces, page actions, TOC, H1, prev/next, no-JS, no external requests; the redesigned header, homepage, footer and page actions (m9)", "class": "local-build", "steps": [
+      { "suite": "m3", "match": ["the /api/ sidebar renders the inventory apiSidebar placement", "triggers dispatch apertis-docs:open", "page actions read the same-origin .md", "without JavaScript the navigation", "the desktop TOC follows the legacy rule", "exactly one H1", "prev/next only link converted pages", "no GitHub raw or other-release requests"] },
+      { "suite": "m9" } ] },
     { "id": "mobile-light-dark-keyboard", "title": "Mobile drawer and sheet, light/dark themes, keyboard search and Ask Docs", "class": "local-build", "steps": [
       { "suite": "m3", "match": ["light is the default", "the mobile drawer opens and closes at 390x844", "the drawer really locks page scrolling"] },
       { "suite": "m4", "match": ["Cmd/Ctrl\\+K opens search with focus in the input", "Ask Docs keyboard", "mobile 390 px", "ArrowDown/ArrowUp move the selection"] } ] },
