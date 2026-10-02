@@ -65,13 +65,13 @@ The second row holds the navbar items from "Preserved reader-facing shell" as se
 
 At narrow widths the header SHALL be one row, and the tabs and account actions SHALL move into a sheet that is opened from a menu button.
 
-**Homepage.** The operator revised the homepage on 2026-10-02 (recorded on #4), after the OpenAI API docs and claude.dev homepages. It SHALL read as the entry to Apertis guides, reference, release notes and articles, not as a docs index, and it SHALL stay calm: one primary action, no destination repeated in the page body, and no bordered tiles or pills. In order:
-- a left-aligned hero: a heading in the display face and one lead line, with no eyebrow and no controls (search is the header's);
-- a quickstart card: a short lead, the primary action (Get started, to the Quick Start page), a secondary action to the Apertis console (`https://apertis.ai/setting?tab=keys`, new tab), and the Quick Start request in tabs (cURL, Python, Node.js) taken from the Quick Start page;
+**Homepage.** The operator revised the homepage on 2026-10-02 (recorded on #4), after the OpenAI developers, Claude docs and claude.dev homepages. It SHALL read as the entry to Apertis guides, reference, models, release notes and articles, not as a docs index, and it SHALL stay calm: one primary action, no destination repeated in the page body, no pills, and no code sample (the Quick Start page carries the request). In order:
+- a left-aligned hero: a heading in the display face, one lead line, the primary action (Get started, to the Quick Start page) and a secondary action to the Apertis console (`https://apertis.ai/setting?tab=keys`, new tab), then the model providers as one row of monochrome marks with their names, not links (search is the header's);
+- "Models": the featured models, after the Claude docs model family, as cards with the name, the provider and context length, use tags, one line and a "New" mark when the release notes announce the model; each opens its page under `https://apertis.ai/models/` in a new tab, with a link to the whole catalog;
 - "Start building": the six homepage feature-card destinations, including the external Playground card, as an unbordered list of items, each with an icon, a title and one line;
-- "Latest": the newest release notes and, once a native article is published, the newest articles beside them.
+- "Latest": the newest release notes and, once a native article is published, the newest articles beside them; each release note links to its page under `https://apertis.ai/changelog/` in a new tab.
 
-Release notes come from a snapshot of the public Apertis changelog committed to the repository (`site-nimbus/src/components/home/release-notes.json`, written by `scripts/nimbus/release-notes-snapshot.mjs` from the changelog's public homepage view). The build reads only that file and never calls the network. Each entry links to its page under `https://apertis.ai/changelog/` in a new tab.
+The release notes and the featured models come from snapshots committed to the repository (`site-nimbus/src/components/home/release-notes.json` and `featured-models.json`), written by `scripts/nimbus/homepage-snapshot.mjs` from the public changelog and model catalog; the featured models, their lines and tags are chosen there, and the snapshot refuses a model the catalog lacks or has disabled. The build reads only the committed files and never calls the network.
 
 Every homepage section starts with its heading, optionally one line, then the content, with one consistent spacing between sections.
 
@@ -91,8 +91,8 @@ The surface open event, the keyboard contract, the search and Ask Docs behaviour
 
 #### Scenario: Calm homepage
 - **WHEN** the homepage is rendered at 1440 px wide
-- **THEN** its body holds exactly one primary button, and no destination appears twice in it
-- **AND** the "Start building" items carry no border at rest, and the six feature-card destinations are among them
+- **THEN** its body holds exactly one primary button, no code sample, and no destination twice
+- **AND** the featured-model cards match the committed snapshot, and the "Start building" items carry no border at rest, the six feature-card destinations among them
 - **AND** "Latest" lists the release-notes snapshot, newest first, each linking to its `https://apertis.ai/changelog/<version>` page
 
 #### Scenario: No brand colour

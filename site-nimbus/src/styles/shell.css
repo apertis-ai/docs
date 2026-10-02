@@ -584,30 +584,33 @@ button { font: inherit; color: inherit; }
   box-shadow: var(--shadow);
 }
 
-/* Homepage (revised 2026-10-02, after the OpenAI API docs and claude.dev homepages): a left-aligned hero,
-   the quickstart card, "Start building" items and "Latest", in one rhythm (heading, content), 80 px apart.
-   No eyebrows, pills or bordered tiles; one primary action. */
+/* Homepage (revised 2026-10-02, after the OpenAI developers, Claude docs and claude.dev homepages): a
+   left-aligned hero with the providers row, "Models", "Start building" and "Latest", in one rhythm
+   (heading, optional line, content), 80 px apart. No eyebrows or pills; one primary action. */
 .landing { padding-bottom: 32px; }
 .hero { padding-top: 72px; }
 .hero__title { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-6xl); font-weight: 400; line-height: 1.12; letter-spacing: -0.02em; }
 .hero__lead { max-width: 62ch; margin: 16px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.6; }
+.hero__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.providers { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 48px 0 0; padding: 20px 0 0; border-top: 1px solid var(--line); list-style: none; color: var(--muted); font-size: var(--fs-ui); font-weight: 500; }
+.providers li { display: inline-flex; align-items: center; gap: 8px; }
+.providers__mark { display: inline-flex; color: var(--ink); }
+.providers__mark svg { width: 18px; height: 18px; }
 .home-section { padding-top: 80px; }
 .home-section h2 { margin: 0 0 20px; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
-/* The quickstart card: copy and the two actions, the Quick Start request in tabs. */
-.quickstart { padding-top: 40px; }
-.quickstart__copy { display: flex; flex-direction: column; justify-content: center; padding: 32px; }
-.home-section .quickstart__copy h2 { margin: 0 0 8px; font-size: var(--fs-2xl); }
-.quickstart__copy p { margin: 0 0 24px; color: var(--desc); font-size: var(--fs-md); line-height: 1.6; }
-.quickstart__actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.hero__code { min-width: 0; border-left: 1px solid var(--line); }
-.hero-code__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px 0 12px; border-bottom: 1px solid var(--line); }
-.hero-code__panel pre.astro-code {
-  margin: 0;
-  padding: 18px 20px;
-  overflow-x: auto;
-  background: var(--card) !important;
-  font: var(--fs-sm)/1.7 var(--mono);
-}
+.home-section h2:has(+ .home-section__lead) { margin-bottom: 6px; }
+.home-section__lead { margin: 0 0 24px; color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
+/* "Models": the featured models as shadcn Cards, four across. */
+.models { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.model-card { display: block; height: 100%; color: var(--ink); }
+.model-card [data-slot='card'] { transition: border-color 0.16s ease; }
+.model-card:hover [data-slot='card'] { border-color: var(--line-strong); }
+.model-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.model-card__name { font-size: var(--fs-body); font-weight: 600; line-height: 1.35; }
+.model-card:hover .model-card__name { text-decoration: underline; text-underline-offset: 3px; }
+.model-card__meta { color: var(--muted); font-size: var(--fs-sm); }
+.model-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.model-card__line { color: var(--desc); font-size: var(--fs-ui); line-height: 1.55; }
 /* "Start building": shadcn Items without a border or fill; hover underlines the title. */
 .start { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 40px; }
 .start-item:hover [data-slot='item-title'] { text-decoration: underline; text-underline-offset: 3px; }
@@ -756,7 +759,7 @@ html.aa-scroll-lock { overflow: hidden; }
   .navbar__inner { display: flex; }
   .navbar__tabs, .navbar__center, .navbar__right { display: none; }
   .navbar__compact { display: flex; }
-  .hero__code { border-top: 1px solid var(--line); border-left: 0; }
+  .models { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .latest--two { grid-template-columns: minmax(0, 1fr); }
   .home-section { padding-top: 64px; }
   .footer__inner { grid-template-columns: minmax(0, 1fr); gap: 36px; }
@@ -797,7 +800,8 @@ html.aa-scroll-lock { overflow: hidden; }
   .ask-docs-trigger span { display: none; }
   .hero { padding-top: 48px; }
   .hero__title { font-size: var(--fs-5xl); }
-  .quickstart__copy { padding: 24px 20px; }
+  .models { grid-template-columns: minmax(0, 1fr); }
+  .providers { gap: 10px 20px; margin-top: 36px; }
   .start { grid-template-columns: minmax(0, 1fr); }
   .article-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; }
   .article-row__date { grid-column: 1 / -1; }

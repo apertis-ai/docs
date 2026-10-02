@@ -150,35 +150,6 @@ test('no brand colour (2026-10-02): no element, the logo included, is filled, ou
   }
 });
 
-test('the hero code tabs switch between cURL, Python and Node.js without JS errors, and copy the shown source', { skip }, async () => {
-  const { context, page, errors } = await open('/');
-  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
-  const panel = () => page.locator('[data-hero-code] [role="tabpanel"]:visible').innerText();
-  assert.match(await panel(), /curl https:\/\/api\.apertis\.ai\/v1\/chat\/completions/);
-  // Below the hero since canary step 5b: the island hydrates when scrolled into view (client:visible).
-  await page.locator('[data-hero-code]').scrollIntoViewIfNeeded();
-  await page.locator('astro-island:not([ssr]) [data-hero-code]').waitFor();
-  const quick = fs.readFileSync(path.resolve(import.meta.dirname, '../src/content/public/getting-started/quick-start.md'), 'utf8');
-  const model = /"model": "([^"]+)"/.exec(quick)![1];
-  for (const [tab, expected] of [['Python', /from openai import OpenAI[\s\S]*base_url="https:\/\/api\.apertis\.ai\/v1"/], ['Node.js', /import OpenAI from 'openai'[\s\S]*baseURL: 'https:\/\/api\.apertis\.ai\/v1'/], ['cURL', /curl /]] as const) {
-    await page.getByRole('tab', { name: tab }).click();
-    assert.equal(await page.getAttribute(`[data-hero-code] [role="tab"]:text-is("${tab}")`, 'aria-selected'), 'true');
-    const text = await panel();
-    assert.match(text, expected, tab);
-    assert.match(text, /sk-your-api-key/, `${tab} placeholder key`);
-    assert.ok(text.includes(model), `${tab} uses the Quick Start model ${model}`);
-    assert.ok(await page.locator('[data-hero-code] [role="tabpanel"]:visible pre.astro-code span[style*="--shiki"]').count() > 3, `${tab} is highlighted at build time`);
-    // The copy button's name is its visible label, and a live region announces the result.
-    assert.equal(await page.getAttribute('[data-hero-copy]', 'aria-label'), null);
-    await page.click('[data-hero-copy]');
-    await page.waitForFunction(() => /Copied/.test(document.querySelector('[data-hero-copy]')?.textContent ?? ''));
-    assert.match(await page.textContent('[data-hero-code] [role="status"]') ?? '', /copied/i);
-    assert.equal((await page.evaluate(() => navigator.clipboard.readText())).trim(), text.trim(), `${tab} copy`);
-  }
-  assert.deepEqual(errors, []);
-  await context.close();
-});
-
 test('the footer carries exactly the pre-redesign footer link set, regrouped, with a brand column and sentence-case headings', { skip }, async () => {
   const { context, page } = await open('/getting-started/quick-start/');
   const links = await page.$$eval('footer.footer a[href]:not(.brand)', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
@@ -212,8 +183,8 @@ test('the navbar destinations are unchanged in the header and in the navigation 
 test('static parts are server-rendered without hydration; homepage links all resolve to published routes', { skip }, async () => {
   const { context, page } = await open('/');
   const islands = await page.$$eval('astro-island', (els: Element[]) => els.map((e) => (e.getAttribute('component-url') ?? '').replace(/^.*\/|\..*$/g, '')).sort());
-  assert.deepEqual(islands, ['HeroCode', 'NavSheet']);
-  const hydrated = await page.$$eval('header.navbar, .hero, .quickstart__copy, .start, .start-item, .latest, .release-row, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
+  assert.deepEqual(islands, ['NavSheet']);
+  const hydrated = await page.$$eval('header.navbar, .hero, .providers, .models, .model-card, .start, .start-item, .latest, .release-row, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
     els.filter((e) => e.closest('astro-island') || e.querySelector('astro-island')).map((e) => e.className));
   assert.deepEqual(hydrated, []);
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
@@ -314,7 +285,7 @@ test('the selected search result and the focused page-actions item have a >= 3:1
   }
 });
 
-test('keyboard focus is visible (>= 3:1) on header buttons, the hero code panel and the search field (light)', { skip }, async () => {
+test('keyboard focus is visible (>= 3:1) on header buttons, a model card and the search field (light)', { skip }, async () => {
   const { context, page } = await open('/');
   await page.evaluate(contrastIn);
   const tabTo = async (selector: string) => {
@@ -327,7 +298,7 @@ test('keyboard focus is visible (>= 3:1) on header buttons, the hero code panel 
   const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
   // Measure the settled indicator, not a transition's first frame.
   const settle = (s: string) => page.waitForFunction((q: string) => document.querySelector(q)!.getAnimations().length === 0, s);
-  for (const sel of ['.navbar__right [data-theme-toggle]', '.navbar__login', '.navbar__signup', '[data-hero-code] [role="tabpanel"]']) {
+  for (const sel of ['.navbar__right [data-theme-toggle]', '.navbar__login', '.navbar__signup', '.model-card']) {
     await tabTo(sel);
     await settle(sel);
     const ratio = await page.evaluate(([s, b]: string[]) => (window as any).__indicator(document.querySelector(s), b), [sel, await bg()]);
@@ -435,14 +406,16 @@ test('one search control on the homepage (canary step 5b reverses step 1): the h
 
 test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
   const { context, page } = await open('/');
-  // A "Start building" item is checked by its title (its line is a sentence). Release-note rows are not
-  // labels: they carry the changelog's own titles and model names, verbatim from apertis.ai/changelog.
-  const labels: string[] = await page.$$eval('main a:not(.release-row)', (as: HTMLAnchorElement[]) => as.map((a) =>
-    (a.querySelector('[data-slot="item-title"]') ?? a).textContent!.replace(/\s+/g, ' ').trim()).filter(Boolean));
+  // A "Start building" item is checked by its title (its line is a sentence), a model card by its use tags.
+  // Model names and release-note rows are not our labels: they come verbatim from the model catalog and
+  // apertis.ai/changelog (provider and model names).
+  const labels: string[] = await page.$$eval('main a:not(.release-row)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
+    (a.matches('.model-card') ? [...a.querySelectorAll('.model-card__tags [data-slot="badge"]')] : [a.querySelector('[data-slot="item-title"]') ?? a])
+      .map((e) => e.textContent!.replace(/\s+/g, ' ').trim())).filter(Boolean));
   const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'Playground', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
   const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
   assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
-  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing'), `labels ${JSON.stringify(labels)}`);
+  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing') && labels.includes('Long tasks'), `labels ${JSON.stringify(labels)}`);
   await context.close();
 });
 
@@ -571,37 +544,55 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
   await m.context.close();
 });
 
-test('calm homepage (2026-10-02, after the OpenAI API docs and claude.dev): a left-aligned hero, one primary action, unbordered start items, no repeated destination, release notes from the snapshot', { skip }, async () => {
-  const notes = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/home/release-notes.json'), 'utf8')).notes;
+test('calm homepage (2026-10-02, after the OpenAI developers, Claude docs and claude.dev homepages): a left-aligned hero with one primary action and the providers, featured models from the snapshot, unbordered start items, no repeated destination, no code sample', { skip }, async () => {
+  const home = path.resolve(import.meta.dirname, '../src/components/home');
+  const notes = JSON.parse(fs.readFileSync(path.join(home, 'release-notes.json'), 'utf8')).notes;
+  const catalog = JSON.parse(fs.readFileSync(path.join(home, 'featured-models.json'), 'utf8'));
   const { context, page } = await open('/', VIEWS[1440]);
   const h = await page.evaluate(() => {
     const hero = document.querySelector('.hero')!;
     const title = hero.querySelector('h1')!;
     const main = document.querySelector('main')!;
+    const link = (a: Element) => [a.textContent!.trim(), a.getAttribute('href'), (a as HTMLAnchorElement).target, (a as HTMLAnchorElement).rel];
     return {
       title: [getComputedStyle(title).fontFamily, getComputedStyle(title).fontWeight, getComputedStyle(title).textAlign],
       left: [title, document.querySelector('.navbar .brand')!].map((e) => Math.round(e.getBoundingClientRect().left)),
-      heroControls: hero.querySelectorAll('a, button, input').length,
+      heroActions: [...hero.querySelectorAll('a, button, input')].map(link),
+      providers: [...hero.querySelectorAll('.providers li')].map((li) => [li.textContent!.trim(), !!li.querySelector('svg'), li.querySelectorAll('a').length]),
       eyebrows: main.querySelectorAll('.eyebrow, .hero__eyebrow').length,
+      code: main.querySelectorAll('pre, code').length,
       primary: [...main.querySelectorAll('[data-slot="button"][data-variant="default"]')].map((b) => [b.textContent!.trim(), b.getAttribute('href')]),
       hrefs: [...main.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')!),
-      console: [...main.querySelectorAll('.quickstart a[target]')].map((a) => [a.getAttribute('href'), (a as HTMLAnchorElement).target, (a as HTMLAnchorElement).rel]),
+      models: [...main.querySelectorAll('#models a.model-card')].map((a) => ({
+        link: link(a).slice(1), name: a.querySelector('.model-card__name')?.textContent, meta: a.querySelector('.model-card__meta')?.textContent,
+        tags: [...a.querySelectorAll('.model-card__tags [data-slot="badge"]')].map((b) => b.textContent), line: a.querySelector('.model-card__line')?.textContent,
+        isNew: [...a.querySelectorAll('.model-card__head [data-slot="badge"]')].map((b) => b.textContent).includes('New'),
+      })),
       items: [...main.querySelectorAll('.start a[data-slot="item"]')].map((a) => ({
         href: a.getAttribute('href'), title: a.querySelector('[data-slot="item-title"]')?.textContent?.trim(),
         line: a.querySelector('[data-slot="item-description"]')?.textContent?.trim(), icon: !!a.querySelector('[data-slot="item-media"] svg'),
-        border: ['Top', 'Right', 'Bottom', 'Left'].some((side) => { const cs = getComputedStyle(a); return parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0 && cs.getPropertyValue(`border-${side.toLowerCase()}-color`) !== 'rgba(0, 0, 0, 0)'; }),
+        border: ['top', 'right', 'bottom', 'left'].some((side) => { const cs = getComputedStyle(a); return parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0 && cs.getPropertyValue(`border-${side}-color`) !== 'rgba(0, 0, 0, 0)'; }),
       })),
-      releases: [...main.querySelectorAll('.latest a.release-row')].map((a) => [a.getAttribute('href'), (a as HTMLAnchorElement).target, (a as HTMLAnchorElement).rel, a.querySelector('time')?.getAttribute('datetime')]),
+      releases: [...main.querySelectorAll('.latest a.release-row')].map((a) => [...link(a).slice(1), a.querySelector('time')?.getAttribute('datetime')]),
     };
   });
   assert.match(h.title[0], /^"?LINE Seed"?,/);
   assert.deepEqual(h.title.slice(1), ['400', 'start'], 'display face, weight 400, left-aligned');
   assert.equal(h.left[0], h.left[1], 'the title starts at the logo edge');
-  assert.equal(h.heroControls, 0, 'the hero holds no controls');
+  assert.deepEqual(h.heroActions, [['Get started', '/getting-started/quick-start/', '', ''], ['Create an API key', 'https://apertis.ai/setting?tab=keys', ...EXT]], 'the hero holds the primary action and the console');
+  assert.ok(h.providers.length >= 6 && h.providers.every(([name, svg, links]: [string, boolean, number]) => name && svg && links === 0), `providers ${JSON.stringify(h.providers)}`);
   assert.equal(h.eyebrows, 0, 'no eyebrows');
+  assert.equal(h.code, 0, 'no code sample on the homepage (the Quick Start page has it)');
   assert.deepEqual(h.primary, [['Get started', '/getting-started/quick-start/']], 'exactly one primary action');
   assert.deepEqual(h.hrefs.filter((x: string, i: number) => h.hrefs.indexOf(x) !== i), [], 'no destination repeated in the body');
-  assert.deepEqual(h.console, [['https://apertis.ai/setting?tab=keys', ...EXT]]);
+  assert.deepEqual(h.models.map((m: { link: string[] }) => m.link), catalog.models.map((m: { id: string }) => [`https://apertis.ai/models/${encodeURIComponent(m.id)}`, ...EXT]));
+  for (const [i, m] of h.models.entries()) {
+    const want = catalog.models[i];
+    assert.equal(m.name, want.name);
+    assert.ok(m.meta.startsWith(`${want.provider} · `) && m.meta.endsWith(' context'), m.meta);
+    assert.deepEqual([m.tags, m.line], [want.tags, want.line]);
+    assert.equal(m.isNew, notes.some((n: { description: string }) => n.description.includes(want.name)), `${want.name} New badge`);
+  }
   assert.equal(h.items.length, 6);
   for (const it of h.items) assert.ok(it.title && it.line && it.icon && !it.border, JSON.stringify(it));
   assert.ok(h.items.some((it: { href: string }) => it.href === 'https://playground.apertis.ai'), 'the Playground card is a start item');
