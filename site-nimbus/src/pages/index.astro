@@ -1,67 +1,61 @@
 ---
 // Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", revised on
-// 2026-10-02 after the OpenAI API docs and claude.dev homepages): the entry to Apertis guides, reference,
-// release notes and articles, kept calm. A left-aligned hero (heading and one line), the quickstart card
-// (the one primary action, the console, the Quick Start request in tabs), "Start building" (the six legacy
-// feature-card destinations as shadcn Items) and "Latest" (release notes from the committed changelog
-// snapshot, and articles once one is published). Search is the header's. Everything here is
-// server-rendered; only the code tabs hydrate.
-import { Code } from 'astro:components';
+// 2026-10-02 after the OpenAI developers, Claude docs and claude.dev homepages): the entry to Apertis guides,
+// reference, release notes and articles, kept calm. A left-aligned hero (heading, one line, the primary
+// action and the console, then the providers in one monochrome row), "Models" (the featured models of the
+// committed catalog snapshot), "Start building" (the six legacy feature-card destinations as shadcn Items)
+// and "Latest" (release notes from the committed changelog snapshot, and articles once one is published).
+// Search is the header's. Everything here is server-rendered without client JavaScript.
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import openai from '@lobehub/icons-static-svg/icons/openai.svg?raw';
+import anthropic from '@lobehub/icons-static-svg/icons/anthropic.svg?raw';
+import google from '@lobehub/icons-static-svg/icons/google.svg?raw';
+import xai from '@lobehub/icons-static-svg/icons/xai.svg?raw';
+import deepseek from '@lobehub/icons-static-svg/icons/deepseek.svg?raw';
+import meta from '@lobehub/icons-static-svg/icons/meta.svg?raw';
+import qwen from '@lobehub/icons-static-svg/icons/qwen.svg?raw';
+import kimi from '@lobehub/icons-static-svg/icons/kimi.svg?raw';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCode from '../components/home/HeroCode.tsx';
 import ArticleList from '../components/home/ArticleList.astro';
+import FeaturedModels from '../components/home/FeaturedModels.tsx';
 import StartBuilding from '../components/home/StartBuilding.tsx';
 import ReleaseNotes from '../components/home/ReleaseNotes.tsx';
+import catalog from '../components/home/featured-models.json';
 import { isNativeArticle } from '../contracts/articles.ts';
-import { Card } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { noTokenizeTimeLimit } from '@/lib/shiki';
 import { documentAt, manifest } from '../manifest/manifest.ts';
-import quickStart from '../content/public/getting-started/quick-start.md?raw';
 
 const doc = documentAt('/');
 // Articles join "Latest" once a native article is published (none yet: release notes only).
 const hasArticles = manifest.documents.some(isNativeArticle);
-
-// The hero sample is the Quick Start request, read from its clean Markdown so the two never drift.
-function fenced(heading: string, lang: string): string {
-  const at = quickStart.indexOf(`### ${heading}\n`);
-  const block = at < 0 ? null : new RegExp('```' + lang + '\\n([\\s\\S]*?)\\n```').exec(quickStart.slice(at));
-  if (!block) throw new Error(`quick-start.md: no \`${lang}\` block under "### ${heading}" for the homepage hero`);
-  return block[1];
-}
-const sources = { curl: fenced('Using cURL', 'bash'), python: fenced('Using Python', 'python'), node: fenced('Using Node.js', 'javascript') };
-const themes = { light: 'github-light', dark: 'github-dark' } as const;
-
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
+// Monochrome provider marks (currentColor), their <title> dropped: the name beside each mark labels it.
+const mark = (svg: string) => svg.replace(/<title>[\s\S]*?<\/title>/, '');
+const providers = [
+  ['OpenAI', openai], ['Anthropic', anthropic], ['Google', google], ['xAI', xai],
+  ['DeepSeek', deepseek], ['Meta', meta], ['Qwen', qwen], ['Kimi', kimi],
+].map(([name, svg]) => ({ name, svg: mark(svg) }));
 ---
 <BaseLayout doc={doc} buildId={manifest.buildId}>
   <main class="landing" id="main">
     <section class="shell-container hero" aria-labelledby="hero-title">
       <h1 class="hero__title" id="hero-title">Build with Apertis</h1>
       <p class="hero__lead">One API key for models across leading providers. Guides, reference, release notes and articles, from your first request to production.</p>
+      <div class="hero__actions">
+        <a data-slot="button" data-variant="default" class={buttonVariants({ size: 'lg' })} href="/getting-started/quick-start/">Get started<ArrowRight className="size-4" aria-hidden="true" /></a>
+        <a data-slot="button" data-variant="outline" class={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'bg-card')} href="https://apertis.ai/setting?tab=keys" {...ext}>Create an API key<ArrowUpRight className="size-4" aria-hidden="true" /></a>
+      </div>
+      <ul class="providers" aria-label="Model providers">
+        {providers.map((p) => <li><span class="providers__mark" aria-hidden="true" set:html={p.svg} />{p.name}</li>)}
+      </ul>
     </section>
 
-    <section class="shell-container home-section quickstart" aria-labelledby="quickstart-title">
-      <Card className="quickstart__card grid gap-0 overflow-hidden py-0 shadow-none lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-        <div class="quickstart__copy">
-          <h2 id="quickstart-title">Make your first request</h2>
-          <p>OpenAI- and Anthropic-compatible endpoints, with smart routing, auto-failover and free prompt caching built in.</p>
-          <div class="quickstart__actions">
-            <a data-slot="button" data-variant="default" class={buttonVariants()} href="/getting-started/quick-start/">Get started<ArrowRight className="size-4" aria-hidden="true" /></a>
-            <a data-slot="button" data-variant="outline" class={cn(buttonVariants({ variant: 'outline' }), 'bg-card')} href="https://apertis.ai/setting?tab=keys" {...ext}>Create an API key<ArrowUpRight className="size-4" aria-hidden="true" /></a>
-          </div>
-        </div>
-        <div class="hero__code">
-          <HeroCode client:visible sources={sources}>
-            <Code slot="curl" code={sources.curl} lang="bash" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-            <Code slot="python" code={sources.python} lang="python" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-            <Code slot="node" code={sources.node} lang="javascript" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-          </HeroCode>
-        </div>
-      </Card>
+    <section class="shell-container home-section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">Models</h2>
+      <p class="home-section__lead">One key reaches {catalog.total} models. Start with one of these.</p>
+      <FeaturedModels />
+      <p class="home-section__more"><a href="https://apertis.ai/models" {...ext}>Browse all {catalog.total} models<ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
     </section>
 
     <section class="shell-container home-section" id="start" aria-labelledby="start-title">
