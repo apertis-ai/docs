@@ -254,7 +254,7 @@ document of that generation.
 ## Paired performance (`scripts/nimbus/paired-perf.mjs`)
 
 ```sh
-PLAYWRIGHT=<...> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --build-id <candidate buildId> --out perf.json [--page /p/ ...]
+PLAYWRIGHT=<...> PAKO=<pako/index.js> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --build-id <candidate buildId> --out perf.json [--page /p/ ...]
 node scripts/nimbus/paired-perf.mjs gate perf.json [shard2.json ...] --build-id <candidate buildId> --out merged.json   # re-gates raw samples, no browser
 ```
 
@@ -298,9 +298,12 @@ the page set, not the protocol, across 12 GitHub-hosted runners:
   Legacy and candidate are therefore still paired on one machine in one window, and no shard shares a
   CPU with another. A page whose run produces no valid samples is retried up to 3 times; a page with
   none after that fails the shard.
-- The shards run Node 25.6.1, the version the legacy byte baseline was recorded with: byte metrics are
-  Node's own gzip at level 9, and its zlib changed within 25.x (the legacy CSS is 25,887 bytes on 25.6.1
-  and 25,892 on 25.9.0). A local run on another Node fails the legacy identity check the same way.
+- Byte metrics are gzip level 9 sizes computed with pako 2.1.0 (`PAKO`, installed outside the
+  repository like Playwright). `node:zlib` depends on how Node was built: the recorded baseline came from
+  Homebrew Node, which links macOS libz 1.2.12, while the official binaries (CI) bundle Chromium zlib
+  1.3.1, and the legacy CSS gzips to 25,887 and 25,892 bytes respectively. pako reproduces the macOS libz
+  sizes byte for byte (447 legacy and candidate assets, 0 differences), so the recorded baseline holds
+  on any platform.
 - `gate` re-gates every raw sample with `paired-perf.mjs gate --set full`, then the PoC pages out of the
   same samples with `--set poc`, and uploads `paired-perf-result` (merged results and gate logs).
 
