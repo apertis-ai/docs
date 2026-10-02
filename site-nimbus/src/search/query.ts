@@ -8,7 +8,8 @@
 //
 // Ranking: variants merge by Pagefind score, not by variant order, so a page that merely mentions a
 // path literally does not outrank the page about it. Then the top RERANK results re-rank by how much
-// of the query names the page (its title, URL path and headings), Pagefind score breaking ties.
+// of the query names the page (its title, URL path below the section, and headings), Pagefind score
+// breaking ties.
 
 /** Anything that is not a letter, digit, whitespace, `_` (a Pagefind word character) or `-` (Pagefind splits hyphenated words itself). */
 const SEPARATORS = /[^\p{L}\p{N}\s_-]+/gu;
@@ -33,11 +34,15 @@ interface Hit {
   data?(): Promise<{ url: string; meta: { title?: string }; anchors?: { text: string }[] }>;
 }
 
-const words = (s: string) => s.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+/** A plural and its singular are one word (`keys` names `key`); `ss` endings and short words stay as they are. */
+const singular = (w: string) => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w);
+const words = (s: string) => (s.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).map(singular);
+/** The URL path below its leading section: `/api/...` would otherwise name every API page "api". */
+const pathWords = (url: string) => words(url.replace(/^[a-z]+:\/\/[^/]+/i, '').split('/').filter(Boolean).slice(1).join(' '));
 
 /** Share of the query's words that name the page: a word in its title or URL path counts 1, a word only in a heading ½. */
 function naming(query: string[], page: Awaited<ReturnType<NonNullable<Hit['data']>>>): number {
-  const named = new Set([...words(page.meta.title ?? ''), ...words(page.url)]);
+  const named = new Set([...words(page.meta.title ?? ''), ...pathWords(page.url)]);
   const headed = new Set((page.anchors ?? []).flatMap((a) => words(a.text)));
   return query.reduce((sum, w) => sum + (named.has(w) ? 1 : headed.has(w) ? 0.5 : 0), 0) / query.length;
 }

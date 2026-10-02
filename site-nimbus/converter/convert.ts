@@ -13,7 +13,7 @@ import { markdownPathFor, type ManifestDocument, type ManifestV1 } from '../src/
 import { MANIFEST_KINDS, type InventoryRoute, type RouteInventory } from '../src/contracts/navigation.ts';
 import { TITLE_SUFFIX } from '../src/contracts/page.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
-import { articleCanonical, articleMarkdown, articlePath, assertNoInventoryCollision, readArticles } from './articles.ts';
+import { articleCanonical, articleMarkdown, articlePath, assertNoInventoryCollision, assertRelatedPublished, readArticles } from './articles.ts';
 export { decodeEntities };
 
 export const SITE_ROOT = path.resolve(import.meta.dirname, '..');
@@ -305,6 +305,15 @@ export function sourceShaOf(repoRoot: string): string {
   return git(repoRoot, ['log', '-1', '--format=%H', '--', ...LEGACY_ROOTS]);
 }
 
+/**
+ * astro copies ../static into dist as it is on disk, while the buildId names only the commit. A checked
+ * build (CI, M2_CHECK=1) therefore refuses any difference there, gitignored files included.
+ */
+export function assertStaticClean(repoRoot: string) {
+  const dirty = git(repoRoot, ['status', '--porcelain', '--ignored', '--', 'static']);
+  if (dirty) throw new Error(`m2: static/ differs from the commit, so dist would not match the buildId:\n${dirty}`);
+}
+
 /** site-nimbus files that cannot change dist: documentation, tests and git metadata. */
 export const NOT_BUILD_INPUTS = ['README.md', '.gitignore', 'test/'];
 
@@ -416,6 +425,7 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
   // Native articles (converter/articles.ts), after the legacy corpus: drafts yield nothing at all.
   const articles = readArticles(siteRoot);
   assertNoInventoryCollision(articles, inventory);
+  assertRelatedPublished(articles.filter((x) => !x.draft), documents);
   for (const a of articles.filter((x) => !x.draft)) {
     const clean = articleMarkdown(a);
     const canonicalUrl = articleCanonical(a.slug);

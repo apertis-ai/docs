@@ -273,6 +273,13 @@ export function initAssistant(): void {
       return;
     }
     if (seq !== searchSeq) return;
+    // Pagefind loads index chunks in its worker and reports a failed one as no results. An empty result
+    // is only "No results" while the index is still reachable; otherwise the connection is the problem.
+    if (!list.length && !(await fetch(PAGEFIND_URL, { method: 'HEAD', cache: 'no-store' }).then((r) => r.ok, () => false))) {
+      if (seq === searchSeq) renderResults([], 'The search could not be completed. Check your connection and try again.');
+      return;
+    }
+    if (seq !== searchSeq) return;
     renderResults(list, list.length ? '' : `No results for “${q}”`);
   }
 

@@ -68,6 +68,21 @@ test('malformed articles fail loudly: front matter, slug, H1 in the body, MDX', 
   bad('Bad_Slug.md', fm(), /slug must be lowercase/);
   bad('a.md', fm('', '# Title again\n'), /must not have an H1/);
   bad('a.md', fm('', 'import X from "y";\n'), /no MDX/);
+  bad('a.md', fm('related: getting-started\n'), /related must be root-absolute served paths/);
+});
+
+test('related docs must be published documentation pages: an unknown path or another article is refused', () => {
+  const site = (related: string) => {
+    const root = tmp();
+    fs.mkdirSync(path.join(root, 'src/articles'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'src/articles/a.md'), `---\ntitle: T\ndescription: D\ndate: 2026-09-28\nauthor: A\ncategory: C\nrelated: ${related}\n---\nBody.\n`);
+    return root;
+  };
+  assert.throws(() => convert({ outRoot: tmp(), siteRoot: site('/no-such-page/') }),
+    (e: unknown) => e instanceof ArticleError && /related \/no-such-page\/ is not a published documentation page/.test(e.message));
+  assert.throws(() => convert({ outRoot: tmp(), siteRoot: site('/blog/a/') }),
+    (e: unknown) => e instanceof ArticleError && /related \/blog\/a\/ is not a published documentation page/.test(e.message));
+  assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
 test('with no articles (the committed tree) nothing changes: 79 documents, no blog output, /blog stays retired', () => {

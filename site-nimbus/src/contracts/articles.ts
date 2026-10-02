@@ -14,3 +14,9 @@ export const isNativeArticle = (d: Partial<Pick<ManifestDocument, 'sourcePath'>>
  * citation for text before the first section lands on the title.
  */
 export const titleId = (title: string) => title.toLowerCase().replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, '').replace(/ /g, '-');
+
+/**
+ * An article's `related` front matter: the documentation pages it follows on from, as comma-separated
+ * root-absolute served paths. Each of those pages lists the article under "Related articles".
+ */
+export const parseRelated = (raw: unknown) => (typeof raw === 'string' ? raw.split(',').map((p) => p.trim()).filter(Boolean) : []);

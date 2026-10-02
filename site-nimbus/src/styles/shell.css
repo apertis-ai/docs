@@ -626,6 +626,17 @@ button { font: inherit; color: inherit; }
 
 /* Native articles (claude.dev blog index pattern): dated rows with hairlines; the /blog/ index puts a
    short intro column beside the list. */
+.article-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+html:not(.js) .article-filter { display: none; }
+.article-filter button { height: 32px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+.article-filter button:hover { color: var(--ink); }
+.article-filter button[aria-pressed='true'] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.article-filter button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.related-articles { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.related-articles h2 { margin: 0 0 12px; font-size: var(--fs-lg); }
+.related-articles ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.related-articles a { color: var(--ink); font-weight: 500; text-decoration: none; }
+.related-articles a:hover { color: var(--teal); }
 .article-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
 .article-row {
   display: grid;
