@@ -71,6 +71,39 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   assert.match(home, /href="\/blog\/routing-requests-across-providers\/"/);
   for (const p of ['index.html', 'blog/choosing-a-plan/index.html']) assert.match(html(p), /<a href="\/blog\/">Blog<\/a>/, p);
 
+  // Docs link back to the articles that name them as related (Claude's "Next steps"); the draft never.
+  const quick = html('getting-started/quick-start/index.html');
+  assert.match(quick, /<section class="related-articles"[^>]*data-pagefind-ignore="all"[^>]*>[\s\S]*<a href="\/blog\/choosing-a-plan\/">Choosing a plan<\/a>/);
+  assert.doesNotMatch(quick, /unfinished-draft|Unfinished draft/);
+  assert.match(html('billing/subscription-plans/index.html'), /<a href="\/blog\/choosing-a-plan\/">Choosing a plan<\/a>/);
+  assert.doesNotMatch(html('api/index.html'), /related-articles/);
+
+  // Two categories: the index offers a category filter; every row carries its category.
+  assert.match(index, /<div class="article-filter" role="group" aria-label="Filter articles by category">/);
+  for (const c of ['All', 'Engineering', 'Guides']) assert.match(index, new RegExp(`<button type="button"[^>]*>${c}</button>`));
+  assert.match(index, /<li data-category="Guides">/);
+  // The filter works in a browser (its inline script is self-contained, so the page HTML alone runs it).
+  if (process.env.PLAYWRIGHT) {
+    const { chromium } = await import(process.env.PLAYWRIGHT);
+    const browser = await chromium.launch({ channel: 'chrome' });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(index, { waitUntil: 'domcontentloaded' });
+      await page.click('.article-filter button[data-category="Engineering"]');
+      const state = await page.evaluate(() => ({
+        pressed: [...document.querySelectorAll('.article-filter button')].map((b) => `${b.textContent}:${b.getAttribute('aria-pressed')}`),
+        shown: [...document.querySelectorAll('.article-list li')].filter((li) => !(li as HTMLElement).hidden).map((li) => (li as HTMLElement).dataset.category),
+      }));
+      assert.deepEqual(state, { pressed: ['All:false', 'Engineering:true', 'Guides:false'], shown: ['Engineering'] });
+      await page.click('.article-filter button[data-category=""]');
+      assert.equal(await page.locator('.article-list li:not([hidden])').count(), 2);
+    } finally {
+      await browser.close();
+    }
+  } else console.log('# category filter click check skipped: PLAYWRIGHT is not set');
+  // The homepage list stays unfiltered.
+  assert.doesNotMatch(home, /article-filter/);
+
   // Sitemap, redirects: /blog/ is live; the legacy posts are still not served.
   const sitemap = html('sitemap.xml');
   for (const slug of ['routing-requests-across-providers', 'choosing-a-plan']) assert.match(sitemap, new RegExp(`/blog/${slug}/</loc>`));

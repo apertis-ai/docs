@@ -18,7 +18,7 @@ import type { ManifestV1 } from '../src/contracts/manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import { isNativeArticle } from '../src/contracts/articles.ts';
-import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
+import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, assertStaticClean, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
 
 /**
  * `check` (on when CI is set or M2_CHECK=1): never rewrite the committed manifest; fail if the build
@@ -26,6 +26,7 @@ import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, mainTextSha256, readInventory, 
  */
 export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }: { check?: boolean } = {}): string[] {
   const log: string[] = [];
+  if (check) assertStaticClean(REPO_ROOT);
   const pub = path.join(siteRoot, GENERATED_PUBLIC);
   for (const e of fs.readdirSync(pub, { recursive: true, withFileTypes: true }).filter((x) => x.isFile())) {
     const rel = path.relative(pub, path.join(e.parentPath, e.name));

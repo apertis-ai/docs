@@ -56,6 +56,18 @@ test('the top 10 re-rank by how much of the query names the page: title or URL p
   assert.deepEqual((await searchWithVariants('base url', async () => [vision, guide])).map((r) => r.id), ['guide', 'vision']);
 });
 
+test('the URL section does not name every page under it, and singular/plural name the same word', async () => {
+  // "api key": every /api/* page used to be named by "api" (its leading segment) and "key" missed "keys",
+  // so the API keys page tied with an unrelated endpoint page and kept the lower Pagefind score.
+  const endpoint = hit('endpoint', 9, { url: '/api/text-generation/chat-completions/', meta: { title: 'Chat Completions' } });
+  const keys = hit('keys', 2, { url: '/authentication/api-keys/', meta: { title: 'API Keys' } });
+  assert.deepEqual((await searchWithVariants('api key', async () => [endpoint, keys])).map((r) => r.id), ['keys', 'endpoint']);
+  // Deeper segments still name the page: "streaming" is in the path only.
+  const streaming = hit('streaming', 1, { url: '/api/text-generation/streaming/', meta: { title: 'Streams' } });
+  const other = hit('other', 9, { url: '/api/text-generation/responses/', meta: { title: 'Responses' } });
+  assert.deepEqual((await searchWithVariants('streaming', async () => [other, streaming])).map((r) => r.id), ['streaming', 'other']);
+});
+
 test('a result that fails to load fails the search instead of being ranked silently', async () => {
   const broken = { id: 'x', score: 1, data: () => Promise.reject(new Error('fragment aborted')) };
   await assert.rejects(searchWithVariants('api key', async () => [broken]), /fragment aborted/);
