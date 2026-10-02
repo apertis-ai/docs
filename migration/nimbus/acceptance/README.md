@@ -305,7 +305,18 @@ the page set, not the protocol, across 12 GitHub-hosted runners:
   sizes byte for byte (447 legacy and candidate assets, 0 differences), so the recorded baseline holds
   on any platform.
 - `gate` re-gates every raw sample with `paired-perf.mjs gate --set full`, then the PoC pages out of the
-  same samples with `--set poc`, and uploads `paired-perf-result` (merged results and gate logs).
+  same samples with `--set poc`, and uploads `paired-perf-first-run`.
+- **One re-measure for timing (operator decision on #4, 2026-10-02).** Timing on shared GitHub-hosted
+  runners varies between runs of the same build (desktop `/installation/bolt_diy/` LCP: candidate
+  median 248 ms in one run, 364 ms in the next, limit 358). When every failure of the first run is a
+  timing exceedance (`lcp`, `tbt`, `searchOpenMs`) on at most 7 pages
+  (`scripts/nimbus/paired-perf-remeasure.mjs`), `remeasure` measures those pages again in full (5
+  alternating rounds, both profiles) on a fresh runner. `verdict` then gates the re-measured samples in
+  place of the first ones. A second exceedance fails. Bytes, legacy identity, coverage and invalid
+  samples are never re-measured. Both runs stay in the artifacts (`paired-perf-first-run`,
+  `perf-remeasure`); `verdict` uploads `paired-perf-result` and names the re-measured pages.
+- `scripts/nimbus/paired-perf-ci.sh` is one runner's work (serve both sites, measure the given pages),
+  shared by `shard` and `remeasure`.
 
 It runs on pull requests that touch the candidate, the Pages Function, the budgets or the two perf scripts,
 and on `workflow_dispatch` once the workflow is on the default branch. It uses no secrets. The legacy
