@@ -282,6 +282,26 @@ average, and the failures. The exit status is 0 only when every page and profile
 **Symmetric origins.** Measure the candidate through the same kind of origin as the legacy server. For
 example, reach both through one hostname: the candidate preview listens on `0.0.0.0` for this.
 
+## Paired performance in CI (`.github/workflows/nimbus-paired-perf.yml`)
+
+The full published page set takes about 5.5 hours on one machine: every page is 5 alternating rounds per
+side and two profiles, and the mobile profile downloads every response at 200 KB/s. The workflow splits
+the page set, not the protocol, across 12 GitHub-hosted runners:
+
+- `legacy` builds the legacy site at `budgets.json` `baseSha`; `candidate` builds the checked-out commit.
+- Each `shard` runner serves both builds itself (legacy on 8791, the candidate with the root Pages
+  Function on 8806) and runs `paired-perf.mjs run` for pages `i, i + 12, ...` with system Google Chrome.
+  Legacy and candidate are therefore still paired on one machine in one window, and no shard shares a
+  CPU with another. A page whose run produces no valid samples is retried up to 3 times; a page with
+  none after that fails the shard.
+- `gate` re-gates every raw sample with `paired-perf.mjs gate --set full`, then the PoC pages out of the
+  same samples with `--set poc`, and uploads `paired-perf-result` (merged results and gate logs).
+
+It runs on pull requests that touch the candidate, the Pages Function, the budgets or the two perf scripts,
+and on `workflow_dispatch` once the workflow is on the default branch. It uses no secrets. The legacy
+byte medians must still equal the recorded baseline, so a legacy build that differs from the baseline
+fails the gate rather than shifting it.
+
 ## Local runs
 
 ```sh
