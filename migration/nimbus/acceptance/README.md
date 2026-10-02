@@ -288,7 +288,11 @@ The full published page set takes about 5.5 hours on one machine: every page is 
 side and two profiles, and the mobile profile downloads every response at 200 KB/s. The workflow splits
 the page set, not the protocol, across 12 GitHub-hosted runners:
 
-- `legacy` builds the legacy site at `budgets.json` `baseSha`; `candidate` builds the checked-out commit.
+- `legacy` downloads the recorded legacy build from the `nimbus-legacy-baseline` release and refuses it
+  unless its sha256 equals `migration/nimbus/legacy-baseline.sha256`. It is not rebuilt: webpack module
+  ids and the search index order depend on the build machine, so a Linux rebuild of `baseSha` differs
+  from the recorded baseline (about 1 KB of JS, 2 KB of search payload). `candidate` builds the
+  checked-out commit.
 - Each `shard` runner serves both builds itself (legacy on 8791, the candidate with the root Pages
   Function on 8806) and runs `paired-perf.mjs run` for pages `i, i + 12, ...` with system Google Chrome.
   Legacy and candidate are therefore still paired on one machine in one window, and no shard shares a
