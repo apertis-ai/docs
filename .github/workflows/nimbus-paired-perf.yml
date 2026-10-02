@@ -17,6 +17,7 @@ on:
       - 'migration/nimbus/budgets.json'
       - 'scripts/nimbus/measure.mjs'
       - 'scripts/nimbus/paired-perf.mjs'
+      - 'migration/nimbus/legacy-baseline.sha256'
       - '.github/workflows/nimbus-paired-perf.yml'
 
 permissions:
@@ -39,23 +40,25 @@ env:
 
 jobs:
   legacy:
-    name: legacy baseline build (budgets.json baseSha)
+    name: legacy baseline build (the recorded one, from the nimbus-legacy-baseline release)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with: { node-version: '22' }
-      - name: build the legacy site at the frozen baseline commit
+      # Not rebuilt: webpack module ids and the search index order depend on the build machine, so a
+      # rebuild of baseSha is not the build the legacy byte baseline was recorded from.
+      - name: fetch the recorded legacy build and refuse any other bytes
         run: |
-          base=$(jq -r .baseSha migration/nimbus/budgets.json)
-          git worktree add --detach "$RUNNER_TEMP/legacy" "$base"
-          cd "$RUNNER_TEMP/legacy"
-          npm ci
-          npm run build
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 3 -o legacy-baseline-build.tgz \
+            https://github.com/apertis-ai/docs/releases/download/nimbus-legacy-baseline/legacy-baseline-build.tgz
+          sha256sum -c "$GITHUB_WORKSPACE/migration/nimbus/legacy-baseline.sha256"
+          mkdir legacy-build
+          tar -xzf legacy-baseline-build.tgz -C legacy-build
+          grep -q 'main.333b8d31.js' legacy-build/index.html
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with: { name: legacy-build, path: '${{ runner.temp }}/legacy/build', retention-days: 3, if-no-files-found: error }
+        with: { name: legacy-build, path: '${{ runner.temp }}/legacy-build', retention-days: 3, if-no-files-found: error, include-hidden-files: true }
 
   candidate:
     name: candidate build
