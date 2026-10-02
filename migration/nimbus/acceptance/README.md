@@ -298,6 +298,9 @@ the page set, not the protocol, across 12 GitHub-hosted runners:
   Legacy and candidate are therefore still paired on one machine in one window, and no shard shares a
   CPU with another. A page whose run produces no valid samples is retried up to 3 times; a page with
   none after that fails the shard.
+- The shards run Node 25.6.1, the version the legacy byte baseline was recorded with: byte metrics are
+  Node's own gzip at level 9, and its zlib changed within 25.x (the legacy CSS is 25,887 bytes on 25.6.1
+  and 25,892 on 25.9.0). A local run on another Node fails the legacy identity check the same way.
 - `gate` re-gates every raw sample with `paired-perf.mjs gate --set full`, then the PoC pages out of the
   same samples with `--set poc`, and uploads `paired-perf-result` (merged results and gate logs).
 
