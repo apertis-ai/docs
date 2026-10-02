@@ -224,8 +224,8 @@ test('without JavaScript the navigation and landing links still work and no dead
   assert.ok(await page.$('article .toc-mobile > summary'));
   assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), null);
   await page.goto(base + '/', { waitUntil: 'load' });
-  // The redesigned homepage (2026-09-29, #4) regroups the six feature-card destinations into the journey
-  // section, so their order follows it; the six links, targets and rels are unchanged.
+  // The homepage (redesigned 2026-09-29 and revised 2026-10-02, #4) carries the six feature-card destinations
+  // as its "Start building" items, so their order follows them; the six links, targets and rels are unchanged.
   const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
   const byHref = (a: string[], b: string[]) => a[0].localeCompare(b[0]);
   assert.deepEqual(cards.sort(byHref), [

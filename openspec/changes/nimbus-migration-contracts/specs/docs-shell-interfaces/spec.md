@@ -1,10 +1,10 @@
 ## ADDED Requirements
 
 ### Requirement: Surface open event
-Search and Ask Docs SHALL be opened through one browser event: `window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' | 'ask', query?: string } }))`. The shell (#8) dispatches it from the navbar search control, the homepage hero search button and any other trigger; the search/Ask Docs client (#9) is the only listener. No component SHALL intercept another component's DOM (such as `.navbar__search-input`) to open a surface.
+Search and Ask Docs SHALL be opened through one browser event: `window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' | 'ask', query?: string } }))`. The shell (#8) dispatches it from the header search control and any other trigger; the search/Ask Docs client (#9) is the only listener. No component SHALL intercept another component's DOM (such as `.navbar__search-input`) to open a surface.
 
-#### Scenario: Homepage hero search
-- **WHEN** the reader activates the homepage hero search button
+#### Scenario: Header search
+- **WHEN** the reader activates the header search control
 - **THEN** the shell dispatches `apertis-docs:open` with `surface: 'search'` and the search dialog opens
 
 ### Requirement: Keyboard contract
@@ -65,14 +65,15 @@ The second row holds the navbar items from "Preserved reader-facing shell" as se
 
 At narrow widths the header SHALL be one row, and the tabs and account actions SHALL move into a sheet that is opened from a menu button.
 
-**Homepage.** The homepage SHALL open with a centred hero on its own band, after the Claude Docs homepage (operator, canary review on 2026-09-30):
-- a small eyebrow and a question as the heading, in the display face;
-- six intent pills, each naming a reader's task and the published page that answers it;
-- a line pointing to the Apertis console, and a "Browse all docs" link to the sections below.
+**Homepage.** The operator revised the homepage on 2026-10-02 (recorded on #4), after the OpenAI API docs and claude.dev homepages. It SHALL read as the entry to Apertis guides, reference, release notes and articles, not as a docs index, and it SHALL stay calm: one primary action, no destination repeated in the page body, and no bordered tiles or pills. In order:
+- a left-aligned hero: a heading in the display face and one lead line, with no eyebrow and no controls (search is the header's);
+- a quickstart card: a short lead, the primary action (Get started, to the Quick Start page), a secondary action to the Apertis console (`https://apertis.ai/setting?tab=keys`, new tab), and the Quick Start request in tabs (cURL, Python, Node.js) taken from the Quick Start page;
+- "Start building": the six homepage feature-card destinations, including the external Playground card, as an unbordered list of items, each with an icon, a title and one line;
+- "Latest": the newest release notes and, once a native article is published, the newest articles beside them.
 
-The hero holds no search control; search is the header's. The first section below it holds the first request: a short lead, three neutral quick links (Quick start, API keys, API reference) and a code sample with tabs (cURL, Python, Node.js), taken from the Quick Start page.
+Release notes come from a snapshot of the public Apertis changelog committed to the repository (`site-nimbus/src/components/home/release-notes.json`, written by `scripts/nimbus/release-notes-snapshot.mjs` from the changelog's public homepage view). The build reads only that file and never calls the network. Each entry links to its page under `https://apertis.ai/changelog/` in a new tab.
 
-Below the hero, sections follow one rhythm: a small eyebrow, a heading, a one-line description, then the content, with generous and consistent spacing between sections. The homepage feature cards and their destinations, including the external Playground card, remain reachable.
+Every homepage section starts with its heading, optionally one line, then the content, with one consistent spacing between sections.
 
 **Footer.** The footer SHALL have a brand column (logo, a short line and social links as labelled icons) and grouped link columns. Together they carry the footer link set from "Preserved reader-facing shell". Column headings use muted sentence case.
 
@@ -88,14 +89,21 @@ The surface open event, the keyboard contract, the search and Ask Docs behaviour
 - **WHEN** the homepage is rendered at 1440, 1024 and 390 px wide
 - **THEN** the left content edge of the header, of every homepage section and of the footer is the same x position
 
-#### Scenario: Restrained accent
+#### Scenario: Calm homepage
+- **WHEN** the homepage is rendered at 1440 px wide
+- **THEN** its body holds exactly one primary button, and no destination appears twice in it
+- **AND** the "Start building" items carry no border at rest, and the six feature-card destinations are among them
+- **AND** "Latest" lists the release-notes snapshot, newest first, each linking to its `https://apertis.ai/changelog/<version>` page
+
+#### Scenario: No brand colour
 - **WHEN** the homepage, a document page, the search dialog and Ask Docs are rendered in both themes
-- **THEN** no button, chip, badge, input or surface is filled or outlined with the teal accent at rest
+- **THEN** no element, the logo included, is filled, outlined or coloured with the teal family at rest
+- **AND** the token file defines no teal token
 
 ### Requirement: Reading layout and page header
-The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: logo, the teal accent (restrained as in **Palette**), Inter for text, and system monospace. Page titles, article h2 and h3, and homepage headings SHALL use the Apertis brand face LINE Seed at weight 400, never synthesised bold (operator, canary review on 2026-09-30). It is taken from apertis.ai, licensed SIL OFL 1.1 with its licence committed beside it, and only the Regular Latin subset ships. The candidate SHALL NOT use another brand's typefaces or marks.
+The operator decided on 2026-09-29 (recorded on #4) that the candidate improves readability instead of copying the legacy look. The candidate keeps every element of "Preserved reader-facing shell" and Apertis branding: the logo (monochrome, as in **Palette**), Inter for text, and system monospace. Page titles, article h2 and h3, and homepage headings SHALL use the Apertis brand face LINE Seed at weight 400, never synthesised bold (operator, canary review on 2026-09-30). It is taken from apertis.ai, licensed SIL OFL 1.1 with its licence committed beside it, and only the Regular Latin subset ships. The candidate SHALL NOT use another brand's typefaces or marks.
 
-**Palette.** The operator revised the palette on 2026-09-29 (recorded on #4). The candidate SHALL use neutral surfaces (a near-white page with white cards and hairline borders in light; near-black in dark) with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. The Apertis teal SHALL appear only in the logo, focus rings and link hover or active states. It SHALL NOT fill buttons, chips, badges, inputs or surfaces. Primary actions SHALL use an inverted neutral fill: dark on light, light on dark. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
+**Palette.** The operator revised the palette on 2026-09-29 (recorded on #4). The candidate SHALL use neutral surfaces (a near-white page with white cards and hairline borders in light; near-black in dark) with near-black ink. It SHALL have a matching dark palette, reachable only through the existing theme switch. The operator removed the brand teal on 2026-10-02 (recorded on #4): the candidate SHALL use no brand hue. The logo SHALL render as a monochrome mark in the ink colour of the current theme. Focus rings and link hover or active states SHALL be neutral (ink). Semantic colours (errors, admonitions) and syntax highlighting are not brand colour and stay. Primary actions SHALL use an inverted neutral fill: dark on light, light on dark. Body text SHALL have a contrast ratio of at least 7:1 against its background. Muted text, labels and links SHALL have at least 4.5:1. Both rules apply in both themes.
 
 **Measure.** Article prose SHALL NOT exceed about 70ch. Tables and code blocks MAY use the full content column.
 

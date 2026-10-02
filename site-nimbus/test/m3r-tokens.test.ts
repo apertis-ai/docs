@@ -44,8 +44,6 @@ const RULES: [fg: string, bg: string, min: number][] = [
   ['--link', '--bg', 4.5],
   ['--link', '--panel', 4.5],
   ['--link', '--card', 4.5],
-  ['--teal', '--bg', 4.5], // link hover and active states
-  ['--teal', '--card', 4.5],
   ['--primary-fg', '--primary', 4.5], // Create account and other primary actions (inverted neutral fill)
   ['--error', '--bg', 4.5],
   ['--error', '--card', 4.5],
@@ -75,4 +73,29 @@ test('surfaces are neutral and light by default; dark only through [data-theme=d
   // Inverted neutral primary: dark on light, light on dark.
   assert.ok(luminance(rgb(light['--primary'])) < 0.02 && luminance(rgb(dark['--primary'])) > 0.9, 'primary is not an inverted neutral fill');
   for (const f of fs.readdirSync(styles)) assert.doesNotMatch(fs.readFileSync(path.join(styles, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, ''), /prefers-color-scheme/, f);
+});
+
+// The brand teal removed on 2026-10-02 (#4, "No brand colour"): no teal token, no teal-family colour in any
+// stylesheet (comments aside), and no Tailwind teal utility in the components, layouts or pages.
+test('no brand teal: no teal token, colour or utility in the stylesheets and components', () => {
+  const tealHex = (hex: string) => {
+    const [r, g, b] = rgb(hex).map((v) => v / 255);
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, l = (max + min) / 2;
+    if (d < 0.08) return false;
+    const h = ((max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60 + 360) % 360;
+    return h >= 160 && h <= 200 && d / (1 - Math.abs(2 * l - 1)) >= 0.25;
+  };
+  for (const f of fs.readdirSync(styles)) {
+    const text = fs.readFileSync(path.join(styles, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.doesNotMatch(text, /teal/i, f);
+    const hits = [...text.matchAll(/#[0-9a-f]{6}\b/gi)].map((m) => m[0]).filter(tealHex);
+    assert.deepEqual(hits, [], `${f}: teal-family colours`);
+  }
+  const src = path.resolve(import.meta.dirname, '../src');
+  for (const dir of ['components', 'layouts', 'pages']) {
+    for (const f of fs.readdirSync(path.join(src, dir), { recursive: true }) as string[]) {
+      if (!/\.(astro|tsx?)$/.test(f)) continue;
+      assert.doesNotMatch(fs.readFileSync(path.join(src, dir, f), 'utf8'), /[\w:[\]-]-teal\b|var\(--teal|#(?:0d9488|0f766e|14b8a6|2dd4bf|5eead4)/i, `${dir}/${f}`);
+    }
+  }
 });

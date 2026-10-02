@@ -1,19 +1,18 @@
 ---
-// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage"), after the
-// Claude Docs homepage: a centred hero band (eyebrow, a question in the display face, six intent pills that
-// each name a task and the page that answers it, a console line and "Browse all docs"), then sections in one
-// rhythm (eyebrow, heading, one line, content): the first request (the Quick Start request in tabs), paths
-// and the journey. Search is the header's. Copy is reused from the legacy landing page and the docs; every
-// destination of the six legacy feature cards stays linked (`.feature-card`). Everything here is
+// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", revised on
+// 2026-10-02 after the OpenAI API docs and claude.dev homepages): the entry to Apertis guides, reference,
+// release notes and articles, kept calm. A left-aligned hero (heading and one line), the quickstart card
+// (the one primary action, the console, the Quick Start request in tabs), "Start building" (the six legacy
+// feature-card destinations as shadcn Items) and "Latest" (release notes from the committed changelog
+// snapshot, and articles once one is published). Search is the header's. Everything here is
 // server-rendered; only the code tabs hydrate.
 import { Code } from 'astro:components';
-import {
-  Activity, ArrowRight, ArrowUpRight, BookOpen, Bot, Code as CodeIcon, CreditCard, Gauge, KeyRound, Layers, Play,
-  ArrowDown, Rocket, Shield, SquareTerminal, Zap,
-} from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroCode from '../components/home/HeroCode.tsx';
 import ArticleList from '../components/home/ArticleList.astro';
+import StartBuilding from '../components/home/StartBuilding.tsx';
+import ReleaseNotes from '../components/home/ReleaseNotes.tsx';
 import { isNativeArticle } from '../contracts/articles.ts';
 import { Card } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
@@ -23,7 +22,7 @@ import { documentAt, manifest } from '../manifest/manifest.ts';
 import quickStart from '../content/public/getting-started/quick-start.md?raw';
 
 const doc = documentAt('/');
-// The Latest articles section appears once a native article is published (none yet: no section).
+// Articles join "Latest" once a native article is published (none yet: release notes only).
 const hasArticles = manifest.documents.some(isNativeArticle);
 
 // The hero sample is the Quick Start request, read from its clean Markdown so the two never drift.
@@ -37,154 +36,55 @@ const sources = { curl: fenced('Using cURL', 'bash'), python: fenced('Using Pyth
 const themes = { light: 'github-light', dark: 'github-dark' } as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
-// Intent pills: a task in the reader's words, then the page that answers it.
-const intents = [
-  { task: 'Make my first API call', page: 'Quick start', href: '/getting-started/quick-start/' },
-  { task: 'Connect my coding assistant', page: 'Coding assistants', href: '/installation/claude-code/' },
-  { task: 'Pick the right model', page: 'Models', href: '/installation/models/' },
-  { task: 'Choose a plan', page: 'Subscription plans', href: '/billing/subscription-plans/' },
-  { task: 'Manage keys and access', page: 'API keys', href: '/authentication/api-keys/' },
-  { task: 'Look up an endpoint', page: 'API reference', href: '/api/' },
-];
-const quickLinks = [
-  { label: 'Quick start', href: '/getting-started/quick-start/' },
-  { label: 'API keys', href: '/authentication/api-keys/' },
-  { label: 'API reference', href: '/api/' },
-];
-
-// Cards and their descriptions come from the legacy feature cards.
-const paths = [
-  {
-    icon: CodeIcon, title: 'API', description: 'Integrate with our SDK. Compatible with OpenAI and Anthropic client libraries.',
-    links: [['Chat completions', '/api/text-generation/chat-completions/'], ['Messages API', '/api/text-generation/messages/'], ['Python SDK', '/api/sdks/python-sdk/']],
-  },
-  {
-    icon: Bot, title: 'Coding agents', description: 'Purpose-built for Claude Code, Cursor, Cline, and other coding tools.',
-    links: [['Claude Code', '/installation/claude-code/'], ['Cursor', '/installation/cursor/'], ['Cline', '/installation/cline/']],
-  },
-  {
-    icon: CreditCard, title: 'Pricing & plans', description: 'Subscription plans with fixed quota per request, or pay-as-you-go per token.',
-    links: [['Subscription plans', '/billing/subscription-plans/'], ['Pay-as-you-go', '/billing/payg/'], ['Rate limits', '/billing/rate-limits/']],
-  },
-];
-
-// `feature` marks the six legacy feature-card destinations (same hrefs as before the redesign).
-const journey = [
-  {
-    step: 'Get started', tiles: [
-      { icon: BookOpen, label: 'Introduction', href: '/intro', feature: true },
-      { icon: Rocket, label: 'Quick start', href: '/getting-started/quick-start/' },
-      { icon: KeyRound, label: 'API keys', href: '/authentication/api-keys/' },
-      { icon: Layers, label: 'Browse models', href: '/installation/models', feature: true },
-    ],
-  },
-  {
-    step: 'Build', tiles: [
-      { icon: CodeIcon, label: 'API reference', href: '/api', feature: true },
-      { icon: SquareTerminal, label: 'Coding agents', href: '/installation/claude-code', feature: true },
-      { icon: Zap, label: 'Streaming', href: '/api/text-generation/streaming/' },
-      { icon: Play, label: 'Playground', href: 'https://playground.apertis.ai', feature: true, external: true },
-    ],
-  },
-  {
-    step: 'Operate', tiles: [
-      { icon: CreditCard, label: 'Subscription plans', href: '/billing/subscription-plans', feature: true },
-      { icon: Gauge, label: 'Quota management', href: '/billing/quota-management/' },
-      { icon: Activity, label: 'Error codes', href: '/help/error-codes/' },
-      { icon: Shield, label: 'Best practices', href: '/security/best-practices/' },
-    ],
-  },
-];
 ---
 <BaseLayout doc={doc} buildId={manifest.buildId}>
   <main class="landing" id="main">
     <section class="shell-container hero" aria-labelledby="hero-title">
-      <p class="hero__eyebrow">Apertis documentation</p>
-      <h1 class="hero__title" id="hero-title">What do you want to build with Apertis?</h1>
-      <ul class="hero__intents" aria-label="Start from a task">
-        {intents.map((i) => (
-          <li>
-            <a data-slot="button" class={cn(buttonVariants({ variant: 'outline' }), 'intent h-auto rounded-full bg-card')} href={i.href}>
-              <span class="intent__task">{i.task}</span>
-              <span class="intent__page">{i.page}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p class="hero__note">To create an API key or check your usage, open the <a href="https://apertis.ai/setting?tab=keys" {...ext}>Apertis console</a>.</p>
-      <p class="hero__browse"><a data-slot="button" class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'bg-card')} href="#paths">Browse all docs<ArrowDown className="size-3.5" aria-hidden="true" /></a></p>
+      <h1 class="hero__title" id="hero-title">Build with Apertis</h1>
+      <p class="hero__lead">One API key for models across leading providers. Guides, reference, release notes and articles, from your first request to production.</p>
     </section>
 
-    <section class="shell-container home-section first-call" aria-labelledby="first-call-title">
-      <div class="first-call__copy">
-        <p class="eyebrow">Quick start</p>
-        <h2 id="first-call-title">Make your first request</h2>
-        <p class="home-section__desc">One API key for models across leading providers. Smart routing, auto-failover, and free prompt caching built in.</p>
-        <ul class="hero__quick" aria-label="Quick links">
-          {quickLinks.map((l) => (
-            <li><a data-slot="button" class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'bg-card')} href={l.href}>{l.label}<ArrowRight className="size-3.5" aria-hidden="true" /></a></li>
-          ))}
-        </ul>
-      </div>
-      <Card className="hero__code gap-0 overflow-hidden py-0 shadow-none">
-        <HeroCode client:visible sources={sources}>
-          <Code slot="curl" code={sources.curl} lang="bash" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-          <Code slot="python" code={sources.python} lang="python" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-          <Code slot="node" code={sources.node} lang="javascript" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
-        </HeroCode>
+    <section class="shell-container home-section quickstart" aria-labelledby="quickstart-title">
+      <Card className="quickstart__card grid gap-0 overflow-hidden py-0 shadow-none lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div class="quickstart__copy">
+          <h2 id="quickstart-title">Make your first request</h2>
+          <p>OpenAI- and Anthropic-compatible endpoints, with smart routing, auto-failover and free prompt caching built in.</p>
+          <div class="quickstart__actions">
+            <a data-slot="button" data-variant="default" class={buttonVariants()} href="/getting-started/quick-start/">Get started<ArrowRight className="size-4" aria-hidden="true" /></a>
+            <a data-slot="button" data-variant="outline" class={cn(buttonVariants({ variant: 'outline' }), 'bg-card')} href="https://apertis.ai/setting?tab=keys" {...ext}>Create an API key<ArrowUpRight className="size-4" aria-hidden="true" /></a>
+          </div>
+        </div>
+        <div class="hero__code">
+          <HeroCode client:visible sources={sources}>
+            <Code slot="curl" code={sources.curl} lang="bash" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
+            <Code slot="python" code={sources.python} lang="python" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
+            <Code slot="node" code={sources.node} lang="javascript" themes={themes} defaultColor={false} transformers={[noTokenizeTimeLimit]} />
+          </HeroCode>
+        </div>
       </Card>
     </section>
 
-    <section class="shell-container home-section" id="paths" aria-labelledby="paths-title">
-      <p class="eyebrow">Paths</p>
-      <h2 id="paths-title">Choose how you build</h2>
-      <p class="home-section__desc">Access OpenAI, Anthropic, Google, Meta, and more through a single API key.</p>
-      <div class="paths">
-        {paths.map((p) => (
-          <Card className="path-card gap-4 px-6 shadow-none">
-            <p.icon className="size-5 text-foreground" aria-hidden="true" />
-            <h3>{p.title}</h3>
-            <p class="path-card__desc">{p.description}</p>
-            <ul>
-              {p.links.map(([label, href]) => <li><a href={href}>{label}<ArrowRight className="size-3.5" aria-hidden="true" /></a></li>)}
-            </ul>
-          </Card>
-        ))}
+    <section class="shell-container home-section" id="start" aria-labelledby="start-title">
+      <h2 id="start-title">Start building</h2>
+      <StartBuilding />
+    </section>
+
+    <section class="shell-container home-section" aria-labelledby="latest-title">
+      <h2 id="latest-title">Latest</h2>
+      <div class:list={['latest', { 'latest--two': hasArticles }]}>
+        {hasArticles && (
+          <div>
+            <h3>Articles</h3>
+            <ArticleList limit={3} />
+            <p class="home-section__more"><a href="/blog/">All articles<ArrowRight className="size-3.5" aria-hidden="true" /></a></p>
+          </div>
+        )}
+        <div>
+          <h3>Release notes</h3>
+          <ReleaseNotes />
+          <p class="home-section__more"><a href="https://apertis.ai/changelog" {...ext}>All release notes<ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
+        </div>
       </div>
     </section>
-
-    <section class="shell-container home-section" aria-labelledby="journey-title">
-      <p class="eyebrow">Journey</p>
-      <h2 id="journey-title">From first call to production</h2>
-      <p class="home-section__desc">Make your first API call in minutes with our OpenAI-compatible endpoint.</p>
-      <ol class="journey">
-        {journey.map((j, i) => (
-          <li class="journey__step">
-            <p class="journey__label"><span class="journey__num">{i + 1}</span>{j.step}</p>
-            <ul class="journey__tiles">
-              {j.tiles.map((t) => (
-                <li>
-                  <a class:list={['tile', { 'feature-card': t.feature }]} href={t.href} {...(t.external ? ext : {})}>
-                    <t.icon className="size-4" aria-hidden="true" />
-                    <span>{t.label}</span>
-                    {t.external && <ArrowUpRight className="tile__ext size-3.5" aria-hidden="true" />}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ol>
-    </section>
-
-    {hasArticles && (
-      <section class="shell-container home-section" aria-labelledby="articles-title">
-        <p class="eyebrow">Blog</p>
-        <h2 id="articles-title">Latest articles</h2>
-        <p class="home-section__desc">Guides, updates and field notes from the team building Apertis.</p>
-        <ArticleList limit={3} />
-        <p class="home-section__more"><a href="/blog/">All articles<ArrowRight className="size-3.5" aria-hidden="true" /></a></p>
-      </section>
-    )}
   </main>
 </BaseLayout>

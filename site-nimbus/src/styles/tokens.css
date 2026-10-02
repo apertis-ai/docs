@@ -1,7 +1,8 @@
 /* Apertis tokens: the ONE token file (openspec docs-shell-interfaces "Reading layout and page header",
    Palette as revised on 2026-09-29, and "Shell alignment, header, footer and homepage").
-   Neutral surfaces and near-black ink; the Apertis teal only in the logo, focus rings and link hover or
-   active states, never as a fill or outline. Primary actions use an inverted neutral fill.
+   Neutral surfaces and near-black ink, and no brand hue (the teal was removed on 2026-10-02): the logo is
+   monochrome, focus rings and link hover or active states are ink. Primary actions use an inverted
+   neutral fill.
    One light set (the default) and one dark set, selected only by data-theme on <html> (the shell's theme
    switch); never by prefers-color-scheme. Every shadcn/ui token (src/styles/app.css @theme) maps onto
    these names and has no value of its own. Contrast is checked by test/m3r-tokens.test.ts. Colours that
@@ -18,8 +19,6 @@
   --line-strong: #d4d4d4; /* input and control borders */
   --hover: #efefef; /* neutral hover and selected fill */
   --link: #0a0a0a; /* links at rest: ink, underlined in prose */
-  --teal: #0f766e; /* the Apertis teal: link hover/active and focus rings only */
-  --teal-brand: #0d9488; /* the logo mark */
   --primary: #171717; /* inverted neutral fill: Create account, primary actions */
   --primary-fg: #fafafa;
   --error: #b42318;
@@ -67,8 +66,6 @@
   --line-strong: #3a3a3a;
   --hover: #262626;
   --link: #fafafa;
-  --teal: #2dd4bf;
-  --teal-brand: #14b8a6;
   --primary: #fafafa;
   --primary-fg: #0a0a0a;
   --error: #fda29b;

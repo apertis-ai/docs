@@ -78,7 +78,7 @@ test('aligned edges: header, every homepage section and the footer share left an
   }
 });
 
-/** In-page walk: every element whose fill, border or outline (or text, outside code tokens) is in the teal family at rest. */
+/** In-page walk: every element whose fill, border or outline (or text, outside code tokens, or SVG paint such as the logo) is in the teal family at rest. */
 const tealAtRest = () => {
   const canvas = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
   const rgba = (c: string) => { canvas.clearRect(0, 0, 1, 1); canvas.fillStyle = '#000'; canvas.fillStyle = c; canvas.fillRect(0, 0, 1, 1); return [...canvas.getImageData(0, 0, 1, 1).data]; };
@@ -108,16 +108,19 @@ const tealAtRest = () => {
     if (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 && teal(cs.outlineColor)) hits.push(`${name} outline ${cs.outlineColor}`);
     if (cs.boxShadow !== 'none' && (cs.boxShadow.match(/rgba?\([^)]*\)/g) ?? []).some(teal)) hits.push(`${name} box-shadow`);
     if (!el.closest('pre.astro-code') && el.tagName !== 'svg' && teal(cs.color) && el.textContent?.trim()) hits.push(`${name} color ${cs.color}`);
+    if (el instanceof SVGElement && (teal(cs.fill) || teal(cs.stroke))) hits.push(`${name} svg paint ${cs.fill} ${cs.stroke}`);
   }
   return hits;
 };
 
-test('restrained accent: no button, chip, badge, input or surface is filled or outlined with teal at rest, in both themes', { skip }, async () => {
+test('no brand colour (2026-10-02): no element, the logo included, is filled, outlined or coloured with teal at rest, in both themes', { skip }, async () => {
   for (const theme of ['light', 'dark']) {
     for (const p of ['/', '/getting-started/quick-start/']) {
       const { context, page } = await open(p, VIEWS[1440], theme);
       await page.mouse.move(0, 0);
       assert.deepEqual(await page.evaluate(tealAtRest), [], `${theme} ${p}`);
+      // The logo is the inline monochrome mark in both the header and the footer, not the teal image.
+      assert.deepEqual(await page.$$eval('a.brand', (as: Element[]) => as.map((a) => [!!a.querySelector('svg'), !!a.querySelector('img')])), [[true, false], [true, false]], `${theme} ${p} logo`);
       if (p !== '/') {
         await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search', query: 'chat completions' } })));
         await page.locator('#aa-results [role="option"]').first().waitFor({ timeout: 15000 });
@@ -210,12 +213,14 @@ test('static parts are server-rendered without hydration; homepage links all res
   const { context, page } = await open('/');
   const islands = await page.$$eval('astro-island', (els: Element[]) => els.map((e) => (e.getAttribute('component-url') ?? '').replace(/^.*\/|\..*$/g, '')).sort());
   assert.deepEqual(islands, ['HeroCode', 'NavSheet']);
-  const hydrated = await page.$$eval('header.navbar, .hero, .intent, .first-call__copy, .paths, .path-card, .journey, .tile, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
+  const hydrated = await page.$$eval('header.navbar, .hero, .quickstart__copy, .start, .start-item, .latest, .release-row, footer.footer, .ask-docs-trigger, #apertis-assistant', (els: Element[]) =>
     els.filter((e) => e.closest('astro-island') || e.querySelector('astro-island')).map((e) => e.className));
   assert.deepEqual(hydrated, []);
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
   const internal = await page.$$eval('main a[href^="/"], footer a[href^="/"], header a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
-  assert.ok(internal.length >= 20, `${internal.length} internal links`);
+  // The homepage body links each internal destination once: the quick start and five of the feature cards.
+  const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
+  assert.deepEqual(body.sort(), ['/api', '/billing/subscription-plans', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/intro']);
   for (const href of internal) assert.ok(served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
   // The six legacy feature-card destinations stay on the homepage.
   const features = await page.$$eval('main a.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
@@ -430,15 +435,14 @@ test('one search control on the homepage (canary step 5b reverses step 1): the h
 
 test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
   const { context, page } = await open('/');
-  // An intent pill carries two labels (the task, then the page); each is checked on its own.
-  const labels: string[] = await page.$$eval('main a', (as: HTMLAnchorElement[]) => as.flatMap((a) => {
-    const parts = a.querySelectorAll('.intent__task, .intent__page');
-    return (parts.length ? [...parts] : [a]).map((e) => (e.textContent ?? '').replace(/\s+/g, ' ').trim());
-  }).filter(Boolean));
+  // A "Start building" item is checked by its title (its line is a sentence). Release-note rows are not
+  // labels: they carry the changelog's own titles and model names, verbatim from apertis.ai/changelog.
+  const labels: string[] = await page.$$eval('main a:not(.release-row)', (as: HTMLAnchorElement[]) => as.map((a) =>
+    (a.querySelector('[data-slot="item-title"]') ?? a).textContent!.replace(/\s+/g, ' ').trim()).filter(Boolean));
   const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'Playground', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
   const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
   assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
-  assert.ok(labels.includes('Chat completions') && labels.includes('Quick start'), 'renamed labels present');
+  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing'), `labels ${JSON.stringify(labels)}`);
   await context.close();
 });
 
@@ -567,48 +571,44 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
   await m.context.close();
 });
 
-test('homepage hero after the Claude Docs homepage (canary step 5b): a centred question in LINE Seed, six intent pills to published pages, the console line and Browse all docs', { skip }, async () => {
+test('calm homepage (2026-10-02, after the OpenAI API docs and claude.dev): a left-aligned hero, one primary action, unbordered start items, no repeated destination, release notes from the snapshot', { skip }, async () => {
+  const notes = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/home/release-notes.json'), 'utf8')).notes;
   const { context, page } = await open('/', VIEWS[1440]);
   const h = await page.evaluate(() => {
     const hero = document.querySelector('.hero')!;
-    const r = (el: Element) => el.getBoundingClientRect();
     const title = hero.querySelector('h1')!;
-    const pills = [...hero.querySelectorAll<HTMLAnchorElement>('.hero__intents a.intent')];
-    const mid = (el: Element) => (r(el).left + r(el).right) / 2;
+    const main = document.querySelector('main')!;
     return {
-      eyebrow: hero.querySelector('.hero__eyebrow')?.textContent, title: title.textContent, font: getComputedStyle(title).fontFamily, weight: getComputedStyle(title).fontWeight,
-      centred: [mid(title), mid(hero.querySelector('.hero__intents')!), mid(hero)].map(Math.round),
-      pills: pills.map((a): (string | null | undefined)[] => [a.querySelector('.intent__task')?.textContent, a.querySelector('.intent__page')?.textContent, a.getAttribute('href')]),
-      rows: [...new Set(pills.map((a) => Math.round(r(a).top)))].length,
-      note: hero.querySelector('.hero__note a')?.getAttribute('href'),
-      browse: hero.querySelector('.hero__browse a')?.getAttribute('href'),
-      band: getComputedStyle(hero).backgroundColor, page: getComputedStyle(document.body).backgroundColor,
-      radius: pills.map((a) => parseFloat(getComputedStyle(a).borderTopLeftRadius) >= r(a).height / 2 - 1),
-      pillBg: getComputedStyle(pills[0]).backgroundColor,
-      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      title: [getComputedStyle(title).fontFamily, getComputedStyle(title).fontWeight, getComputedStyle(title).textAlign],
+      left: [title, document.querySelector('.navbar .brand')!].map((e) => Math.round(e.getBoundingClientRect().left)),
+      heroControls: hero.querySelectorAll('a, button, input').length,
+      eyebrows: main.querySelectorAll('.eyebrow, .hero__eyebrow').length,
+      primary: [...main.querySelectorAll('[data-slot="button"][data-variant="default"]')].map((b) => [b.textContent!.trim(), b.getAttribute('href')]),
+      hrefs: [...main.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')!),
+      console: [...main.querySelectorAll('.quickstart a[target]')].map((a) => [a.getAttribute('href'), (a as HTMLAnchorElement).target, (a as HTMLAnchorElement).rel]),
+      items: [...main.querySelectorAll('.start a[data-slot="item"]')].map((a) => ({
+        href: a.getAttribute('href'), title: a.querySelector('[data-slot="item-title"]')?.textContent?.trim(),
+        line: a.querySelector('[data-slot="item-description"]')?.textContent?.trim(), icon: !!a.querySelector('[data-slot="item-media"] svg'),
+        border: ['Top', 'Right', 'Bottom', 'Left'].some((side) => { const cs = getComputedStyle(a); return parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0 && cs.getPropertyValue(`border-${side.toLowerCase()}-color`) !== 'rgba(0, 0, 0, 0)'; }),
+      })),
+      releases: [...main.querySelectorAll('.latest a.release-row')].map((a) => [a.getAttribute('href'), (a as HTMLAnchorElement).target, (a as HTMLAnchorElement).rel, a.querySelector('time')?.getAttribute('datetime')]),
     };
   });
-  assert.equal(h.eyebrow, 'Apertis documentation');
-  assert.equal(h.title, 'What do you want to build with Apertis?');
-  assert.match(h.font, /^"?LINE Seed"?,/);
-  assert.equal(h.weight, '400');
-  assert.ok(Math.max(...h.centred) - Math.min(...h.centred) <= 1, `title, pills and band share a centre: ${h.centred}`);
-  assert.equal(h.pills.length, 6);
-  assert.ok(h.pills.every(([t, p, href]: (string | null | undefined)[]) => t && p && href?.startsWith('/')), JSON.stringify(h.pills));
-  assert.equal(h.rows, 2, 'three pills per row at 1440');
-  assert.equal(h.note, 'https://apertis.ai/setting?tab=keys');
-  assert.equal(h.browse, '#paths');
-  assert.notEqual(h.band, h.page, 'the hero sits on its own band');
-  assert.ok(h.radius.every(Boolean), `pills are fully rounded: ${h.radius}`);
-  assert.equal(h.pillBg, h.band, 'pills share the band fill');
-  // The band and its hairline span the viewport, painted by box-shadows (no scrollable overflow; checked above).
-  const band = await page.evaluate(() => { const cs = getComputedStyle(document.querySelector('.hero')!); return [cs.boxShadow, cs.clipPath]; });
-  assert.match(band[0], /0px 0px 0px \d+px, .* 0px 1px 0px \d+px$/, `band and hairline shadows: ${band[0]}`);
-  assert.match(band[1], /^inset\(0px -\d+px -1px\)$/, `clip keeps the hairline: ${band[1]}`);
-  assert.equal(h.overflow, 0, 'the full-bleed band does not overflow');
-  for (const [, , href] of h.pills) {
-    const res = await page.request.get(base + href!);
-    assert.equal(res.status(), 200, `${href} is published`);
+  assert.match(h.title[0], /^"?LINE Seed"?,/);
+  assert.deepEqual(h.title.slice(1), ['400', 'start'], 'display face, weight 400, left-aligned');
+  assert.equal(h.left[0], h.left[1], 'the title starts at the logo edge');
+  assert.equal(h.heroControls, 0, 'the hero holds no controls');
+  assert.equal(h.eyebrows, 0, 'no eyebrows');
+  assert.deepEqual(h.primary, [['Get started', '/getting-started/quick-start/']], 'exactly one primary action');
+  assert.deepEqual(h.hrefs.filter((x: string, i: number) => h.hrefs.indexOf(x) !== i), [], 'no destination repeated in the body');
+  assert.deepEqual(h.console, [['https://apertis.ai/setting?tab=keys', ...EXT]]);
+  assert.equal(h.items.length, 6);
+  for (const it of h.items) assert.ok(it.title && it.line && it.icon && !it.border, JSON.stringify(it));
+  assert.ok(h.items.some((it: { href: string }) => it.href === 'https://playground.apertis.ai'), 'the Playground card is a start item');
+  assert.deepEqual(h.releases, notes.map((n: { version: string; date: string }) => [`https://apertis.ai/changelog/${encodeURIComponent(n.version)}`, ...EXT, n.date]));
+  for (const it of h.items.filter((x: { href: string }) => x.href.startsWith('/'))) {
+    const res = await page.request.get(base + it.href);
+    assert.equal(res.status(), 200, `${it.href} is published`);
   }
   await context.close();
 });
