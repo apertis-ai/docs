@@ -47,6 +47,20 @@ function naming(query: string[], page: Awaited<ReturnType<NonNullable<Hit['data'
   return query.reduce((sum, w) => sum + (named.has(w) ? 1 : headed.has(w) ? 0.5 : 0), 0) / query.length;
 }
 
+/**
+ * Whether a result's excerpt shows the query matching at all. When a query word is in no page, Pagefind still
+ * answers with pages that match only its first letter (`zzqqxx` returns pages marking `z`), so a result counts
+ * only when some marked word shares at least the first three characters (or the whole query word, if
+ * shorter) with a query word. A result without marks is kept: Pagefind matched it on something not shown.
+ */
+export function excerptMatches(query: string, excerpt: string): boolean {
+  const marked = [...excerpt.matchAll(/<mark>([\s\S]*?)<\/mark>/g)].flatMap((m) => words(m[1]));
+  if (!marked.length) return true;
+  const typed = queryVariants(query).flatMap(words);
+  const shared = (a: string, b: string) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i; };
+  return typed.some((w) => marked.some((m) => shared(w, m) >= Math.min(3, w.length)));
+}
+
 /** Runs every variant, keeps each page once at its best score, orders by score, then re-ranks the top RERANK. */
 export async function searchWithVariants<R extends Hit>(
   query: string,

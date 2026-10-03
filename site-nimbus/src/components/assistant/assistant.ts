@@ -1,7 +1,7 @@
 // Search + Ask Docs client (#9). The only `apertis-docs:open` listener and the only Cmd/Ctrl+K owner.
 // Search loads Pagefind lazily on first use; Ask Docs posts the legacy wire request to /api/ask.
 import { OPEN_EVENT } from '../../contracts/events.ts';
-import { searchWithVariants } from '../../search/query.ts';
+import { excerptMatches, searchWithVariants } from '../../search/query.ts';
 import { ASK_PATH, askBody, currentPageContext, errorMessage, readAnswer, sourceLinks, turnstileSiteKey } from './wire.ts';
 import { answerNodes } from './answer-render.ts';
 
@@ -273,7 +273,7 @@ export function initAssistant(): void {
     try {
       const found = await searchWithVariants(q, async (v) => (await pf.search(v))?.results ?? [], () => seq === searchSeq);
       if (seq !== searchSeq) return;
-      list = await Promise.all(found.slice(0, MAX_RESULTS).map((r) => r.data()));
+      list = (await Promise.all(found.slice(0, MAX_RESULTS).map((r) => r.data()))).filter((d) => excerptMatches(q, d.excerpt ?? ''));
     } catch {
       if (seq === searchSeq) renderResults([], 'The search could not be completed. Check your connection and try again.');
       return;
@@ -508,13 +508,15 @@ export function initAssistant(): void {
     messages = [];
     store.remove(messagesKey);
     renderMessages();
+    question.focus(); // the button hides itself; focus stays in the panel
   });
   window.addEventListener('hashchange', refreshContext);
   window.addEventListener('popstate', refreshContext);
   // Leaving mid-stream keeps the question and the partial answer (as interrupted).
   window.addEventListener('pagehide', saveMessages);
 
-  // The panel stays open across page loads within the session; its context is the new page.
-  if (store.get(OPEN_KEY)) show('ask', { focus: false });
+  // The panel stays open across page loads within the session; its context is the new page. On a phone it
+  // is a sheet over most of the page, so it does not reopen over the page the reader just opened.
+  if (store.get(OPEN_KEY) && !matchMedia('(max-width: 640px)').matches) show('ask', { focus: false });
 
 }
