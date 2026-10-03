@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
+import { modelView, noteView, type NewModel, type ReleaseNote } from '../src/components/home/feed.ts';
 
 const base = process.env.PREVIEW_URL?.replace(/\/$/, '');
 const skip = !base || !process.env.PLAYWRIGHT ? 'set PREVIEW_URL and PLAYWRIGHT' : false;
@@ -19,16 +20,29 @@ const VIEWS = {
   390: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
 } as const;
 
-// The footer link set before the redesign (f517488:site-nimbus/src/components/shell/Footer.astro, the
-// legacy docusaurus.config.js themeConfig.footer): label-independent, as [href, target, rel].
+// The footer of apertis.ai (operator review 2026-10-03; stima-api web/shared/marketing-chrome/contract.json),
+// column by column as [label, href], with this site's Blog in place of "API Documentation" and the Developers
+// links pointing into this site. apertis.ai and other sites open in a new tab.
 const EXT = ['_blank', 'noopener noreferrer'];
-const FOOTER_LINKS = [
-  ['https://api.apertis.ai', ...EXT], ['https://chat.apertis.ai', ...EXT], ['https://apertis.ai/research', ...EXT],
-  ['https://status.apertis.ai', ...EXT], ['mailto:hi@apertis.ai', '', ''], ['https://www.facebook.com/stimaai/', ...EXT],
-  ['https://www.instagram.com/stimatech', ...EXT], ['https://www.linkedin.com/company/apertis-ai', ...EXT], ['https://github.com/apertis-ai', ...EXT],
-];
-// Navbar destinations ("Preserved reader-facing shell"), in header order after the logo.
-const NAV = ['/intro', '/api', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register'];
+const A = 'https://apertis.ai';
+const FOOTER_COLUMNS = {
+  Product: [['Coding Plan', `${A}/subscribe`], ['Helmway', `${A}/brand`], ['Models', `${A}/models`], ['Pricing', `${A}/models`], ['Cost Calculator', `${A}/calculator`], ['Chat', 'https://chat.apertis.ai']],
+  Resources: [['Blog', '/blog/'], ['Enterprise', `${A}/enterprise`], ['Research', `${A}/research`], ['Brand', `${A}/brand`], ['Academic Access', `${A}/academic`], ['Changelog', `${A}/changelog`], ['Ideas', `${A}/ideas`], ['Compare', `${A}/compare`], ['Service Status', 'https://status.apertis.ai']],
+  Developers: [['API Reference', '/api/text-generation/chat-completions/'], ['Quickstart Guide', '/intro/'], ['SDKs & Libraries', '/installation/scripts/'], ['Agent Skill', 'https://github.com/apertis-ai/apertis-skills'], ['MCP Server', '/api/sdks/mcp-server/']],
+  Contact: [['Email', 'mailto:hi@apertis.ai'], ['Facebook', 'https://www.facebook.com/stimaai/'], ['Instagram', 'https://www.instagram.com/stimatech'], ['LinkedIn', 'https://www.linkedin.com/company/apertis-ai'], ['GitHub', 'https://github.com/apertis-ai/apertis-api']],
+  Legal: [['Terms of Service', `${A}/terms`], ['Privacy Policy', `${A}/privacy`], ['Refund Policy', `${A}/refund`], ['GitHub Promotion', `${A}/github-promotion-policy`], ['DPA (Data Processing)', `${A}/trust`], ['Compliance & Security', `${A}/trust`]],
+};
+const FOOTER_BOTTOM = [['Security & Compliance', `${A}/trust`], ['DPA requests', `${A}/trust/dpa`], ['Service Status', 'https://status.apertis.ai']];
+// Navbar destinations ("Preserved reader-facing shell" and the Blog tab), in tab order, then the account actions.
+const NAV = ['/intro', '/api', '/blog/', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register'];
+
+// The homepage feed rows as shown: each `data-f` field's text (or href, or "" when hidden), per list.
+type Row = Record<string, string>;
+const homeFeedRows = () => ['models', 'notes'].map((list) => [...document.querySelectorAll(`[data-feed="${list}"] > li`)].map((li) =>
+  Object.fromEntries([...li.querySelectorAll<HTMLElement>('[data-f]')].map((el) => [el.dataset.f!,
+    el.dataset.f === 'href' ? `${el.getAttribute('href')} ${(el as HTMLAnchorElement).target} ${(el as HTMLAnchorElement).rel}` : el.checkVisibility() ? el.textContent!.trim() : ''])) as Row));
+const rowsOf = (views: Row[]) => views.map((v) => Object.fromEntries(Object.entries(v).filter(([k]) => k !== 'datetime')
+  .map(([k, x]) => [k, k === 'href' ? `${x} ${EXT.join(' ')}` : x])));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let browser: any;
@@ -150,26 +164,37 @@ test('no brand colour (2026-10-02): no element, the logo included, is filled, ou
   }
 });
 
-test('the footer carries exactly the pre-redesign footer link set, regrouped, with a brand column and sentence-case headings', { skip }, async () => {
+test('the footer follows the apertis.ai footer: brand column, five link columns, trust facts and the bottom row', { skip }, async () => {
   const { context, page } = await open('/getting-started/quick-start/');
-  const links = await page.$$eval('footer.footer a[href]:not(.brand)', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  const key = (l: string[]) => l.join(' ');
-  assert.deepEqual(links.map(key).sort(), FOOTER_LINKS.map(key).sort());
-  assert.equal(links.length, FOOTER_LINKS.length, 'each link once');
-  const labels = await page.$$eval('footer .footer__social a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('aria-label')));
-  assert.deepEqual(labels.sort(), ['Facebook', 'GitHub', 'Instagram', 'LinkedIn']);
-  const titles = await page.$$eval('footer .footer__title', (ps: HTMLElement[]) => ps.map((p) => [p.textContent, getComputedStyle(p).textTransform]));
-  assert.ok(titles.length >= 2 && titles.every(([t, tt]: string[]) => tt === 'none' && /^[A-Z][a-z]/.test(t)), `headings ${JSON.stringify(titles)}`);
-  assert.doesNotMatch(await page.textContent('.footer__copyright'), /RESERVED/);
+  const f = await page.evaluate(() => {
+    const link = (a: HTMLAnchorElement) => [a.textContent!.trim(), a.getAttribute('href')!, a.target, a.rel];
+    return {
+      brand: [...document.querySelector('footer .footer__brand')!.children].map((e) => e.textContent!.trim()),
+      columns: [...document.querySelectorAll('footer .footer__columns > div')].map((c) => [c.querySelector('.footer__title')!.textContent, [...c.querySelectorAll('a')].map(link)]),
+      titles: [...document.querySelectorAll('footer .footer__title')].map((p) => getComputedStyle(p).textTransform),
+      trust: [...document.querySelectorAll('footer .footer__trust li')].map((li) => li.textContent!.replace(/\s+/g, ' ').trim()),
+      bottom: [...document.querySelectorAll<HTMLAnchorElement>('footer .footer__legal a')].map(link),
+      copyright: document.querySelector('footer .footer__copyright')!.textContent,
+    };
+  });
+  const ext = ([label, href]: string[]) => [label, href, ...(href.startsWith('/') || href.startsWith('mailto:') ? ['', ''] : EXT)];
+  assert.deepEqual(f.brand, ['Apertis', 'Apertis AI by STIMA AI LLC.', 'Service status']);
+  assert.deepEqual(f.columns, Object.entries(FOOTER_COLUMNS).map(([title, links]) => [title, links.map(ext)]));
+  assert.ok(f.titles.every((t: string) => t === 'none'), 'sentence-case headings');
+  assert.deepEqual(f.trust, ['AWS Partner Network Member', 'PCI DSS via Stripe', 'DPA Available', 'MFA Supported']);
+  assert.deepEqual(f.bottom, FOOTER_BOTTOM.map(ext));
+  assert.match(f.copyright!, /^© \d{4} STIMA AI LLC$/);
+  const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
+  for (const [, href] of Object.values(FOOTER_COLUMNS).flat().filter(([, h]) => h.startsWith('/') && h !== '/blog/')) assert.ok(served.has(href), `${href} is published`);
   await context.close();
 });
 
 test('the navbar destinations are unchanged in the header and in the navigation sheet', { skip }, async () => {
   const { context, page } = await open('/api/');
   // Reading order of the two header rows (canary step 5a): logo and account actions, then the section tabs.
-  assert.deepEqual(await page.$$eval('header.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href'))), ['/', ...NAV.slice(3), ...NAV.slice(0, 3)]);
+  assert.deepEqual(await page.$$eval('header.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href'))), ['/', ...NAV.slice(4), ...NAV.slice(0, 4)]);
   const ext = await page.$$eval('header.navbar a[target]', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(ext, [...NAV.slice(3), NAV[2]].map((h) => [h, ...EXT]));
+  assert.deepEqual(ext, [...NAV.slice(4), NAV[3]].map((h) => [h, ...EXT]));
   await context.close();
   const mobile = await open('/api/', VIEWS[390]);
   await mobile.page.click('[data-drawer-open]');
@@ -189,16 +214,15 @@ test('static parts are server-rendered without hydration; homepage links all res
   assert.deepEqual(hydrated, []);
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
   const internal = await page.$$eval('main a[href^="/"], footer a[href^="/"], header a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
-  // The homepage body links each internal destination once: the quick start and five of the feature cards.
+  // The homepage body links each internal destination once: the quick start, the start items and the blog.
   const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
-  assert.deepEqual(body.sort(), ['/api', '/billing/subscription-plans', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/intro']);
-  for (const href of internal) assert.ok(served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
-  // The six legacy feature-card destinations stay on the homepage.
-  const features = await page.$$eval('main a.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(features.map((f: string[]) => f.join(' ')).sort(), [
-    ['/intro', '', ''], ['/installation/models', '', ''], ['/api', '', ''], ['/installation/claude-code', '', ''],
-    ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', ...EXT],
-  ].map((f) => f.join(' ')).sort());
+  assert.deepEqual(body.sort(), ['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro']);
+  // /blog/ is the articles index, not a manifest document; it is served with or without articles.
+  for (const href of internal) assert.ok(href === '/blog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
+  assert.equal((await page.request.get(base + '/blog/')).status(), 200);
+  // The legacy feature-card destinations stay on the homepage (the Playground is gone, 2026-10-03), with SDKs.
+  const features = await page.$$eval('main a.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel].join(' ')));
+  assert.deepEqual(features.sort(), ['/intro', '/installation/models', '/api', '/installation/claude-code', '/installation/scripts', '/billing/subscription-plans'].map((f) => `${f}  `).sort());
   await context.close();
 });
 
@@ -281,6 +305,10 @@ test('the selected search result and the focused page-actions item have a >= 3:1
       return el.getAttribute('role') === 'menuitem' ? (window as any).__indicator(el, getComputedStyle(el.closest('[role="menu"]')!).backgroundColor) : -1;
     });
     assert.ok(item >= 3, `${theme}: focused menu item indicator ${item}`);
+    // Under the pointer an item has the fill only: no ring and no side bar (operator review 2026-10-03).
+    await page.hover('[role="menu"] [role="menuitem"]:nth-of-type(3)');
+    const hovered = await page.$eval('[role="menu"] [role="menuitem"]:hover', (el: HTMLElement) => [getComputedStyle(el).boxShadow, getComputedStyle(el, '::before').content]);
+    assert.deepEqual(hovered, ['none', 'none'], `${theme}: hovered menu item ${hovered}`);
     await context.close();
   }
 });
@@ -406,16 +434,15 @@ test('one search control on the homepage (canary step 5b reverses step 1): the h
 
 test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
   const { context, page } = await open('/');
-  // A "Start building" item is checked by its title (its line is a sentence), a model card by its use tags.
-  // Model names and release-note rows are not our labels: they come verbatim from the model catalog and
-  // apertis.ai/changelog (provider and model names).
-  const labels: string[] = await page.$$eval('main a:not(.release-row)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
-    (a.matches('.model-card') ? [...a.querySelectorAll('.model-card__tags [data-slot="badge"]')] : [a.querySelector('[data-slot="item-title"]') ?? a])
+  // A "Start building" item is checked by its title (its line is a sentence). Model cards and release-note
+  // rows are not our labels: they come verbatim from the model catalog and apertis.ai/changelog.
+  const labels: string[] = await page.$$eval('main a:not(.release-row):not(.model-card)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
+    [a.querySelector('[data-slot="item-title"]') ?? a]
       .map((e) => e.textContent!.replace(/\s+/g, ' ').trim())).filter(Boolean));
-  const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'Playground', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
+  const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
   const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
   assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
-  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing') && labels.includes('Long tasks'), `labels ${JSON.stringify(labels)}`);
+  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing') && labels.includes('Visit the blog'), `labels ${JSON.stringify(labels)}`);
   await context.close();
 });
 
@@ -497,7 +524,7 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await m.context.close();
 });
 
-test('two-row header and LINE Seed display face (canary step 5a): centred search, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
+test('two-row header and LINE Seed display face (canary step 5a): search on the right beside the theme switch, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
   const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
   await page.evaluate(() => document.fonts.ready);
   const h = await page.evaluate(() => {
@@ -513,7 +540,8 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
       header: r('.navbar').height, top: r('.navbar__inner').bottom, tabsTop: r('.navbar__tabs').top,
       tabs: tabs.map((a) => a.getAttribute('href')), active: active.getAttribute('href'), underline: getComputedStyle(active).boxShadow,
       firstTab: tabs[0].getBoundingClientRect().left, brand: r('.navbar .brand').left,
-      search: (r('.navbar__search').left + r('.navbar__search').right) / 2, centre: (ib.left + parseFloat(cs.paddingLeft) + ib.right - parseFloat(cs.paddingRight)) / 2,
+      search: [r('.navbar__search').left, r('.navbar__search').right], theme: r('.navbar__right [data-theme-toggle]').left, centre: (ib.left + parseFloat(cs.paddingLeft) + ib.right - parseFloat(cs.paddingRight)) / 2,
+      searchBorder: getComputedStyle(document.querySelector('.navbar__search')!).borderTopWidth,
       h1: [h1.fontFamily, h1.fontWeight], h2: [h2.fontFamily, h2.fontWeight],
       loaded: document.fonts.check('400 16px "LINE Seed"'),
       faces: performance.getEntriesByType('resource').filter((e) => /LINESeed/.test(e.name)).map((e) => (e as PerformanceResourceTiming).encodedBodySize || (e as PerformanceResourceTiming).transferSize),
@@ -521,11 +549,13 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
   });
   assert.equal(h.header, 100);
   assert.ok(h.tabsTop >= h.top, `tabs are a second row (${h.tabsTop} vs ${h.top})`);
-  assert.deepEqual(h.tabs, NAV.slice(0, 3));
+  assert.deepEqual(h.tabs, NAV.slice(0, 4));
   assert.equal(h.active, '/intro');
   assert.match(h.underline, /inset 0px -2px 0px|0px -2px 0px 0px inset/, `current tab underlined: ${h.underline}`);
   assert.ok(Math.abs(h.firstTab - h.brand) <= 1, `tabs start at the logo edge (${h.firstTab} vs ${h.brand})`);
-  assert.ok(Math.abs(h.search - h.centre) <= 1, `search is centred (${h.search} vs ${h.centre})`);
+  // Operator review 2026-10-03: the centred search field was abrupt; it is a quiet borderless pill in the right cluster.
+  assert.ok(h.search[0] > h.centre && h.search[1] <= h.theme && h.theme - h.search[1] <= 16, `search sits right, before the theme switch (${h.search} / ${h.theme})`);
+  assert.equal(h.searchBorder, '0px');
   for (const [family, weight] of [h.h1, h.h2]) {
     assert.match(family, /^"?LINE Seed"?,/);
     assert.equal(weight, '400', 'display text is never faux-bolded');
@@ -544,11 +574,19 @@ test('two-row header and LINE Seed display face (canary step 5a): centred search
   await m.context.close();
 });
 
-test('calm homepage (2026-10-02, after the OpenAI developers, Claude docs and claude.dev homepages): a left-aligned hero with one primary action and the providers, featured models from the snapshot, unbordered start items, no repeated destination, no code sample', { skip }, async () => {
-  const home = path.resolve(import.meta.dirname, '../src/components/home');
-  const notes = JSON.parse(fs.readFileSync(path.join(home, 'release-notes.json'), 'utf8')).notes;
-  const catalog = JSON.parse(fs.readFileSync(path.join(home, 'featured-models.json'), 'utf8'));
-  const { context, page } = await open('/', VIEWS[1440]);
+// The homepage as the build renders it (the live feed blocked), and after the swap script refills it from a feed.
+const feedFixture = (snapshot: { notes: ReleaseNote[]; models: NewModel[] }) => ({
+  notes: [{ version: '9.9.9', date: '2026-12-01', title: 'Models Added', description: 'Add <b>Test</b> Model' }, ...snapshot.notes.slice(0, 2)],
+  models: [{ id: 'test/model 1', name: 'Test Model', provider: 'Testers', category: 'voice', context: null, added: '2026-12-01', description: '' } as NewModel, ...snapshot.models.slice(0, 5)],
+  total: 400, providers: 40,
+});
+
+test('calm homepage (2026-10-03, after the OpenAI developers, Claude docs and claude.dev homepages): a left-aligned hero with one primary action and the providers, the newest models and release notes from the feed, unbordered start items, the blog beside the release notes, no repeated destination, no code sample', { skip }, async () => {
+  const snapshot = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/home/home-feed.json'), 'utf8'));
+  const context = await browser.newContext(VIEWS[1440]);
+  await context.route('**/_nimbus/home-feed', (route: { abort: () => Promise<void> }) => route.abort());
+  const page = await context.newPage();
+  await page.goto(base + '/', { waitUntil: 'networkidle' });
   const h = await page.evaluate(() => {
     const hero = document.querySelector('.hero')!;
     const title = hero.querySelector('h1')!;
@@ -558,22 +596,19 @@ test('calm homepage (2026-10-02, after the OpenAI developers, Claude docs and cl
       title: [getComputedStyle(title).fontFamily, getComputedStyle(title).fontWeight, getComputedStyle(title).textAlign],
       left: [title, document.querySelector('.navbar .brand')!].map((e) => Math.round(e.getBoundingClientRect().left)),
       heroActions: [...hero.querySelectorAll('a, button, input')].map(link),
-      providers: [...hero.querySelectorAll('.providers li')].map((li) => [li.textContent!.trim(), !!li.querySelector('svg'), li.querySelectorAll('a').length]),
+      providers: [...hero.querySelectorAll('.providers li:not(.providers__more)')].map((li) => [li.textContent!.trim(), !!li.querySelector('svg'), li.querySelectorAll('a').length]),
       eyebrows: main.querySelectorAll('.eyebrow, .hero__eyebrow').length,
       code: main.querySelectorAll('pre, code').length,
       primary: [...main.querySelectorAll('[data-slot="button"][data-variant="default"]')].map((b) => [b.textContent!.trim(), b.getAttribute('href')]),
       hrefs: [...main.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')!),
-      models: [...main.querySelectorAll('#models a.model-card')].map((a) => ({
-        link: link(a).slice(1), name: a.querySelector('.model-card__name')?.textContent, meta: a.querySelector('.model-card__meta')?.textContent,
-        tags: [...a.querySelectorAll('.model-card__tags [data-slot="badge"]')].map((b) => b.textContent), line: a.querySelector('.model-card__line')?.textContent,
-        isNew: [...a.querySelectorAll('.model-card__head [data-slot="badge"]')].map((b) => b.textContent).includes('New'),
-      })),
+      providersMore: document.querySelector('.providers__more')?.textContent,
+      total: document.querySelector('[data-feed-total]')?.textContent,
+      blog: [...main.querySelectorAll('.latest h3')].map((h3) => h3.textContent),
       items: [...main.querySelectorAll('.start a[data-slot="item"]')].map((a) => ({
         href: a.getAttribute('href'), title: a.querySelector('[data-slot="item-title"]')?.textContent?.trim(),
         line: a.querySelector('[data-slot="item-description"]')?.textContent?.trim(), icon: !!a.querySelector('[data-slot="item-media"] svg'),
         border: ['top', 'right', 'bottom', 'left'].some((side) => { const cs = getComputedStyle(a); return parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0 && cs.getPropertyValue(`border-${side}-color`) !== 'rgba(0, 0, 0, 0)'; }),
       })),
-      releases: [...main.querySelectorAll('.latest a.release-row')].map((a) => [...link(a).slice(1), a.querySelector('time')?.getAttribute('datetime')]),
     };
   });
   assert.match(h.title[0], /^"?LINE Seed"?,/);
@@ -585,21 +620,36 @@ test('calm homepage (2026-10-02, after the OpenAI developers, Claude docs and cl
   assert.equal(h.code, 0, 'no code sample on the homepage (the Quick Start page has it)');
   assert.deepEqual(h.primary, [['Get started', '/getting-started/quick-start/']], 'exactly one primary action');
   assert.deepEqual(h.hrefs.filter((x: string, i: number) => h.hrefs.indexOf(x) !== i), [], 'no destination repeated in the body');
-  assert.deepEqual(h.models.map((m: { link: string[] }) => m.link), catalog.models.map((m: { id: string }) => [`https://apertis.ai/models/${encodeURIComponent(m.id)}`, ...EXT]));
-  for (const [i, m] of h.models.entries()) {
-    const want = catalog.models[i];
-    assert.equal(m.name, want.name);
-    assert.ok(m.meta.startsWith(`${want.provider} · `) && m.meta.endsWith(' context'), m.meta);
-    assert.deepEqual([m.tags, m.line], [want.tags, want.line]);
-    assert.equal(m.isNew, notes.some((n: { description: string }) => n.description.includes(want.name)), `${want.name} New badge`);
-  }
+  assert.deepEqual(await page.evaluate(homeFeedRows), [snapshot.models.map(modelView), snapshot.notes.map(noteView)].map(rowsOf), 'the build renders the committed feed');
+  assert.deepEqual([h.total, h.providersMore], [String(snapshot.total), `and ${snapshot.providers - 8} more`]);
+  assert.deepEqual(h.blog, ['Release notes', 'From the blog']);
   assert.equal(h.items.length, 6);
   for (const it of h.items) assert.ok(it.title && it.line && it.icon && !it.border, JSON.stringify(it));
-  assert.ok(h.items.some((it: { href: string }) => it.href === 'https://playground.apertis.ai'), 'the Playground card is a start item');
-  assert.deepEqual(h.releases, notes.map((n: { version: string; date: string }) => [`https://apertis.ai/changelog/${encodeURIComponent(n.version)}`, ...EXT, n.date]));
   for (const it of h.items.filter((x: { href: string }) => x.href.startsWith('/'))) {
     const res = await page.request.get(base + it.href);
     assert.equal(res.status(), 200, `${it.href} is published`);
   }
   await context.close();
+});
+
+test('the homepage swaps in the live feed after load: rows refilled from /_nimbus/home-feed, text never parsed as HTML, empty fields hidden; a failing feed keeps the build copy', { skip }, async () => {
+  const snapshot = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/home/home-feed.json'), 'utf8'));
+  const feed = feedFixture(snapshot);
+  const context = await browser.newContext(VIEWS[1440]);
+  await context.route('**/_nimbus/home-feed', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill({ json: feed }));
+  const page = await context.newPage();
+  await page.goto(base + '/', { waitUntil: 'load' });
+  await page.locator('.model-card__name', { hasText: 'Test Model' }).waitFor();
+  assert.deepEqual(await page.evaluate(homeFeedRows), [feed.models.map(modelView), feed.notes.map(noteView)].map(rowsOf));
+  assert.equal(await page.locator('.release-row b').count(), 0, 'upstream text is text');
+  const emptyShown = () => document.querySelectorAll('[data-feed] [data-f]:not([data-f="href"])').values().filter((e) => !e.textContent!.trim() && (e as HTMLElement).checkVisibility()).toArray().length;
+  assert.equal(await page.evaluate(emptyShown), 0, 'no empty badge or line is shown');
+  assert.deepEqual(await page.evaluate(() => [document.querySelector('[data-feed-total]')!.textContent, document.querySelector('.providers__more')!.textContent]), ['400', 'and 32 more']);
+  await context.close();
+  const failing = await browser.newContext(VIEWS[1440]);
+  await failing.route('**/_nimbus/home-feed', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill({ status: 502, json: { error: 'feed unavailable' } }));
+  const p2 = await failing.newPage();
+  await p2.goto(base + '/', { waitUntil: 'networkidle' });
+  assert.deepEqual(await p2.evaluate(homeFeedRows), [snapshot.models.map(modelView), snapshot.notes.map(noteView)].map(rowsOf));
+  await failing.close();
 });

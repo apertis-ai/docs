@@ -94,6 +94,7 @@ export default function NavSheet({ sidebar, current }: Props) {
           <nav aria-label="Main" className="drawer__menu">
             <a className={cn(item, current === 'tutorialSidebar' && 'font-medium')} href="/intro" aria-current={current === 'tutorialSidebar' ? 'true' : undefined}>Docs</a>
             <a className={cn(item, current === 'apiSidebar' && 'font-medium')} href="/api" aria-current={current === 'apiSidebar' ? 'true' : undefined}>API Reference</a>
+            <a className={item} href="/blog/">Blog</a>
             <a className={cn(item, 'flex items-center justify-between')} href="https://apertis.ai/changelog" {...external}>Release Notes<ArrowUpRight className="size-4 text-muted-foreground" aria-hidden="true" /></a>
           </nav>
           <div className="mt-3 grid grid-cols-2 gap-2">

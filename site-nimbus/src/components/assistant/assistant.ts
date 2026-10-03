@@ -2,7 +2,7 @@
 // Search loads Pagefind lazily on first use; Ask Docs posts the legacy wire request to /api/ask.
 import { OPEN_EVENT } from '../../contracts/events.ts';
 import { searchWithVariants } from '../../search/query.ts';
-import { ASK_PATH, askBody, currentPageContext, errorMessage, readAnswer, sourceLinks } from './wire.ts';
+import { ASK_PATH, askBody, currentPageContext, errorMessage, readAnswer, sourceLinks, turnstileSiteKey } from './wire.ts';
 import { answerNodes } from './answer-render.ts';
 
 type Surface = 'search' | 'ask';
@@ -43,8 +43,6 @@ declare global {
 
 const PAGEFIND_URL = '/pagefind/pagefind.js';
 const MAX_RESULTS = 10;
-// The legacy widget (src/components/UnifiedSearchModal/AskAITab.tsx, ask-wire.json).
-const TURNSTILE_SITE_KEY = '0x4AAAAAACS2SzpYBFytHb_E';
 const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 const TURNSTILE_TIMEOUT_MS = 30000;
 const SESSION_KEY = 'askai_session_id';
@@ -284,9 +282,12 @@ export function initAssistant(): void {
   }
 
   input.addEventListener('input', () => void runSearch());
+  results.addEventListener('pointermove', () => delete results.dataset.nav);
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
+      // Keyboard navigation shows the selection ring (shell.css); a pointer move hides it again.
+      results.dataset.nav = 'keyboard';
       select(selected + (e.key === 'ArrowDown' ? 1 : -1));
     } else if (e.key === 'Enter' && selected >= 0) {
       e.preventDefault();
@@ -362,7 +363,7 @@ export function initAssistant(): void {
       const ts = window.turnstile;
       if (!ts) return script.onerror?.(new Event('error'));
       widgetId = ts.render($('aa-turnstile'), {
-        sitekey: TURNSTILE_SITE_KEY,
+        sitekey: turnstileSiteKey(import.meta.env.PUBLIC_TURNSTILE_SITEKEY),
         callback: (t: string) => {
           clearTimeout(timer);
           verifyFailed = false;

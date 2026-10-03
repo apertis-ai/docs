@@ -65,9 +65,10 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   assert.match(page, /<h2 id="subscription">/);
   assert.equal(fs.readFileSync(path.join(dist, 'blog/choosing-a-plan/index.md'), 'utf8').split('\n')[0], '# Choosing a plan');
 
-  // Entry points appear with the first article: the Articles column of the homepage "Latest" and the footer link.
+  // The homepage "From the blog" column lists the articles instead of saying they are on their way.
   const home = html('index.html');
-  assert.match(home, /class="latest latest--two"[\s\S]*?<h3>Articles<\/h3>/);
+  assert.match(home, /<h3>From the blog<\/h3>[\s\S]*?href="\/blog\/routing-requests-across-providers\/"[\s\S]*?>All articles</);
+  assert.doesNotMatch(home, /are on their way/);
   assert.match(home, /href="\/blog\/routing-requests-across-providers\/"/);
   for (const p of ['index.html', 'blog/choosing-a-plan/index.html']) assert.match(html(p), /<a href="\/blog\/">Blog<\/a>/, p);
 

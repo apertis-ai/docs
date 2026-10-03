@@ -12,6 +12,8 @@
     "typecheck": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "test": "node --test \"test/*.test.ts\"",
     "preview": "cd .. && CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false WRANGLER_SEND_METRICS=false wrangler pages dev site-nimbus/dist --compatibility-date=2024-01-01 --persist-to site-nimbus/.wrangler/state",
+    "build:ask": "PUBLIC_TURNSTILE_SITEKEY=1x00000000000000000000AA npm run build",
+    "preview:ask": "cd .. && env -i PATH=\"$PATH\" HOME=\"$HOME\" CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=true CLOUDFLARE_INCLUDE_PROCESS_ENV=true WRANGLER_SEND_METRICS=false site-nimbus/node_modules/.bin/wrangler pages dev site-nimbus/dist --compatibility-date=2024-01-01 --persist-to site-nimbus/.wrangler/state --env-file \"${ASK_ENV_FILE:?set ASK_ENV_FILE to the Ask Docs bindings file, see assistant/README.md}\" --binding TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA",
     "test:routes": "node --test test/routes.check.ts",
     "test:dist": "node --test test/dist.check.ts",
     "m2:regenerate": "node converter/convert.ts && CI= M2_CHECK=0 npm run build",

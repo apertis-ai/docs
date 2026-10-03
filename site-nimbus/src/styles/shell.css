@@ -55,9 +55,15 @@ a { color: var(--link); text-decoration: none; }
 
 button { font: inherit; color: inherit; }
 
-/* Mono small labels: eyebrows, meta labels, sidebar categories, the TOC title, keyboard hints. */
-.label, .doc-header__tag, .doc-meta dt, .sidebar__heading, .doc-page__toc-title, .toc-progress,
-.pagination a span {
+/* Small labels in the text face, as on the Claude docs (operator review 2026-10-03): the page's category,
+   the sidebar categories, the TOC title and the pager hints. Muted, sentence case as written. */
+.doc-header__tag, .sidebar__heading, .doc-page__toc-title, .pagination a span {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 20px;
+}
+/* Mono small labels: eyebrows and the reading-progress figure. */
+.label, .toc-progress {
   font-family: var(--mono);
   font-size: var(--fs-2xs);
   font-weight: 500;
@@ -111,7 +117,7 @@ button { font: inherit; color: inherit; }
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
-.navbar__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; height: var(--navbar-top); }
+.navbar__inner { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; height: var(--navbar-top); }
 
 .brand {
   display: inline-flex;
@@ -123,9 +129,8 @@ button { font: inherit; color: inherit; }
   font-weight: 600;
   white-space: nowrap;
 }
-.brand img { display: block; width: 24px; height: 24px; }
+.brand__mark { display: block; flex: none; width: 22px; height: 22px; color: var(--ink); }
 .navbar .brand { justify-self: start; }
-.navbar__center { display: flex; justify-content: center; }
 
 .navbar__tabs { height: calc(var(--navbar-height) - var(--navbar-top) - 1px); }
 .navbar__links { display: flex; align-items: stretch; gap: 28px; height: 100%; }
@@ -148,24 +153,24 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  width: 280px;
+  width: 200px;
   height: 32px;
-  padding: 0 6px 0 10px;
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  background: var(--card);
+  margin-right: 4px;
+  padding: 0 6px 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel);
   color: var(--muted);
   font-size: var(--fs-sm);
   cursor: pointer;
-  transition: border-color 0.16s ease, color 0.16s ease;
+  transition: background-color 0.16s ease, color 0.16s ease;
 }
-.navbar__search:hover { color: var(--ink); }
+.navbar__search:hover { background: var(--hover); color: var(--ink); }
 .navbar__search span { flex: 1; text-align: left; }
 .navbar__search kbd {
   padding: 1px 5px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: var(--panel);
+  border-radius: 999px;
+  background: var(--card);
   color: var(--muted);
   font: 500 var(--fs-2xs)/16px var(--mono);
 }
@@ -338,6 +343,7 @@ button { font: inherit; color: inherit; }
 .doc-header > h1 { grid-column: 1; }
 .doc-header__actions { grid-column: 2; grid-row: 1; align-self: center; justify-self: end; }
 .doc-header:has(> .doc-header__tag) > .doc-header__actions { grid-row: 2; }
+.doc-header__tag { margin: 0 0 8px; color: var(--muted); }
 .docs-content .doc-header h1 { margin: 0; }
 .docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
 .doc-header__meta {
@@ -347,11 +353,12 @@ button { font: inherit; color: inherit; }
   justify-content: space-between;
   gap: 16px 32px;
   justify-self: stretch;
-  margin-top: 28px;
+  margin-top: 20px;
 }
-.doc-meta { display: flex; gap: 40px; margin: 0; }
-.doc-meta dt { color: var(--muted); }
-.doc-meta dd { margin: 4px 0 0; color: var(--ink); font-size: var(--fs-md); line-height: 22px; }
+.doc-meta { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 0; color: var(--muted); font-size: var(--fs-sm); line-height: 20px; }
+.doc-meta > div { display: flex; gap: 4px; }
+.doc-meta > div + div::before { content: '·'; margin: 0 8px; }
+.doc-meta dd { margin: 0; color: var(--ink); }
 .doc-header__rule { height: 0; margin: 32px 0 36px; border: 0; border-top: 1px solid var(--line); }
 
 /* Page actions */
@@ -395,8 +402,10 @@ button { font: inherit; color: inherit; }
   background: var(--card);
   color: var(--ink);
 }
-/* Keyboard focus in the menu: an ink bar, like the selected search result. */
-.page-actions__menu [role='menuitem']:focus { box-shadow: inset 2px 0 0 var(--ink); }
+/* The menu item under the pointer gets the neutral fill only (Radix focuses it on hover, and Chrome can
+   count that focus as visible); keyboard focus away from the pointer adds a thin muted ring (>= 3:1 on
+   the card) around the whole item, never a side bar. */
+.page-actions__menu [role='menuitem']:focus-visible:not(:hover) { box-shadow: inset 0 0 0 1px var(--muted); }
 /* The status floats under the split button as a small card, so it never overlaps the description text. */
 .docs-content .page-actions__status {
   position: absolute;
@@ -561,18 +570,24 @@ button { font: inherit; color: inherit; }
 
 /* Footer: brand column and grouped links in the shared container, then the copyright row. */
 .footer { margin-top: 96px; border-top: 1px solid var(--line); background: var(--bg); }
-.footer__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 48px; padding-block: 56px 40px; }
-.footer__line { margin: 12px 0 20px; max-width: 34ch; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
-.footer__social { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.footer__social a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; color: var(--muted); }
-.footer__social a:hover { background: var(--hover); color: var(--ink); }
-.footer__columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.footer__inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 4fr); gap: 48px; padding-block: 56px 40px; }
+.footer__line { margin: 12px 0 16px; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
+.footer__status { color: var(--muted); font-size: var(--fs-sm); text-decoration: underline; text-underline-offset: 3px; }
+.footer__columns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; }
 .footer__columns ul { margin: 0; padding: 0; list-style: none; }
 .footer__title { margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; }
+.footer__columns li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .footer__columns li + li { margin-top: 8px; }
 .footer__columns a { color: var(--ink); font-size: var(--fs-ui); }
+.footer__badge { font-size: var(--fs-2xs); padding: 0 6px; }
 .footer__bottom { padding-bottom: 32px; }
-.footer__copyright { margin: 0; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--fs-sm); }
+.footer__trust { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; padding: 20px 0; border-top: 1px solid var(--line); list-style: none; color: var(--muted); font-size: var(--fs-sm); }
+.footer__trust a { color: var(--muted); }
+.footer__trust span { color: var(--ink); font-weight: 500; }
+.footer__legal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.footer__copyright { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.footer__legal ul { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; }
+.footer__legal a { color: var(--muted); font-size: var(--fs-sm); }
 .doc-page ~ .footer, .doc-page + .footer { margin-top: 0; }
 
 /* Ask Docs trigger (opens #9's panel through apertis-docs:open) */
@@ -601,22 +616,24 @@ button { font: inherit; color: inherit; }
 .home-section h2:has(+ .home-section__lead) { margin-bottom: 6px; }
 .home-section__lead { margin: 0 0 24px; color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
 /* "Models": the featured models as shadcn Cards, four across. */
-.models { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+/* A feed field with nothing to show (feed.ts views) is hidden: important, because this file is the base layer and the badge's inline-flex utility would otherwise win. */
+[data-f][hidden] { display: none !important; }
 .model-card { display: block; height: 100%; color: var(--ink); }
 .model-card [data-slot='card'] { transition: border-color 0.16s ease; }
 .model-card:hover [data-slot='card'] { border-color: var(--line-strong); }
-.model-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .model-card__name { font-size: var(--fs-body); font-weight: 600; line-height: 1.35; }
 .model-card:hover .model-card__name { text-decoration: underline; text-underline-offset: 3px; }
 .model-card__meta { color: var(--muted); font-size: var(--fs-sm); }
 .model-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.model-card__line { color: var(--desc); font-size: var(--fs-ui); line-height: 1.55; }
+.model-card__line { display: -webkit-box; overflow: hidden; color: var(--desc); font-size: var(--fs-ui); line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 /* "Start building": shadcn Items without a border or fill; hover underlines the title. */
 .start { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 40px; }
 .start-item:hover [data-slot='item-title'] { text-decoration: underline; text-underline-offset: 3px; }
 /* "Latest": release notes, and the newest articles beside them once one is published. */
-.latest { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; }
-.latest--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.latest { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; }
+.latest__soon { margin: 0; padding: 16px 0; border-top: 1px solid var(--line); color: var(--desc); font-size: var(--fs-ui); line-height: 1.6; }
+.providers__more { color: var(--muted); font-weight: 400; }
 .latest h3 { margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; line-height: 20px; }
 .release-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
 .release-row {
@@ -666,6 +683,8 @@ html:not(.js) .article-filter { display: none; }
 .blog-index { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 56px; padding-block: 72px 24px; }
 .blog-index__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
 .blog-index__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+.blog-index__empty { margin: 0; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+.blog-index__empty a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Search and Ask Docs (#9, Assistant.tsx): one native <dialog>. Search is a modal Command dialog; Ask Docs
    a non-blocking sheet docked right on desktop and at the bottom at <= 640 px. Neutral tokens only. */
@@ -679,6 +698,20 @@ html:not(.js) .article-filter { display: none; }
   font: var(--fs-ui)/1.5 var(--font);
 }
 .aa::backdrop { background: var(--overlay); }
+/* Open and close: the search dialog fades in and settles from slightly above; Ask Docs slides in from the
+   right (from below as a bottom sheet). Discrete transitions keep the closing frame visible; no motion with
+   prefers-reduced-motion (below). */
+.aa, .aa::backdrop {
+  transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), overlay 0.24s allow-discrete, display 0.24s allow-discrete;
+}
+.aa:not([open]), .aa:not([open])::backdrop { opacity: 0; }
+.aa[data-surface='search']:not([open]) { transform: translateY(-8px) scale(0.98); }
+.aa[data-surface='ask']:not([open]) { transform: translateX(24px); }
+@starting-style {
+  .aa[open], .aa[open]::backdrop { opacity: 0; }
+  .aa[data-surface='search'][open] { transform: translateY(-8px) scale(0.98); }
+  .aa[data-surface='ask'][open] { transform: translateX(24px); }
+}
 .aa[data-surface='search'] { width: min(640px, calc(100vw - 32px)); margin: 80px auto auto; max-height: calc(100vh - 120px); }
 .aa[data-surface='ask'] {
   position: fixed; inset: calc(var(--navbar-height) + 12px) 16px 16px auto; margin: 0; width: min(420px, calc(100vw - 32px));
@@ -695,9 +728,12 @@ html.aa-scroll-lock { overflow: hidden; }
 .aa-status:empty { display: none; }
 .aa-results { margin: 0; padding: 6px; list-style: none; overflow-y: auto; }
 .aa-results li { border-radius: 6px; }
-/* The selection is an ink bar (>= 3:1 on the card), not only the faint hover fill. */
-.aa-results li[aria-selected='true'] { background: var(--hover); box-shadow: inset 2px 0 0 var(--ink); }
-.aa [data-slot='command-input-wrapper']:focus-within { outline: 2px solid var(--ink); outline-offset: -2px; }
+/* The selected result has the neutral fill; while the keyboard moves the selection it also gets a thin
+   muted ring (>= 3:1 on the card) around the whole row, never a side bar. */
+.aa-results li[aria-selected='true'] { background: var(--hover); }
+.aa-results[data-nav='keyboard'] li[aria-selected='true'] { box-shadow: inset 0 0 0 1px var(--muted); }
+/* The focused search field: its hairline darkens to muted (>= 3:1), no frame around it. */
+.aa [data-slot='command-input-wrapper']:focus-within { box-shadow: inset 0 -1px 0 var(--muted); }
 .aa-results a { display: block; padding: 8px 10px; color: inherit; text-decoration: none; }
 .aa-results .aa-title { display: block; color: var(--ink); font-weight: 600; }
 .aa-results .aa-path { display: block; color: var(--muted); font: var(--fs-xs)/1.5 var(--mono); }
@@ -730,14 +766,16 @@ html.aa-scroll-lock { overflow: hidden; }
 .aa-ask-status { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
 .aa-ask-status:empty { display: none; }
 .aa-ask-status[data-kind='error'] { padding: 8px 10px; border: 1px solid var(--error); border-radius: 8px; color: var(--error); }
-.aa-form { display: flex; gap: 8px; align-items: flex-end; padding: 8px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--card); }
-.aa-form:focus-within { outline: 2px solid var(--ink); outline-offset: 1px; }
+.aa-form { display: flex; gap: 8px; align-items: flex-end; padding: 8px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--card); transition: border-color 0.16s ease; }
+.aa-form:focus-within { border-color: var(--muted); }
 .aa-form textarea { flex: 1; border: 0; outline: 0; resize: none; font: inherit; font-size: var(--fs-base); color: var(--ink); background: none; }
 .aa-foot { display: flex; justify-content: space-between; align-items: center; min-height: 24px; color: var(--muted); font-size: var(--fs-xs); }
 .aa-turnstile:empty { display: none; }
 @media (max-width: 640px) {
   .aa[data-surface='search'] { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 90vh; border-radius: 16px 16px 0 0; }
   .aa[data-surface='ask'] { inset: auto 0 0 0; width: 100vw; max-width: 100vw; height: min(82vh, 680px); border-radius: 14px 14px 0 0; }
+  .aa:not([open])[data-surface] { transform: translateY(32px); }
+  @starting-style { .aa[open][data-surface] { transform: translateY(32px); } }
 }
 
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -748,21 +786,19 @@ html.aa-scroll-lock { overflow: hidden; }
   #shell-drawer .drawer__sidebar { display: none; }
 }
 
-@media (max-width: 1279px) {
-  .navbar__search { width: 220px; }
-}
 
 /* Below 1024 px the header links, search box and account actions move into the navigation sheet. */
 @media (max-width: 1023px) {
   /* One header row: the tab row and the account actions live in the navigation sheet. */
   :root { --navbar-height: 57px; }
   .navbar__inner { display: flex; }
-  .navbar__tabs, .navbar__center, .navbar__right { display: none; }
+  .navbar__tabs, .navbar__right { display: none; }
   .navbar__compact { display: flex; }
   .models { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .latest--two { grid-template-columns: minmax(0, 1fr); }
+  .latest { grid-template-columns: minmax(0, 1fr); }
   .home-section { padding-top: 64px; }
   .footer__inner { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .footer__columns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .blog-index { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; }
 }
 
@@ -790,7 +826,6 @@ html.aa-scroll-lock { overflow: hidden; }
   /* Wide tables scroll inside their own box. */
   .docs-content table { white-space: nowrap; }
   .docs-content table::after { content: '→ Scroll to see more'; display: block; padding: 0.5rem; color: var(--muted); font-size: 0.75rem; font-style: italic; text-align: center; }
-  #shell-drawer .sidebar__heading { font-size: var(--fs-2xs); }
   #shell-drawer .sidebar__link, #shell-drawer .sidebar__group > summary { font-size: var(--fs-base); }
 }
 
@@ -814,5 +849,5 @@ html.aa-scroll-lock { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+  *, *::before, *::after, .aa::backdrop { transition: none !important; scroll-behavior: auto !important; }
 }

@@ -32,6 +32,13 @@ if (!['poc', 'full'].includes(SET)) { console.error(`--set ${SET}: expected poc 
 // The page set and the recorded legacy byte medians it is gated against.
 const PAGES = SET === 'full' ? budgets.fullCorpus.pages : budgets.protocol.pages;
 const RECORDED = SET === 'full' ? budgets.fullCorpus.baseline?.gatedBytes ?? {} : budgets.baseline.gatedBytes;
+// Byte limits the operator changed for one page and metric, each with its decision on #4 (budgetRules.enforcement).
+const DECISIONS = budgets.budgetDecisions ?? [];
+for (const d of DECISIONS) {
+  if (!/^https:\/\/github\.com\/apertis-ai\/docs\/issues\/4#issuecomment-\d+$/.test(d.decision ?? '') || !BYTES.includes(d.metric) || !(d.limit > 0)) {
+    throw new Error(`budgets.json budgetDecisions: ${JSON.stringify(d)} needs a #4 decision comment, a byte metric and a positive limit`);
+  }
+}
 
 // What each side served for this sample: the candidate's `apertis-docs:build` meta, and the legacy
 // build's main bundle name (Docusaurus has no build meta).
@@ -86,9 +93,12 @@ function evaluate(samples, expectedBuildId) {
       const recorded = RECORDED[profile]?.[page];
       if (!recorded) { failures.push(`${profile} ${page}: no recorded byte baseline`); continue; }
       for (const m of BYTES) {
-        const pass = C[m] <= recorded[m];
-        gates.push({ profile, page, metric: m, rule: 'bytes', candidate: C[m], limit: recorded[m], pass });
-        if (!pass) failures.push(`${profile} ${page} ${m}: candidate median ${C[m]} > recorded legacy median ${recorded[m]}`);
+        // A byte limit differs from the recorded legacy median only by a decision recorded on #4 (budgetDecisions).
+        const decision = DECISIONS.find((d) => d.page === page && d.metric === m);
+        const limit = decision ? decision.limit : recorded[m];
+        const pass = C[m] <= limit;
+        gates.push({ profile, page, metric: m, rule: 'bytes', candidate: C[m], limit, ...(decision ? { decision: decision.decision } : {}), pass });
+        if (!pass) failures.push(`${profile} ${page} ${m}: candidate median ${C[m]} > ${decision ? `decided limit ${limit} (${decision.decision})` : `recorded legacy median ${recorded[m]}`}`);
         // The paired legacy server must be the recorded baseline build, or the timing pairing is meaningless.
         if (L[m] !== recorded[m]) failures.push(`${profile} ${page} ${m}: paired legacy median ${L[m]} != recorded baseline ${recorded[m]} (legacy server is not the baseline build)`);
       }

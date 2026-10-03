@@ -138,8 +138,29 @@ rm .dev.vars
 
 In `unconfigured` mode it checks the fail-closed `500 Server configuration error` instead of the 400s.
 
+## Ask Docs in the local preview (real answers)
+
+`npm run preview:ask` (site-nimbus) serves the built candidate like `npm run preview`, with the Ask Docs
+bindings read from the file `ASK_ENV_FILE` names. `wrangler pages dev` does not bind an `--env-file` itself:
+it loads the file into its own environment, so the script starts wrangler with an empty environment (`env -i`,
+only `PATH` and `HOME`) and binds that environment (`CLOUDFLARE_INCLUDE_PROCESS_ENV`). A `.dev.vars` in the
+repository root takes precedence over all of this; remove it first. The file holds KEY=VALUE lines
+(`JINA_API_KEY`, `APERTIS_API_KEY`, `APERTIS_BASE_URL` ending in `/v1`, `APERTIS_MODEL`,
+`ASK_RETRIEVAL_SOURCE`, and that source's retrieval bindings, such as `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ASK_GENERATION_ENVIRONMENT` and
+`ASK_GENERATION_READER_TOKEN`). Point it at isolated (non-production) bindings; questions call the real
+model and embedding providers. It must be a regular file (wrangler reads it twice, so a pipe or process
+substitution hangs); keep it outside the repository with mode 600. To reach the preview from another
+machine (a tailnet host), add `-- --ip 0.0.0.0 --port 8811`.
+
+Turnstile: build with `npm run build:ask` first. It names Cloudflare's always-pass test sitekey in
+`PUBLIC_TURNSTILE_SITEKEY` (`turnstileSiteKey`, `site-nimbus/src/components/assistant/wire.ts`), because local
+hosts are not on the real sitekey's domain list; `preview:ask` binds the matching always-pass test secret. Every
+other build (CI, deployments) ships the real sitekey, and `npm run test:dist` fails on a build that carries a
+test sitekey, so run `npm run build` again before it.
+
 `npx wrangler pages functions build --outdir <tmp> --output-routes-path <tmp>/_routes.json` shows that
-`/api/ask` is the only function route.
+`/api/ask` and `/_nimbus/home-feed` (the homepage's live models and release notes,
+`functions/_nimbus/home-feed.ts`) are the only function routes.
 
 The Turnstile secret above is Cloudflare's documented always-fail test secret, so the flow stops at 403
 before any paid call. Do not use the always-pass secret here: the next hop is the real Jina URL.

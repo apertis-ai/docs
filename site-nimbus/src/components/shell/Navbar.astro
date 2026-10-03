@@ -1,8 +1,9 @@
 ---
 // Header per openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", in two rows as
-// in the Claude Docs header. Top row: logo and name, a centred search trigger with the Cmd/Ctrl+K hint,
-// the theme switch, a thin separator, Log in (quiet) and Create account (primary). Second row: the navbar
-// items of "Preserved reader-facing shell" as section tabs, the current one underlined. Server-rendered;
+// in the Claude Docs header. Top row: logo and name, then on the right a quiet search trigger with the
+// Cmd/Ctrl+K hint (operator review 2026-10-03: not centred, as on the OpenAI and Claude docs), the theme
+// switch, a thin separator, Log in (quiet) and Create account (primary). Second row: the navbar items of
+// "Preserved reader-facing shell" and Blog as section tabs, the current one underlined. Server-rendered;
 // the search trigger only dispatches `apertis-docs:open` (shell.client.ts), Cmd/Ctrl+K belongs to #9.
 // Below 1024 px the tab row and the account actions move into the navigation sheet (NavSheet.tsx).
 import { ArrowUpRight, Menu, Moon, Search, Sun } from 'lucide-react';
@@ -15,24 +16,24 @@ interface Props {
   sidebar: SidebarId | null;
 }
 const { sidebar } = Astro.props;
+const onBlog = Astro.url.pathname.startsWith('/blog/');
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 const links = [
   { label: 'Docs', href: '/intro', current: sidebar === 'tutorialSidebar' },
   { label: 'API Reference', href: '/api', current: sidebar === 'apiSidebar' },
+  { label: 'Blog', href: '/blog/', current: onBlog },
   { label: 'Release Notes', href: 'https://apertis.ai/changelog', current: false, external: true },
 ];
 ---
 <header class="navbar">
   <div class="shell-container navbar__inner">
     <a class="brand" href="/"><Logo /><span>Apertis Docs</span></a>
-    <div class="navbar__center">
+    <div class="navbar__right">
       <button type="button" class="navbar__search" data-open-surface="search" aria-label="Search documentation" aria-keyshortcuts="Meta+K Control+K">
         <Search className="size-4" aria-hidden="true" />
         <span>Search</span>
         <kbd>⌘K</kbd>
       </button>
-    </div>
-    <div class="navbar__right">
       <button type="button" data-slot="button" class={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'icon-button')} data-theme-toggle aria-label="Switch to dark mode">
         <Sun className="icon-sun size-[18px]" aria-hidden="true" />
         <Moon className="icon-moon size-[18px]" aria-hidden="true" />

@@ -85,7 +85,7 @@ test('related docs must be published documentation pages: an unknown path or ano
   assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
-test('with no articles (the committed tree) nothing changes: 79 documents, no blog output, /blog stays retired', () => {
+test('with no articles (the committed tree) nothing changes: 79 documents, no blog output', () => {
   assert.equal(fs.existsSync(path.join(site, 'src/articles')), false, 'no article is committed yet');
   const out = tmp();
   const m = convert({ outRoot: out });
@@ -94,12 +94,16 @@ test('with no articles (the committed tree) nothing changes: 79 documents, no bl
   assert.equal(fs.existsSync(path.join(out, 'src/content/public/blog')), false);
 });
 
-test('/blog/ is released from the retired-route rewrite only once a native article is published; every other retired /blog path stays 404', () => {
+test('/blog/ is never rewritten to 404, with or without articles (the index says the first articles are on their way); every other retired /blog path stays 404', () => {
   const dist = tmp();
-  fs.mkdirSync(path.join(dist, 'blog'), { recursive: true });
+  fs.mkdirSync(path.join(dist, 'blog/welcome'), { recursive: true });
   fs.writeFileSync(path.join(dist, 'blog/index.html'), '<!doctype html>');
+  fs.writeFileSync(path.join(dist, 'blog/welcome/index.html'), '<!doctype html>');
   const legacy = convert({ outRoot: tmp() });
-  assert.match(publicationFiles(legacy, inventory, dist)._redirects ?? '', /^\/blog\/ \/__retired 200$/m, 'without articles a /blog/ page would be rewritten to 404');
+  const without = publicationFiles(legacy, inventory, dist)._redirects ?? '';
+  assert.doesNotMatch(without, /^\/blog\/? /m, 'the /blog/ index is served without articles too');
+  assert.match(without, /^\/blog\/welcome\/ \/__retired 200$/m, 'a retired legacy post stays 404');
+  assert.doesNotMatch(publicationFiles(legacy, inventory, dist)['sitemap.xml'], /\/blog\//, 'the empty index is not in the sitemap');
   const withArticles = convert({ outRoot: tmp(), siteRoot: path.join(fixtures, 'published') });
   const files = publicationFiles(withArticles, inventory, dist);
   assert.doesNotMatch(files._redirects ?? '', /^\/blog\/? /m);
