@@ -110,6 +110,8 @@ export function initAssistant(): void {
       tabs[s].setAttribute('aria-selected', String(s === next));
     }
     document.documentElement.classList.toggle('aa-scroll-lock', next === 'search');
+    // Wide screens make room for the docked panel instead of covering the page (shell.css).
+    document.documentElement.toggleAttribute('data-ask-open', next === 'ask');
     if (next === 'search') {
       store.remove(OPEN_KEY);
       dialog.showModal();
@@ -133,11 +135,17 @@ export function initAssistant(): void {
       store.remove(OPEN_KEY);
       controller?.abort(); // closing the panel stops a streaming answer
     }
+    const was = surface;
     surface = null;
     document.documentElement.classList.remove('aa-scroll-lock');
+    document.documentElement.removeAttribute('data-ask-open');
     const back = opener as HTMLElement | null;
     opener = null;
     if (back?.isConnected && back !== document.body) back.focus();
+    // A panel restored on page load has no opener: focus goes to its trigger, never back to <body>.
+    else if (was === 'ask' && (document.activeElement === document.body || dialog.contains(document.activeElement))) {
+      document.querySelector<HTMLElement>('.ask-docs-trigger')?.focus();
+    }
   }
 
   function hide() {

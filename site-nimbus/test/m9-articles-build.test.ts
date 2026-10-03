@@ -54,6 +54,7 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   const index = html('blog/index.html');
   assert.ok(index.indexOf('Routing requests across providers') < index.indexOf('Choosing a plan') && index.indexOf('Choosing a plan') > 0);
   assert.match(index, /<link rel="canonical" href="https:\/\/docs\.apertis\.ai\/blog\/">/);
+  assert.doesNotMatch(index, /name="robots"/, 'with articles the index is indexable');
 
   // An article: the page header of a document, with the article's front matter.
   const page = html('blog/choosing-a-plan/index.html');

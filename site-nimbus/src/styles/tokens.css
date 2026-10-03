@@ -27,7 +27,7 @@
   --adm-info: #6d28d9;
   --adm-warning: #92400e;
   --adm-danger: #b91c1c;
-  --navbar-bg: rgba(250, 250, 250, 0.85);
+  --navbar-bg: rgb(250, 250, 250);
   --overlay: rgba(10, 10, 10, 0.4);
   --shadow: 0 12px 32px rgba(10, 10, 10, 0.08), 0 1px 2px rgba(10, 10, 10, 0.04);
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -74,7 +74,7 @@
   --adm-info: #c4b5fd;
   --adm-warning: #fcd34d;
   --adm-danger: #fca5a5;
-  --navbar-bg: rgba(18, 18, 18, 0.85);
+  --navbar-bg: rgb(18, 18, 18);
   --overlay: rgba(0, 0, 0, 0.6);
   --shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
