@@ -282,19 +282,18 @@ button { font: inherit; color: inherit; }
 /* Desktop rule kept from legacy: an h2's h3 list shows only while that h2 or one of its h3s is active. */
 .doc-page__toc .toc ul { display: none; }
 .doc-page__toc .toc > li:has(a.active) > ul { display: block; }
+/* A plain list, as on the Claude docs (operator review 2026-10-04): h3s indent under their h2, and only the
+   current section is in the ink colour. */
 .toc a {
-  display: flex;
-  gap: 6px;
+  display: block;
   padding: 3px 0;
   color: var(--muted);
   font-size: var(--fs-sm);
   line-height: 20px;
   transition: color 0.16s ease;
 }
-.toc a::before { content: '└'; flex: 0 0 auto; color: var(--line-strong); font-family: var(--mono); }
 .toc a:hover { color: var(--ink); }
 .toc a.active { color: var(--ink); font-weight: 500; }
-.toc a.active::before { color: var(--ink); }
 
 .toc-progress { display: none; align-items: center; gap: 10px; margin: 20px 0 0; color: var(--muted); }
 .js .toc-progress { display: flex; }
