@@ -561,8 +561,21 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.ok(Math.abs(mid.width - top.width) < 0.5 && mid.aside === top.aside && mid.title === top.title, 'no layout shift in the rail');
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
   await page.waitForFunction(() => document.querySelector('.toc-progress__value')!.textContent === '100%');
-  // Glyphs: every TOC entry is drawn with the tree glyph.
-  assert.equal(await page.$eval('.doc-page__toc .toc a', (a: Element) => getComputedStyle(a, '::before').content), '"└"');
+  // A plain list, as on the Claude docs (operator review 2026-10-04): no tree glyph, h3s indented under their h2,
+  // and only the current section in the ink colour.
+  const toc = await page.evaluate(() => {
+    const links = [...document.querySelectorAll<HTMLElement>('.doc-page__toc .toc a')].filter((a) => a.checkVisibility());
+    const h3 = links.find((a) => a.closest('ul ul'));
+    const ink = getComputedStyle(document.querySelector('.doc-page__title, h1')!).color;
+    return {
+      glyphs: links.map((a) => getComputedStyle(a, '::before').content).filter((c) => c !== 'none' && c !== 'normal'),
+      indent: h3 ? h3.getBoundingClientRect().left - links[0].getBoundingClientRect().left : null,
+      inked: links.filter((a) => getComputedStyle(a).color === ink).map((a) => a.classList.contains('active')),
+    };
+  });
+  assert.deepEqual(toc.glyphs, [], 'no TOC entry draws a glyph');
+  assert.ok(toc.indent === null || toc.indent >= 12, `h3 entries are indented (${toc.indent}px)`);
+  assert.deepEqual(toc.inked, [true], 'exactly the current section is in the ink colour');
   const reduced = await open(CHAT, { ...DESKTOP, reducedMotion: 'reduce' });
   assert.equal(await reduced.page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
   assert.notEqual(await page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
