@@ -224,17 +224,17 @@ test('without JavaScript the navigation and landing links still work and no dead
   assert.ok(await page.$('article .toc-mobile > summary'));
   assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), null);
   await page.goto(base + '/', { waitUntil: 'load' });
-  // The homepage (redesigned 2026-09-29 and revised 2026-10-02, #4) carries the six feature-card destinations
-  // as its "Start building" items, so their order follows them; the six links, targets and rels are unchanged.
+  // The homepage (redesigned 2026-09-29 and revised 2026-10-03, #4) carries the feature-card destinations as
+  // its "Start building" items, so their order follows them; the Playground is gone and SDKs joined them.
   const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
   const byHref = (a: string[], b: string[]) => a[0].localeCompare(b[0]);
   assert.deepEqual(cards.sort(byHref), [
     ['/intro', '', ''], ['/installation/models', '', ''], ['/api', '', ''], ['/installation/claude-code', '', ''],
-    ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', '_blank', 'noopener noreferrer'],
+    ['/billing/subscription-plans', '', ''], ['/installation/scripts', '', ''],
   ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
-  // Two header rows (canary step 5a): logo and account actions, then the section tabs.
-  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', 'https://apertis.ai/changelog']);
+  // Two header rows (canary step 5a): logo and account actions, then the section tabs with Blog.
+  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', 'https://apertis.ai/changelog']);
   await context.close();
 });
 
@@ -413,7 +413,7 @@ test('every document page opens with the header block: tag, title, description, 
   const doc = liveManifest().documents.find((d) => d.servedPath === QS)!;
   const meta = pageMeta()[doc.id];
   const text = (sel: string) => page.$eval(sel, (e: HTMLElement) => e.innerText.trim());
-  assert.equal(await text('article .doc-header__tag'), 'GETTING STARTED'); // CSS uppercases the inventory label
+  assert.equal(await text('article .doc-header__tag'), 'Getting Started'); // the inventory label as written (operator review 2026-10-03)
   assert.equal(await page.$eval('article .doc-header__tag', (e: HTMLElement) => e.textContent), 'Getting Started');
   assert.equal(await text('article .doc-header h1'), 'Quick Start');
   const desc = await text('article .doc-header__desc');
@@ -552,7 +552,7 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   });
   const top = await state();
   assert.equal(await page.textContent('.doc-page__toc-title'), 'On this page');
-  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.doc-page__toc-title')!).textTransform), 'uppercase');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.doc-page__toc-title')!).textTransform), 'none', 'sentence case in the text face, as on the Claude docs');
   assert.deepEqual([top.value, top.now], ['0%', '0']);
   const middle = await page.evaluate(() => { scrollTo(0, (document.documentElement.scrollHeight - innerHeight) / 2); return scrollY; });
   await page.waitForFunction(() => !['0%', '100%'].includes(document.querySelector('.toc-progress__value')!.textContent!));

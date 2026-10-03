@@ -1,8 +1,8 @@
 ---
 // Native articles (openspec docs-routing-publication "Native articles"): /blog/<slug>/ for every native
-// manifest entry, and the /blog/ index once at least one exists. Zero published articles emit nothing,
-// so /blog/ keeps answering 404. Publication is decided by the converter (drafts get no manifest entry);
-// the collection only supplies the body and front matter.
+// manifest entry, and the /blog/ index, which says the first articles are on their way while none is
+// published (operator review 2026-10-03: readers should know articles live here). Publication is decided
+// by the converter (drafts get no manifest entry); the collection only supplies the body and front matter.
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocLayout from '../../layouts/DocLayout.astro';
@@ -13,7 +13,6 @@ import { manifest } from '../../manifest/manifest.ts';
 
 export async function getStaticPaths() {
   const native = manifest.documents.filter(isNativeArticle);
-  if (!native.length) return [];
   const entries = new Map((await getCollection('articles')).map((e) => [e.id, e]));
   const pages = native.map((doc) => {
     const entry = entries.get(doc.servedPath.slice('/blog/'.length, -1));
@@ -28,6 +27,7 @@ interface Props {
   entry?: CollectionEntry<'articles'>;
 }
 const { doc, entry } = Astro.props;
+const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
 const data = entry?.data as { title: string; description: string; author: string; category: string } | undefined;
 // The index is not a manifest document (like /search/): it is never indexed and has no Markdown.
@@ -48,7 +48,11 @@ const index: ManifestDocument = {
         <h1>Apertis blog</h1>
         <p>Guides, updates and field notes from the team building Apertis.</p>
       </div>
-      <div class="blog-index__list"><ArticleList filter /></div>
+      <div class="blog-index__list">
+        {hasArticles ? <ArticleList filter /> : (
+          <p class="blog-index__empty">The first articles are on their way: guides, engineering notes and model deep dives. Until then, see what ships in the <a href="https://apertis.ai/changelog" target="_blank" rel="noopener noreferrer">release notes</a>.</p>
+        )}
+      </div>
     </main>
   </BaseLayout>
 )}

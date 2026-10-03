@@ -63,20 +63,20 @@ The live template blog (`/blog/**`, feeds), `/test`, `/markdown-page` and the `/
 - **THEN** these routes are preserved with their observed status and redirect behavior
 
 ### Requirement: Native articles
-The operator decided on 2026-09-30 (canary review) that the candidate carries articles beside the docs, after the claude.dev blog: `/blog/<slug>/` for each article and a `/blog/` index, with the homepage and footer linking them only once the first article is published. Articles are written for the candidate, not converted from the legacy tree:
+The operator decided on 2026-09-30 (canary review) that the candidate carries articles beside the docs, after the claude.dev blog: `/blog/<slug>/` for each article and a `/blog/` index. On 2026-10-03 the operator decided that the header, homepage and footer link `/blog/` before the first article is published. Articles are written for the candidate, not converted from the legacy tree:
 - each is `site-nimbus/src/articles/<slug>.md`, plain Markdown with front matter `title`, `description`, `date` (YYYY-MM-DD), `author`, `category`, optional `draft` and optional `related` (comma-separated served paths of the documentation pages the article follows on from); the body has no H1 and no MDX, and anything else fails the conversion;
 - a published article is the manifest entry `blog:<slug>` at `/blog/<slug>/`, identified as native by its source path (the manifest v1 shape is unchanged), eligible for HTML, search, the clean Markdown artifact and retrieval, and listed in the sitemap;
 - a draft yields nothing: no manifest entry, page, artifact, sitemap URL or search record;
 - the route inventory is never edited and records no native article. A slug whose path or id any inventory row names (the retired legacy blog posts, tags, authors, archive and feeds) SHALL fail the conversion;
 - every `related` path SHALL be a published documentation page (not an article); anything else fails the conversion. Each of those pages lists the article under "Related articles" after its body, outside the search index;
 - the `/blog/` index offers a category filter once the published articles span two or more categories; without JavaScript every article stays listed;
-- once an article is published, the `/blog/` index supersedes the retired legacy `/blog` row (and only it): the retirement rewrite no longer applies there. Every other retired `/blog/**` path keeps answering 404.
+- the `/blog/` index supersedes the retired legacy `/blog` row (and only it), with or without published articles (operator review 2026-10-03: readers should see that articles live here): the retirement rewrite no longer applies there. Without articles the index says the first articles are on their way; it is not a manifest document, so it has no Markdown, search record or sitemap URL. Every other retired `/blog/**` path keeps answering 404.
 
 The candidate emits no `llms*` outputs at all, so articles have none either.
 
 #### Scenario: No published article
 - **WHEN** the candidate is built with no article, or only drafts
-- **THEN** the manifest, `_redirects`, sitemap, search index, homepage, header and footer are those of the build without the articles feature, and `/blog` and `/blog/` answer 404
+- **THEN** the manifest, sitemap and search index have no article, `/blog/` answers 200 with the "on their way" line, the homepage "From the blog" column says the same, and every other retired `/blog/**` path answers 404
 
 #### Scenario: Draft
 - **WHEN** an article has `draft: true`
