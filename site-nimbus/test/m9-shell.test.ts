@@ -703,3 +703,54 @@ test('UX canary 2026-10-03: opaque header, no shift when search opens, Ask Docs 
   assert.equal(await wide.page.$('meta[name="robots"]'), null);
   await wide.context.close();
 });
+
+test('UX canary round 2: no junk search hits, Ask Docs says what it does and that it is working, Clear chat keeps focus, a phone does not reopen the sheet, the 404 page has the site shell', { skip }, async () => {
+  // A nonsense query is "No results", not single-letter fragments that only share a letter with it.
+  const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
+  await page.locator('dialog[open] #aa-q').fill('zzqqxx');
+  await page.getByText(/No results for/).waitFor({ timeout: 5000 });
+  await page.keyboard.press('Escape');
+  // An empty conversation explains itself; a pending answer shows that it is being worked on.
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
+  await page.locator('dialog[open] #aa-question').waitFor();
+  const before = (sel: string) => page.evaluate((s: string) => getComputedStyle(document.querySelector(s)!, '::before').content, sel);
+  assert.match(await before('.aa-messages'), /Ask about setup/);
+  await page.evaluate(() => {
+    const m = Object.assign(document.createElement('div'), { className: 'aa-msg' });
+    m.dataset.role = 'assistant';
+    m.dataset.state = 'streaming';
+    document.querySelector('.aa-messages')!.append(m);
+  });
+  assert.match(await before('.aa-msg[data-state="streaming"]'), /Searching the docs/);
+  await context.close();
+  // Clear chat hides itself and leaves focus in the question field.
+  const chat = await browser.newContext(VIEWS[1440]);
+  await chat.addInitScript(() => {
+    sessionStorage.setItem('askai_session_id', 'canary');
+    sessionStorage.setItem('askdocs_messages_canary', JSON.stringify([{ role: 'user', content: 'hi' }, { role: 'assistant', content: 'hello', state: 'done' }]));
+  });
+  const p = await chat.newPage();
+  await p.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
+  await p.click('.ask-docs-trigger');
+  await p.click('#aa-clear');
+  assert.equal(await p.evaluate(() => document.activeElement?.id), 'aa-question');
+  await chat.close();
+  // On a phone the sheet covers the page: it opens on request, not again on every navigation.
+  const phone = await open('/getting-started/quick-start/', VIEWS[390]);
+  await phone.page.click('.ask-docs-trigger');
+  await phone.page.locator('dialog[open] #aa-question').waitFor();
+  await phone.page.reload({ waitUntil: 'load' });
+  await phone.page.waitForTimeout(300);
+  assert.equal(await phone.page.$('dialog[open] #aa-question'), null, 'the sheet stays closed after navigation');
+  await phone.context.close();
+  // An unknown path answers 404 with the header (search), footer and a way back, and is not indexed.
+  const lost = await open('/', VIEWS[1440]);
+  const res = await lost.page.goto(base + '/no-such-page/', { waitUntil: 'load' });
+  assert.equal(res.status(), 404);
+  assert.equal(await lost.page.textContent('h1'), 'Page not found');
+  for (const sel of ['.navbar', 'footer', 'main a[href="/"]', 'main [data-open-surface="search"]']) assert.ok(await lost.page.$(sel), `404 page has ${sel}`);
+  assert.equal(await lost.page.getAttribute('meta[name="robots"]', 'content'), 'noindex');
+  assert.equal(await lost.page.$('link[rel="canonical"]'), null, 'no canonical on the 404 page');
+  await lost.context.close();
+});

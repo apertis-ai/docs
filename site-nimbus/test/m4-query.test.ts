@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { queryVariants, searchWithVariants } from '../src/search/query.ts';
+import { excerptMatches, queryVariants, searchWithVariants } from '../src/search/query.ts';
 
 test('punctuated queries also search their parts; words, identifiers and hyphens are unchanged', () => {
   assert.deepEqual(queryVariants('chat/completions'), ['chat/completions', 'chat completions']);
@@ -81,4 +81,14 @@ test('a superseded search loads no fragments (Pagefind caches and mutates them p
   assert.deepEqual(ids, ['a', 'b']);
   await searchWithVariants('api key', async () => [hit('a'), hit('b')], () => true);
   assert.equal(loads, 2);
+});
+
+test('a result is shown only when a word it highlights shares a 3-letter start with a typed word (UX canary F9)', () => {
+  // Pagefind's fuzzy fallback highlights single letters of a nonsense query: those are not matches.
+  assert.equal(excerptMatches('zzqqxx', 'set <mark>x</mark> to the <mark>z</mark> axis'), false);
+  assert.equal(excerptMatches('stream', 'enable <mark>streaming</mark> responses'), true);
+  assert.equal(excerptMatches('strem', 'enable <mark>streaming</mark> responses'), true, 'a typo keeps its prefix');
+  assert.equal(excerptMatches('API keys', 'create an <mark>API</mark> <mark>key</mark>'), true);
+  assert.equal(excerptMatches('go', 'the <mark>Go</mark> SDK'), true, 'a short word needs only its own length');
+  assert.equal(excerptMatches('anything', 'an excerpt without highlights'), true, 'nothing highlighted: nothing to judge, keep it');
 });

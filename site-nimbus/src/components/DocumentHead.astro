@@ -12,7 +12,7 @@ interface Props {
 const { doc, buildId } = Astro.props;
 ---
 <title>{doc.title + TITLE_SUFFIX}</title>
-<link rel="canonical" href={doc.canonicalUrl} />
+{doc.canonicalUrl && <link rel="canonical" href={doc.canonicalUrl} />}
 <meta name={PAGE_META.id} content={doc.id} />
 <meta name={PAGE_META.build} content={buildId} />
 {doc.markdown && <meta name={PAGE_META.markdown} content={doc.markdown.path} />}
