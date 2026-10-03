@@ -42,7 +42,7 @@ const index: ManifestDocument = {
     <rendered.Content />
   </DocLayout>
 ) : (
-  <BaseLayout doc={index} buildId={manifest.buildId}>
+  <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <h1>Apertis blog</h1>

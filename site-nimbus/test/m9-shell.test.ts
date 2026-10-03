@@ -464,7 +464,9 @@ test('document pages are centred beyond the frame width (canary step 3): at 1920
       frameLeft: sidebar.left,
       frameRight: r(toc).right,
       footerLeft: r(document.querySelector('footer .shell-container')!).left,
-      width: innerWidth - (innerWidth - document.documentElement.clientWidth),
+      // The laid-out width: the root reserves a stable scrollbar gutter, which headless Chrome's hidden scrollbars
+      // leave out of clientWidth.
+      width: document.body.getBoundingClientRect().width,
     };
   });
   assert.ok(Math.abs(e.logo - e.sidebarText) <= 1, `logo ${e.logo} vs sidebar text ${e.sidebarText}`);
@@ -652,4 +654,52 @@ test('the homepage swaps in the live feed after load: rows refilled from /_nimbu
   await p2.goto(base + '/', { waitUntil: 'networkidle' });
   assert.deepEqual(await p2.evaluate(homeFeedRows), [snapshot.models.map(modelView), snapshot.notes.map(noteView)].map(rowsOf));
   await failing.close();
+});
+
+test('UX canary 2026-10-03: opaque header, no shift when search opens, Ask Docs makes room on wide screens, focus never lands on <body>, empty blog not indexed', { skip }, async () => {
+  // The header hides what scrolls under it.
+  const { context, page } = await open('/', VIEWS[1440]);
+  const bg = await page.evaluate(() => getComputedStyle(document.querySelector('.navbar')!).backgroundColor);
+  assert.match(bg, /^rgb\(/, `opaque header background: ${bg}`);
+  // Opening the modal search locks scrolling without moving the page under it.
+  await page.evaluate(() => scrollTo(0, 600));
+  const brand = () => page.evaluate(() => document.querySelector('.navbar .brand')!.getBoundingClientRect().left);
+  const before = await brand();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'search' } })));
+  await page.locator('dialog[open] #aa-q').waitFor();
+  assert.equal(await brand(), before, 'the page does not shift when the search dialog opens');
+  await page.keyboard.press('Escape');
+  // At 1440 the panel docks over the page; the page keeps its layout.
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('apertis-docs:open', { detail: { surface: 'ask' } })));
+  await page.locator('dialog[open] #aa-question').waitFor();
+  assert.equal(await brand(), before, 'at 1440 the docked panel does not move the page');
+  await context.close();
+  // At 1920 the open panel takes its own column: no model card lies under it, and closing restores the layout.
+  const wide = await open('/', { viewport: { width: 1920, height: 1000 } });
+  const left = await wide.page.evaluate(() => document.querySelector('.navbar .brand')!.getBoundingClientRect().left);
+  await wide.page.click('.ask-docs-trigger');
+  await wide.page.locator('dialog[open] #aa-question').waitFor();
+  await wide.page.waitForTimeout(400);
+  const under = await wide.page.evaluate(() => {
+    const p = document.getElementById('apertis-assistant')!.getBoundingClientRect();
+    return [...document.querySelectorAll('.model-card, .navbar__right')].filter((e) => e.getBoundingClientRect().right > p.left).length;
+  });
+  assert.equal(under, 0, 'nothing lies under the open panel at 1920');
+  await wide.page.click('#aa-close');
+  await wide.page.waitForTimeout(400);
+  assert.equal(await wide.page.evaluate(() => document.querySelector('.navbar .brand')!.getBoundingClientRect().left), left, 'closing restores the layout');
+  assert.equal(await wide.page.evaluate(() => document.activeElement?.className.includes('ask-docs-trigger')), true, 'focus returns to the trigger');
+  // A panel restored on page load has no opener: closing it focuses the trigger, not <body>.
+  await wide.page.click('.ask-docs-trigger');
+  await wide.page.locator('dialog[open] #aa-question').waitFor();
+  await wide.page.reload({ waitUntil: 'load' });
+  await wide.page.locator('dialog[open] #aa-question').waitFor();
+  await wide.page.click('#aa-close');
+  assert.equal(await wide.page.evaluate(() => document.activeElement?.className.includes('ask-docs-trigger')), true, 'restored panel: focus goes to the trigger');
+  // The empty /blog/ index asks not to be indexed; real pages do not.
+  await wide.page.goto(base + '/blog/', { waitUntil: 'load' });
+  assert.equal(await wide.page.getAttribute('meta[name="robots"]', 'content'), 'noindex');
+  await wide.page.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
+  assert.equal(await wide.page.$('meta[name="robots"]'), null);
+  await wide.context.close();
 });

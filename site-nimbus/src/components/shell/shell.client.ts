@@ -6,6 +6,26 @@ import { codeCopy, headingAnchors } from '@cloudflare/nimbus-docs/client';
 import { send } from '../../lib/bridge.ts';
 import { openAskDocs, openSearch } from '../../contracts/events.ts';
 
+// Over plain http (a tailnet preview) the browser offers no navigator.clipboard, and the code-copy and page
+// copy buttons would fail. Outside a secure context only, copy through a selected textarea instead.
+if (!window.isSecureContext && !navigator.clipboard) {
+  Object.defineProperty(navigator, 'clipboard', {
+    value: {
+      writeText: async (text: string) => {
+        const area = Object.assign(document.createElement('textarea'), { value: text, readOnly: true });
+        area.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        const active = document.activeElement as HTMLElement | null;
+        document.body.append(area);
+        area.select();
+        const ok = document.execCommand('copy');
+        area.remove();
+        active?.focus();
+        if (!ok) throw new Error('copy failed');
+      },
+    },
+  });
+}
+
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T>(sel)] as T[];
 
 // Surface triggers (navbar search, homepage hero, Ask Docs button).

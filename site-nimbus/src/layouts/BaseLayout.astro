@@ -19,8 +19,10 @@ interface Props {
   doc: ManifestDocument;
   buildId: string;
   nav?: PageNavigation | null;
+  /** A page with nothing to index yet (the empty /blog/ index). */
+  noindex?: boolean;
 }
-const { doc, buildId, nav = null } = Astro.props;
+const { doc, buildId, nav = null, noindex = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -28,6 +30,7 @@ const { doc, buildId, nav = null } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <DocumentHead doc={doc} buildId={buildId} />
+    {noindex && <meta name="robots" content="noindex" />}
     <!-- The monochrome mark without a tile, dark on a light browser chrome and light on a dark one (the icon's
          own media query; the page itself never follows prefers-color-scheme); the legacy .ico stays for
          browsers without SVG icons. -->
