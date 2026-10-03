@@ -27,3 +27,6 @@ CLAUDE.md
 
 # Scripts (internal tooling)
 scripts/
+
+# The task-worktree script links the primary checkout's .claude here (a symlink, so no trailing slash)
+/.claude

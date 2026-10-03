@@ -1,0 +1,11 @@
+# Ignored paths that the worktree janitor (~/.cc-reaper) may discard together with a landed, idle
+# worktree, because a command rebuilds each of them. Only add a path that something really rebuilds.
+.docusaurus               # npm run build (legacy Docusaurus)
+build                     # npm run build (legacy Docusaurus)
+site-nimbus/dist          # npm run build in site-nimbus
+site-nimbus/.nimbus       # written by nimbus-docs during the site-nimbus build
+# wrangler pages dev runs without a wrangler config and binds no KV, D1, R2 or Durable Objects
+# locally: its state holds only the Cache API (the cached homepage feed) and an empty workflows store,
+# and tmp holds bundled Functions. Revisit these two lines before adding any local data binding.
+.wrangler                 # npm run preview / preview:ask (tmp bundles, Cache API state)
+site-nimbus/.wrangler     # the same, under --persist-to site-nimbus/.wrangler/state
