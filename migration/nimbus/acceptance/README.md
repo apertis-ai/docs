@@ -56,7 +56,7 @@ of these change:
 
 | Job | Checks | Run it locally |
 | --- | --- | --- |
-| `legacy` | Root `npm ci`, `npm run build`, `npm run test:developer-activation` | the same commands at the root |
+| `legacy` | Root `npm ci`, `npm run build:legacy` (Docusaurus; the root `npm run build` builds the candidate since the release branch), `npm run test:developer-activation` | the same commands at the root |
 | `candidate` | `site-nimbus` clean `npm ci`, then `CI=1 npm run build` (fails on a stale manifest). Then no tracked file changed (conversion determinism), `typecheck`, `npm test` and `test:dist`. Then the activation guard again, now covering `dist/`. | the same commands in `site-nimbus/` |
 | `preview` | Serves the build with the root Pages Function and no `.dev.vars`. Then `test:routes`, `route-fixtures.mjs check --scope poc` and then without `--scope` (all 228 rows), `test:m3-browser` and `m4-e2e`. Then `measure.mjs search --scope poc`, which must report 14/14 with `keyboardFocus` true. | see [Local runs](#local-runs) |
 | `assistant` | `node --test assistant/test/*.test.ts`, then `new-client-old-server.test.ts` (the candidate wire client against the deployed legacy handler). When `indexer/package.json` exists, it also runs the indexer tests (PGlite, no network) and the credential-free dry run. The dry run must plan every `rag`-eligible manifest entry for the manifest's `buildId`. If `indexer/` is absent, this part does not apply and does not fail. | `node --test --test-timeout=10000 'assistant/test/*.test.ts'`; `node --test migration/nimbus/acceptance/new-client-old-server.test.ts`; `cd indexer && npm ci && node --test --test-timeout=120000 'test/*.test.ts'` |
