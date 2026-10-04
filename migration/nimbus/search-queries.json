@@ -1,0 +1,32 @@
+{
+  "frozenAt": "2026-09-29",
+  "baseSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
+  "hitRule": "A query passes when, among the first 3 results the search UI shows for the exact query string, at least one result's pathname equals one of `expect` after removing the #fragment and any trailing slash (except '/'). Section/heading results count as their page. Targets were fixed before any legacy or candidate measurement and are never tuned to observed results.",
+  "scopeRule": "scope 'poc' queries gate #12 against the PoC corpus; #13 reruns every query (poc and full) against the full corpus.",
+  "queries": [
+    { "q": "quick start", "expect": ["/getting-started/quick-start"], "scope": "poc" },
+    { "q": "api key", "expect": ["/authentication/api-keys"], "scope": "poc" },
+    { "q": "create API key", "expect": ["/authentication/api-keys", "/getting-started/quick-start"], "scope": "poc" },
+    { "q": "subscription plans", "expect": ["/billing/subscription-plans"], "scope": "poc" },
+    { "q": "claude code", "expect": ["/installation/claude-code"], "scope": "poc" },
+    { "q": "ANTHROPIC_BASE_URL", "expect": ["/installation/claude-code"], "scope": "poc" },
+    { "q": "roo code", "expect": ["/installation/roocode"], "scope": "poc" },
+    { "q": "chat/completions", "expect": ["/api/text-generation/chat-completions"], "scope": "poc" },
+    { "q": "/v1/messages", "expect": ["/api/text-generation/messages"], "scope": "poc" },
+    { "q": "responses api", "expect": ["/api/text-generation/responses"], "scope": "poc" },
+    { "q": "streaming", "expect": ["/api/text-generation/streaming"], "scope": "poc" },
+    { "q": "@apertis/ai-sdk-provider", "expect": ["/api/sdks/ai-sdk-provider"], "scope": "poc" },
+    { "q": "createApertis", "expect": ["/api/sdks/ai-sdk-provider"], "scope": "poc" },
+    { "q": "base url", "expect": ["/api", "/getting-started/quick-start"], "scope": "poc" },
+    { "q": "rate limits", "expect": ["/billing/rate-limits"], "scope": "full" },
+    { "q": "context_length_exceeded", "expect": ["/help/error-codes"], "scope": "full" },
+    { "q": "429", "expect": ["/help/error-codes", "/billing/rate-limits", "/help/troubleshooting"], "scope": "full" },
+    { "q": "embeddings", "expect": ["/api/embeddings/embeddings-api", "/api/embeddings/guide"], "scope": "full" },
+    { "q": "rerank", "expect": ["/api/embeddings/rerank"], "scope": "full" },
+    { "q": "web search", "expect": ["/api/search/web-search"], "scope": "full" },
+    { "q": "cursor", "expect": ["/installation/cursor"], "scope": "full" },
+    { "q": "fallback models", "expect": ["/api/utilities/fallback-models"], "scope": "full" },
+    { "q": "pip install apertis", "expect": ["/api/sdks/python-sdk"], "scope": "full" },
+    { "q": "PAYG", "expect": ["/billing/payg"], "scope": "full" }
+  ]
+}
