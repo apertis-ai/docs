@@ -1,0 +1,4260 @@
+[
+  {
+    "path": "/404",
+    "status": 200,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/404.html",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null,
+    "slashVariant": {
+      "path": "/404/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog",
+    "status": 308,
+    "location": "/blog/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/",
+      "status": 200
+    },
+    "title": "Blog | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/archive",
+    "status": 308,
+    "location": "/blog/archive/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/archive/",
+      "status": 200
+    },
+    "title": "Archive | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/archive",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null,
+    "slashVariant": {
+      "path": "/blog/archive/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/authors",
+    "status": 308,
+    "location": "/blog/authors/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/authors/",
+      "status": 200
+    },
+    "title": "Authors | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/authors",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null,
+    "slashVariant": {
+      "path": "/blog/authors/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/authors/all-sebastien-lorber-articles",
+    "status": 308,
+    "location": "/blog/authors/all-sebastien-lorber-articles/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/authors/all-sebastien-lorber-articles/",
+      "status": 200
+    },
+    "title": "Sébastien Lorber - 3 posts | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/authors/all-sebastien-lorber-articles",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/authors/all-sebastien-lorber-articles/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/authors/yangshun",
+    "status": 308,
+    "location": "/blog/authors/yangshun/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/authors/yangshun/",
+      "status": 200
+    },
+    "title": "Yangshun Tay - 3 posts | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/authors/yangshun",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/authors/yangshun/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/first-blog-post",
+    "status": 308,
+    "location": "/blog/first-blog-post/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/first-blog-post/",
+      "status": 200
+    },
+    "title": "First Blog Post | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/first-blog-post",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/hola",
+      "https://github.com/apertis-ai/docs/tree/main/blog/2019-05-28-first-blog-post.md",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "8d23437a4c438ab8268670010a9ba782d96590f41d2109f3084f1081143b2359",
+    "slashVariant": {
+      "path": "/blog/first-blog-post/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/long-blog-post",
+    "status": 308,
+    "location": "/blog/long-blog-post/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/long-blog-post/",
+      "status": 200
+    },
+    "title": "Long Blog Post | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/long-blog-post",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/hello",
+      "https://github.com/apertis-ai/docs/tree/main/blog/2019-05-29-long-blog-post.md",
+      "https://github.com/yangshun",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "5d3c7bb1f040007734f6de5de2b5229a593f2cc9cce14874a2d6a3ed47271214",
+    "slashVariant": {
+      "path": "/blog/long-blog-post/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/mdx-blog-post",
+    "status": 308,
+    "location": "/blog/mdx-blog-post/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/mdx-blog-post/",
+      "status": 200
+    },
+    "title": "MDX Blog Post | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/mdx-blog-post",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/tags/docusaurus",
+      "https://docusaurus.io/docs/markdown-features",
+      "https://github.com/apertis-ai/docs/tree/main/blog/2021-08-01-mdx-blog-post.mdx",
+      "https://github.com/slorber",
+      "https://mdxjs.com/",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber"
+    ],
+    "images": [
+      "https://github.com/slorber.png"
+    ],
+    "articleSha256": "e9202b1a433a795dcf5a268a6180b34a4d005cd5069be2db33d6518ce4fe6753",
+    "slashVariant": {
+      "path": "/blog/mdx-blog-post/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/tags",
+    "status": 308,
+    "location": "/blog/tags/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/tags/",
+      "status": 200
+    },
+    "title": "Tags | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/tags",
+    "robots": null,
+    "headingIds": [
+      "D"
+    ],
+    "links": [
+      "/blog/tags/docusaurus"
+    ],
+    "images": [],
+    "articleSha256": "a20ef80b8c57d16f10ea56d6f790cea6c0ae3768f20827a54f02a2d5b6970596",
+    "slashVariant": {
+      "path": "/blog/tags/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/tags/docusaurus",
+    "status": 308,
+    "location": "/blog/tags/docusaurus/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/tags/docusaurus/",
+      "status": 200
+    },
+    "title": "4 posts tagged with &quot;Docusaurus&quot; | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/tags/docusaurus",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/tags/docusaurus/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/tags/facebook",
+    "status": 308,
+    "location": "/blog/tags/facebook/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/tags/facebook/",
+      "status": 200
+    },
+    "title": "One post tagged with &quot;Facebook&quot; | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/tags/facebook",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/tags/facebook/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/tags/hello",
+    "status": 308,
+    "location": "/blog/tags/hello/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/tags/hello/",
+      "status": 200
+    },
+    "title": "2 posts tagged with &quot;Hello&quot; | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/tags/hello",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "/blog/welcome",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "50114a899a79e82252fff15968db3aee02713421067c229331ff71b5ceef15b4",
+    "slashVariant": {
+      "path": "/blog/tags/hello/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/tags/hola",
+    "status": 308,
+    "location": "/blog/tags/hola/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/tags/hola/",
+      "status": 200
+    },
+    "title": "One post tagged with &quot;Hola&quot; | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/tags/hola",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/first-blog-post",
+      "/blog/tags/docusaurus",
+      "/blog/tags/hola",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "c47f5460c4a43dfa653a9545b53d3b173f3701f3b0bbd3f8536ae507699e825a",
+    "slashVariant": {
+      "path": "/blog/tags/hola/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/welcome",
+    "status": 308,
+    "location": "/blog/welcome/",
+    "contentType": null,
+    "final": {
+      "path": "/blog/welcome/",
+      "status": 200
+    },
+    "title": "Welcome | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/blog/welcome",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/blog/authors/all-sebastien-lorber-articles",
+      "/blog/authors/yangshun",
+      "/blog/tags/docusaurus",
+      "/blog/tags/facebook",
+      "/blog/tags/hello",
+      "https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog",
+      "https://docusaurus.io/docs/blog",
+      "https://github.com/apertis-ai/docs/tree/main/blog/2021-08-26-welcome/index.md",
+      "https://github.com/slorber",
+      "https://github.com/yangshun",
+      "https://thisweekinreact.com",
+      "https://www.linkedin.com/in/sebastienlorber/",
+      "https://x.com/sebastienlorber",
+      "https://x.com/yangshunz"
+    ],
+    "images": [
+      "/assets/images/docusaurus-plushie-banner-a60f7593abca1e3eef26a9afa244e4fb.jpeg",
+      "https://github.com/slorber.png",
+      "https://github.com/yangshun.png"
+    ],
+    "articleSha256": "3e5fb74c510fe0754be0b68fec7b9d1bf2ead6b612f48b55c2a9573e854b4822",
+    "slashVariant": {
+      "path": "/blog/welcome/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/markdown-page",
+    "status": 308,
+    "location": "/markdown-page/",
+    "contentType": null,
+    "final": {
+      "path": "/markdown-page/",
+      "status": 200
+    },
+    "title": "Markdown page example | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/markdown-page",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": "8681b916fbf1036feb403934e52c0b1004e86b7b3e5826337e1a55ef10717a92",
+    "slashVariant": {
+      "path": "/markdown-page/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/search",
+    "status": 308,
+    "location": "/search/",
+    "contentType": null,
+    "final": {
+      "path": "/search/",
+      "status": 200
+    },
+    "title": "Search the documentation",
+    "canonical": "https://docs.apertis.ai/search",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null,
+    "slashVariant": {
+      "path": "/search/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/test",
+    "status": 308,
+    "location": "/test/",
+    "contentType": null,
+    "final": {
+      "path": "/test/",
+      "status": 200
+    },
+    "title": "Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/test",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null,
+    "slashVariant": {
+      "path": "/test/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/",
+    "status": 200,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "title": "API Reference | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/",
+    "robots": null,
+    "headingIds": [
+      "quick-links",
+      "text-generation",
+      "multimodal",
+      "utilities",
+      "sdks--libraries",
+      "base-url",
+      "authentication"
+    ],
+    "links": [
+      "/",
+      "/api/audio-video/audio",
+      "/api/audio-video/video",
+      "/api/sdks/ai-sdk-provider",
+      "/api/sdks/langchain",
+      "/api/sdks/litellm",
+      "/api/sdks/llamaindex",
+      "/api/sdks/python-sdk",
+      "/api/text-generation/chat-completions",
+      "/api/text-generation/messages",
+      "/api/text-generation/responses",
+      "/api/utilities/billing-credits",
+      "/api/vision/image-generation",
+      "/api/vision/read-image",
+      "/authentication/api-keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/index.md"
+    ],
+    "images": [],
+    "articleSha256": "e965e18b808eda904f1edc54a56f2218bc3d03bf715b370b4c14f5f9c7ab49d3",
+    "slashVariant": {
+      "path": "/api",
+      "status": 308,
+      "location": "/api/"
+    }
+  },
+  {
+    "path": "/api/audio-video/audio",
+    "status": 308,
+    "location": "/api/audio-video/audio/",
+    "contentType": null,
+    "final": {
+      "path": "/api/audio-video/audio/",
+      "status": 200
+    },
+    "title": "Audio API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/audio-video/audio",
+    "robots": null,
+    "headingIds": [
+      "overview",
+      "speech-to-text-transcription",
+      "endpoint",
+      "request",
+      "supported-transcription-models",
+      "supported-audio-formats",
+      "example-basic-transcription",
+      "response",
+      "example-with-language-hint",
+      "example-with-spelling-hints",
+      "example-srt-subtitles",
+      "audio-translation",
+      "endpoint-1",
+      "request-1",
+      "example",
+      "response-1",
+      "text-to-speech-tts",
+      "endpoint-2",
+      "request-2",
+      "supported-tts-models",
+      "available-voices",
+      "available-models",
+      "example-basic-tts",
+      "response-2",
+      "example-high-quality-audio",
+      "example-adjusting-speed",
+      "streaming-tts",
+      "audio-in-chat-completions",
+      "endpoint-3",
+      "request-3",
+      "example-1",
+      "notes",
+      "supported-languages",
+      "transcription-languages",
+      "tts-languages",
+      "best-practices",
+      "audio-quality",
+      "optimizing-tts",
+      "long-audio-handling",
+      "error-handling",
+      "common-errors",
+      "error-response-example",
+      "pricing",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/embeddings/embeddings-api",
+      "/api/text-generation/chat-completions",
+      "/billing/rate-limits",
+      "/help/error-codes",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/audio-video/audio.md",
+      "https://platform.openai.com/docs/guides/speech-to-text/supported-languages"
+    ],
+    "images": [],
+    "articleSha256": "2780efa8f2aefbc0a56a83877e6f696900b0fc8c041bfdace3b9f8d8e2a80917",
+    "slashVariant": {
+      "path": "/api/audio-video/audio/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/audio-video/video",
+    "status": 308,
+    "location": "/api/audio-video/video/",
+    "contentType": null,
+    "final": {
+      "path": "/api/audio-video/video/",
+      "status": 200
+    },
+    "title": "Video API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/audio-video/video",
+    "robots": null,
+    "headingIds": [
+      "create-video",
+      "http-request",
+      "authentication",
+      "parameters",
+      "required-parameters",
+      "optional-parameters",
+      "image-reference-limits-by-model",
+      "sora-2-specific-parameters",
+      "response-format",
+      "response-fields",
+      "query-video-status",
+      "http-request-1",
+      "query-parameters",
+      "response-format-1",
+      "pendingprocessing",
+      "completed",
+      "response-fields-1",
+      "example-usage",
+      "python---complete-workflow",
+      "javascript---complete-workflow",
+      "with-frame-references-veo2-fast-frames",
+      "sora-2-complete-workflow",
+      "sora-2-with-character-creation",
+      "alternative-api-v1videos",
+      "create-video-with-reference-image",
+      "http-request-2",
+      "parameters-multipartform-data",
+      "response-format-2",
+      "get-video-status",
+      "http-request-3",
+      "response-format-3",
+      "get-video-content",
+      "http-request-4",
+      "example-complete-workflow",
+      "sora-2-extended-api",
+      "create-video-sora",
+      "http-request-5",
+      "parameters-multipartform-data-1",
+      "character-parameters",
+      "response-format-4",
+      "get-video-status-sora",
+      "http-request-6",
+      "response-format-5",
+      "response-fields-2",
+      "get-video-content-sora",
+      "http-request-7",
+      "response-format-6",
+      "remix-video-sora",
+      "http-request-8",
+      "parameters-1",
+      "response-format-7",
+      "create-character",
+      "http-request-9",
+      "parameters-2",
+      "response-format-8",
+      "response-fields-3",
+      "example-complete-sora-workflow-with-characters",
+      "supported-models",
+      "veo-models",
+      "sora-models",
+      "sora-2-chat-completions-api",
+      "http-request-10",
+      "parameters-3",
+      "streaming-response",
+      "python-example",
+      "javascript-example",
+      "error-responses",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/chat-completions",
+      "/api/utilities/models",
+      "/api/vision/images-api",
+      "/cdn-cgi/l/email-protection",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/audio-video/video.md"
+    ],
+    "images": [],
+    "articleSha256": "51dc86f23ba6ffece76bfe86d434e2f27a1e4b933fe7b8d443cd95a3b80184f2",
+    "slashVariant": {
+      "path": "/api/audio-video/video/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/embeddings/embeddings-api",
+    "status": 308,
+    "location": "/api/embeddings/embeddings-api/",
+    "contentType": null,
+    "final": {
+      "path": "/api/embeddings/embeddings-api/",
+      "status": 200
+    },
+    "title": "Embedding API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/embeddings/embeddings-api",
+    "robots": null,
+    "headingIds": [
+      "usage-example-in-python",
+      "parameters"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/embeddings/embeddings-api.md"
+    ],
+    "images": [],
+    "articleSha256": "3c7ccbbee29ba80188ab8420e897b24020ee8a225fd320e28c076cedd3970f0a",
+    "slashVariant": {
+      "path": "/api/embeddings/embeddings-api/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/embeddings/guide",
+    "status": 308,
+    "location": "/api/embeddings/guide/",
+    "contentType": null,
+    "final": {
+      "path": "/api/embeddings/guide/",
+      "status": 200
+    },
+    "title": "Embedding API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/embeddings/guide",
+    "robots": null,
+    "headingIds": [
+      "usage-example-in-python",
+      "parameters",
+      "jina-ai-embedding-model-usage-example-in-python",
+      "parameters-1"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/embeddings/guide.md"
+    ],
+    "images": [],
+    "articleSha256": "3284093d3ad21d0937760baf9da4182df7fadb18fa29f3538d7b089768efc931",
+    "slashVariant": {
+      "path": "/api/embeddings/guide/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/embeddings/rerank",
+    "status": 308,
+    "location": "/api/embeddings/rerank/",
+    "contentType": null,
+    "final": {
+      "path": "/api/embeddings/rerank/",
+      "status": 200
+    },
+    "title": "Rerank API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/embeddings/rerank",
+    "robots": null,
+    "headingIds": [
+      "http-request",
+      "authentication",
+      "parameters",
+      "required-parameters",
+      "example-usage",
+      "python",
+      "javascript",
+      "rag-pipeline-example",
+      "response-format",
+      "response-fields",
+      "results-object",
+      "supported-models",
+      "error-responses",
+      "use-cases",
+      "best-practices",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/embeddings/embeddings-api",
+      "/api/text-generation/chat-completions",
+      "/api/utilities/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/embeddings/rerank.md"
+    ],
+    "images": [],
+    "articleSha256": "8ce2bf4cc50f34b016a15dd5ec39881e58a541af8e052c9757a40415146d920f",
+    "slashVariant": {
+      "path": "/api/embeddings/rerank/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/agent-sdk",
+    "status": 308,
+    "location": "/api/sdks/agent-sdk/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/agent-sdk/",
+      "status": 200
+    },
+    "title": "@apertis/agent | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/agent-sdk",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "quickstart",
+      "streaming",
+      "stop-conditions",
+      "how-maxcost-measures-cost",
+      "tool-approval-human-in-the-loop",
+      "configuration",
+      "format-converters",
+      "links"
+    ],
+    "links": [
+      "/",
+      "/api/sdks/ai-sdk-provider",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/apertis-agent",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/agent-sdk.md",
+      "https://www.npmjs.com/package/@apertis/agent"
+    ],
+    "images": [],
+    "articleSha256": "92d399f8cb1ef6965f36f860a42234d20ed450f54eaeeae02f4dcc4ac0e5c3dc",
+    "slashVariant": {
+      "path": "/api/sdks/agent-sdk/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/ai-sdk-provider",
+    "status": 308,
+    "location": "/api/sdks/ai-sdk-provider/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/ai-sdk-provider/",
+      "status": 200
+    },
+    "title": "@apertis/ai-sdk-provider | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/ai-sdk-provider",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "setup",
+      "environment-variable",
+      "code-configuration",
+      "usage-examples",
+      "basic-text-generation",
+      "streaming",
+      "tool-calling-function-calling",
+      "embeddings",
+      "supported-models",
+      "chat-models",
+      "embedding-models",
+      "context-compression",
+      "advanced-configuration",
+      "resources"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "/api/utilities/models",
+      "https://apertis.ai/register",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/apertis-sdk",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/ai-sdk-provider.md",
+      "https://sdk.vercel.ai/",
+      "https://www.npmjs.com/package/@apertis/ai-sdk-provider"
+    ],
+    "images": [],
+    "articleSha256": "b2c6f2ac6e45e7e8cf778039b67e0f7a24d56e4047ae17ceed791b2b9663c83f",
+    "slashVariant": {
+      "path": "/api/sdks/ai-sdk-provider/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/cli",
+    "status": 308,
+    "location": "/api/sdks/cli/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/cli/",
+      "status": 200
+    },
+    "title": "@apertis/cli | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/cli",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "authentication",
+      "commands",
+      "apertis-usage",
+      "apertis-models",
+      "apertis-benchmark-models",
+      "apertis-config",
+      "global-flags",
+      "links"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/pricing",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/apertis-cli",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/cli.md",
+      "https://www.npmjs.com/package/@apertis/cli"
+    ],
+    "images": [],
+    "articleSha256": "068ec660bfe0f864988987d3f697b57e813b59dab4d1b6c64295fea1a30035fc",
+    "slashVariant": {
+      "path": "/api/sdks/cli/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/langchain",
+    "status": 308,
+    "location": "/api/sdks/langchain/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/langchain/",
+      "status": 200
+    },
+    "title": "LangChain | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/langchain",
+    "robots": null,
+    "headingIds": [
+      "installing-langchain",
+      "apertis-usage-example",
+      "context-compression"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/langchain.md"
+    ],
+    "images": [],
+    "articleSha256": "e7598bfa1a247550fe2c0a38c48c236425cbe275b3898146540e49ed4d1ccc6f",
+    "slashVariant": {
+      "path": "/api/sdks/langchain/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/litellm",
+    "status": 308,
+    "location": "/api/sdks/litellm/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/litellm/",
+      "status": 200
+    },
+    "title": "LiteLLM | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/litellm",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "environment-setup",
+      "basic-usage",
+      "completion",
+      "streaming",
+      "using-different-models",
+      "litellm-proxy-configuration",
+      "1-export-api-key",
+      "2-configure-configyaml",
+      "3-start-proxy",
+      "context-compression",
+      "supported-parameters",
+      "popular-models"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/BerriAI/litellm",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/litellm.md"
+    ],
+    "images": [],
+    "articleSha256": "9f002f250f5a202d9854ef6ef0c317ecef8496ad1e0ffe9694f3ae7b14414534",
+    "slashVariant": {
+      "path": "/api/sdks/litellm/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/llamaindex",
+    "status": 308,
+    "location": "/api/sdks/llamaindex/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/llamaindex/",
+      "status": 200
+    },
+    "title": "LlamaIndex | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/llamaindex",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "basic-setup",
+      "chat-api",
+      "streaming-chat",
+      "completion-api",
+      "streaming-completion",
+      "using-different-models",
+      "context-compression",
+      "supported-models"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/llamaindex.md"
+    ],
+    "images": [],
+    "articleSha256": "ab85adb908ad12ea3e1e490c1ed67d23b5f6999b57435301d4eb36b4acad9977",
+    "slashVariant": {
+      "path": "/api/sdks/llamaindex/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/mcp-server",
+    "status": 308,
+    "location": "/api/sdks/mcp-server/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/mcp-server/",
+      "status": 200
+    },
+    "title": "Apertis MCP Server | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/mcp-server",
+    "robots": null,
+    "headingIds": [
+      "installation",
+      "claude-code",
+      "opencode",
+      "environment-variables",
+      "available-tools",
+      "recommend_model--dynamic-model-selection",
+      "delegate--offload-grunt-work-to-a-cheap-coworker",
+      "resources",
+      "security"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/recommend",
+      "https://github.com/apertis-ai/apertis-mcp",
+      "https://github.com/apertis-ai/apertis-mcp/blob/main/coworker-rules.md",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/mcp-server.md",
+      "https://modelcontextprotocol.io"
+    ],
+    "images": [],
+    "articleSha256": "6ee1fee248f623dd03018590246db1cabf0e68e3e079cbf9f4bb7b72bffea1e5",
+    "slashVariant": {
+      "path": "/api/sdks/mcp-server/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/",
+    "status": 200,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Apertis Python SDK | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "installation",
+      "setup",
+      "environment-variable-recommended",
+      "code-configuration",
+      "quick-start",
+      "supported-models",
+      "feature-documentation",
+      "resources"
+    ],
+    "links": [
+      "/",
+      "/api/sdks/python-sdk/async",
+      "/api/sdks/python-sdk/audio",
+      "/api/sdks/python-sdk/chat-completions",
+      "/api/sdks/python-sdk/embeddings",
+      "/api/sdks/python-sdk/messages-api",
+      "/api/sdks/python-sdk/reasoning",
+      "/api/sdks/python-sdk/rerank",
+      "/api/sdks/python-sdk/responses-api",
+      "/api/sdks/python-sdk/streaming",
+      "/api/sdks/python-sdk/tool-calling",
+      "/api/sdks/python-sdk/video",
+      "/api/sdks/python-sdk/vision",
+      "/api/sdks/python-sdk/web-search",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/index.md",
+      "https://github.com/apertis-ai/python-sdk",
+      "https://pypi.org/project/apertis"
+    ],
+    "images": [],
+    "articleSha256": "7977b48bb346a4b0dea32a1dd74c18e66af5a76b063d49eaea98d91d1a7fda02",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk",
+      "status": 308,
+      "location": "/api/sdks/python-sdk/"
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/async",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/async/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/async/",
+      "status": 200
+    },
+    "title": "Async Patterns | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/async",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-async-client",
+      "concurrent-requests",
+      "async-streaming",
+      "semaphore-for-rate-limiting",
+      "async-context-manager",
+      "async-batch-embeddings",
+      "error-handling-in-async",
+      "async-retry-with-backoff",
+      "async-producer-consumer-pattern",
+      "api-reference",
+      "asyncapertis-client",
+      "available-async-methods",
+      "best-practices"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/async.md"
+    ],
+    "images": [],
+    "articleSha256": "00b7ea682c056c812cd54d181a54d55c7e7156ccf70919a9ede264a117f5f102",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/async/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/audio",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/audio/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/audio/",
+      "status": 200
+    },
+    "title": "Audio | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/audio",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "speech-to-text-transcription",
+      "transcription-with-options",
+      "translation-audio-to-english",
+      "text-to-speech",
+      "high-quality-text-to-speech",
+      "streaming-text-to-speech",
+      "audio-in-chat-multimodal",
+      "batch-transcription",
+      "supported-models",
+      "transcriptiontranslation",
+      "text-to-speech-1",
+      "available-voices",
+      "api-reference",
+      "transcription-parameters",
+      "speech-parameters",
+      "supported-audio-formats"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/audio.md"
+    ],
+    "images": [],
+    "articleSha256": "b8b2bf5ce10fbe9427bd999b440c1d8e133a4f0f4d6306c3956c798b255f0033",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/audio/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/chat-completions",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/chat-completions/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/chat-completions/",
+      "status": 200
+    },
+    "title": "Chat Completions | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/chat-completions",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-usage",
+      "multi-turn-conversations",
+      "configuration-options",
+      "response-format",
+      "context-compression",
+      "supported-models",
+      "api-reference"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/chat-completions.md"
+    ],
+    "images": [],
+    "articleSha256": "e84cd301f86633939bce8f29f18bfd0aaba564caa473532250ef2743b86df047",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/chat-completions/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/embeddings",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/embeddings/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/embeddings/",
+      "status": 200
+    },
+    "title": "Embeddings | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/embeddings",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-embedding",
+      "batch-embeddings",
+      "reduced-dimensions",
+      "semantic-similarity",
+      "semantic-search",
+      "async-batch-processing",
+      "supported-models",
+      "api-reference"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/embeddings.md"
+    ],
+    "images": [],
+    "articleSha256": "4f3f1b6e3dc07a049eddf1b1f635b8549d4915a0f1495d88e4a868be7cd1258c",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/embeddings/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/messages-api",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/messages-api/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/messages-api/",
+      "status": 200
+    },
+    "title": "Messages API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/messages-api",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-usage",
+      "system-prompts",
+      "multi-turn-conversations",
+      "streaming",
+      "vision-with-messages-api",
+      "tool-use-function-calling",
+      "extended-thinking",
+      "response-metadata",
+      "async-messages-api",
+      "context-compression",
+      "supported-models",
+      "api-reference",
+      "request-parameters",
+      "response-object"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/messages-api.md"
+    ],
+    "images": [],
+    "articleSha256": "e8f3e0f2fe8fb5b0fba765674ea530e94c3d68b1d36304927790a527e885b6f9",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/messages-api/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/reasoning",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/reasoning/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/reasoning/",
+      "status": 200
+    },
+    "title": "Reasoning &amp; Extended Thinking | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/reasoning",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-reasoning",
+      "extended-thinking-with-claude",
+      "deepseek-reasoning",
+      "complex-problem-solving",
+      "code-analysis-with-reasoning",
+      "mathematical-proofs",
+      "logic-puzzles",
+      "streaming-reasoning-where-supported",
+      "supported-models",
+      "openai-reasoning-models",
+      "deepseek-reasoning-models",
+      "claude-extended-thinking",
+      "api-reference",
+      "reasoning-parameters",
+      "claude-extended-thinking-1",
+      "best-practices"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/reasoning.md"
+    ],
+    "images": [],
+    "articleSha256": "480b0b8eb2c0107704ca7fb3cb08076c6a6f71ebea033f5ec5d830eadd50b8c3",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/reasoning/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/rerank",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/rerank/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/rerank/",
+      "status": 200
+    },
+    "title": "Rerank | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/rerank",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-reranking",
+      "reranking-with-document-objects",
+      "top-n-results",
+      "rag-pipeline-integration",
+      "batch-reranking",
+      "relevance-threshold",
+      "supported-models",
+      "api-reference",
+      "request-parameters",
+      "response-object",
+      "best-practices"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/rerank.md"
+    ],
+    "images": [],
+    "articleSha256": "2221f3b222062cb01bf028c802e5989a81307556a90164a22c644ece3c105033",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/rerank/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/responses-api",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/responses-api/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/responses-api/",
+      "status": 200
+    },
+    "title": "Responses API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/responses-api",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-usage",
+      "multi-turn-with-input-items",
+      "system-instructions",
+      "built-in-web-search",
+      "code-interpreter",
+      "function-calling",
+      "streaming",
+      "image-input",
+      "response-with-reasoning",
+      "response-metadata",
+      "async-responses-api",
+      "context-compression",
+      "supported-models",
+      "api-reference",
+      "request-parameters",
+      "built-in-tools",
+      "response-object"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/responses-api.md"
+    ],
+    "images": [],
+    "articleSha256": "12cf2e24d99fec5a8d5b83abadab2ef8e1eb0dde970a673db8c67ecf0b34242c",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/responses-api/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/streaming",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/streaming/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/streaming/",
+      "status": 200
+    },
+    "title": "Streaming | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/streaming",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-streaming",
+      "collecting-streamed-content",
+      "streaming-with-context-manager",
+      "async-streaming",
+      "streaming-with-error-handling",
+      "stream-options",
+      "supported-models",
+      "api-reference"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/streaming.md"
+    ],
+    "images": [],
+    "articleSha256": "1bfc1f04da3f38e8a419745958b5e828618c68ba21be6fc6f4658b90502c54aa",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/streaming/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/tool-calling",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/tool-calling/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/tool-calling/",
+      "status": 200
+    },
+    "title": "Tool Calling | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/tool-calling",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-tool-calling",
+      "complete-tool-calling-loop",
+      "forcing-tool-use",
+      "parallel-tool-calls",
+      "supported-models",
+      "api-reference"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/tool-calling.md"
+    ],
+    "images": [],
+    "articleSha256": "51080667a59fd4556b27e35bbf0aa09a61be0177055c50b3c821d4575ecf505d",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/tool-calling/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/video",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/video/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/video/",
+      "status": 200
+    },
+    "title": "Video | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/video",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-video-analysis",
+      "local-video-base64",
+      "video-question-answering",
+      "temporal-analysis",
+      "video-with-audio-analysis",
+      "video-comparison",
+      "streaming-video-analysis",
+      "action-recognition",
+      "supported-models",
+      "api-reference",
+      "video-url-object",
+      "supported-formats",
+      "limitations"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/video.md"
+    ],
+    "images": [],
+    "articleSha256": "3f158838eda2e0e1fe2a6795ecff4ead7742e4ab355eb4fc1a589ad1e80d1bab",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/video/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/vision",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/vision/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/vision/",
+      "status": 200
+    },
+    "title": "Vision (Images) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/vision",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-image-analysis",
+      "local-image-base64",
+      "multiple-images",
+      "image-quality-control",
+      "visual-question-answering",
+      "streaming-with-images",
+      "supported-models",
+      "api-reference",
+      "image-url-object",
+      "supported-formats",
+      "size-limits"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/vision.md"
+    ],
+    "images": [],
+    "articleSha256": "657a15a853c9a5c3f8769cb9c83148e5829761b33a54e9c35ea79a8aa202ad82",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/vision/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/sdks/python-sdk/web-search",
+    "status": 308,
+    "location": "/api/sdks/python-sdk/web-search/",
+    "contentType": null,
+    "final": {
+      "path": "/api/sdks/python-sdk/web-search/",
+      "status": 200
+    },
+    "title": "Web Search | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/web-search",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "basic-web-search",
+      "web-search-with-citations",
+      "factual-questions",
+      "research-assistant",
+      "news-summary",
+      "streaming-with-web-search",
+      "competitive-analysis",
+      "multi-turn-with-web-search",
+      "supported-models",
+      "api-reference",
+      "citation-object",
+      "best-practices"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/sdks/python-sdk/web-search.md"
+    ],
+    "images": [],
+    "articleSha256": "7c0c98b8a8b1509ce9ecf5445459853e2435bbe3e6fa5e7d1c198a57a240b270",
+    "slashVariant": {
+      "path": "/api/sdks/python-sdk/web-search/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/search/web-search",
+    "status": 308,
+    "location": "/api/search/web-search/",
+    "contentType": null,
+    "final": {
+      "path": "/api/search/web-search/",
+      "status": 200
+    },
+    "title": "Web Search | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/search/web-search",
+    "robots": null,
+    "headingIds": [
+      "quick-start",
+      "supported-models",
+      "request-parameters",
+      "example-request",
+      "response-format",
+      "streaming-mode",
+      "streaming-request",
+      "streaming-response",
+      "http-headers",
+      "use-cases",
+      "1-real-time-information",
+      "2-technical-documentation",
+      "3-academic-research",
+      "billing",
+      "error-handling",
+      "best-practices"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/search/web-search.md"
+    ],
+    "images": [],
+    "articleSha256": "33f4cb964ec02489d5bccc9245fa8ef767c5b651425351db7e7f4f56d41c5ae5",
+    "slashVariant": {
+      "path": "/api/search/web-search/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/chat-completions",
+    "status": 308,
+    "location": "/api/text-generation/chat-completions/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/chat-completions/",
+      "status": 200
+    },
+    "title": "Chat Completion | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/chat-completions",
+    "robots": null,
+    "headingIds": [
+      "http-request",
+      "optional-headers",
+      "optional-parameters",
+      "context-compression",
+      "request-timeout"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/context-compression",
+      "/api/utilities/fallback-models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/chat-completions.md"
+    ],
+    "images": [],
+    "articleSha256": "3a8b872b2e47bef5f1d202c808018fdca4d45017d0ab055d3e67b351edc7262a",
+    "slashVariant": {
+      "path": "/api/text-generation/chat-completions/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/context-compression",
+    "status": 308,
+    "location": "/api/text-generation/context-compression/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/context-compression/",
+      "status": 200
+    },
+    "title": "Context Compression | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/context-compression",
+    "robots": null,
+    "headingIds": [
+      "how-it-works",
+      "enabling-compression",
+      "method-1-request-body-recommended-for-sdks",
+      "openai-sdk-python",
+      "anthropic-sdk-python",
+      "curl",
+      "openai-sdk--responses-api-python",
+      "curl--responses-api",
+      "nodejs--typescript",
+      "method-2-request-headers",
+      "method-3-token-level-defaults",
+      "configuration-parameters",
+      "compression-object",
+      "strategies",
+      "auto-model-selection",
+      "response-headers",
+      "when-compression-is-applied",
+      "when-compression-is-skipped",
+      "error-codes",
+      "multimodal-safety",
+      "cost-considerations",
+      "supported-endpoints",
+      "graceful-degradation"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/context-compression.md"
+    ],
+    "images": [],
+    "articleSha256": "b119c25f5a47214ede449b96007674487a7dd19f939b49fd89a8d8ce3a0ae972",
+    "slashVariant": {
+      "path": "/api/text-generation/context-compression/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/messages",
+    "status": 308,
+    "location": "/api/text-generation/messages/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/messages/",
+      "status": 200
+    },
+    "title": "Messages API (Native Anthropic) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/messages",
+    "robots": null,
+    "headingIds": [
+      "http-request",
+      "authentication",
+      "parameters",
+      "required-parameters",
+      "optional-parameters-native-anthropic",
+      "thinking-parameter",
+      "extended-parameters-openai-compatible",
+      "example-usage",
+      "python-anthropic-sdk",
+      "javascript-anthropic-sdk",
+      "with-system-prompt",
+      "multi-turn-conversation",
+      "streaming",
+      "streaming-with-curl",
+      "vision-image-input",
+      "pdf-document-input",
+      "document-source-options",
+      "response-format",
+      "supported-models",
+      "differences-from-direct-anthropic-api",
+      "context-compression",
+      "using-the-anthropic-sdk",
+      "using-curl",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/chat-completions",
+      "/api/text-generation/context-compression",
+      "/api/text-generation/responses",
+      "/api/utilities/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/messages.md"
+    ],
+    "images": [],
+    "articleSha256": "031e320800b88f5506eb3c82f707618a2d9f2c14afedf6247b9ae9720a59145d",
+    "slashVariant": {
+      "path": "/api/text-generation/messages/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/prompt-cache",
+    "status": 308,
+    "location": "/api/text-generation/prompt-cache/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/prompt-cache/",
+      "status": 200
+    },
+    "title": "Prompt Cache | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/prompt-cache",
+    "robots": null,
+    "headingIds": [
+      "overview",
+      "key-features",
+      "core-benefits",
+      "technical-architecture",
+      "cache-strategy",
+      "cache-key-generation",
+      "cache-hit-conditions",
+      "cache-invalidation"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/prompt-cache.md"
+    ],
+    "images": [],
+    "articleSha256": "04217b1c2ee9918f7671a2604e9ca419b4b50cafd30ae355a5f52ac36e099cb1",
+    "slashVariant": {
+      "path": "/api/text-generation/prompt-cache/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/responses",
+    "status": 308,
+    "location": "/api/text-generation/responses/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/responses/",
+      "status": 200
+    },
+    "title": "Responses API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/responses",
+    "robots": null,
+    "headingIds": [
+      "http-request",
+      "authentication",
+      "parameters",
+      "required-parameters",
+      "optional-parameters",
+      "reasoning-parameter",
+      "text-parameter",
+      "input-formats",
+      "example-usage",
+      "python",
+      "javascript",
+      "with-web-search",
+      "with-reasoning",
+      "streaming",
+      "multi-turn-conversation",
+      "with-instructions",
+      "stateful-conversations",
+      "with-function-calling",
+      "response-format",
+      "supported-models",
+      "models-with-native-v1responses-support",
+      "responses-only-models",
+      "all-other-models",
+      "differences-from-chat-completions",
+      "context-compression",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/chat-completions",
+      "/api/text-generation/context-compression",
+      "/api/text-generation/messages",
+      "/api/utilities/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/responses.md"
+    ],
+    "images": [],
+    "articleSha256": "fae0327f0930a2d85db889b8abc7c71559ee39ab08282f67ed886fa4f1e24d5b",
+    "slashVariant": {
+      "path": "/api/text-generation/responses/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/streaming",
+    "status": 308,
+    "location": "/api/text-generation/streaming/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/streaming/",
+      "status": 200
+    },
+    "title": "Streaming Output | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/streaming",
+    "robots": null,
+    "headingIds": [
+      "python-example",
+      "parameters"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/streaming.md"
+    ],
+    "images": [],
+    "articleSha256": "d4e5fa5c12a7dd260375a1055312d100c4e6485479eab860412a4678857d00af",
+    "slashVariant": {
+      "path": "/api/text-generation/streaming/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/text-generation/structured-output",
+    "status": 308,
+    "location": "/api/text-generation/structured-output/",
+    "contentType": null,
+    "final": {
+      "path": "/api/text-generation/structured-output/",
+      "status": 200
+    },
+    "title": "Structured Output | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/text-generation/structured-output",
+    "robots": null,
+    "headingIds": [
+      "use-example",
+      "parameter"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/text-generation/structured-output.md"
+    ],
+    "images": [],
+    "articleSha256": "eb14a8926fef07f4b09f14709c1c8e5285569fee3d6a3e2a11fc4010291bc572",
+    "slashVariant": {
+      "path": "/api/text-generation/structured-output/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/utilities/billing-credits",
+    "status": 308,
+    "location": "/api/utilities/billing-credits/",
+    "contentType": null,
+    "final": {
+      "path": "/api/utilities/billing-credits/",
+      "status": 200
+    },
+    "title": "Billing Credits | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/utilities/billing-credits",
+    "robots": null,
+    "headingIds": [
+      "check-remaining-credits",
+      "http-request",
+      "response-payg-only",
+      "response-payg-with-unlimited-token",
+      "response-subscription",
+      "response-subscription-with-payg-fallback",
+      "response-fields",
+      "top-level",
+      "payg-object--account-level",
+      "payg-object--token-level",
+      "subscription-object",
+      "token-level-vs-account-level",
+      "python-example",
+      "nodejs-example"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/billing-credits.md"
+    ],
+    "images": [],
+    "articleSha256": "760a5a5c18a0dde677bedf1c70ef69c216d75afbd3775627d6883f56db9da037",
+    "slashVariant": {
+      "path": "/api/utilities/billing-credits/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/utilities/fallback-models",
+    "status": 308,
+    "location": "/api/utilities/fallback-models/",
+    "contentType": null,
+    "final": {
+      "path": "/api/utilities/fallback-models/",
+      "status": 200
+    },
+    "title": "Fallback Models | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/utilities/fallback-models",
+    "robots": null,
+    "headingIds": [
+      "overview",
+      "configuration-methods",
+      "request-level-configuration-highest-priority",
+      "token-level-configuration",
+      "parameter-reference",
+      "fallback_models",
+      "fallback_timeout",
+      "fallback_enabled",
+      "fallback-trigger-conditions",
+      "1-timeout-errors",
+      "2-connection-errors",
+      "3-model-errors",
+      "4-http-status-errors",
+      "request-examples",
+      "python-examples",
+      "complete-example-with-requests-library",
+      "curl-examples",
+      "curl-example-with-header-inspection",
+      "response-headers",
+      "timeout-architecture",
+      "subscription-users",
+      "configuration-priority",
+      "best-practices",
+      "1-choose-appropriate-fallback-models",
+      "2-set-reasonable-timeout-values",
+      "3-fallback-model-count",
+      "monitoring-and-debugging",
+      "check-fallback-usage",
+      "common-issues",
+      "billing-information"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/fallback-models.md"
+    ],
+    "images": [],
+    "articleSha256": "a3f7eb3140e4f7ede9a8585195c11ee08d68326ca0d5cc1c1593aaf523a16049",
+    "slashVariant": {
+      "path": "/api/utilities/fallback-models/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/utilities/models",
+    "status": 308,
+    "location": "/api/utilities/models/",
+    "contentType": null,
+    "final": {
+      "path": "/api/utilities/models/",
+      "status": 200
+    },
+    "title": "Models | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/utilities/models",
+    "robots": null,
+    "headingIds": [
+      "list-all-models",
+      "http-request",
+      "response-standard-key",
+      "response-subscription-key",
+      "plan-model-access",
+      "retrieve-a-model",
+      "http-request-1",
+      "response",
+      "python-example",
+      "nodejs-example"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/models.md"
+    ],
+    "images": [],
+    "articleSha256": "ef1568bad38cf1332ec6700298838b11135d1f39886657748ab0cd98b7ff1f86",
+    "slashVariant": {
+      "path": "/api/utilities/models/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/utilities/recommend",
+    "status": 308,
+    "location": "/api/utilities/recommend/",
+    "contentType": null,
+    "final": {
+      "path": "/api/utilities/recommend/",
+      "status": 200
+    },
+    "title": "Recommend | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/utilities/recommend",
+    "robots": null,
+    "headingIds": [
+      "dynamic-model-recommendation",
+      "http-request",
+      "query-parameters",
+      "response",
+      "error-responses",
+      "usage-example-python"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/apertis-skills",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/recommend.md"
+    ],
+    "images": [],
+    "articleSha256": "cb5c55e974538e5e8b0cac4aee7f1525313c6ddbfe6cccd97645f861fa51c405",
+    "slashVariant": {
+      "path": "/api/utilities/recommend/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/vision/dalle",
+    "status": 308,
+    "location": "/api/vision/dalle/",
+    "contentType": null,
+    "final": {
+      "path": "/api/vision/dalle/",
+      "status": 200
+    },
+    "title": "Using GPT-Image-1 and Dall-E 3 | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/vision/dalle",
+    "robots": null,
+    "headingIds": [
+      "python-example",
+      "parameters"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/vision/dalle.md"
+    ],
+    "images": [],
+    "articleSha256": "1f5375d57567191217731d3247f572f1175246ac7a47d109cbd1f213b8477acb",
+    "slashVariant": {
+      "path": "/api/vision/dalle/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/vision/image-generation",
+    "status": 308,
+    "location": "/api/vision/image-generation/",
+    "contentType": null,
+    "final": {
+      "path": "/api/vision/image-generation/",
+      "status": 200
+    },
+    "title": "Using Image Generation API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/vision/image-generation",
+    "robots": null,
+    "headingIds": [
+      "usage-python-example",
+      "usage-bash-example",
+      "parameter-description"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/vision/image-generation.md"
+    ],
+    "images": [],
+    "articleSha256": "411064276e1c6e0442ac503eb1248621776507d150aac57daada4b8646123b88",
+    "slashVariant": {
+      "path": "/api/vision/image-generation/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/vision/images-api",
+    "status": 308,
+    "location": "/api/vision/images-api/",
+    "contentType": null,
+    "final": {
+      "path": "/api/vision/images-api/",
+      "status": 200
+    },
+    "title": "Images API | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/vision/images-api",
+    "robots": null,
+    "headingIds": [
+      "http-request",
+      "authentication",
+      "parameters",
+      "required-parameters",
+      "prompt-length-limits",
+      "optional-parameters",
+      "gpt-image-1-and-gpt-image-15-specific-parameters",
+      "size-options",
+      "example-usage",
+      "python",
+      "javascript",
+      "with-transparent-background-gpt-image-1",
+      "hd-quality-with-dall-e-3",
+      "response-format",
+      "dall-e-response-with-url",
+      "gpt-image-response-base64",
+      "response-fields",
+      "supported-models",
+      "image-edits",
+      "http-request-1",
+      "parameters-1",
+      "gpt-image-1-and-gpt-image-15-edit-parameters",
+      "gpt-image-1-only-parameter",
+      "example-usage-1",
+      "python-1",
+      "javascript-1",
+      "with-mask-for-inpainting",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/audio-video/audio",
+      "/api/text-generation/chat-completions",
+      "/api/utilities/models",
+      "/cdn-cgi/l/email-protection",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/vision/images-api.md"
+    ],
+    "images": [],
+    "articleSha256": "03bb9417b6d838a6b79e62d450f293a22a5ffa035a182b106d8812404620164b",
+    "slashVariant": {
+      "path": "/api/vision/images-api/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/vision/read-image",
+    "status": 308,
+    "location": "/api/vision/read-image/",
+    "contentType": null,
+    "final": {
+      "path": "/api/vision/read-image/",
+      "status": 200
+    },
+    "title": "Read Image with LLM | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/api/vision/read-image",
+    "robots": null,
+    "headingIds": [
+      "python-example",
+      "parameters"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs-api/vision/read-image.md"
+    ],
+    "images": [],
+    "articleSha256": "09be3af1ca4d138187ed033219852256d00bf631f53067158567950748a479db",
+    "slashVariant": {
+      "path": "/api/vision/read-image/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/",
+    "status": 200,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Home | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/",
+    "robots": null,
+    "headingIds": [],
+    "links": [],
+    "images": [],
+    "articleSha256": null
+  },
+  {
+    "path": "/authentication/api-keys",
+    "status": 308,
+    "location": "/authentication/api-keys/",
+    "contentType": null,
+    "final": {
+      "path": "/authentication/api-keys/",
+      "status": 200
+    },
+    "title": "API Keys | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/authentication/api-keys",
+    "robots": null,
+    "headingIds": [
+      "obtaining-your-api-key",
+      "standard-api-key-payg",
+      "subscription-api-key",
+      "api-key-format",
+      "using-your-api-key",
+      "authentication-methods",
+      "example-bearer-token-openai-sdks",
+      "example-x-api-key-anthropic-sdks",
+      "python-example",
+      "nodejs-example",
+      "api-key-settings",
+      "quota-management",
+      "model-restrictions",
+      "ip-whitelisting-subnet-restrictions",
+      "expiration-date",
+      "types-of-api-keys",
+      "standard-api-keys-sk-",
+      "subscription-api-keys-sk-sub-",
+      "organization-api-keys-sk-org_",
+      "organization-admin-keys-sk-admin_",
+      "organization-api-keys-tab-rules",
+      "project-keys",
+      "project-service-accounts",
+      "user-keys",
+      "organization-admin-keys-tab-rules",
+      "best-practices",
+      "security-guidelines",
+      "quota-management-tips",
+      "managing-multiple-keys",
+      "revoking-api-keys",
+      "troubleshooting",
+      "common-issues",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/organizations",
+      "/billing/rate-limits",
+      "/billing/subscription-plans",
+      "/help/error-codes",
+      "https://apertis.ai/login",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs/authentication/api-keys.md"
+    ],
+    "images": [],
+    "articleSha256": "8d929f72863f65c068c599572a90f291f12a3562f0c0596c0572b3bda7dff266",
+    "slashVariant": {
+      "path": "/authentication/api-keys/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/authentication/organizations",
+    "status": 308,
+    "location": "/authentication/organizations/",
+    "contentType": null,
+    "final": {
+      "path": "/authentication/organizations/",
+      "status": 200
+    },
+    "title": "Organizations, Members, Projects, Groups, and Roles | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/authentication/organizations",
+    "robots": null,
+    "headingIds": [
+      "personal-and-team-organizations",
+      "members",
+      "invitations",
+      "projects",
+      "groups",
+      "roles",
+      "projects-vs-groups-vs-roles",
+      "recommended-access-flow",
+      "api-keys-and-member-removal"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/authentication/organizations.md"
+    ],
+    "images": [],
+    "articleSha256": "4e2112c45f2e89187e602e8ba4c093888a02d70d6beca455f28574947b7acacc",
+    "slashVariant": {
+      "path": "/authentication/organizations/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/billing/payg",
+    "status": 308,
+    "location": "/billing/payg/",
+    "contentType": null,
+    "final": {
+      "path": "/billing/payg/",
+      "status": 200
+    },
+    "title": "Pay-As-You-Go (PAYG) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/billing/payg",
+    "robots": null,
+    "headingIds": [
+      "overview",
+      "payg-vs-subscription",
+      "when-to-use-payg",
+      "when-to-use-subscription",
+      "adding-funds",
+      "payment-methods",
+      "top-up-process",
+      "minimum-top-up",
+      "payg-pricing",
+      "cost-calculation",
+      "payg-fallback-for-subscriptions",
+      "how-it-works",
+      "enabling-payg-fallback",
+      "spending-limits",
+      "billing-mode-switch",
+      "auto-top-up",
+      "configuration",
+      "example-setup",
+      "setting-up-auto-top-up",
+      "best-practices",
+      "monitoring-payg-usage",
+      "dashboard-views",
+      "api-access",
+      "low-balance-handling",
+      "warning-levels",
+      "when-balance-exhausted",
+      "recovery-steps",
+      "payg-for-teams",
+      "shared-balance",
+      "per-key-limits",
+      "cost-optimization",
+      "model-selection",
+      "prompt-optimization",
+      "caching-strategy",
+      "set-max-tokens",
+      "billing-statements",
+      "viewing-statements",
+      "statement-contents",
+      "refunds",
+      "refund-policy",
+      "requesting-a-refund",
+      "faq",
+      "can-i-switch-from-payg-to-subscription",
+      "what-happens-to-unused-payg-balance",
+      "can-i-get-invoices-for-payg-purchases",
+      "is-there-a-minimum-balance-required",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/quota-management",
+      "/billing/rate-limits",
+      "/billing/subscription-plans",
+      "/cdn-cgi/l/email-protection#0e66674e6f7e6b7c7a677d206f67",
+      "https://apertis.ai/login",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs/billing/payg.md"
+    ],
+    "images": [],
+    "articleSha256": "60c7f034b9a91fd31f847622e38a470fb268e11284c1dd765b8301fed1e3738e",
+    "slashVariant": {
+      "path": "/billing/payg/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/billing/payment-methods",
+    "status": 308,
+    "location": "/billing/payment-methods/",
+    "contentType": null,
+    "final": {
+      "path": "/billing/payment-methods/",
+      "status": 200
+    },
+    "title": "Payment Methods | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/billing/payment-methods",
+    "robots": null,
+    "headingIds": [
+      "supported-payment-methods",
+      "credit--debit-cards",
+      "supported-cards",
+      "adding-a-card",
+      "card-security",
+      "default-payment-method",
+      "removing-a-card",
+      "card-declined",
+      "auto-top-up",
+      "what-is-auto-top-up",
+      "setting-up-auto-top-up",
+      "how-it-works",
+      "configuration-options",
+      "auto-top-up-best-practices",
+      "disabling-auto-top-up",
+      "invoices--receipts",
+      "accessing-invoices",
+      "invoice-contents",
+      "tax-information",
+      "receipts",
+      "payment-troubleshooting",
+      "payment-failed",
+      "duplicate-charges",
+      "refund-requests",
+      "regional-payment-options",
+      "global",
+      "enterprise-payment-options",
+      "security-best-practices",
+      "protecting-payment-information",
+      "fraud-prevention",
+      "faq",
+      "can-i-pay-annually",
+      "is-my-payment-information-secure",
+      "can-i-get-a-paid-receipt",
+      "what-currency-are-charges-in",
+      "why-was-my-payment-declined",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/billing/payg",
+      "/billing/quota-management",
+      "/billing/subscription-plans",
+      "/cdn-cgi/l/email-protection#432b2a0322332631372a306d222a",
+      "/cdn-cgi/l/email-protection#9df5f4ddfcedf8efe9f4eeb3fcf4",
+      "/help/faq",
+      "https://github.com/apertis-ai/docs/tree/main/docs/billing/payment-methods.md"
+    ],
+    "images": [],
+    "articleSha256": "f6018b4fe1b177cea9f6b76a08cb418e4ada0a6318150b66070f9c77fdfe262d",
+    "slashVariant": {
+      "path": "/billing/payment-methods/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/billing/quota-management",
+    "status": 308,
+    "location": "/billing/quota-management/",
+    "contentType": null,
+    "final": {
+      "path": "/billing/quota-management/",
+      "status": 200
+    },
+    "title": "Quota Management | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/billing/quota-management",
+    "robots": null,
+    "headingIds": [
+      "quota-overview",
+      "types-of-quota",
+      "1-api-key-quota",
+      "2-subscription-quota",
+      "3-account-balance",
+      "quota-calculation",
+      "subscription-quota--per-request-billing",
+      "payg--per-token-billing",
+      "model-pricing",
+      "monitoring-quota-usage",
+      "dashboard-overview",
+      "api-endpoints",
+      "response-headers",
+      "managing-quota-effectively",
+      "1-choose-the-right-model",
+      "2-optimize-prompts",
+      "3-use-system-messages-wisely",
+      "4-implement-caching",
+      "5-set-quota-limits",
+      "quota-alerts",
+      "setting-up-alerts",
+      "alert-thresholds",
+      "quota-exhaustion",
+      "what-happens",
+      "error-response",
+      "recovery-options",
+      "quota-reset",
+      "subscription-quota-reset",
+      "manual-quota-reset-admin",
+      "best-practices",
+      "for-development",
+      "for-production",
+      "cost-control-strategies",
+      "usage-reports",
+      "accessing-reports",
+      "report-metrics",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/payg",
+      "/billing/rate-limits",
+      "/billing/subscription-plans",
+      "https://apertis.ai/subscribe",
+      "https://github.com/apertis-ai/docs/tree/main/docs/billing/quota-management.md"
+    ],
+    "images": [],
+    "articleSha256": "7e11b02529978ee1f15950256f5d68569edb193ec237ecb513252b461b90f04b",
+    "slashVariant": {
+      "path": "/billing/quota-management/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/billing/rate-limits",
+    "status": 308,
+    "location": "/billing/rate-limits/",
+    "contentType": null,
+    "final": {
+      "path": "/billing/rate-limits/",
+      "status": 200
+    },
+    "title": "Rate Limits | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/billing/rate-limits",
+    "robots": null,
+    "headingIds": [
+      "rate-limit-overview",
+      "api-rate-limits",
+      "global-api-rate-limit",
+      "per-api-key-rate-limit",
+      "per-model-rate-limit",
+      "effective-rate-limit",
+      "rate-limit-headers",
+      "example-response-headers",
+      "handling-rate-limits",
+      "http-429-response",
+      "retry-strategy",
+      "nodejs-example",
+      "best-practices",
+      "1-request-batching",
+      "2-implement-request-queuing",
+      "3-use-streaming-for-long-responses",
+      "4-cache-responses",
+      "5-distribute-across-multiple-keys",
+      "special-rate-limits",
+      "critical-operations",
+      "log-query-rate-limit",
+      "uploaddownload-rate-limit",
+      "rate-limits-by-plan",
+      "subscription-users",
+      "payg-users",
+      "enterprise",
+      "monitoring-your-usage",
+      "dashboard-metrics",
+      "programmatic-monitoring",
+      "troubleshooting",
+      "consistently-hitting-rate-limits",
+      "sudden-rate-limit-errors",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/subscription-plans",
+      "/help/error-codes",
+      "https://github.com/apertis-ai/docs/tree/main/docs/billing/rate-limits.md"
+    ],
+    "images": [],
+    "articleSha256": "a740558596346e90a035a460d7094ccd540d9e1c520bcf16d213e22f06d443f5",
+    "slashVariant": {
+      "path": "/billing/rate-limits/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/billing/subscription-plans",
+    "status": 308,
+    "location": "/billing/subscription-plans/",
+    "contentType": null,
+    "final": {
+      "path": "/billing/subscription-plans/",
+      "status": 200
+    },
+    "title": "Subscription Plans | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/billing/subscription-plans",
+    "robots": null,
+    "headingIds": [
+      "available-plans",
+      "plan-comparison",
+      "billing-cycles",
+      "quota-system",
+      "how-quota-works",
+      "how-billing-works",
+      "free-models",
+      "model-rates-by-plan",
+      "estimated-uses-per-month",
+      "payg-pay-as-you-go-fallback",
+      "what-is-payg-fallback",
+      "configuring-payg",
+      "payg-spending-limits",
+      "subscription-lifecycle",
+      "subscription-status",
+      "cycle-reset",
+      "payment-failure-handling",
+      "managing-your-subscription",
+      "viewing-subscription-status",
+      "changing-plans",
+      "cancelling-subscription",
+      "subscription-vs-payg-only",
+      "when-to-use-subscription",
+      "when-to-use-payg-only",
+      "auto-top-up",
+      "dedicated-subscription-token",
+      "finding-your-subscription-token",
+      "using-your-subscription-token",
+      "viewing-available-models",
+      "faq",
+      "what-happens-when-my-quota-runs-out",
+      "can-i-change-my-billing-cycle",
+      "is-there-a-free-trial",
+      "can-i-get-a-refund",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/models",
+      "/authentication/api-keys",
+      "/billing/rate-limits",
+      "/help/troubleshooting",
+      "/installation/claude-code#coding-model-ids",
+      "https://apertis.ai/setting?tab=keys",
+      "https://apertis.ai/setting?tab=subscription",
+      "https://apertis.ai/subscribe",
+      "https://github.com/apertis-ai/docs/tree/main/docs/billing/subscription-plans.md"
+    ],
+    "images": [],
+    "articleSha256": "064bf3ab04e3df85743fa744f2d1bd32dcdf831c06c6d5083fd3cb3ea31b90ab",
+    "slashVariant": {
+      "path": "/billing/subscription-plans/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/getting-started/quick-start",
+    "status": 308,
+    "location": "/getting-started/quick-start/",
+    "contentType": null,
+    "final": {
+      "path": "/getting-started/quick-start/",
+      "status": 200
+    },
+    "title": "Quick Start | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/getting-started/quick-start",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "step-1-create-your-account-and-choose-access",
+      "step-2-create-your-api-key",
+      "step-3-make-your-first-request",
+      "using-curl",
+      "using-python",
+      "using-nodejs",
+      "step-4-verify-the-response-and-activity-record",
+      "key-fields",
+      "step-5-try-different-models",
+      "popular-models",
+      "step-6-enable-streaming",
+      "common-use-cases",
+      "multi-turn-conversations",
+      "code-generation",
+      "image-analysis",
+      "text-embeddings",
+      "environment-variables",
+      "error-handling",
+      "next-steps",
+      "quick-reference",
+      "base-url",
+      "authentication",
+      "key-endpoints",
+      "getting-help"
+    ],
+    "links": [
+      "/",
+      "/api/text-generation/streaming",
+      "/authentication/api-keys",
+      "/billing/subscription-plans",
+      "/cdn-cgi/l/email-protection#afc7c6efcedfcadddbc6dc81cec6",
+      "/help/error-codes",
+      "/help/troubleshooting",
+      "/installation/cline",
+      "/installation/models",
+      "https://apertis.ai/login",
+      "https://apertis.ai/models",
+      "https://apertis.ai/register",
+      "https://apertis.ai/setting?tab=activity",
+      "https://apertis.ai/setting?tab=credits",
+      "https://apertis.ai/setting?tab=keys",
+      "https://apertis.ai/subscribe",
+      "https://github.com/apertis-ai/docs/tree/main/docs/getting-started/quick-start.md"
+    ],
+    "images": [],
+    "articleSha256": "d350951b63302a19c792cb50d72be147562043238c2573c6ae1497cb6f1dc183",
+    "slashVariant": {
+      "path": "/getting-started/quick-start/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/help/error-codes",
+    "status": 308,
+    "location": "/help/error-codes/",
+    "contentType": null,
+    "final": {
+      "path": "/help/error-codes/",
+      "status": 200
+    },
+    "title": "Error Codes | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/help/error-codes",
+    "robots": null,
+    "headingIds": [
+      "error-response-format",
+      "http-status-codes",
+      "quick-reference",
+      "authentication-errors-401",
+      "invalid_api_key",
+      "missing_api_key",
+      "expired_api_key",
+      "billing-errors-402",
+      "quota_exceeded",
+      "insufficient_balance",
+      "subscription_expired",
+      "payment_failed",
+      "permission-errors-403",
+      "access_denied",
+      "model_access_denied",
+      "ip_not_allowed",
+      "account_suspended",
+      "not-found-errors-404",
+      "model_not_found",
+      "endpoint_not_found",
+      "validation-errors-400",
+      "invalid_request",
+      "invalid_parameter",
+      "missing_parameter",
+      "context_length_exceeded",
+      "invalid_image",
+      "rate-limit-errors-429",
+      "rate_limit_exceeded",
+      "server-errors-5xx",
+      "internal_error-500",
+      "service_unavailable-503",
+      "model_overloaded-503",
+      "upstream_error-502",
+      "model-specific-errors",
+      "content_policy_violation",
+      "output_length_exceeded",
+      "error-handling-best-practices",
+      "python-example",
+      "nodejs-example",
+      "retry-with-exponential-backoff",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/rate-limits",
+      "/cdn-cgi/l/email-protection#4a22230a2b3a2f383e2339642b23",
+      "/help/troubleshooting",
+      "https://github.com/apertis-ai/docs/tree/main/docs/help/error-codes.md"
+    ],
+    "images": [],
+    "articleSha256": "d8b9f7d71b2b85d4e3b31adb458eb64330bd315a8057ba8e3877258cb3dbd17b",
+    "slashVariant": {
+      "path": "/help/error-codes/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/help/faq",
+    "status": 308,
+    "location": "/help/faq/",
+    "contentType": null,
+    "final": {
+      "path": "/help/faq/",
+      "status": 200
+    },
+    "title": "Frequently Asked Questions | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/help/faq",
+    "robots": null,
+    "headingIds": [
+      "general-questions",
+      "what-is-apertis",
+      "how-is-apertis-different-from-using-providers-directly",
+      "is-apertis-compatible-with-openai-sdk",
+      "what-models-are-available",
+      "account--authentication",
+      "how-do-i-get-an-api-key",
+      "i-lost-my-api-key-can-i-recover-it",
+      "how-many-api-keys-can-i-create",
+      "can-i-share-my-api-key",
+      "billing--pricing",
+      "how-does-billing-work",
+      "whats-the-difference-between-subscription-and-payg",
+      "how-is-usage-calculated",
+      "what-happens-when-i-run-out-of-quota",
+      "do-unused-quotas-roll-over",
+      "can-i-get-a-refund",
+      "technical-questions",
+      "whats-the-api-base-url",
+      "whats-the-rate-limit",
+      "do-you-support-streaming",
+      "whats-the-maximum-context-length",
+      "do-you-support-function-calling",
+      "do-you-support-vision-image-input",
+      "what-audio-formats-are-supported",
+      "integrations",
+      "does-apertis-work-with-langchain",
+      "does-apertis-work-with-cursorclinecontinue",
+      "can-i-use-apertis-with-my-existing-openai-code",
+      "models--features",
+      "which-model-should-i-use",
+      "are-model-responses-the-same-as-direct-providers",
+      "what-is-fallback-models",
+      "is-there-a-model-playground",
+      "security--privacy",
+      "is-my-data-secure",
+      "do-you-store-my-prompts-or-responses",
+      "is-apertis-soc-2-compliant",
+      "can-i-restrict-api-key-by-ip",
+      "troubleshooting",
+      "im-getting-401-unauthorized",
+      "im-getting-429-too-many-requests",
+      "im-getting-402-payment-required",
+      "my-requests-are-slow",
+      "account-management",
+      "how-do-i-change-my-email",
+      "how-do-i-delete-my-account",
+      "can-i-have-multiple-accounts",
+      "support",
+      "how-do-i-contact-support",
+      "what-are-support-hours",
+      "is-there-a-status-page",
+      "still-have-questions"
+    ],
+    "links": [
+      "/",
+      "/api/utilities/fallback-models",
+      "/billing/rate-limits",
+      "/billing/subscription-plans",
+      "/cdn-cgi/l/email-protection#20484960415045525449530e4149",
+      "/cdn-cgi/l/email-protection#21494861405144535548520f4048",
+      "/cdn-cgi/l/email-protection#9bf3f2dbfaebfee9eff2e8b5faf2",
+      "/cdn-cgi/l/email-protection#eb8382ab8a9b8e999f8298c58a82",
+      "/help/error-codes",
+      "/help/troubleshooting",
+      "/installation/cline",
+      "/installation/continue",
+      "/installation/cursor",
+      "https://apertis.ai/models",
+      "https://apertis.ai/register",
+      "https://apertis.ai/setting?tab=credits",
+      "https://apertis.ai/setting?tab=keys",
+      "https://apertis.ai/subscribe",
+      "https://github.com/apertis-ai/docs/tree/main/docs/help/faq.md",
+      "https://playground.apertis.ai",
+      "https://status.apertis.ai"
+    ],
+    "images": [],
+    "articleSha256": "c77f03eb614c5ed892b7a7cdb45c4734be6ba8a0cdedf10dd7b5516bb31f9ad6",
+    "slashVariant": {
+      "path": "/help/faq/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/help/ideas",
+    "status": 308,
+    "location": "/help/ideas/",
+    "contentType": null,
+    "final": {
+      "path": "/help/ideas/",
+      "status": 200
+    },
+    "title": "Ideas | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/help/ideas",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "categories",
+      "status-workflow",
+      "how-to-use"
+    ],
+    "links": [
+      "https://apertis.ai/ideas",
+      "https://github.com/apertis-ai/docs/tree/main/docs/help/ideas.md"
+    ],
+    "images": [],
+    "articleSha256": "a727b2383a91b1a12a6647f8159dcaf3e97232995094258db8a8a521b9341856",
+    "slashVariant": {
+      "path": "/help/ideas/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/help/migration-guides",
+    "status": 308,
+    "location": "/help/migration-guides/",
+    "contentType": null,
+    "final": {
+      "path": "/help/migration-guides/",
+      "status": 200
+    },
+    "title": "Migration Guides | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/help/migration-guides",
+    "robots": null,
+    "headingIds": [
+      "migrating-from-openai",
+      "step-1-update-base-url",
+      "step-2-get-your-apertis-api-key",
+      "step-3-update-environment-variables",
+      "step-4-test-your-integration",
+      "model-name-mapping",
+      "additional-models",
+      "migrating-from-anthropic-claude-direct",
+      "api-format-differences",
+      "key-differences",
+      "system-prompts",
+      "response-parsing",
+      "migrating-from-azure-openai",
+      "configuration-changes",
+      "key-differences-1",
+      "migrating-from-google-vertex-ai--gemini",
+      "from-vertex-ai-sdk",
+      "from-google-ai-studio",
+      "migrating-from-other-providers",
+      "litellm",
+      "openrouter",
+      "framework-migrations",
+      "langchain",
+      "llamaindex",
+      "migration-checklist",
+      "pre-migration",
+      "during-migration",
+      "post-migration",
+      "troubleshooting-migration-issues",
+      "common-issues",
+      "getting-help",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/cdn-cgi/l/email-protection#f39b9ab392839681879a80dd929a",
+      "/getting-started/quick-start",
+      "/help/error-codes",
+      "/help/faq",
+      "/help/troubleshooting",
+      "/installation/models",
+      "https://api.apertis.ai",
+      "https://github.com/apertis-ai/docs/tree/main/docs/help/migration-guides.md"
+    ],
+    "images": [],
+    "articleSha256": "41aed77b061f0b9b438b712ab59650a98d8274de92c5837b490607f75639efdf",
+    "slashVariant": {
+      "path": "/help/migration-guides/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/help/troubleshooting",
+    "status": 308,
+    "location": "/help/troubleshooting/",
+    "contentType": null,
+    "final": {
+      "path": "/help/troubleshooting/",
+      "status": 200
+    },
+    "title": "Troubleshooting | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/help/troubleshooting",
+    "robots": null,
+    "headingIds": [
+      "quick-diagnostics",
+      "test-your-api-key",
+      "check-api-status",
+      "common-issues",
+      "authentication-errors",
+      "401-unauthorized",
+      "403-forbidden",
+      "quota--billing-errors",
+      "402-payment-required",
+      "subscription-token-not-working",
+      "rate-limiting",
+      "429-too-many-requests",
+      "model-errors",
+      "model-not-found",
+      "model-access-denied",
+      "request-errors",
+      "400-bad-request",
+      "request-timeout",
+      "connection-issues",
+      "ssltls-errors",
+      "dns-resolution-errors",
+      "streaming-issues",
+      "incomplete-streaming-response",
+      "debugging-tools",
+      "enable-verbose-logging",
+      "requestresponse-inspection",
+      "environment-specific-issues",
+      "python",
+      "openai-sdk-version",
+      "nodejs",
+      "package-version",
+      "es-modules-vs-commonjs",
+      "dockercontainer",
+      "dns-issues-in-containers",
+      "getting-help",
+      "before-contacting-support",
+      "information-to-include",
+      "contact-support",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/rate-limits",
+      "/cdn-cgi/l/email-protection#2b43426b4a5b4e595f4258054a42",
+      "/help/error-codes",
+      "https://github.com/apertis-ai/docs/tree/main/docs/help/troubleshooting.md",
+      "https://status.apertis.ai"
+    ],
+    "images": [],
+    "articleSha256": "79870bc88fb6f98ec1042a3030b903376fb0b6594b2bdebee4614cb21c9ecba6",
+    "slashVariant": {
+      "path": "/help/troubleshooting/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/bolt_diy",
+    "status": 308,
+    "location": "/installation/bolt_diy/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/bolt_diy/",
+      "status": 200
+    },
+    "title": "bolt.diy (prev. oTToDev) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/bolt_diy",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "basic-configuration",
+      "api-endpoint",
+      "api-key-setup",
+      "installation-example"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/setting?tab=keys",
+      "https://api.apertis.ai",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/bolt_diy.md"
+    ],
+    "images": [
+      "/assets/images/bolt_1-8a7ae8c85109a7cce9931e056ae673ff.png",
+      "/assets/images/bolt_2-178355cfb46764bf8ec562ba77af0fcd.png",
+      "/assets/images/bolt_3-7ed91b74fea8ea403659ede98668c181.png"
+    ],
+    "articleSha256": "53bd9d789c24bc05fc23ce47679c580c945af0437a03ba6e2f72f84aeac4ecb7",
+    "slashVariant": {
+      "path": "/installation/bolt_diy/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/chatbox",
+    "status": 308,
+    "location": "/installation/chatbox/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/chatbox/",
+      "status": 200
+    },
+    "title": "Chatbox AI | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/chatbox",
+    "robots": null,
+    "headingIds": [
+      "download-and-installation",
+      "setting-up-api-key"
+    ],
+    "links": [
+      "/",
+      "https://chatboxai.app/zh-TW",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/chatbox.md"
+    ],
+    "images": [
+      "/assets/images/chatbox_0-fe11c406a3cda621e5fe30c61ae38f59.png",
+      "/assets/images/chatbox_1-bd6f5444c3f220063428e95f4631e517.png",
+      "/assets/images/chatbox_2-6f1af9a2d865bfdab3e7479154ca319f.png",
+      "/assets/images/chatbox_3-8c06cbe3e3d85b8fd34313d8f47b0303.png",
+      "/assets/images/chatbox_4-37813420ffcbd397cb6f0ac24546ac91.png"
+    ],
+    "articleSha256": "04db55efe68ee360b7a5075cf084ef8a74cceeec74fc7d2887f0f9d934912f9c",
+    "slashVariant": {
+      "path": "/installation/chatbox/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/claude-code",
+    "status": 308,
+    "location": "/installation/claude-code/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/claude-code/",
+      "status": 200
+    },
+    "title": "Claude Code | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/claude-code",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "installation",
+      "native-installer-recommended",
+      "npm-installation",
+      "configuration",
+      "setup",
+      "activate-the-script",
+      "commands",
+      "configuration-variables",
+      "available-model-ids",
+      "example-usage",
+      "launch-and-verify",
+      "verify-connection",
+      "model-configuration",
+      "coding-model-ids",
+      "selecting-models-in-claude-code",
+      "troubleshooting",
+      "configuration-not-taking-effect",
+      "verify-configuration",
+      "connection-issues",
+      "tool-use-failures",
+      "features",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://docs.anthropic.com/en/docs/claude-code/configuration",
+      "https://docs.apertis.ai",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/claude-code.mdx"
+    ],
+    "images": [
+      "/img/claude-code.svg"
+    ],
+    "articleSha256": "37c0d7e5185faefb7f3944b3db87afec05272cdf4b0bf071cd544c79e0fb3e53",
+    "slashVariant": {
+      "path": "/installation/claude-code/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/cline",
+    "status": 308,
+    "location": "/installation/cline/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/cline/",
+      "status": 200
+    },
+    "title": "Cline (prev. Claude Dev) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/cline",
+    "robots": null,
+    "headingIds": [
+      "installing-cline",
+      "using-apertis"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/cline.mdx",
+      "https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev"
+    ],
+    "images": [
+      "/img/cline.svg",
+      "https://raw.githubusercontent.com/Apertis-AI/documentation/refs/heads/main/static/img/cline.png"
+    ],
+    "articleSha256": "1bc31728ad73b37c0b32f296a504ab77ad6cf264fb0842994ea3658ea478e1b7",
+    "slashVariant": {
+      "path": "/installation/cline/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/connection",
+    "status": 308,
+    "location": "/installation/connection/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/connection/",
+      "status": 200
+    },
+    "title": "Base URL and API Key Connection Guide | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/connection",
+    "robots": null,
+    "headingIds": [
+      "base_url",
+      "api-key"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/setting?tab=keys",
+      "https://api.apertis.ai",
+      "https://api.apertis.ai/v1",
+      "https://api.apertis.ai/v1/chat/completions",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/connection.md"
+    ],
+    "images": [],
+    "articleSha256": "c61599375278fbff83bf5fb1ee94069dcd2201fb422b39c39c006318fc4ff409",
+    "slashVariant": {
+      "path": "/installation/connection/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/continue",
+    "status": 308,
+    "location": "/installation/continue/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/continue/",
+      "status": 200
+    },
+    "title": "Continue Dev | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/continue",
+    "robots": null,
+    "headingIds": [
+      "introduction",
+      "installation",
+      "adding-configjson",
+      "start-using"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/continue.md",
+      "https://www.continue.dev/"
+    ],
+    "images": [
+      "/assets/images/continue_1-f37fa54622147c6e9db501f11fc3ce2e.jpg",
+      "/assets/images/continue_2-8fd070feb2a825ca13c7df0b22daaf0b.jpg",
+      "/assets/images/continue_3-59a60038378531e20584c8efcef21d3e.png",
+      "/assets/images/continue_4-41624f537514971e0691e8c3c15c5d23.png",
+      "/assets/images/continue_5-00ab0c0b03fffdb2b380affdef2c42c5.png"
+    ],
+    "articleSha256": "0d7049da0eb201f88d5b1685d5c71622b627a22cd321df9495eedb9cedf4a651",
+    "slashVariant": {
+      "path": "/installation/continue/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/crush",
+    "status": 308,
+    "location": "/installation/crush/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/crush/",
+      "status": 200
+    },
+    "title": "Crush | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/crush",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "installation",
+      "homebrew-macos",
+      "npm-cross-platform",
+      "arch-linux",
+      "nix",
+      "configuration-for-apertis-api",
+      "step-1-get-api-key",
+      "step-2-configure-crushjson",
+      "step-3-launch-crush",
+      "step-4-switch-model",
+      "available-models",
+      "keyboard-shortcuts",
+      "mcp-integration",
+      "troubleshooting",
+      "configuration-not-working",
+      "connection-issues",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "/installation/claude-code",
+      "/installation/opencode",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/crush.md"
+    ],
+    "images": [],
+    "articleSha256": "cae003e1f7e4d5656f5b986bc477e13428bc71fdd420d8394e4a03ffe7e0eb16",
+    "slashVariant": {
+      "path": "/installation/crush/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/cursor",
+    "status": 308,
+    "location": "/installation/cursor/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/cursor/",
+      "status": 200
+    },
+    "title": "Cursor IDE | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/cursor",
+    "robots": null,
+    "headingIds": [
+      "using-apertis-models",
+      "setting-up-api-key",
+      "enabling-models",
+      "model-id-conflicts"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=models",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/cursor.mdx"
+    ],
+    "images": [
+      "/assets/images/cursor_api_keys-07d711a0dae941016b1943427782ce19.png",
+      "/assets/images/cursor_models_list-26157a1e37ddf1f0375656e8cf219ffb.png",
+      "/assets/images/cursor_settings_sidebar-eeeb0f3c17122bb7779224ee87772409.png",
+      "/img/cursor.svg"
+    ],
+    "articleSha256": "c2aaa6b24b18e8a4fe56f1ec6d48484518bb0e2548a5a7b72491e561f8d7a1c6",
+    "slashVariant": {
+      "path": "/installation/cursor/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/goose",
+    "status": 308,
+    "location": "/installation/goose/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/goose/",
+      "status": 200
+    },
+    "title": "Goose | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/goose",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "installation",
+      "desktop-application",
+      "cli-installation",
+      "configuration-for-apertis-api",
+      "step-1-open-provider-settings",
+      "step-2-configure-anthropic-compatible-provider",
+      "step-3-select-model",
+      "step-4-activate-provider",
+      "alternative-openai-compatible-configuration",
+      "available-models",
+      "mcp-integration",
+      "capabilities",
+      "troubleshooting",
+      "provider-not-working",
+      "connection-issues",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "/installation/claude-code",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://block.github.io/goose/docs/quickstart/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/goose.mdx"
+    ],
+    "images": [
+      "/img/goose.svg"
+    ],
+    "articleSha256": "07e4523457e05e4a6aa57f87b0d38ca63e82f31b9fa89c3ff8b877def455c884",
+    "slashVariant": {
+      "path": "/installation/goose/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/kilo-cli",
+    "status": 308,
+    "location": "/installation/kilo-cli/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/kilo-cli/",
+      "status": 200
+    },
+    "title": "Kilo CLI | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/kilo-cli",
+    "robots": null,
+    "headingIds": [
+      "prerequisites",
+      "installation",
+      "configuration",
+      "configuration-fields",
+      "available-model-ids",
+      "agent-modes",
+      "mcp-server-examples",
+      "launch",
+      "keybinds",
+      "troubleshooting",
+      "connection-issues",
+      "config-not-loading",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "/installation/claude-code",
+      "/installation/kilo-code",
+      "/installation/opencode",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/kilo-cli.mdx"
+    ],
+    "images": [
+      "/img/kilo-code.svg"
+    ],
+    "articleSha256": "e465e878bc71d2690558a4e8fd2ceebb8f5f2d23e09a7f602e6f77fdea737c98",
+    "slashVariant": {
+      "path": "/installation/kilo-cli/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/kilo-code",
+    "status": 308,
+    "location": "/installation/kilo-code/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/kilo-code/",
+      "status": 200
+    },
+    "title": "Kilo Code | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/kilo-code",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "installation",
+      "step-1-install-extension",
+      "step-2-configure-api-key",
+      "configure-apertis-api",
+      "api-provider-setup",
+      "configuration-summary",
+      "available-models",
+      "capabilities",
+      "mcp-integration",
+      "troubleshooting",
+      "connection-issues",
+      "extension-not-working",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "/installation/cline",
+      "/installation/roocode",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/kilo-code.mdx"
+    ],
+    "images": [
+      "/img/kilo-code.svg"
+    ],
+    "articleSha256": "414210f4fbfc911ac151e91941109c183ed7809bc3c0a63f95325ada7a8ec86c",
+    "slashVariant": {
+      "path": "/installation/kilo-code/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/models",
+    "status": 308,
+    "location": "/installation/models/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/models/",
+      "status": 200
+    },
+    "title": "Models | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/models",
+    "robots": null,
+    "headingIds": [],
+    "links": [
+      "/",
+      "https://apertis.ai",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/models.md"
+    ],
+    "images": [],
+    "articleSha256": "eb2f19f0594d54f50bc6cb5b6639fd384e6e3d49893f9e11c2160589316fad03",
+    "slashVariant": {
+      "path": "/installation/models/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/opencode",
+    "status": 308,
+    "location": "/installation/opencode/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/opencode/",
+      "status": 200
+    },
+    "title": "OpenCode | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/opencode",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "installation",
+      "method-1-install-script-recommended",
+      "method-2-npm",
+      "configuration-for-apertis-api",
+      "option-1-using-apertis-sdk-recommended",
+      "option-2-without-sdk-openai-compatible",
+      "configuration-fields",
+      "available-model-ids",
+      "launch-opencode",
+      "ide-integration",
+      "keyboard-shortcuts",
+      "commands",
+      "github-integration",
+      "setup",
+      "usage",
+      "mcp-server-support",
+      "troubleshooting",
+      "connection-issues",
+      "authentication-problems",
+      "related-resources"
+    ],
+    "links": [
+      "/",
+      "/installation/claude-code",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/opencode.mdx",
+      "https://opencode.ai/docs"
+    ],
+    "images": [
+      "/img/opencode.svg"
+    ],
+    "articleSha256": "05f6283525484e55d91ac3dbf94ff7b6ac7569c89f5b39cb6585cb26ddfa09ab",
+    "slashVariant": {
+      "path": "/installation/opencode/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/roocode",
+    "status": 308,
+    "location": "/installation/roocode/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/roocode/",
+      "status": 200
+    },
+    "title": "Roo Code (prev. Roo Cline) | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/roocode",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "basic-configuration",
+      "api-endpoint",
+      "api-key-setup",
+      "installation-example"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://apertis.ai/setting?tab=keys",
+      "https://api.apertis.ai/v1",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/roocode.mdx"
+    ],
+    "images": [
+      "/assets/images/roocode_1-de781387191909ece6242a6977114781.png",
+      "/assets/images/roocode_2-d831260c252e1b40c1eb688ed4b27439.png",
+      "/img/roocode.svg"
+    ],
+    "articleSha256": "0cca91e63ae127f0244922b56a07eff41347c96acfdc9b1ece6856ed1fce3b74",
+    "slashVariant": {
+      "path": "/installation/roocode/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/scripts",
+    "status": 308,
+    "location": "/installation/scripts/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/scripts/",
+      "status": 200
+    },
+    "title": "Call Apertis via OpenAI SDK | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/scripts",
+    "robots": null,
+    "headingIds": [
+      "python",
+      "javascript",
+      "typescript",
+      "curl"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/scripts.md"
+    ],
+    "images": [],
+    "articleSha256": "26cd1b7f4edcad2f6231dc099c6d9ef79f0e18d04b9e1e91f78165458ab4b9c3",
+    "slashVariant": {
+      "path": "/installation/scripts/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/installation/translate",
+    "status": 308,
+    "location": "/installation/translate/",
+    "contentType": null,
+    "final": {
+      "path": "/installation/translate/",
+      "status": 200
+    },
+    "title": "Immersive Translation | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/installation/translate",
+    "robots": null,
+    "headingIds": [
+      "getting-the-immersive-translation-extension",
+      "setting-up-the-service-provider---apertis",
+      "setting-up-models---claude-gemini",
+      "using-webpage-translation",
+      "real-time-subtitle-translation",
+      "translating-pdf-documents"
+    ],
+    "links": [
+      "/",
+      "https://chromewebstore.google.com/detail/%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%BF%BB%E8%AD%AF-%E7%B6%B2%E9%A0%81%E7%BF%BB%E8%AD%AF%E6%93%B4%E5%85%85-pdf%E7%BF%BB%E8%AD%AF-%E5%85%8D%E8%B2%BB/bpoadfkcbjbfhfodiogcnhhhpibjhbnh",
+      "https://github.com/apertis-ai/docs/tree/main/docs/installation/translate.md"
+    ],
+    "images": [
+      "https://hackmd.io/_uploads/B1PfrNOsR.png",
+      "https://hackmd.io/_uploads/B1YpWE_oA.png",
+      "https://hackmd.io/_uploads/BJlgXQRhqA.png",
+      "https://hackmd.io/_uploads/BJy9MA2qR.png",
+      "https://hackmd.io/_uploads/ByT7uNdiC.jpg",
+      "https://hackmd.io/_uploads/H1AZER39C.png",
+      "https://hackmd.io/_uploads/H1de44uoC.png",
+      "https://hackmd.io/_uploads/HJ4O-VuoC.png",
+      "https://hackmd.io/_uploads/HJGmDN_jC.png",
+      "https://hackmd.io/_uploads/HJQxwNdo0.png",
+      "https://hackmd.io/_uploads/Hyv_IN_iR.png",
+      "https://hackmd.io/_uploads/SkL44VdiC.png",
+      "https://hackmd.io/_uploads/SkNYXNdo0.png",
+      "https://hackmd.io/_uploads/Sy__11WL1g.png",
+      "https://hackmd.io/_uploads/rJmIr4_iA.png",
+      "https://hackmd.io/_uploads/ry8_lVdoA.png"
+    ],
+    "articleSha256": "1e47466329e05b6df38ed0d9ecf908c383de8aefaa39bfd09929d5648f03b080",
+    "slashVariant": {
+      "path": "/installation/translate/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/intro",
+    "status": 308,
+    "location": "/intro/",
+    "contentType": null,
+    "final": {
+      "path": "/intro/",
+      "status": 200
+    },
+    "title": "Quick Overview | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/intro",
+    "robots": null,
+    "headingIds": [
+      "1-homepage---apertis",
+      "2-login",
+      "3-keys",
+      "4-credits",
+      "5-logs"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs/intro.md"
+    ],
+    "images": [],
+    "articleSha256": "54cd4158ff3e2414cb09db25357696b1bf94a8427903402fd30d50faa0d20c36",
+    "slashVariant": {
+      "path": "/intro/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/opensource",
+    "status": 308,
+    "location": "/opensource/",
+    "contentType": null,
+    "final": {
+      "path": "/opensource/",
+      "status": 200
+    },
+    "title": "Open-Source Models | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/opensource",
+    "robots": null,
+    "headingIds": [
+      "open-source-model-services",
+      "llama-models",
+      "gemma-models",
+      "qwen-models",
+      "mistral-models",
+      "model-list"
+    ],
+    "links": [
+      "/",
+      "https://apertis.ai/models",
+      "https://github.com/apertis-ai/docs/tree/main/docs/opensource.md"
+    ],
+    "images": [],
+    "articleSha256": "e127165657bfa356c57d2f4d0e9ba0ce3b609b5513a20f102572465b65c8e68b",
+    "slashVariant": {
+      "path": "/opensource/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/principles",
+    "status": 308,
+    "location": "/principles/",
+    "contentType": null,
+    "final": {
+      "path": "/principles/",
+      "status": 200
+    },
+    "title": "Why Choose Apertis? | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/principles",
+    "robots": null,
+    "headingIds": [
+      "-perfect-balance-of-performance-and-cost",
+      "-seamless-integration-experience",
+      "-leading-market-insights",
+      "-simplified-billing-system",
+      "️-enterprise-grade-reliability",
+      "-enhanced-usage-limits"
+    ],
+    "links": [
+      "/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/principles.md"
+    ],
+    "images": [],
+    "articleSha256": "0fc96ffde770f673f62b33dc14832924c9e9b8a188b78b60d95e5b38bb8be84b",
+    "slashVariant": {
+      "path": "/principles/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/security/best-practices",
+    "status": 308,
+    "location": "/security/best-practices/",
+    "contentType": null,
+    "final": {
+      "path": "/security/best-practices/",
+      "status": 200
+    },
+    "title": "Security Best Practices | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/security/best-practices",
+    "robots": null,
+    "headingIds": [
+      "api-key-security",
+      "never-expose-keys-in-client-side-code",
+      "use-environment-variables",
+      "never-commit-keys-to-git",
+      "use-secrets-management",
+      "access-control",
+      "principle-of-least-privilege",
+      "model-restrictions",
+      "ip-whitelisting",
+      "key-rotation",
+      "secure-architecture",
+      "backend-proxy-pattern",
+      "rate-limiting-your-backend",
+      "request-validation",
+      "data-protection",
+      "sensitive-data-handling",
+      "data-anonymization",
+      "logging-best-practices",
+      "authentication-security",
+      "session-management",
+      "multi-factor-authentication",
+      "network-security",
+      "https-only",
+      "certificate-validation",
+      "firewall-configuration",
+      "monitoring--alerting",
+      "usage-monitoring",
+      "security-logging",
+      "incident-response",
+      "compliance-considerations",
+      "data-residency",
+      "audit-trails",
+      "data-retention",
+      "security-checklist",
+      "before-going-live",
+      "regular-review",
+      "related-topics"
+    ],
+    "links": [
+      "/",
+      "/authentication/api-keys",
+      "/billing/rate-limits",
+      "/help/error-codes",
+      "/help/troubleshooting",
+      "https://github.com/apertis-ai/docs/tree/main/docs/security/best-practices.md"
+    ],
+    "images": [],
+    "articleSha256": "28ed3ab55255a4ecd4a174bb81f0073da73ec53c27e3a2d1f510ee4ac9fc7cf7",
+    "slashVariant": {
+      "path": "/security/best-practices/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/stimachat",
+    "status": 308,
+    "location": "/stimachat/",
+    "contentType": null,
+    "final": {
+      "path": "/stimachat/",
+      "status": 200
+    },
+    "title": "Web Chat Service | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/stimachat",
+    "robots": null,
+    "headingIds": [
+      "features",
+      "how-to-use",
+      "access-the-conversation-interface",
+      "start-chatting"
+    ],
+    "links": [
+      "/",
+      "https://chat.apertis.ai",
+      "https://github.com/apertis-ai/docs/tree/main/docs/stimachat.md"
+    ],
+    "images": [
+      "/assets/images/stimachat_1-b9026cd81065ed422aee2c975fa18f45.png",
+      "/assets/images/stimachat_2-5c90474de5a1d7a414c5c10e9a4d148b.png",
+      "/assets/images/stimachat_3-8157c4b9dc27e5d37e55ed898d8a74ee.png",
+      "/assets/images/stimachat_4-b08f819d474ad1a1bf973f5db7857b32.png"
+    ],
+    "articleSha256": "f2dbddb0316059e3c67a95bbe5fdf0f7fd7fc6e80e21a37752ed3761a7027fc1",
+    "slashVariant": {
+      "path": "/stimachat/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/usage",
+    "status": 308,
+    "location": "/usage/",
+    "contentType": null,
+    "final": {
+      "path": "/usage/",
+      "status": 200
+    },
+    "title": "Models Intro | Apertis Documentation",
+    "canonical": "https://docs.apertis.ai/usage",
+    "robots": null,
+    "headingIds": [
+      "recommended-models",
+      "model-naming-rules",
+      "openai",
+      "anthropic",
+      "google"
+    ],
+    "links": [
+      "/",
+      "https://gemini.google.com/",
+      "https://github.com/apertis-ai/docs/tree/main/docs/usage.md",
+      "https://mistral.ai/",
+      "https://openai.com/",
+      "https://www.alibabacloud.com/",
+      "https://www.anthropic.com/",
+      "https://www.llama.com/",
+      "https://www.microsoft.com/en-us/ai/microsoft-365-copilot"
+    ],
+    "images": [],
+    "articleSha256": "1a6d2d13758e3e9be833ab11947821faf9734f5f6757b31b30f79b1d52feebfd",
+    "slashVariant": {
+      "path": "/usage/",
+      "status": 200,
+      "location": null
+    }
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "location": null,
+    "contentType": "application/xml",
+    "slashVariant": {
+      "path": "/sitemap.xml/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/robots.txt",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/robots.txt/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/rss.xml",
+    "status": 200,
+    "location": null,
+    "contentType": "application/xml",
+    "slashVariant": {
+      "path": "/blog/rss.xml/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/blog/atom.xml",
+    "status": 200,
+    "location": null,
+    "contentType": "application/xml",
+    "slashVariant": {
+      "path": "/blog/atom.xml/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/llms.txt",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/llms.txt/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/intro.md",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/intro.md/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/does-not-exist",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/does-not-exist/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/does-not-exist",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/api/does-not-exist/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/api/ask",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/api/ask/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/search-index.json",
+    "status": 200,
+    "location": null,
+    "contentType": "application/json",
+    "slashVariant": {
+      "path": "/search-index.json/",
+      "status": 404,
+      "location": null
+    }
+  },
+  {
+    "path": "/category/功能",
+    "status": 404,
+    "location": null,
+    "contentType": "text/html; charset=utf-8",
+    "slashVariant": {
+      "path": "/category/功能/",
+      "status": 404,
+      "location": null
+    }
+  }
+]

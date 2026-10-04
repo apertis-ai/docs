@@ -1,0 +1,351 @@
+{
+  "base": "http://stimaclawmac-mini:8791",
+  "hitRule": "A query passes when, among the first 3 results the search UI shows for the exact query string, at least one result's pathname equals one of `expect` after removing the #fragment and any trailing slash (except '/'). Section/heading results count as their page. Targets were fixed before any legacy or candidate measurement and are never tuned to observed results.",
+  "measuredAt": "2026-09-28T17:28:06.082Z",
+  "keyboardFocus": false,
+  "retyped": 9,
+  "rows": [
+    {
+      "q": "quick start",
+      "scope": "poc",
+      "expect": [
+        "/getting-started/quick-start"
+      ],
+      "top3": [
+        "/getting-started/quick-start",
+        "/api/sdks/python-sdk",
+        "/api/search/web-search"
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "api key",
+      "scope": "poc",
+      "expect": [
+        "/authentication/api-keys"
+      ],
+      "top3": [
+        "/installation/connection",
+        null,
+        "/authentication/api-keys"
+      ],
+      "rank": 3,
+      "pass": true
+    },
+    {
+      "q": "create API key",
+      "scope": "poc",
+      "expect": [
+        "/authentication/api-keys",
+        "/getting-started/quick-start"
+      ],
+      "top3": [
+        "/installation/connection",
+        null,
+        "/authentication/api-keys"
+      ],
+      "rank": 3,
+      "pass": true
+    },
+    {
+      "q": "subscription plans",
+      "scope": "poc",
+      "expect": [
+        "/billing/subscription-plans"
+      ],
+      "top3": [
+        null,
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "claude code",
+      "scope": "poc",
+      "expect": [
+        "/installation/claude-code"
+      ],
+      "top3": [
+        null,
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "ANTHROPIC_BASE_URL",
+      "scope": "poc",
+      "expect": [
+        "/installation/claude-code"
+      ],
+      "top3": [
+        "/installation/claude-code",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "roo code",
+      "scope": "poc",
+      "expect": [
+        "/installation/roocode"
+      ],
+      "top3": [
+        "/installation/roocode",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "chat/completions",
+      "scope": "poc",
+      "expect": [
+        "/api/text-generation/chat-completions"
+      ],
+      "top3": [
+        "/api/sdks/python-sdk/chat-completions",
+        "/api/audio-video/audio",
+        "/api/text-generation/responses"
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "/v1/messages",
+      "scope": "poc",
+      "expect": [
+        "/api/text-generation/messages"
+      ],
+      "top3": [
+        "/api/text-generation/context-compression",
+        "/api/text-generation/responses",
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "responses api",
+      "scope": "poc",
+      "expect": [
+        "/api/text-generation/responses"
+      ],
+      "top3": [
+        null,
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "streaming",
+      "scope": "poc",
+      "expect": [
+        "/api/text-generation/streaming"
+      ],
+      "top3": [
+        "/api/sdks/python-sdk/streaming",
+        "/api/text-generation/messages",
+        "/api/sdks/python-sdk/messages-api"
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "@apertis/ai-sdk-provider",
+      "scope": "poc",
+      "expect": [
+        "/api/sdks/ai-sdk-provider"
+      ],
+      "top3": [
+        "/api/sdks/ai-sdk-provider",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "createApertis",
+      "scope": "poc",
+      "expect": [
+        "/api/sdks/ai-sdk-provider"
+      ],
+      "top3": [
+        "/api/sdks/ai-sdk-provider",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "base url",
+      "scope": "poc",
+      "expect": [
+        "/api",
+        "/getting-started/quick-start"
+      ],
+      "top3": [
+        "/installation/connection",
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "rate limits",
+      "scope": "full",
+      "expect": [
+        "/billing/rate-limits"
+      ],
+      "top3": [
+        "/billing/rate-limits",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "context_length_exceeded",
+      "scope": "full",
+      "expect": [
+        "/help/error-codes"
+      ],
+      "top3": [
+        "/help/error-codes",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "429",
+      "scope": "full",
+      "expect": [
+        "/help/error-codes",
+        "/billing/rate-limits",
+        "/help/troubleshooting"
+      ],
+      "top3": [
+        "/billing/rate-limits",
+        "/help/error-codes",
+        "/help/faq"
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "embeddings",
+      "scope": "full",
+      "expect": [
+        "/api/embeddings/embeddings-api",
+        "/api/embeddings/guide"
+      ],
+      "top3": [
+        "/api/sdks/ai-sdk-provider",
+        "/api/sdks/python-sdk/async",
+        "/api/sdks/python-sdk/embeddings"
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "rerank",
+      "scope": "full",
+      "expect": [
+        "/api/embeddings/rerank"
+      ],
+      "top3": [
+        "/api/sdks/python-sdk/rerank",
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "web search",
+      "scope": "full",
+      "expect": [
+        "/api/search/web-search"
+      ],
+      "top3": [
+        "/api/sdks/python-sdk/web-search",
+        null,
+        null
+      ],
+      "rank": null,
+      "pass": false
+    },
+    {
+      "q": "cursor",
+      "scope": "full",
+      "expect": [
+        "/installation/cursor"
+      ],
+      "top3": [
+        "/installation/cursor",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "fallback models",
+      "scope": "full",
+      "expect": [
+        "/api/utilities/fallback-models"
+      ],
+      "top3": [
+        "/api/utilities/fallback-models",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "pip install apertis",
+      "scope": "full",
+      "expect": [
+        "/api/sdks/python-sdk"
+      ],
+      "top3": [
+        "/api/sdks/python-sdk",
+        "/api/sdks/python-sdk/chat-completions",
+        "/api/sdks/python-sdk/audio"
+      ],
+      "rank": 1,
+      "pass": true
+    },
+    {
+      "q": "PAYG",
+      "scope": "full",
+      "expect": [
+        "/billing/payg"
+      ],
+      "top3": [
+        "/billing/payg",
+        null,
+        null
+      ],
+      "rank": 1,
+      "pass": true
+    }
+  ],
+  "note": "Legacy baseline served by wrangler pages dev from the 7b6ef85 build on the Mac mini; verdicts identical across three independent runs."
+}
