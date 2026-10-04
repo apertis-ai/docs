@@ -6,8 +6,12 @@ The Nimbus candidate SHALL live in `site-nimbus/` with its own package manifest 
 The release branch (`claude/nimbus-release`, #14) is that release step, prepared but not merged. The root `npm run build` runs `scripts/nimbus/pages-build.sh`, which unshallows the clone, runs the checked candidate build and publishes `site-nimbus/dist` as `build/`. The Docusaurus build stays available as `npm run build:legacy`. The Pages build settings, the root lockfile, `index-docs.yml` and its trigger stay unchanged. The branch merges to `main` only with the operator approval that #14 Part B names.
 
 #### Scenario: Pushed candidate branch
-- **WHEN** a branch containing `site-nimbus/` is pushed
+- **WHEN** a branch containing `site-nimbus/` but not the release step is pushed
 - **THEN** the Pages preview build for that branch still builds the legacy Docusaurus site and the production deployment is unaffected
+
+#### Scenario: Pushed release branch
+- **WHEN** the release branch, or after the release any branch, is pushed
+- **THEN** its Pages preview build publishes the candidate, which proves the production build path, and the production deployment is unaffected
 
 ### Requirement: Frozen PoC page set
 The PoC SHALL convert exactly these 12 real pages: `/`, `/getting-started/quick-start`, `/authentication/api-keys`, `/billing/subscription-plans`, `/installation/claude-code`, `/installation/roocode`, `/api/`, `/api/text-generation/chat-completions`, `/api/text-generation/messages`, `/api/text-generation/responses`, `/api/text-generation/streaming`, `/api/sdks/ai-sdk-provider`. Links from these pages to routes outside the set are PoC coverage limits: `route-fixtures.json` lists them in `pocCoverageLimits` (18 targets at baseline), and `route-fixtures.mjs check --scope poc` fails any PoC-page link that is neither a PoC route nor a listed limit. Limits are never counted as passing pages.

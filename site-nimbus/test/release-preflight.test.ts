@@ -9,8 +9,8 @@ const ROLLBACK = '2efbe4c4-db00-4b7f-b4cd-34df32047ff2';
 type Facts = {
   phase: string;
   candidate: { expected: string; head: string; clean: boolean; pushed: boolean; buildId: string; previewBuildId: string | null };
-  ci: { conclusions: string[]; pending: number };
-  project: { name: string; productionBranch: string; buildCommand: string; outputDir: string; canonicalDeploymentId: string; deployments: { id: string; environment: string; status: string }[]; askRetrievalSource: string | null };
+  ci: { conclusions: string[]; pending: number; missing?: number };
+  project: { name: string; productionBranch: string; buildCommand: string; outputDir: string; rootDir: string; productionEnvNames: string[]; previewEnvNames: string[]; canonicalDeploymentId: string; deployments: { id: string; environment: string; status: string }[]; askRetrievalSource: string | null };
   rollback: { deploymentId: string; legacyBundle: string };
   live: { buildId: string | null; legacyBundle: string | null };
 };
@@ -19,7 +19,8 @@ const ready = (): Facts => ({
   candidate: { expected: 'abc123', head: 'abc123', clean: true, pushed: true, buildId: 'd9ae.84b5', previewBuildId: 'd9ae.84b5' },
   ci: { conclusions: ['success', 'success', 'success'], pending: 0 },
   project: {
-    name: 'docs', productionBranch: 'main', buildCommand: 'npm run build', outputDir: 'build',
+    name: 'docs', productionBranch: 'main', buildCommand: 'npm run build', outputDir: 'build', rootDir: '',
+    productionEnvNames: ['APERTIS_API_KEY', 'ASK_RETRIEVAL_SOURCE', 'TURNSTILE_SECRET_KEY'], previewEnvNames: [],
     canonicalDeploymentId: ROLLBACK, deployments: [{ id: ROLLBACK, environment: 'production', status: 'success' }],
     askRetrievalSource: 'legacy',
   },
@@ -37,6 +38,12 @@ test('the wrong project or changed build settings are refused', () => {
   assert.match(failures((f) => { f.project.productionBranch = 'release'; }).join(), /production branch/);
   assert.match(failures((f) => { f.project.buildCommand = 'npm run build:legacy'; }).join(), /build command/);
   assert.match(failures((f) => { f.project.outputDir = 'site-nimbus/dist'; }).join(), /output/);
+  assert.match(failures((f) => { f.project.rootDir = 'site-nimbus'; }).join(), /root directory/);
+});
+
+test('a project variable that would make the production build differ from the previewed one is refused', () => {
+  assert.match(failures((f) => { f.project.productionEnvNames.push('PUBLIC_TURNSTILE_SITEKEY'); }).join(), /PUBLIC_TURNSTILE_SITEKEY/);
+  assert.match(failures((f) => { f.project.previewEnvNames.push('NODE_VERSION'); }).join(), /NODE_VERSION/);
 });
 
 test('a candidate that is not the approved commit, is dirty, unpushed or not built by Pages is refused', () => {
@@ -51,6 +58,7 @@ test('CI that failed, is still running or never ran is refused', () => {
   assert.match(failures((f) => { f.ci.conclusions = ['success', 'failure']; }).join(), /CI/);
   assert.match(failures((f) => { f.ci.pending = 1; }).join(), /CI/);
   assert.match(failures((f) => { f.ci.conclusions = []; }).join(), /CI/);
+  assert.match(failures((f) => { f.ci.missing = 3; }).join(), /CI/);
 });
 
 test('a missing or moved rollback point is refused', () => {

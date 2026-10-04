@@ -46,8 +46,12 @@ approval.
    - The variable takes effect only on the next deployment, so nothing changes until step 4.
    - Undo: remove the variable.
 3. **Preflight again.** Expect PASS.
-4. **Merge** the release PR to `main`. Pages builds the merge commit with `scripts/nimbus/pages-build.sh`.
-   - If the build fails, production keeps serving the rollback point, and nothing else has changed.
+4. **Merge** the release PR to `main`. Pages builds the merge commit with `scripts/nimbus/pages-build.sh`. The build fails when:
+   - the committed manifest is stale (`check-build-id.mjs`);
+   - the checked build fails;
+   - `test:dist` fails, which includes a test Turnstile key.
+
+   If the build fails, production keeps serving the rollback point, but the merge is on `main`. The next successful build of `main`, from any push or a retry, would publish the candidate with no one watching. Revert the merge at once (see Rollback, step 2), and release again later from a new PR.
 5. **Confirm the deployment** (about 5 minutes after the build). Expect PASS:
    ```
    node scripts/nimbus/release-preflight.mjs --candidate <sha> --account <id> --after-release
@@ -55,7 +59,7 @@ approval.
    Here `<sha>` is the merged candidate commit, checked out clean.
 6. **Smoke**, within 15 minutes:
    - `node scripts/nimbus/route-fixtures.mjs check https://docs.apertis.ai` passes 228/228;
-   - `node scripts/nimbus/measure.mjs search https://docs.apertis.ai --scope full` passes 24/24 with keyboard focus;
+   - `PLAYWRIGHT=<path to playwright 1.63.0 index.mjs> node scripts/nimbus/measure.mjs search https://docs.apertis.ai --scope full` passes 24/24 with keyboard focus (Playwright is installed outside the repository, as in the PR gates);
    - `/getting-started/quick-start.md` is `text/markdown`, and `/_nimbus/home-feed` answers GET with JSON;
    - `/openspec/`, `/migration/` and `/site-nimbus/` answer 404;
    - Ask Docs answers two questions in a real browser on `docs.apertis.ai`, through the real Turnstile widget, with citations to existing pages:
@@ -73,9 +77,12 @@ Roll back immediately when any of these happens:
 - Ask Docs fails both smoke questions, after one retry each. One upstream timeout alone is not a reason, because it also occurs on legacy.
 - a cited link 404s.
 
-During the first 24 hours, watch the Pages Functions metrics for project `docs`. Roll back if any of these holds:
-- `/api/ask` errors stay above 5% of requests for an hour;
-- the HTML 404 rate rises clearly above the week before the release.
+During the first 24 hours, watch the `apertis.ai` zone's HTTP analytics, filtered by host `docs.apertis.ai`, path and status. Pages Functions metrics are per project and count only exceptions, so they cannot show these.
+
+Before step 4, record the previous 7 days' share of 404 responses on HTML paths and of 5xx responses on `/api/ask`. Roll back if any of these holds:
+- `/api/ask` 5xx responses exceed 5% of its requests over any hour, or reach twice the recorded share;
+- 404 responses on HTML paths reach twice the recorded share over any 6 hours;
+- any 5xx appears on an HTML path.
 
 **Rollback.**
 1. Pages: run "Rollback to this deployment" on `ae522f1d` in the dashboard, or call the API:
@@ -84,6 +91,8 @@ During the first 24 hours, watch the Pages Functions metrics for project `docs`.
    ```
    In the rehearsal the switch took 6 to 10 seconds, with no rebuild.
 2. Revert the merge on `main`. Without the revert, the next push to `main` deploys the candidate again.
+   - The revert itself starts a new production Docusaurus build, which replaces the rolled-back deployment. When it is live, check that it serves a legacy `main.*.js` bundle and that the baseline paths answer as before (`route-fixtures.mjs snapshot` against `migration/nimbus/baseline/live-paths.txt`). Then record it in `legacy-rollback.json` as the new `currentProductionDeployment`.
+   - A later release must first revert the revert. Merging the same branch again brings nothing back.
 3. Keep `ASK_RETRIEVAL_SOURCE`, since the legacy handler ignores it. Retrieval needs nothing, because the legacy tables were never written.
 4. Record the trigger, the timings and the evidence on #14.
 
