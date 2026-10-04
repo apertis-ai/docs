@@ -6,7 +6,15 @@ import assert from 'node:assert/strict';
 import { judge } from '../../scripts/nimbus/release-preflight.mjs';
 
 const ROLLBACK = '2efbe4c4-db00-4b7f-b4cd-34df32047ff2';
-const ready = () => ({
+type Facts = {
+  phase: string;
+  candidate: { expected: string; head: string; clean: boolean; pushed: boolean; buildId: string; previewBuildId: string | null };
+  ci: { conclusions: string[]; pending: number };
+  project: { name: string; productionBranch: string; buildCommand: string; outputDir: string; canonicalDeploymentId: string; deployments: { id: string; environment: string; status: string }[]; askRetrievalSource: string | null };
+  rollback: { deploymentId: string; legacyBundle: string };
+  live: { buildId: string | null; legacyBundle: string | null };
+};
+const ready = (): Facts => ({
   phase: 'before-release',
   candidate: { expected: 'abc123', head: 'abc123', clean: true, pushed: true, buildId: 'd9ae.84b5', previewBuildId: 'd9ae.84b5' },
   ci: { conclusions: ['success', 'success', 'success'], pending: 0 },
@@ -18,7 +26,7 @@ const ready = () => ({
   rollback: { deploymentId: ROLLBACK, legacyBundle: 'main.9321920d.js' },
   live: { buildId: null, legacyBundle: 'main.9321920d.js' },
 });
-const failures = (mutate: (f: ReturnType<typeof ready>) => void) => { const f = ready(); mutate(f); return judge(f).failures; };
+const failures = (mutate: (f: Facts) => void) => { const f = ready(); mutate(f); return judge(f).failures; };
 
 test('a ready release passes every check', () => {
   assert.deepEqual(judge(ready()), { ok: true, failures: [] });
@@ -58,7 +66,8 @@ test('the release waits for the server-first retrieval setting', () => {
 });
 
 test('after the release, production must serve the candidate from a new deployment', () => {
-  const after = () => { const f = ready(); f.phase = 'after-release'; f.project.canonicalDeploymentId = 'new'; f.live = { buildId: 'd9ae.84b5', legacyBundle: null }; return f; };
+  // The merge commit has a production build, not a preview one.
+  const after = () => { const f = ready(); f.phase = 'after-release'; f.candidate.previewBuildId = null; f.project.canonicalDeploymentId = 'new'; f.live = { buildId: 'd9ae.84b5', legacyBundle: null }; return f; };
   assert.deepEqual(judge(after()).failures, []);
   const stale = after(); stale.live = { buildId: null, legacyBundle: 'main.9321920d.js' };
   assert.match(judge(stale).failures.join(), /serves/);

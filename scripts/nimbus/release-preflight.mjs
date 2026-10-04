@@ -25,7 +25,8 @@ export function judge(f) {
   if (c.head !== c.expected) fail.push(`HEAD ${c.head} is not the approved candidate ${c.expected}`);
   if (!c.clean) fail.push('the checkout has uncommitted changes');
   if (!c.pushed) fail.push('the candidate is not pushed to its branch');
-  if (!c.previewBuildId || c.previewBuildId !== c.buildId) fail.push(`the Pages preview build of the candidate serves ${c.previewBuildId ?? 'nothing'}, not buildId ${c.buildId}`);
+  // Before the release the Pages preview build proves the build path; after it, the production deployment does.
+  if (f.phase !== 'after-release' && (!c.previewBuildId || c.previewBuildId !== c.buildId)) fail.push(`the Pages preview build of the candidate serves ${c.previewBuildId ?? 'nothing'}, not buildId ${c.buildId}`);
 
   if (!f.ci.conclusions.length || f.ci.pending || f.ci.conclusions.some((x) => x !== 'success' && x !== 'skipped' && x !== 'neutral'))
     fail.push(`CI on the candidate is not green (${f.ci.pending} running; ${f.ci.conclusions.join(', ') || 'no runs'})`);
