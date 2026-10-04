@@ -1,0 +1,29 @@
+---
+// /search (inventory `generated:/search`, disposition preserve): the legacy search results path keeps
+// working as /search/ -> the search dialog, with ?q= passed to it. Not a manifest document (kind
+// `generated`): identity comes from its inventory row, it is never indexed, and it has no Markdown.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { ManifestDocument } from '../contracts/manifest.ts';
+import type { RouteInventory } from '../contracts/navigation.ts';
+import { manifest } from '../manifest/manifest.ts';
+import { decodeEntities } from '../contracts/validate-manifest.ts';
+import inventoryFile from '../../../migration/nimbus/route-inventory.json' with { type: 'json' };
+
+const row = (inventoryFile as RouteInventory).routes.find((r) => r.documentId === 'generated:/search');
+if (!row?.eligibility.publish || !row.live?.canonical || !row.live.title) throw new Error('generated:/search is not a published inventory row');
+const doc: ManifestDocument = {
+  id: row.documentId!, sourcePath: '', servedPath: '/search/', canonicalUrl: row.live.canonical, title: decodeEntities(row.live.title),
+  eligibility: row.eligibility, markdown: null, contentSha256: '',
+};
+---
+<BaseLayout doc={doc} buildId={manifest.buildId}>
+  <main id="main">
+    <h1>{row.live.title}</h1>
+    <p><button type="button" data-open-surface="search">Open search</button></p>
+  </main>
+</BaseLayout>
+<script>
+  import { openSearch } from '../contracts/events.ts';
+  // After load, so the search client's listener is registered; an empty query just opens the dialog.
+  window.addEventListener('load', () => openSearch(new URLSearchParams(location.search).get('q') ?? undefined));
+</script>
