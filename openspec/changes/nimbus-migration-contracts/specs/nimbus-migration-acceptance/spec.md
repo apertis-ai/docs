@@ -3,6 +3,8 @@
 ### Requirement: Isolated candidate package
 The Nimbus candidate SHALL live in `site-nimbus/` with its own package manifest and committed lockfile. The root Docusaurus build (`npm run build` → `build/`, which Cloudflare Pages project `docs` runs on every branch push and on `main`), root `package.json`, root lockfile, the Pages build settings and the indexing workflow and its trigger SHALL NOT change until a release step under #14 is separately authorized. The Pages Function under `functions/` stays the `/api/ask` route; #10 may refactor it on its task branch, but because merging to `main` deploys it to production, that merge is a separately authorized release that requires the old-client/new-server compatibility evidence.
 
+The release branch (`claude/nimbus-release`, #14) is that release step, prepared but not merged. The root `npm run build` runs `scripts/nimbus/pages-build.sh`, which unshallows the clone, runs the checked candidate build and publishes `site-nimbus/dist` as `build/`. The Docusaurus build stays available as `npm run build:legacy`. The Pages build settings, the root lockfile, `index-docs.yml` and its trigger stay unchanged. The branch merges to `main` only with the operator approval that #14 Part B names.
+
 #### Scenario: Pushed candidate branch
 - **WHEN** a branch containing `site-nimbus/` is pushed
 - **THEN** the Pages preview build for that branch still builds the legacy Docusaurus site and the production deployment is unaffected
@@ -41,6 +43,23 @@ The legacy Pages deployment `2efbe4c4-db00-4b7f-b4cd-34df32047ff2` (source `7b6e
 #### Scenario: Rehearsed rollback
 - **WHEN** #14 rehearses a rollback
 - **THEN** the site returns to a deployment serving `main.9321920d.js` or an explicitly recorded successor, and retrieval returns to the recorded legacy identity or a recorded generation, without data loss
+
+### Requirement: Release and rollback
+The release SHALL follow `migration/nimbus/release/RUNBOOK.md`. Its steps are:
+- the read-only preflight `scripts/nimbus/release-preflight.mjs`;
+- production `ASK_RETRIEVAL_SOURCE=legacy` before the merge, because the candidate handler fails closed without it and the legacy handler ignores it;
+- one merge of the release branch to `main`;
+- smoke checks against `https://docs.apertis.ai`.
+
+Rollback is the Pages rollback to the recorded production deployment (`legacy-rollback.json` `currentProductionDeployment`), followed by reverting the merge on `main`. Retrieval needs no change, because the legacy tables are never written by the release. Production generation retrieval is a later, separately approved step.
+
+#### Scenario: Preflight refuses an unready release
+- **WHEN** the candidate is not the approved commit, CI is not green, the Pages preview build does not serve its buildId, production moved since the rollback point was recorded, or `ASK_RETRIEVAL_SOURCE` is not `legacy`
+- **THEN** the preflight exits non-zero and names each failure, and nothing is changed
+
+#### Scenario: Rehearsed release and rollback
+- **WHEN** the isolated rehearsal deploys the legacy artifact with its 7b6ef85 Functions, then the candidate with `ASK_RETRIEVAL_SOURCE=legacy`, then rolls back and forward through the Pages API
+- **THEN** each state serves its own identity and answers Ask Docs with citations, and a new-client request to the legacy handler is answered
 
 ### Requirement: Authority boundaries
 Push, pull requests, merge, deployment, Pages or Supabase configuration, secrets, database execution beyond read-only inspection, index activation, DNS and destructive cleanup SHALL require separately established authority. Pushing any branch triggers a Pages preview build; merging to `main` deploys production and, for `docs/**` or `docs-api/**` changes, runs the production indexing workflow.
