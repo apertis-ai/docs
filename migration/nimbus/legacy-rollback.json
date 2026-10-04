@@ -39,11 +39,11 @@
       "verification": "Project canonical_deployment and latest_deployment are both 2efbe4c4; docs.apertis.ai, docs.stima.tech, docs-2r1.pages.dev and 2efbe4c4.docs-2r1.pages.dev all serve /assets/js/main.9321920d.js; all 97 live HTML routes match a local 7b6ef85 build by status, redirect, canonical and heading ids, and article text matches except Cloudflare Email Address Obfuscation rewriting mailto text on 8 pages."
     },
     "currentProductionDeployment": {
-      "id": "ae522f1d-fcef-4eb6-9b12-20c230b95070",
-      "source": "993279f",
+      "id": "35a51747-4774-462f-bbaf-4b7882660113",
+      "source": "d5df26a",
       "bundle": "main.0b5ee150.js",
-      "recordedAt": "2026-10-04",
-      "note": "The recorded successor of 2efbe4c4 and the release's rollback point. Merging #18 (.gitignore and .worktree-regenerable only) rebuilt production on 2026-10-03. Read-only snapshots of all 108 baseline live paths on 2efbe4c4 and ae522f1d agree in status, redirect, canonical, heading ids, links, images and article text; only the Docusaurus bundle hash differs. docs.apertis.ai, docs.stima.tech and docs-2r1.pages.dev serve it."
+      "recordedAt": "2026-10-05",
+      "note": "The rollback point for the second release attempt. It is the legacy tree of 993279f, rebuilt after the #20 revert and redeployed once the production APERTIS_API_KEY was replaced. The 108 baseline paths match ae522f1d, the previous rollback point and successor of 2efbe4c4, in a read-only snapshot. Legacy Ask Docs answers on it. docs.apertis.ai, docs.stima.tech and docs-2r1.pages.dev serve it."
     },
     "previousProductionDeployment": {
       "id": "98aaadcc-ed9b-4ce3-80cb-90e82d4d2040",
