@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const PROJECT = 'docs';
@@ -20,16 +20,21 @@ export function judge(f) {
   if (p.productionBranch !== 'main') fail.push(`production branch is ${p.productionBranch}, not main`);
   if (p.buildCommand !== 'npm run build') fail.push(`build command is "${p.buildCommand}", not "npm run build"`);
   if (p.outputDir !== 'build') fail.push(`output directory is ${p.outputDir}, not build`);
+  if (p.rootDir) fail.push(`root directory is ${p.rootDir}, not the repository root`);
+  // The preview build is the evidence for the production build only while nothing build-relevant differs:
+  // a production sitekey override would ship a test key, a NODE_VERSION would override .node-version.
+  for (const name of ['PUBLIC_TURNSTILE_SITEKEY', 'NODE_VERSION'])
+    if (p.productionEnvNames.includes(name) || p.previewEnvNames.includes(name)) fail.push(`${name} is set on the project; the build must take it from the repository`);
 
   const c = f.candidate;
   if (c.head !== c.expected) fail.push(`HEAD ${c.head} is not the approved candidate ${c.expected}`);
   if (!c.clean) fail.push('the checkout has uncommitted changes');
-  if (!c.pushed) fail.push('the candidate is not pushed to its branch');
+  if (!c.pushed) fail.push(f.phase === 'after-release' ? 'the candidate is not on main' : 'the candidate is not pushed to its branch');
   // Before the release the Pages preview build proves the build path; after it, the production deployment does.
   if (f.phase !== 'after-release' && (!c.previewBuildId || c.previewBuildId !== c.buildId)) fail.push(`the Pages preview build of the candidate serves ${c.previewBuildId ?? 'nothing'}, not buildId ${c.buildId}`);
 
-  if (!f.ci.conclusions.length || f.ci.pending || f.ci.conclusions.some((x) => x !== 'success' && x !== 'skipped' && x !== 'neutral'))
-    fail.push(`CI on the candidate is not green (${f.ci.pending} running; ${f.ci.conclusions.join(', ') || 'no runs'})`);
+  if (!f.ci.conclusions.length || f.ci.missing || f.ci.pending || f.ci.conclusions.some((x) => x !== 'success' && x !== 'skipped' && x !== 'neutral'))
+    fail.push(`CI on the candidate is not green (${f.ci.pending} running, ${f.ci.missing ?? 0} unread; ${f.ci.conclusions.join(', ') || 'no runs'})`);
 
   const rb = p.deployments.find((d) => d.id === f.rollback.deploymentId);
   if (!rb || rb.status !== 'success') fail.push(`rollback point ${f.rollback.deploymentId} is not a successful deployment of ${PROJECT}`);
@@ -67,10 +72,19 @@ async function facts(expected, account, phase) {
     return r.result;
   };
   const head = git('rev-parse', 'HEAD');
-  const branch = git('rev-parse', '--abbrev-ref', 'HEAD');
-  const remote = execFileSync('git', ['ls-remote', `https://github.com/${REPO}`, `refs/heads/${branch}`], { encoding: 'utf8' }).split('\t')[0];
+  // Before the release the candidate is its pushed branch head; after it, a commit on main.
+  let pushed;
+  if (phase === 'after-release') {
+    const main = execFileSync('git', ['ls-remote', `https://github.com/${REPO}`, 'refs/heads/main'], { encoding: 'utf8' }).split('\t')[0];
+    git('fetch', '--quiet', `https://github.com/${REPO}`, 'main');
+    pushed = !!main && spawnSync('git', ['-C', ROOT, 'merge-base', '--is-ancestor', expected, main]).status === 0;
+  } else {
+    const branch = git('rev-parse', '--abbrev-ref', 'HEAD');
+    pushed = execFileSync('git', ['ls-remote', `https://github.com/${REPO}`, `refs/heads/${branch}`], { encoding: 'utf8' }).split('\t')[0] === head;
+  }
   const buildId = JSON.parse(fs.readFileSync(path.join(ROOT, 'site-nimbus/src/manifest/manifest.json'), 'utf8')).buildId;
-  const runs = JSON.parse(execFileSync('gh', ['api', `repos/${REPO}/commits/${expected}/check-runs?per_page=100`], { encoding: 'utf8' })).check_runs;
+  const checks = JSON.parse(execFileSync('gh', ['api', `repos/${REPO}/commits/${expected}/check-runs?per_page=100`], { encoding: 'utf8' }));
+  const runs = checks.check_runs;
   const pages = JSON.parse(fs.readFileSync(path.join(ROOT, 'migration/nimbus/legacy-rollback.json'), 'utf8')).pages;
   // The rollback point is the recorded production deployment: the latest recorded successor, else the baseline one.
   const rollback = pages.currentProductionDeployment ?? { ...pages.servingDeployment, bundle: 'main.9321920d.js' };
@@ -82,11 +96,14 @@ async function facts(expected, account, phase) {
   const env = project.deployment_configs?.production?.env_vars?.ASK_RETRIEVAL_SOURCE;
   return {
     phase,
-    candidate: { expected, head, clean: git('status', '--porcelain') === '', pushed: remote === head, buildId, previewBuildId: preview ? (await served(preview.url)).buildId : null },
-    ci: { conclusions: runs.filter((r) => r.status === 'completed').map((r) => r.conclusion), pending: runs.filter((r) => r.status !== 'completed').length },
+    candidate: { expected, head, clean: git('status', '--porcelain') === '', pushed, buildId, previewBuildId: preview ? (await served(preview.url)).buildId : null },
+    ci: { conclusions: runs.filter((r) => r.status === 'completed').map((r) => r.conclusion), pending: runs.filter((r) => r.status !== 'completed').length, missing: checks.total_count - runs.length },
     project: {
       name: project.name, productionBranch: project.production_branch, buildCommand: project.build_config?.build_command,
-      outputDir: project.build_config?.destination_dir, canonicalDeploymentId: project.canonical_deployment?.id,
+      outputDir: project.build_config?.destination_dir, rootDir: project.build_config?.root_dir ?? '',
+      productionEnvNames: Object.keys(project.deployment_configs?.production?.env_vars ?? {}),
+      previewEnvNames: Object.keys(project.deployment_configs?.preview?.env_vars ?? {}),
+      canonicalDeploymentId: project.canonical_deployment?.id,
       deployments: rb ? [{ id: rb.id, environment: rb.environment, status: rb.latest_stage?.status }] : [],
       // A secret's value is never returned; this setting is a plain-text variable.
       askRetrievalSource: env?.type === 'plain_text' ? env.value : null,

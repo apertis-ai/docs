@@ -90,6 +90,8 @@ jobs:
         with: { node-version: '25', cache: npm, cache-dependency-path: site-nimbus/package-lock.json }
       - run: npm ci
         working-directory: site-nimbus
+      - name: the committed manifest is this checkout's (no content merged without m2:regenerate)
+        run: node scripts/nimbus/check-build-id.mjs
       - name: build (fails on a stale committed manifest)
         run: CI=1 npm run build
         working-directory: site-nimbus
