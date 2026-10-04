@@ -1,0 +1,31 @@
+---
+// Every converted document, at its manifest servedPath (/x/ -> dist/x/index.html). Standalone pages
+// (page:*) and native articles (src/pages/blog) have their own route files. /api/ask is never a manifest entry, so it is never emitted.
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import DocLayout from '../layouts/DocLayout.astro';
+import { documentAt, manifest } from '../manifest/manifest.ts';
+import { isNativeArticle } from '../contracts/articles.ts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('docs');
+  const served = new Set(entries.map((e) => `/${e.id}/`));
+  const missing = manifest.documents.filter((d) => !d.id.startsWith('page:') && !isNativeArticle(d) && d.eligibility.publish && !served.has(d.servedPath));
+  if (missing.length) throw new Error(`no generated content for ${missing.map((d) => d.id).join(', ')}; run node converter/convert.ts`);
+  // documentAt throws for a generated entry without a manifest entry (stale content).
+  return entries.map((entry) => {
+    const doc = documentAt(`/${entry.id}/`);
+    if (!doc.eligibility.publish) throw new Error(`${doc.id} is not publish-eligible but has generated content`);
+    return { params: { slug: entry.id }, props: { entry, doc } };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'docs'>;
+  doc: ReturnType<typeof documentAt>;
+}
+const { entry, doc } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<DocLayout doc={doc} buildId={manifest.buildId} headings={headings}>
+  <Content />
+</DocLayout>

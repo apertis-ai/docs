@@ -1,0 +1,122 @@
+---
+// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", revised on
+// 2026-10-03 after the OpenAI developers, Claude docs and claude.dev homepages): the entry to Apertis guides,
+// reference, models, release notes and articles, kept calm. A left-aligned hero (heading, one line, the
+// primary action and the console, then the providers in one monochrome row with the count of the rest),
+// "New models" (the models most recently added to the catalog), "Start building" (the feature-card
+// destinations as shadcn Items) and "Latest" (release notes beside the blog). Search is the header's.
+// Everything renders at build time from home-feed.json; the one script below swaps in /_nimbus/home-feed
+// after load, so the models, release notes and counts are current without a rebuild.
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import openai from '@lobehub/icons-static-svg/icons/openai.svg?raw';
+import anthropic from '@lobehub/icons-static-svg/icons/anthropic.svg?raw';
+import google from '@lobehub/icons-static-svg/icons/google.svg?raw';
+import deepseek from '@lobehub/icons-static-svg/icons/deepseek.svg?raw';
+import meta from '@lobehub/icons-static-svg/icons/meta.svg?raw';
+import qwen from '@lobehub/icons-static-svg/icons/qwen.svg?raw';
+import mistral from '@lobehub/icons-static-svg/icons/mistral.svg?raw';
+import spacexai from '../components/home/spacexai.svg?raw';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleList from '../components/home/ArticleList.astro';
+import NewModels from '../components/home/NewModels.tsx';
+import StartBuilding from '../components/home/StartBuilding.tsx';
+import ReleaseNotes from '../components/home/ReleaseNotes.tsx';
+import feed from '../components/home/home-feed.json';
+import { isNativeArticle } from '../contracts/articles.ts';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { documentAt, manifest } from '../manifest/manifest.ts';
+
+const doc = documentAt('/');
+const hasArticles = manifest.documents.some(isNativeArticle);
+const ext = { target: '_blank', rel: 'noopener noreferrer' };
+// Monochrome provider marks (currentColor), their <title> dropped: the name beside each mark labels it.
+// SpaceXAI's mark is apertis.ai's.
+const mark = (svg: string) => svg.replace(/<title>[\s\S]*?<\/title>/, '');
+const providers = [
+  ['OpenAI', openai], ['Anthropic', anthropic], ['Google', google], ['SpaceXAI', spacexai],
+  ['DeepSeek', deepseek], ['Meta', meta], ['Qwen', qwen], ['Mistral', mistral],
+].map(([name, svg]) => ({ name, svg: mark(svg) }));
+const more = (count: number) => `and ${count - providers.length} more`;
+---
+<BaseLayout doc={doc} buildId={manifest.buildId}>
+  <main class="landing" id="main">
+    <section class="shell-container hero" aria-labelledby="hero-title">
+      <h1 class="hero__title" id="hero-title">Build with Apertis</h1>
+      <p class="hero__lead">Guides, API reference and articles for building with every leading model through one API key.</p>
+      <div class="hero__actions">
+        <a data-slot="button" data-variant="default" class={buttonVariants({ size: 'lg' })} href="/getting-started/quick-start/">Get started<ArrowRight className="size-4" aria-hidden="true" /></a>
+        <a data-slot="button" data-variant="outline" class={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'bg-card')} href="https://apertis.ai/setting?tab=keys" {...ext}>Create an API key<ArrowUpRight className="size-4" aria-hidden="true" /></a>
+      </div>
+      <ul class="providers" aria-label="Model providers">
+        {providers.map((p) => <li><span class="providers__mark" aria-hidden="true" set:html={p.svg} />{p.name}</li>)}
+        <li class="providers__more" data-feed-providers>{more(feed.providers)}</li>
+      </ul>
+    </section>
+
+    <section class="shell-container home-section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">New models</h2>
+      <p class="home-section__lead">The latest additions to the catalog, available with the same key.</p>
+      <NewModels models={feed.models} />
+      <p class="home-section__more"><a href="https://apertis.ai/models" {...ext}><span>Browse all <span data-feed-total>{feed.total}</span> models</span><ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
+    </section>
+
+    <section class="shell-container home-section" id="start" aria-labelledby="start-title">
+      <h2 id="start-title">Start building</h2>
+      <StartBuilding />
+    </section>
+
+    <section class="shell-container home-section" aria-labelledby="latest-title">
+      <h2 id="latest-title">Latest</h2>
+      <div class="latest">
+        <div>
+          <h3>Release notes</h3>
+          <ReleaseNotes notes={feed.notes} />
+          <p class="home-section__more"><a href="https://apertis.ai/changelog" {...ext}>All release notes<ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
+        </div>
+        <div>
+          <h3>From the blog</h3>
+          {hasArticles ? <ArticleList limit={3} /> : (
+            <p class="latest__soon">Guides, engineering notes and model deep dives are on their way.</p>
+          )}
+          <p class="home-section__more"><a href="/blog/">{hasArticles ? 'All articles' : 'Visit the blog'}<ArrowRight className="size-3.5" aria-hidden="true" /></a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  // Swap in the live feed (functions/_nimbus/home-feed.ts): refill each list by cloning its first row and
+  // setting the `data-f` fields from the same views the build used. Any failure keeps the build's copy.
+  import { modelView, noteView, type HomeFeed, type View } from '../components/home/feed.ts';
+
+  const fill = (list: Element | null, views: View[]) => {
+    const row = list?.firstElementChild;
+    if (!list || !row || !views.length) return;
+    list.replaceChildren(...views.map((v) => {
+      const li = row.cloneNode(true) as Element;
+      for (const el of li.querySelectorAll<HTMLElement>('[data-f]')) {
+        const value = v[el.dataset.f!] ?? '';
+        if (el.dataset.f === 'href') { el.setAttribute('href', value); continue; }
+        el.textContent = value;
+        el.hidden = !value;
+        if (el instanceof HTMLTimeElement) el.dateTime = v.datetime ?? '';
+      }
+      return li;
+    }));
+  };
+
+  fetch('/_nimbus/home-feed', { priority: 'low' } as RequestInit)
+    .then((r) => (r.ok ? (r.json() as Promise<HomeFeed>) : null))
+    .then((feed) => {
+      if (!feed || !Array.isArray(feed.models) || !Array.isArray(feed.notes)) return;
+      fill(document.querySelector('[data-feed="models"]'), feed.models.map(modelView));
+      fill(document.querySelector('[data-feed="notes"]'), feed.notes.map(noteView));
+      const total = document.querySelector('[data-feed-total]');
+      if (total && feed.total > 0) total.textContent = String(feed.total);
+      const more = document.querySelector('[data-feed-providers]');
+      if (more && feed.providers > 8) more.textContent = `and ${feed.providers - 8} more`;
+    })
+    .catch(() => {});
+</script>
