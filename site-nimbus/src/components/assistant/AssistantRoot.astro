@@ -1,0 +1,13 @@
+---
+// Mount point for search and Ask Docs (#9 owns this directory), rendered once per page by BaseLayout.
+// The shell opens it only through the `apertis-docs:open` event (src/contracts/events.ts); assistant.ts
+// is its one listener and the one Cmd/Ctrl+K owner. The view (Assistant.tsx, shadcn parts) is rendered at
+// build time; see there why it is not hydrated. Styles: src/styles/shell.css ("Search and Ask Docs").
+import Assistant from './Assistant.tsx';
+---
+<Assistant />
+
+<script>
+  import { initAssistant } from './assistant.ts';
+  initAssistant();
+</script>

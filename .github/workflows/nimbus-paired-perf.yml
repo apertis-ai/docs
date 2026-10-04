@@ -1,0 +1,236 @@
+# Paired legacy/candidate performance gate (budgets.json `budgetRules`), full published page set, sharded
+# across GitHub-hosted runners. Non-mutating: no secrets, no deploy, no database, no index.
+#
+# The protocol is unchanged: every shard runner serves both sites itself and runs
+# `paired-perf.mjs run` for its pages (5 alternating rounds per side, both profiles, system Google Chrome),
+# so legacy and candidate are always paired on one machine in one window. Only the page set is split.
+# The `gate` job re-gates every raw sample with `paired-perf.mjs gate` (full set, then the 12 PoC pages).
+# Documentation: migration/nimbus/acceptance/README.md "Paired performance in CI".
+name: nimbus-paired-perf
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'site-nimbus/**'
+      - 'functions/**'
+      - 'migration/nimbus/budgets.json'
+      - 'scripts/nimbus/measure.mjs'
+      - 'scripts/nimbus/paired-perf.mjs'
+      - 'migration/nimbus/legacy-baseline.sha256'
+      - '.github/workflows/nimbus-paired-perf.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nimbus-paired-perf-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+env:
+  ASTRO_TELEMETRY_DISABLED: '1'
+  WRANGLER_SEND_METRICS: 'false'
+  CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: 'false'
+  PLAYWRIGHT_VERSION: '1.63.0'
+  # measure.mjs computes the byte metrics with pako (see its header), installed outside the repository.
+  PAKO_VERSION: '2.1.0'
+  SHARDS: '12'
+
+jobs:
+  legacy:
+    name: legacy baseline build (the recorded one, from the nimbus-legacy-baseline release)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      # Not rebuilt: webpack module ids and the search index order depend on the build machine, so a
+      # rebuild of baseSha is not the build the legacy byte baseline was recorded from.
+      - name: fetch the recorded legacy build and refuse any other bytes
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 3 -o legacy-baseline-build.tgz \
+            https://github.com/apertis-ai/docs/releases/download/nimbus-legacy-baseline/legacy-baseline-build.tgz
+          sha256sum -c "$GITHUB_WORKSPACE/migration/nimbus/legacy-baseline.sha256"
+          mkdir legacy-build
+          tar -xzf legacy-baseline-build.tgz -C legacy-build
+          grep -q 'main.333b8d31.js' legacy-build/index.html
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: legacy-build, path: '${{ runner.temp }}/legacy-build', retention-days: 3, if-no-files-found: error, include-hidden-files: true }
+
+  candidate:
+    name: candidate build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      build-id: ${{ steps.build.outputs.build-id }}
+      shards: ${{ steps.build.outputs.shards }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false } # sourceSha needs full history (#7)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '25', cache: npm, cache-dependency-path: site-nimbus/package-lock.json }
+      - id: build
+        run: |
+          npm ci --prefix site-nimbus
+          (cd site-nimbus && CI=1 npm run build)
+          echo "build-id=$(jq -r .buildId site-nimbus/src/manifest/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "shards=$(jq -c -n --argjson n "$SHARDS" '[range($n)]')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: candidate-dist, path: site-nimbus/dist, retention-days: 3, if-no-files-found: error }
+
+  shard:
+    name: paired perf shard ${{ matrix.shard }}
+    needs: [legacy, candidate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.candidate.outputs.shards) }}
+    env:
+      BUILD_ID: ${{ needs.candidate.outputs.build-id }}
+      SHARD: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
+      - name: install (root for the Pages Function, site-nimbus for wrangler); Playwright and pako outside the repository
+        run: |
+          npm ci
+          npm ci --prefix site-nimbus
+          npm install --prefix "$RUNNER_TEMP/pw" --no-save --no-package-lock "playwright@$PLAYWRIGHT_VERSION" "pako@$PAKO_VERSION"
+          echo "PLAYWRIGHT=$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" >> "$GITHUB_ENV"
+          echo "PAKO=$RUNNER_TEMP/pw/node_modules/pako/index.js" >> "$GITHUB_ENV"
+          google-chrome --version
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: candidate-dist, path: site-nimbus/dist }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: legacy-build, path: '${{ runner.temp }}/legacy-build' }
+      - name: measure this shard's pages (pages i, i+SHARDS, ...)
+        run: |
+          mapfile -t pages < <(jq -r --argjson n "$SHARDS" --argjson i "$SHARD" '.fullCorpus.pages | to_entries[] | select(.key % $n == $i) | .value' migration/nimbus/budgets.json)
+          OUT="$RUNNER_TEMP/out" LEGACY_BUILD="$RUNNER_TEMP/legacy-build" bash scripts/nimbus/paired-perf-ci.sh "${pages[@]}"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: 'perf-shard-${{ matrix.shard }}', path: '${{ runner.temp }}/out', retention-days: 14 }
+
+  # Operator decision on #4 (2026-10-02): a timing exceedance (lcp, tbt, searchOpenMs) on GitHub-hosted
+  # runners is re-measured once. The first run is gated here. If every failure is a timing exceedance on at
+  # most 7 pages (one shard's worth), those pages are measured again in full (5 alternating rounds, both
+  # profiles) on a fresh runner, and the verdict gates the re-measured samples in their place. Both runs are
+  # kept. Any other failure (bytes, legacy identity, coverage, invalid samples) is final here.
+  gate:
+    name: paired perf, first run
+    needs: [candidate, shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      remeasure: ${{ steps.gate.outputs.remeasure }}
+    env:
+      BUILD_ID: ${{ needs.candidate.outputs.build-id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '25' }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { pattern: 'perf-shard-*', path: '${{ runner.temp }}/pages', merge-multiple: true }
+      - id: gate
+        name: gate every raw sample (full published set, then the PoC pages out of the same samples)
+        run: |
+          P="$RUNNER_TEMP/pages"; R="$RUNNER_TEMP/first-run"; mkdir -p "$R"
+          full=0; node scripts/nimbus/paired-perf.mjs gate "$P"/*.json --build-id "$BUILD_ID" --set full --out "$R/merged.json" > "$R/gate.log" 2>&1 || full=$?
+          mapfile -t poc < <(jq -r --arg d "$P" '.protocol.pages[] | $d + "/" + gsub("/"; "_") + ".json"' migration/nimbus/budgets.json)
+          pocrc=0; node scripts/nimbus/paired-perf.mjs gate "${poc[@]}" --build-id "$BUILD_ID" --set poc --out "$R/poc-merged.json" > "$R/poc-gate.log" 2>&1 || pocrc=$?
+          cat "$R/gate.log" "$R/poc-gate.log"
+          if [ "$full" -eq 0 ] && [ "$pocrc" -eq 0 ]; then echo 'remeasure=[]' >> "$GITHUB_OUTPUT"; exit 0; fi
+          # Every failure line must be a timing exceedance; anything else is final.
+          node scripts/nimbus/paired-perf-remeasure.mjs "$R/merged.json" "$R/poc-merged.json" >> "$GITHUB_OUTPUT"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: paired-perf-first-run, path: '${{ runner.temp }}/first-run', retention-days: 30 }
+
+  remeasure:
+    name: paired perf, timing re-measure
+    needs: [legacy, candidate, gate]
+    if: needs.gate.outputs.remeasure != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      BUILD_ID: ${{ needs.candidate.outputs.build-id }}
+      PAGES: ${{ needs.gate.outputs.remeasure }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
+      - name: install (root for the Pages Function, site-nimbus for wrangler); Playwright and pako outside the repository
+        run: |
+          npm ci
+          npm ci --prefix site-nimbus
+          npm install --prefix "$RUNNER_TEMP/pw" --no-save --no-package-lock "playwright@$PLAYWRIGHT_VERSION" "pako@$PAKO_VERSION"
+          echo "PLAYWRIGHT=$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" >> "$GITHUB_ENV"
+          echo "PAKO=$RUNNER_TEMP/pw/node_modules/pako/index.js" >> "$GITHUB_ENV"
+          google-chrome --version
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: candidate-dist, path: site-nimbus/dist }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: legacy-build, path: '${{ runner.temp }}/legacy-build' }
+      - name: measure the timing-exceeding pages again, in full
+        run: |
+          mapfile -t pages < <(jq -r '.[]' <<< "$PAGES")
+          OUT="$RUNNER_TEMP/out" LEGACY_BUILD="$RUNNER_TEMP/legacy-build" bash scripts/nimbus/paired-perf-ci.sh "${pages[@]}"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: perf-remeasure, path: '${{ runner.temp }}/out', retention-days: 30 }
+
+  verdict:
+    name: paired perf gate (full set, then PoC)
+    needs: [candidate, gate, remeasure]
+    # Always runs, so a first-run failure that is final shows as a failed gate, never as a skipped one.
+    if: always() && needs.candidate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BUILD_ID: ${{ needs.candidate.outputs.build-id }}
+      REMEASURED: ${{ needs.gate.outputs.remeasure }}
+    steps:
+      - name: the first run is final (see `paired-perf-first-run`), or the re-measure did not complete
+        if: needs.gate.result != 'success' || (needs.remeasure.result != 'success' && needs.remeasure.result != 'skipped')
+        run: |
+          echo "gate: ${{ needs.gate.result }}, remeasure: ${{ needs.remeasure.result }}"
+          exit 1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '25' }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { pattern: 'perf-shard-*', path: '${{ runner.temp }}/pages', merge-multiple: true }
+      - if: needs.remeasure.result == 'success'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: perf-remeasure, path: '${{ runner.temp }}/remeasure' }
+      - name: gate the samples, the re-measured pages in place of their first run
+        run: |
+          P="$RUNNER_TEMP/pages"; R="$RUNNER_TEMP/result"; mkdir -p "$R"
+          mapfile -t again < <(jq -r '.[]' <<< "$REMEASURED")
+          for p in "${again[@]}"; do
+            f="$(echo "$p" | tr '/' '_').json"
+            test -s "$RUNNER_TEMP/remeasure/$f"
+            cp "$RUNNER_TEMP/remeasure/$f" "$P/$f"
+          done
+          full=0; node scripts/nimbus/paired-perf.mjs gate "$P"/*.json --build-id "$BUILD_ID" --set full --out "$R/merged.json" > "$R/gate.log" 2>&1 || full=$?
+          mapfile -t poc < <(jq -r --arg d "$P" '.protocol.pages[] | $d + "/" + gsub("/"; "_") + ".json"' migration/nimbus/budgets.json)
+          pocrc=0; node scripts/nimbus/paired-perf.mjs gate "${poc[@]}" --build-id "$BUILD_ID" --set poc --out "$R/poc-merged.json" > "$R/poc-gate.log" 2>&1 || pocrc=$?
+          cat "$R/gate.log" "$R/poc-gate.log"
+          { echo "### Paired perf, buildId \`$BUILD_ID\`"; echo "Re-measured once (timing): ${again[*]:-none}"; echo '```'; tail -20 "$R/gate.log"; echo '--- PoC'; tail -5 "$R/poc-gate.log"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          echo "$REMEASURED" > "$R/remeasured.json"
+          test "$full" -eq 0 && test "$pocrc" -eq 0
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: paired-perf-result, path: '${{ runner.temp }}/result', retention-days: 30 }
