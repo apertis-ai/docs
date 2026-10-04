@@ -10,7 +10,7 @@ approval.
 | | Value | Source |
 |---|---|---|
 | Production Pages project | `docs` (`docs.apertis.ai`, `docs.stima.tech`, `docs-2r1.pages.dev`), production branch `main`, build `npm run build` → `build/` | `legacy-rollback.json` |
-| Rollback point | deployment `ae522f1d-fcef-4eb6-9b12-20c230b95070` (`993279f`, `main.0b5ee150.js`) | `legacy-rollback.json` `currentProductionDeployment` |
+| Rollback point | deployment `35a51747-4774-462f-bbaf-4b7882660113` (`d5df26a`, the `993279f` tree, `main.0b5ee150.js`) | `legacy-rollback.json` `currentProductionDeployment` |
 | Candidate | the head of `claude/nimbus-release`, merged as one PR; its buildId is `site-nimbus/src/manifest/manifest.json` | PR to `main` |
 | Retrieval | legacy tables `documents` and `document_chunks` through `search_docs`. The release does not change them. | `legacy-rollback.json` `retrieval` |
 
@@ -40,6 +40,8 @@ approval.
    - `ASK_RETRIEVAL_SOURCE` is `legacy`.
 
    Before step 2, the only failure it reports is that last one.
+
+   **Also check that Ask Docs answers on legacy before the release.** On `docs.apertis.ai`, mint a real Turnstile token in a browser and ask the two smoke questions. If legacy cannot answer, fix that first. The first release attempt was rolled back over a production key that legacy also failed with.
 2. **Server first.** Set the production variable `ASK_RETRIEVAL_SOURCE=legacy` (plain text) on project `docs`.
    - The serving legacy handler ignores the variable.
    - The candidate handler fails closed without it.
@@ -79,15 +81,15 @@ Roll back immediately when any of these happens:
 
 During the first 24 hours, watch the `apertis.ai` zone's HTTP analytics, filtered by host `docs.apertis.ai`, path and status. Pages Functions metrics are per project and count only exceptions, so they cannot show these.
 
-Before step 4, record the previous 7 days' share of 404 responses on HTML paths and of 5xx responses on `/api/ask`. Roll back if any of these holds:
+Before step 4, record the previous 7 days' shares of 404 and of 5xx responses on `docs.apertis.ai`. The legacy baseline is not clean: in the week before 2026-10-04, 22% of responses were 404 and 9.5% were 5xx, most of them 504 on HTML pages. Roll back if any of these holds:
 - `/api/ask` 5xx responses exceed 5% of its requests over any hour, or reach twice the recorded share;
-- 404 responses on HTML paths reach twice the recorded share over any 6 hours;
-- any 5xx appears on an HTML path.
+- 404 or 5xx responses on HTML paths reach twice the recorded share over any 6 hours;
+- any of the smoke checks' own requests gets a 5xx.
 
 **Rollback.**
-1. Pages: run "Rollback to this deployment" on `ae522f1d` in the dashboard, or call the API:
+1. Pages: run "Rollback to this deployment" on the recorded rollback point in the dashboard, or call the API:
    ```
-   POST /accounts/<id>/pages/projects/docs/deployments/ae522f1d-fcef-4eb6-9b12-20c230b95070/rollback
+   POST /accounts/<id>/pages/projects/docs/deployments/<currentProductionDeployment id>/rollback
    ```
    In the rehearsal the switch took 6 to 10 seconds, with no rebuild.
 2. Revert the merge on `main`. Without the revert, the next push to `main` deploys the candidate again.
@@ -97,6 +99,16 @@ Before step 4, record the previous 7 days' share of 404 responses on HTML paths 
 4. Record the trigger, the timings and the evidence on #14.
 
 Nothing is deleted during a rollback: deployments, artifacts, tables and variables all stay.
+
+## Release attempt 1 (2026-10-04)
+
+- #19 was merged as `702d134` at 09:27 UTC. The site smoke checks passed in full.
+- Ask Docs failed: Apertis returned 401 because the production key was its encrypted stored form, and two transient Jina timeouts also occurred.
+- The release was rolled back on Pages to `ae522f1d` at 09:39; all domains switched within 16 s.
+- #20 then reverted the merge.
+- Legacy Ask Docs failed the same way, so the threshold was right to stop the release, but the cause was not in the candidate.
+- After the operator replaced the key and production was redeployed (`35a51747`), legacy Ask Docs answers.
+- Pages reads secrets only when a deployment is created. After a secret changes, retry the serving deployment.
 
 ## After the release (separate approvals)
 
