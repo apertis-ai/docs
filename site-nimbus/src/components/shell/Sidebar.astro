@@ -1,0 +1,18 @@
+---
+// One sidebar (tutorialSidebar or apiSidebar) plus the legacy Console link. Rendered in the desktop
+// aside and again inside the mobile drawer.
+import SidebarTree from './SidebarTree.astro';
+import type { PageNavigation } from './navigation.ts';
+
+interface Props {
+  nav: PageNavigation;
+}
+const { nav } = Astro.props;
+---
+<nav class="sidebar" aria-label="Docs sidebar">
+  <SidebarTree nodes={nav.tree} current={nav.entry.id} level={1} />
+  <a class="sidebar__console" href="https://apertis.ai/setting?tab=keys" target="_blank" rel="noopener noreferrer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    <span>Console</span>
+  </a>
+</nav>

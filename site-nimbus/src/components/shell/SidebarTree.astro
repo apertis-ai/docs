@@ -1,0 +1,31 @@
+---
+// Recursive sidebar list. Level-1 categories are section headings (legacy desktop look); deeper
+// categories are native <details open> so they collapse without JavaScript.
+import type { SidebarNode } from './navigation.ts';
+
+interface Props {
+  nodes: SidebarNode[];
+  current: string;
+  level: number;
+}
+const { nodes, current, level } = Astro.props;
+---
+<ul class={`sidebar__list sidebar__list--l${level}`}>
+  {nodes.map((n) =>
+    n.kind === 'link' ? (
+      <li><a class="sidebar__link" href={n.entry.href} aria-current={n.entry.id === current ? 'page' : undefined}>{n.entry.label}</a></li>
+    ) : level === 1 ? (
+      <li class="sidebar__section">
+        <p class="sidebar__heading">{n.label}</p>
+        <Astro.self nodes={n.items} current={current} level={level + 1} />
+      </li>
+    ) : (
+      <li>
+        <details class="sidebar__group" open>
+          <summary>{n.label}</summary>
+          <Astro.self nodes={n.items} current={current} level={level + 1} />
+        </details>
+      </li>
+    ),
+  )}
+</ul>
