@@ -34,14 +34,19 @@ const contrast = (a: string, b: string) => {
 const RULES: [fg: string, bg: string, min: number][] = [
   ['--ink', '--bg', 7], // headings
   ['--body', '--bg', 7], // article prose
+  ['--body', '--card', 7], // prose on cards, dialogs and sheets
   ['--desc', '--bg', 7], // page-header description ("muted but 7:1")
   ['--body', '--panel', 7], // table cells and admonition text
   ['--muted', '--bg', 4.5], // labels, meta, sidebar and TOC entries
   ['--muted', '--panel', 4.5],
+  ['--muted', '--card', 4.5],
+  ['--muted', '--hover', 4.5], // a muted label on a hovered or selected row
   ['--link', '--bg', 4.5],
   ['--link', '--panel', 4.5],
-  ['--on-accent', '--accent', 4.5], // Create account button, skip link
+  ['--link', '--card', 4.5],
+  ['--primary-fg', '--primary', 4.5], // Create account and other primary actions (inverted neutral fill)
   ['--error', '--bg', 4.5],
+  ['--error', '--card', 4.5],
   ...['note', 'tip', 'info', 'warning', 'danger'].map((t) => [`--adm-${t}`, '--panel', 4.5] as [string, string, number]),
 ];
 
@@ -55,10 +60,42 @@ for (const [name, theme] of [['light', light], ['dark', dark]] as const) {
   });
 }
 
-test('the paper is warm and light by default; dark only through [data-theme=dark], never prefers-color-scheme', () => {
-  const [r, g, b] = rgb(light['--bg']);
-  assert.ok(r >= g && g >= b && r - b >= 4 && luminance([r, g, b]) > 0.9, `light --bg ${light['--bg']} is not a warm paper`);
-  const [dr, dg, db] = rgb(dark['--bg']);
-  assert.ok(dr >= dg && dg >= db && luminance([dr, dg, db]) < 0.02, `dark --bg ${dark['--bg']} is not a warm near-black`);
+// Palette as revised on 2026-09-29 (#4): neutral surfaces replace the warm paper. A channel spread of at
+// most 2 is grey; white cards on a near-white page in light, near-black in dark.
+const neutral = ([r, g, b]: [number, number, number]) => Math.max(r, g, b) - Math.min(r, g, b) <= 2;
+test('surfaces are neutral and light by default; dark only through [data-theme=dark], never prefers-color-scheme', () => {
+  for (const t of ['--bg', '--card', '--panel', '--ink', '--body', '--desc', '--muted', '--line', '--hover', '--primary']) {
+    assert.ok(neutral(rgb(light[t])), `light ${t} ${light[t]} is not neutral`);
+    assert.ok(neutral(rgb(dark[t])), `dark ${t} ${dark[t]} is not neutral`);
+  }
+  assert.ok(luminance(rgb(light['--bg'])) > 0.9 && light['--card'].toLowerCase() === '#ffffff', `light --bg ${light['--bg']} / --card ${light['--card']}`);
+  assert.ok(luminance(rgb(dark['--bg'])) < 0.02, `dark --bg ${dark['--bg']} is not a near-black`);
+  // Inverted neutral primary: dark on light, light on dark.
+  assert.ok(luminance(rgb(light['--primary'])) < 0.02 && luminance(rgb(dark['--primary'])) > 0.9, 'primary is not an inverted neutral fill');
   for (const f of fs.readdirSync(styles)) assert.doesNotMatch(fs.readFileSync(path.join(styles, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, ''), /prefers-color-scheme/, f);
+});
+
+// The brand teal removed on 2026-10-02 (#4, "No brand colour"): no teal token, no teal-family colour in any
+// stylesheet (comments aside), and no Tailwind teal utility in the components, layouts or pages.
+test('no brand teal: no teal token, colour or utility in the stylesheets and components', () => {
+  const tealHex = (hex: string) => {
+    const [r, g, b] = rgb(hex).map((v) => v / 255);
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, l = (max + min) / 2;
+    if (d < 0.08) return false;
+    const h = ((max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60 + 360) % 360;
+    return h >= 160 && h <= 200 && d / (1 - Math.abs(2 * l - 1)) >= 0.25;
+  };
+  for (const f of fs.readdirSync(styles)) {
+    const text = fs.readFileSync(path.join(styles, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.doesNotMatch(text, /teal/i, f);
+    const hits = [...text.matchAll(/#[0-9a-f]{6}\b/gi)].map((m) => m[0]).filter(tealHex);
+    assert.deepEqual(hits, [], `${f}: teal-family colours`);
+  }
+  const src = path.resolve(import.meta.dirname, '../src');
+  for (const dir of ['components', 'layouts', 'pages']) {
+    for (const f of fs.readdirSync(path.join(src, dir), { recursive: true }) as string[]) {
+      if (!/\.(astro|tsx?)$/.test(f)) continue;
+      assert.doesNotMatch(fs.readFileSync(path.join(src, dir, f), 'utf8'), /[\w:[\]-]-teal\b|var\(--teal|#(?:0d9488|0f766e|14b8a6|2dd4bf|5eead4)/i, `${dir}/${f}`);
+    }
+  }
 });

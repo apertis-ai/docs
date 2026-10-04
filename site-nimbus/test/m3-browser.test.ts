@@ -84,8 +84,8 @@ test('light is the default, prefers-color-scheme is ignored, and the switch pers
   assert.equal(await theme(), 'dark');
   await page.goto(base + '/', { waitUntil: 'load' });
   assert.equal(await theme(), 'dark');
-  // Reading layout (#8): the dark token --bg #1b1a17 (was the legacy #121212).
-  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(27, 26, 23)');
+  // Palette revised on 2026-09-29 (#4): the dark token --bg is the neutral #121212 (was the warm #1b1a17).
+  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(18, 18, 18)');
   await page.reload();
   assert.equal(await theme(), 'dark');
   await page.click('.navbar__right [data-theme-toggle]');
@@ -100,7 +100,14 @@ test('the mobile drawer opens and closes at 390x844 with focus contained and ret
   assert.equal(await page.isVisible('#shell-drawer'), false);
   const noOverflow = () => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
   assert.ok(await noOverflow(), 'no document-wide horizontal overflow');
+  // The drawer is a React island (NavSheet.tsx, client:idle): a click before hydration is handed over and
+  // opens it once hydrated, so wait for it instead of asserting on the same tick.
+  const opened = async () => {
+    await page.locator('#shell-drawer').waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.querySelector('#shell-drawer')!.contains(document.activeElement), null, { timeout: 2000 });
+  };
   await page.click('[data-drawer-open]');
+  await opened();
   assert.equal(await page.isVisible('#shell-drawer'), true);
   assert.equal(await page.getAttribute('[data-drawer-open]', 'aria-expanded'), 'true');
   assert.ok(await page.isVisible('#shell-drawer .sidebar [aria-current="page"]'));
@@ -112,9 +119,11 @@ test('the mobile drawer opens and closes at 390x844 with focus contained and ret
   // The dialog `close` event is queued after Escape; the lock must lift once it fires.
   await page.waitForFunction(() => !document.body.hasAttribute('data-scroll-locked'), null, { timeout: 2000 });
   await page.click('[data-drawer-open]');
+  await opened();
   await page.mouse.click(380, 420); // backdrop, right of the drawer panel
   assert.equal(await page.isVisible('#shell-drawer'), false);
   await page.click('[data-drawer-open]');
+  await opened();
   await page.click('#shell-drawer [data-drawer-close]');
   assert.equal(await page.isVisible('#shell-drawer'), false);
   await page.goto(base + '/', { waitUntil: 'load' });
@@ -136,7 +145,7 @@ test('triggers dispatch apertis-docs:open with the right surface; the shell bind
   assert.equal((await opens(page)).length, before);
   await page.keyboard.press('Escape');
   await page.goto(base + '/', { waitUntil: 'load' });
-  await page.click('.hero__search');
+  await page.click('.navbar__search'); // canary step 5b: the homepage search is the header's
   assert.deepEqual(await opens(page), [{ surface: 'search' }]);
   await context.close();
 });
@@ -182,12 +191,18 @@ test('page actions read the same-origin .md from the page meta and report failur
   assert.equal(await page.getAttribute('.page-actions__toggle', 'aria-expanded'), 'false');
 
   const prompt = encodeURIComponent(`Load the contents of ${md} into this chat's context so we can discuss it.`);
-  const hrefs = await page.$$eval('.page-actions__menu a', (as: HTMLAnchorElement[]) => as.map((a) => [a.dataset.action, a.getAttribute('href'), a.target, a.rel]));
+  // The links as the reader gets them: inside the open menu (Radix mounts it only while open).
+  await page.click('.page-actions__toggle');
+  await page.locator('[role="menu"]').waitFor();
+  const hrefs = await page.$$eval('[role="menu"] a', (as: HTMLAnchorElement[]) => as.map((a) => [a.dataset.action, a.getAttribute('href'), a.target, a.rel]));
+  await page.keyboard.press('Escape');
+  await page.locator('[role="menu"]').waitFor({ state: 'detached' });
+  // Claude Docs order (canary step 4): View as Markdown with the copy actions, then the AI tools.
   assert.deepEqual(hrefs, [
+    ['view', md, '_blank', 'noopener noreferrer'],
     ['claude', `https://claude.ai/new?q=${prompt}`, '_blank', 'noopener noreferrer'],
     ['chatgpt', `https://chatgpt.com/?hints=search&prompt=${prompt}`, '_blank', 'noopener noreferrer'],
     ['cursor', `https://cursor.com/link/prompt?text=${prompt}`, '_blank', 'noopener noreferrer'],
-    ['view', md, '_blank', 'noopener noreferrer'],
   ]);
   await page.click('.page-actions__toggle');
   const [popup] = await Promise.all([context.waitForEvent('page'), page.click('.page-actions__menu [data-action="view"]')]);
@@ -209,13 +224,17 @@ test('without JavaScript the navigation and landing links still work and no dead
   assert.ok(await page.$('article .toc-mobile > summary'));
   assert.equal(await page.getAttribute('article .toc-mobile > summary', 'aria-expanded'), null);
   await page.goto(base + '/', { waitUntil: 'load' });
+  // The homepage (redesigned 2026-09-29 and revised 2026-10-03, #4) carries the feature-card destinations as
+  // its "Start building" items, so their order follows them; the Playground is gone and SDKs joined them.
   const cards = await page.$$eval('.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(cards, [
+  const byHref = (a: string[], b: string[]) => a[0].localeCompare(b[0]);
+  assert.deepEqual(cards.sort(byHref), [
     ['/intro', '', ''], ['/installation/models', '', ''], ['/api', '', ''], ['/installation/claude-code', '', ''],
-    ['/billing/subscription-plans', '', ''], ['https://playground.apertis.ai', '_blank', 'noopener noreferrer'],
-  ]);
+    ['/billing/subscription-plans', '', ''], ['/installation/scripts', '', ''],
+  ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
-  assert.deepEqual(nav, ['/', '/intro', '/api', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register']);
+  // Two header rows (canary step 5a): logo and account actions, then the section tabs with Blog.
+  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', 'https://apertis.ai/changelog']);
   await context.close();
 });
 
@@ -225,6 +244,7 @@ test('the drawer really locks page scrolling at 390x844 (wheel and touch)', { sk
   const { context, page } = await open(CHAT, MOBILE);
   const y = () => page.evaluate(() => scrollY);
   await page.click('[data-drawer-open]');
+  await page.locator('#shell-drawer').waitFor({ state: 'visible' }); // a React island: opens once hydrated
   await page.mouse.move(380, 500);
   await page.mouse.wheel(0, 800);
   await page.waitForTimeout(400);
@@ -393,7 +413,7 @@ test('every document page opens with the header block: tag, title, description, 
   const doc = liveManifest().documents.find((d) => d.servedPath === QS)!;
   const meta = pageMeta()[doc.id];
   const text = (sel: string) => page.$eval(sel, (e: HTMLElement) => e.innerText.trim());
-  assert.equal(await text('article .doc-header__tag'), 'GETTING STARTED'); // CSS uppercases the inventory label
+  assert.equal(await text('article .doc-header__tag'), 'Getting Started'); // the inventory label as written (operator review 2026-10-03)
   assert.equal(await page.$eval('article .doc-header__tag', (e: HTMLElement) => e.textContent), 'Getting Started');
   assert.equal(await text('article .doc-header h1'), 'Quick Start');
   const desc = await text('article .doc-header__desc');
@@ -403,9 +423,11 @@ test('every document page opens with the header block: tag, title, description, 
   assert.equal(await page.getAttribute('article .doc-meta time', 'datetime'), meta.updated);
   const l = await layout(page);
   assert.ok(l.tag! < l.h1! && l.h1! < l.desc! && l.desc! < l.meta! && l.meta! < l.rule! && l.rule! < l.body!, JSON.stringify(l));
-  // Desktop: the page actions share the meta row; the hairline spans the content column.
-  assert.ok(await page.$('article .doc-header__meta > .page-actions'), 'the page actions are part of the meta row');
-  assert.ok(l.actions !== null && l.actions < l.metaBottom && l.actionsBottom > l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
+  // Desktop: the page actions sit at the right of the title row (the Claude Docs pattern, canary step 4 on
+  // 2026-09-30; m9-shell checks the alignment), above the meta row; the hairline spans the content column.
+  // The page actions are a React island: its <astro-island> wrapper (display: contents) sits in between.
+  assert.ok(await page.$('article .doc-header > .doc-header__actions > astro-island > .page-actions'), 'the page actions have their own header slot');
+  assert.ok(l.actions !== null && l.actionsBottom < l.meta!, `actions ${l.actions}-${l.actionsBottom} vs meta ${l.meta}-${l.metaBottom}`);
   assert.equal(l.ruleWidth, l.articleWidth);
   assert.equal(l.toc, null, 'the mobile TOC disclosure is hidden on desktop');
   // The description moved out of the lead paragraph, so the body does not repeat it.
@@ -413,7 +435,7 @@ test('every document page opens with the header block: tag, title, description, 
   assert.equal(await page.$$eval('article p', (ps: HTMLElement[]) => ps.filter((p) => p.textContent!.includes('Get up and running')).length), 1);
   // Search indexes the title and body, not the header chrome.
   assert.deepEqual(await page.$$eval('article .doc-header > *', (els: HTMLElement[]) => els.map((e) => [e.className || e.tagName, e.hasAttribute('data-pagefind-ignore')])),
-    [['doc-header__tag', true], ['H1', false], ['doc-header__desc', false], ['doc-header__meta', true]]);
+    [['doc-header__tag', true], ['H1', false], ['doc-header__desc', false], ['doc-header__meta', true], ['doc-header__actions', true]]);
   // No category (the API overview has an empty sidebar trail) and no sidebar at all: no tag, the rest stays.
   for (const p of ['/api/', '/help/ideas/']) {
     await page.goto(base + p, { waitUntil: 'load' });
@@ -444,6 +466,8 @@ test('on a phone the title block comes first, then the page actions and the "On 
   assert.ok(order.every((y) => y !== null) && order.every((y, i) => i === 0 || y! > order[i - 1]!), JSON.stringify(l));
   assert.ok(l.actions! >= l.metaBottom, 'actions sit below the meta row');
   const summary = 'article .toc-mobile > summary';
+  // The disclosure is a React island: it states aria-expanded once hydrated (never before, see the no-JS test).
+  await page.waitForSelector(`${summary}[aria-expanded]`, { state: 'attached' });
   assert.equal(await page.getAttribute(summary, 'aria-expanded'), 'false');
   assert.ok(await page.$(`${summary} svg`), 'chevron icon');
   await page.click(summary);
@@ -473,7 +497,7 @@ test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings cle
       article: art.getBoundingClientRect().width, pre: pre.getBoundingClientRect().width,
       h1: [px(cs(art.querySelector('h1')!).fontSize), Number(cs(art.querySelector('h1')!).fontWeight), cs(art.querySelector('h1')!).fontFamily],
       h2: [px(cs(art.querySelector('h2')!).fontSize), cs(art.querySelector('h2')!).fontFamily],
-      h3: px(cs(art.querySelector('h3')!).fontSize),
+      h3: px(cs(art.querySelector('h3')!).fontSize), h3face: [cs(art.querySelector('h3')!).fontFamily, cs(art.querySelector('h3')!).fontWeight],
       code: px(cs(pre).lineHeight) / px(cs(pre).fontSize), mono: cs(pre).fontFamily,
     };
   });
@@ -481,8 +505,11 @@ test('reading type: 17px body at ~1.65, prose measure <= 70ch, sans headings cle
   assert.ok(Math.abs(t.lh - 1.65) < 0.02, `line-height ${t.lh}`);
   assert.ok(t.measure >= 60 && t.measure <= 70, `measure ${t.measure}ch`);
   assert.ok(t.pre > t.pmax && Math.abs(t.pre - t.article) <= 1, `code uses the full column: ${t.pre} vs ${t.article}, prose ${t.pmax}`);
-  assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] >= 500 && t.h1[1] <= 600 && /Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
-  assert.ok((t.h2[0] as number) >= 1.3 * t.body && /Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
+  // Titles, h2 and h3 in the LINE Seed display face at 400 (canary steps 5a and 5b, 2026-09-30): an Inter
+  // 600 h3 read heavier than the h2 above it. Inter stays the text face (h4 and below, body).
+  assert.ok(t.h1[0] >= 34 && t.h1[0] <= 36 && t.h1[1] === 400 && /^"?LINE Seed"?, Inter/.test(t.h1[2] as string), `h1 ${t.h1}`);
+  assert.ok((t.h2[0] as number) >= 1.3 * t.body && /^"?LINE Seed"?, Inter/.test(t.h2[1] as string) && t.h3 >= 1.15 * t.body && t.h3 < (t.h2[0] as number), `h2 ${t.h2} h3 ${t.h3}`);
+  assert.ok(/^"?LINE Seed"?, Inter/.test(t.h3face[0]) && t.h3face[1] === '400', `h3 ${t.h3face}`);
   assert.ok(Math.abs(t.code - 1.7) < 0.05, `code line-height ${t.code}`);
   assert.match(t.mono, /^ui-monospace/);
   await context.close();
@@ -525,7 +552,7 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   });
   const top = await state();
   assert.equal(await page.textContent('.doc-page__toc-title'), 'On this page');
-  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.doc-page__toc-title')!).textTransform), 'uppercase');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.doc-page__toc-title')!).textTransform), 'none', 'sentence case in the text face, as on the Claude docs');
   assert.deepEqual([top.value, top.now], ['0%', '0']);
   const middle = await page.evaluate(() => { scrollTo(0, (document.documentElement.scrollHeight - innerHeight) / 2); return scrollY; });
   await page.waitForFunction(() => !['0%', '100%'].includes(document.querySelector('.toc-progress__value')!.textContent!));
@@ -534,8 +561,21 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.ok(Math.abs(mid.width - top.width) < 0.5 && mid.aside === top.aside && mid.title === top.title, 'no layout shift in the rail');
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
   await page.waitForFunction(() => document.querySelector('.toc-progress__value')!.textContent === '100%');
-  // Glyphs: every TOC entry is drawn with the tree glyph.
-  assert.equal(await page.$eval('.doc-page__toc .toc a', (a: Element) => getComputedStyle(a, '::before').content), '"└"');
+  // A plain list, as on the Claude docs (operator review 2026-10-04): no tree glyph, h3s indented under their h2,
+  // and only the current section in the ink colour.
+  const toc = await page.evaluate(() => {
+    const links = [...document.querySelectorAll<HTMLElement>('.doc-page__toc .toc a')].filter((a) => a.checkVisibility());
+    const h3 = links.find((a) => a.closest('ul ul'));
+    const ink = getComputedStyle(document.querySelector('.doc-page__title, h1')!).color;
+    return {
+      glyphs: links.map((a) => getComputedStyle(a, '::before').content).filter((c) => c !== 'none' && c !== 'normal'),
+      indent: h3 ? h3.getBoundingClientRect().left - links[0].getBoundingClientRect().left : null,
+      inked: links.filter((a) => getComputedStyle(a).color === ink).map((a) => a.classList.contains('active')),
+    };
+  });
+  assert.deepEqual(toc.glyphs, [], 'no TOC entry draws a glyph');
+  assert.ok(toc.indent === null || toc.indent >= 12, `h3 entries are indented (${toc.indent}px)`);
+  assert.deepEqual(toc.inked, [true], 'exactly the current section is in the ink colour');
   const reduced = await open(CHAT, { ...DESKTOP, reducedMotion: 'reduce' });
   assert.equal(await reduced.page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
   assert.notEqual(await page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');

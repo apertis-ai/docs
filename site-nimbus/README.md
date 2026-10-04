@@ -152,7 +152,7 @@ that one missing artifact until #7 generates it.
 
 - **Triggers.** The navbar search box, the homepage hero search and the floating Ask Docs button call `openSearch()` / `openAskDocs()` from `src/contracts/events.ts`. The shell binds no keyboard shortcut and reads no other component's DOM.
 - **Theme.** `data-theme` on `<html>`, light by default, stored under the legacy `theme` localStorage key, never taken from `prefers-color-scheme`. Only CSS reads it.
-- **Page actions.** Rendered only when the manifest entry has `markdown`. The client reads `<meta name="apertis-docs:markdown">` and builds `location.origin + path`. Copy as Markdown fetches that URL. A failed fetch or blocked clipboard shows a message and copies nothing, with no fallback to rendered text. The actions are hidden without JavaScript.
+- **Page actions.** Rendered only when the manifest entry has `markdown`. The client reads `<meta name="apertis-docs:markdown">` and builds `location.origin + path`. Copy page (Copy as Markdown) fetches that URL. A failed fetch or blocked clipboard shows a message and copies nothing, with no fallback to rendered text. The actions are hidden without JavaScript.
 - **Code, admonitions, tables.**
   - DocLayout links `/_nimbus/shiki.css`; Nimbus emits Shiki tokens as `--shiki-light` / `--shiki-dark` variables, and `shell.css` maps them per theme. The GitHub light/dark token colours are clamped with relative colour (`oklch(from … min(l, 0.5) …)` light, `max(l, 0.74)` dark) so every token class stays ≥ 4.5:1 on the code panel. `figure` margins are zeroed, so code spans the full content width.
   - `aside.admonition.admonition-<type>`: panel, hairline, a 3 px stripe and a mono title in the type colour (`--adm-note|tip|info|warning|danger`; caution = warning). There are no icons, because #7 emits none.
@@ -464,6 +464,32 @@ all `false`, and their fixtures expect 404.
   rewrites `/404`, `/404/` and `/404.html` to `/__retired`. Nothing serves that path, so Pages
   answers with the normal 404 page and status 404. Unknown paths keep the normal 404 page.
 - Rollback: restore the rows to `preserve-pending-decision` and regenerate.
+
+### Native articles (`/blog/`)
+
+Articles are written for this site, not converted: `src/articles/<slug>.md` (openspec
+docs-routing-publication "Native articles"). None is committed yet, so nothing below is emitted and
+`/blog` still answers 404.
+
+- Front matter: `title`, `description`, `date` (YYYY-MM-DD), `author`, `category`, optional
+  `draft: true`, optional `related: /getting-started/quick-start/, /api/` (the documentation pages
+  the article follows on from; each must be a published docs page, and each lists the article under
+  "Related articles"). Plain Markdown, no H1 (the title is the H1), no MDX. `converter/articles.ts`
+  refuses anything else, and any slug an inventory row already names (the retired legacy blog).
+- `node converter/convert.ts` turns each published article into the manifest entry `blog:<slug>`
+  (all four eligibilities, source path under `site-nimbus/src/articles/`) and its artifact
+  `/blog/<slug>/index.md`. A draft produces nothing. Articles are build inputs, so a new or edited
+  article moves the buildId: `git add` it before `npm run m2:regenerate`.
+- `src/pages/blog/[...path].astro` renders `/blog/<slug>/` (the document page header with category,
+  author, published date and reading time) and the `/blog/` index. The homepage "Latest articles"
+  section and the footer Blog link appear with the first article. From then on the retired `/blog`
+  row no longer rewrites `/blog/`; every other retired `/blog/**` path stays 404.
+  With two or more categories the `/blog/` index shows category filter buttons (all rows stay
+  listed without JavaScript).
+- Checks: `test/m9-articles.test.ts` (converter, fixtures in `test/fixtures/articles`) and
+  `test/m9-articles-build.test.ts`, which builds the fixtures in a throwaway copy of the repository
+  and runs `test/dist.check.ts` and the indexer plan there. `NIMBUS_ARTICLES_BUILD_KEEP=1` keeps the
+  copy for review.
 
 ### Identity at the end of #13
 

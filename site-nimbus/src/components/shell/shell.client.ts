@@ -1,11 +1,30 @@
-import '../../styles/shell.css';
-// Shell behavior, one entry for every page: surface triggers, theme switch, mobile drawer, page
-// actions, TOC highlight, and Nimbus's code-copy buttons and heading anchors.
+// Shell behavior, one entry for every page: surface triggers, theme switch, navigation sheet hand-off,
+// TOC highlight and reading progress, and Nimbus's code-copy buttons and heading anchors. Page actions,
+// the mobile TOC and the navigation sheet are React islands.
 // Search and Ask Docs open only through the contract event; this file binds no keyboard shortcut.
-import { codeCopy, headingAnchors, lockScroll, makeDisclosure, unlockScroll } from '@cloudflare/nimbus-docs/client';
+import { codeCopy, headingAnchors } from '@cloudflare/nimbus-docs/client';
+import { send } from '../../lib/bridge.ts';
 import { openAskDocs, openSearch } from '../../contracts/events.ts';
-import { PAGE_META } from '../../contracts/page.ts';
-import { aiToolUrls, markdownUrl } from './page-actions.ts';
+
+// Over plain http (a tailnet preview) the browser offers no navigator.clipboard, and the code-copy and page
+// copy buttons would fail. Outside a secure context only, copy through a selected textarea instead.
+if (!window.isSecureContext && !navigator.clipboard) {
+  Object.defineProperty(navigator, 'clipboard', {
+    value: {
+      writeText: async (text: string) => {
+        const area = Object.assign(document.createElement('textarea'), { value: text, readOnly: true });
+        area.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        const active = document.activeElement as HTMLElement | null;
+        document.body.append(area);
+        area.select();
+        const ok = document.execCommand('copy');
+        area.remove();
+        active?.focus();
+        if (!ok) throw new Error('copy failed');
+      },
+    },
+  });
+}
 
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T>(sel)] as T[];
 
@@ -14,102 +33,24 @@ for (const el of $$('[data-open-surface]')) {
   el.addEventListener('click', () => (el.dataset.openSurface === 'ask' ? openAskDocs() : openSearch()));
 }
 
-// Theme: light default, the reader's choice persists under the legacy `theme` key. Styling only.
+// Theme: light default, the reader's choice persists under the legacy `theme` key. Styling only. Delegated,
+// so the switch inside the navigation sheet (mounted later) works too.
 const root = document.documentElement;
 function syncThemeButtons() {
   const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
   for (const b of $$('[data-theme-toggle]')) b.setAttribute('aria-label', `Switch to ${next} mode`);
 }
-for (const b of $$('[data-theme-toggle]')) {
-  b.addEventListener('click', () => {
-    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch { /* storage blocked: session-only */ }
-    syncThemeButtons();
-  });
-}
+document.addEventListener('click', (e) => {
+  if (!(e.target as Element).closest?.('[data-theme-toggle]')) return;
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('theme', root.dataset.theme); } catch { /* storage blocked: session-only */ }
+  syncThemeButtons();
+});
 syncThemeButtons();
 
-// Mobile drawer: a modal <dialog> gives focus containment, Escape and focus return natively.
-const drawer = document.querySelector<HTMLDialogElement>('#shell-drawer');
-const drawerOpener = document.querySelector<HTMLElement>('[data-drawer-open]');
-if (drawer && drawerOpener) {
-  drawerOpener.addEventListener('click', () => {
-    drawer.showModal();
-    lockScroll();
-    drawerOpener.setAttribute('aria-expanded', 'true');
-    drawer.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: 'center' });
-  });
-  drawer.addEventListener('close', () => {
-    unlockScroll();
-    drawerOpener.setAttribute('aria-expanded', 'false');
-  });
-  drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
-  for (const b of $$('[data-drawer-close]', drawer)) b.addEventListener('click', () => drawer.close());
-  // Leaving the mobile breakpoint with the drawer open would leave the page locked.
-  matchMedia('(min-width: 997px)').addEventListener('change', (e) => { if (e.matches && drawer.open) drawer.close(); });
-}
-
-// Page actions: every action reads this deployment's Markdown artifact from the page meta.
-const actions = document.querySelector<HTMLElement>('[data-page-actions]');
-const mdUrl = markdownUrl(location.origin, document.querySelector<HTMLMetaElement>(`meta[name="${PAGE_META.markdown}"]`)?.content);
-if (actions && !mdUrl) actions.remove();
-if (actions && mdUrl) {
-  const status = actions.querySelector<HTMLElement>('.page-actions__status')!;
-  const label = actions.querySelector<HTMLElement>('[data-copy-label]')!;
-  const menu = makeDisclosure({
-    trigger: actions.querySelector<HTMLElement>('.page-actions__toggle')!,
-    content: actions.querySelector<HTMLElement>('.page-actions__menu')!,
-  });
-  const tools = aiToolUrls(mdUrl);
-  const hrefs: Record<string, string> = { claude: tools.claude, chatgpt: tools.chatgpt, cursor: tools.cursor, view: mdUrl };
-  for (const a of $$<HTMLAnchorElement>('a[data-action]', actions)) {
-    a.href = hrefs[a.dataset.action!];
-    a.addEventListener('click', () => menu.close());
-  }
-
-  let reset: number | undefined;
-  const report = (message: string, ok: boolean, short?: string) => {
-    status.textContent = message;
-    status.dataset.state = ok ? 'ok' : 'error';
-    label.textContent = short ?? 'Copy as Markdown';
-    clearTimeout(reset);
-    if (ok) reset = window.setTimeout(() => { status.textContent = ''; label.textContent = 'Copy as Markdown'; }, 1800);
-  };
-  const clipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch {
-      report('Copying is blocked in this browser. Use View as Markdown to open the file instead.', false);
-      return false;
-    }
-  };
-  const copyMarkdown = async () => {
-    let text: string;
-    try {
-      const res = await fetch(mdUrl, { cache: 'no-cache' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      text = await res.text();
-    } catch (err) {
-      // No silent fallback to rendered text: the reader is told nothing was copied.
-      report(`Could not load this page's Markdown (${(err as Error).message}). Nothing was copied.`, false);
-      return;
-    }
-    if (await clipboard(text)) report('Page copied as Markdown.', true, 'Copied');
-  };
-  for (const b of $$('button[data-action="copy-markdown"]', actions)) b.addEventListener('click', () => { menu.close(); copyMarkdown(); });
-  actions.querySelector('button[data-action="copy-url"]')!.addEventListener('click', async () => {
-    menu.close();
-    if (await clipboard(mdUrl)) report('Markdown URL copied.', true, 'URL Copied');
-  });
-  document.addEventListener('pointerdown', (e) => { if (menu.isOpen() && !actions.contains(e.target as Node)) menu.close(); });
-  actions.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && menu.isOpen()) {
-      menu.close();
-      actions.querySelector<HTMLElement>('.page-actions__toggle')!.focus();
-    }
-  });
-}
+// Navigation sheet (NavSheet.tsx, hydrated on idle): the header's menu button hands its click over the
+// bridge, so a click before hydration still opens the sheet.
+for (const b of $$('[data-drawer-open]')) b.addEventListener('click', () => send('nav'));
 
 // TOC highlight, the legacy Docusaurus rule (useTOCHighlight): the first h2/h3 at or below the navbar
 // is active if it sits in the top half of the viewport, otherwise the heading before it; past the last
@@ -155,13 +96,6 @@ if (tocLinks.length) {
   read();
 }
 
-// Mobile "On this page" disclosure: expose its state on the summary (set here, so without JS the
-// native <details> state is the only one).
-for (const d of $$<HTMLDetailsElement>('details.toc-mobile')) {
-  const sync = () => d.querySelector('summary')!.setAttribute('aria-expanded', String(d.open));
-  d.addEventListener('toggle', sync);
-  sync();
-}
-
-codeCopy();
+// Code copy buttons belong to document code blocks; the homepage sample has its own.
+if (document.querySelector('article.docs-content')) codeCopy();
 headingAnchors();

@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { ConversionError, buildHashOf, convert, convertDocument, mainTextSha256, readInventory } from '../converter/convert.ts';
+import { ConversionError, assertStaticClean, buildHashOf, convert, convertDocument, mainTextSha256, readInventory } from '../converter/convert.ts';
 import { finalize } from '../converter/integration.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 
@@ -218,4 +218,20 @@ test('finalize in check mode refuses a stale committed manifest instead of rewri
   fs.writeFileSync(path.join(outDir, 'index.html'), '<main>home</main>');
   assert.throws(() => finalize(outDir, siteRoot, { check: true }), /not regenerated/);
   assert.equal(fs.readFileSync(file, 'utf8'), bytes);
+});
+
+test('a checked build refuses a static/ that is not exactly the commit, gitignored files included', () => {
+  // astro copies ../static into dist as it is on disk; the buildId only names the commit.
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'nimbus-static-'));
+  const git = (...args: string[]) => execFileSync('git', ['-C', repo, '-c', 'user.name=t', '-c', 'user.email=t@invalid', ...args], { stdio: 'pipe' });
+  fs.mkdirSync(path.join(repo, 'static'));
+  fs.writeFileSync(path.join(repo, 'static/logo.svg'), '<svg/>');
+  fs.writeFileSync(path.join(repo, '.gitignore'), '*.tmp\n');
+  git('init', '-q'); git('add', '-A'); git('commit', '-q', '-m', 'init');
+  assertStaticClean(repo);
+  fs.writeFileSync(path.join(repo, 'static/stray.tmp'), 'x');
+  assert.throws(() => assertStaticClean(repo), /static\/stray\.tmp/);
+  fs.rmSync(path.join(repo, 'static/stray.tmp'));
+  fs.writeFileSync(path.join(repo, 'static/logo.svg'), '<svg>edited</svg>');
+  assert.throws(() => assertStaticClean(repo), /static\/logo\.svg/);
 });

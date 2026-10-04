@@ -1588,12 +1588,15 @@
     {
       "path": "/blog",
       "scope": "full",
-      "status": 404
+      "status": 308,
+      "location": "/blog/"
     },
     {
       "path": "/blog/",
       "scope": "full",
-      "status": 404
+      "status": 200,
+      "canonical": "https://docs.apertis.ai/blog/",
+      "note": "Operator review 2026-10-03 (docs-routing-publication, Native articles): the /blog/ index supersedes the retired legacy /blog row, with or without published articles. The index is native, so its canonical keeps the trailing slash, as the articles' do."
     },
     {
       "path": "/blog/archive",

@@ -1,84 +1,122 @@
 ---
-// Landing page, ported from the legacy src/pages/index.js + index.module.css (page:index): hero with
-// the search trigger and six feature cards with the same links. Not an <article>, as at baseline.
+// Landing page (openspec docs-shell-interfaces "Shell alignment, header, footer and homepage", revised on
+// 2026-10-03 after the OpenAI developers, Claude docs and claude.dev homepages): the entry to Apertis guides,
+// reference, models, release notes and articles, kept calm. A left-aligned hero (heading, one line, the
+// primary action and the console, then the providers in one monochrome row with the count of the rest),
+// "New models" (the models most recently added to the catalog), "Start building" (the feature-card
+// destinations as shadcn Items) and "Latest" (release notes beside the blog). Search is the header's.
+// Everything renders at build time from home-feed.json; the one script below swaps in /_nimbus/home-feed
+// after load, so the models, release notes and counts are current without a rebuild.
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import openai from '@lobehub/icons-static-svg/icons/openai.svg?raw';
+import anthropic from '@lobehub/icons-static-svg/icons/anthropic.svg?raw';
+import google from '@lobehub/icons-static-svg/icons/google.svg?raw';
+import deepseek from '@lobehub/icons-static-svg/icons/deepseek.svg?raw';
+import meta from '@lobehub/icons-static-svg/icons/meta.svg?raw';
+import qwen from '@lobehub/icons-static-svg/icons/qwen.svg?raw';
+import mistral from '@lobehub/icons-static-svg/icons/mistral.svg?raw';
+import spacexai from '../components/home/spacexai.svg?raw';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleList from '../components/home/ArticleList.astro';
+import NewModels from '../components/home/NewModels.tsx';
+import StartBuilding from '../components/home/StartBuilding.tsx';
+import ReleaseNotes from '../components/home/ReleaseNotes.tsx';
+import feed from '../components/home/home-feed.json';
+import { isNativeArticle } from '../contracts/articles.ts';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { documentAt, manifest } from '../manifest/manifest.ts';
-import '../styles/landing.css';
 
 const doc = documentAt('/');
-const g = (id: string) => `url(#${id})`;
-const dot = 'var(--line-art-color, #0d9488)';
-const features = [
-  {
-    title: 'Get Started', badge: 'Quickstart', cta: 'Start building', link: '/intro',
-    description: 'Make your first API call in minutes with our OpenAI-compatible endpoint.',
-    icon: '<polygon points="5 3 19 12 5 21 5 3" />',
-    art: 'start', lines: `<path d="M280 40 H200 Q190 40 190 50 V90 Q190 100 180 100 H120 Q110 100 110 110 V160" stroke="${g('start')}" stroke-width="1.5" /><path d="M280 100 H240 Q230 100 230 110 V150 Q230 160 220 160 H160" stroke="${g('start')}" stroke-width="1.5" /><circle cx="110" cy="160" r="3" fill="${dot}" opacity="0.4" /><circle cx="160" cy="160" r="3" fill="${dot}" opacity="0.4" /><polygon points="230,30 250,40 230,50" fill="${dot}" opacity="0.15" />`,
-  },
-  {
-    title: 'Every Model, One API', badge: 'Live model catalog', cta: 'Browse models', link: '/installation/models',
-    description: 'Access OpenAI, Anthropic, Google, Meta, and more through a single API key.',
-    icon: '<polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" />',
-    art: 'models', lines: `<rect x="160" y="40" width="80" height="24" rx="4" stroke="${g('models')}" stroke-width="1.5" /><rect x="180" y="76" width="80" height="24" rx="4" stroke="${g('models')}" stroke-width="1.5" /><rect x="150" y="112" width="80" height="24" rx="4" stroke="${g('models')}" stroke-width="1.5" /><path d="M200 64 V76" stroke="${g('models')}" stroke-width="1.5" /><path d="M220 100 V112" stroke="${g('models')}" stroke-width="1.5" /><circle cx="200" cy="52" r="2" fill="${dot}" opacity="0.3" /><circle cx="220" cy="88" r="2" fill="${dot}" opacity="0.3" /><circle cx="190" cy="124" r="2" fill="${dot}" opacity="0.3" />`,
-  },
-  {
-    title: 'API Reference', badge: 'OpenAI-compatible', cta: 'View API docs', link: '/api',
-    description: 'Integrate with our SDK. Compatible with OpenAI and Anthropic client libraries.',
-    icon: '<polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />',
-    art: 'api', lines: `<path d="M180 30 L150 60 L180 90" stroke="${g('api')}" stroke-width="1.5" stroke-linecap="round" /><path d="M220 30 L250 60 L220 90" stroke="${g('api')}" stroke-width="1.5" stroke-linecap="round" /><path d="M280 120 H200 Q190 120 190 130 V170" stroke="${g('api')}" stroke-width="1.5" /><path d="M280 150 H240 Q230 150 230 160 V180" stroke="${g('api')}" stroke-width="1.5" /><circle cx="190" cy="170" r="3" fill="${dot}" opacity="0.4" /><circle cx="230" cy="180" r="3" fill="${dot}" opacity="0.4" />`,
-  },
-  {
-    title: 'Built for Coding Agents', badge: 'Integrations', cta: 'Connect now', link: '/installation/claude-code',
-    description: 'Purpose-built for Claude Code, Cursor, Cline, and other coding tools.',
-    icon: '<path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24" />',
-    art: 'int', lines: `<circle cx="210" cy="100" r="20" stroke="${g('int')}" stroke-width="1.5" /><circle cx="210" cy="100" r="4" fill="${dot}" opacity="0.3" /><path d="M210 80 V40" stroke="${g('int')}" stroke-width="1.5" /><path d="M230 100 H270" stroke="${g('int')}" stroke-width="1.5" /><path d="M210 120 V160" stroke="${g('int')}" stroke-width="1.5" /><path d="M190 100 H150" stroke="${g('int')}" stroke-width="1.5" /><path d="M226 84 L256 54" stroke="${g('int')}" stroke-width="1.5" /><path d="M194 116 L164 146" stroke="${g('int')}" stroke-width="1.5" /><circle cx="210" cy="40" r="3" fill="${dot}" opacity="0.4" /><circle cx="270" cy="100" r="3" fill="${dot}" opacity="0.4" /><circle cx="210" cy="160" r="3" fill="${dot}" opacity="0.4" /><circle cx="150" cy="100" r="3" fill="${dot}" opacity="0.4" />`,
-  },
-  {
-    title: 'Flexible Pricing', badge: 'Save up to 50%', cta: 'View plans', link: '/billing/subscription-plans',
-    description: 'Subscription plans with fixed quota per request, or pay-as-you-go per token.',
-    icon: '<rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />',
-    art: 'price', lines: `<rect x="150" y="50" width="100" height="60" rx="6" stroke="${g('price')}" stroke-width="1.5" /><line x1="150" y1="72" x2="250" y2="72" stroke="${g('price')}" stroke-width="1.5" /><path d="M170 140 H280" stroke="${g('price')}" stroke-width="1.5" /><path d="M190 155 H260" stroke="${g('price')}" stroke-width="1.5" /><path d="M200 170 H240" stroke="${g('price')}" stroke-width="1.5" /><circle cx="200" cy="88" r="2.5" fill="${dot}" opacity="0.3" />`,
-  },
-  {
-    title: 'Playground', badge: 'Try it live', cta: 'Open playground', link: 'https://playground.apertis.ai', external: true,
-    description: 'Test any model in your browser. No setup required.',
-    icon: '<polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />',
-    art: 'play', lines: `<rect x="140" y="30" width="130" height="90" rx="6" stroke="${g('play')}" stroke-width="1.5" /><line x1="140" y1="50" x2="270" y2="50" stroke="${g('play')}" stroke-width="1.5" /><circle cx="155" cy="40" r="3" fill="${dot}" opacity="0.25" /><circle cx="165" cy="40" r="3" fill="${dot}" opacity="0.25" /><circle cx="175" cy="40" r="3" fill="${dot}" opacity="0.25" /><path d="M160 68 L172 76 L160 84" stroke="${g('play')}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><line x1="182" y1="100" x2="220" y2="100" stroke="${g('play')}" stroke-width="1.5" stroke-linecap="round" /><path d="M180 140 H260 Q270 140 270 150 V180" stroke="${g('play')}" stroke-width="1.5" /><circle cx="270" cy="180" r="3" fill="${dot}" opacity="0.4" />`,
-  },
-];
-const gradient = (id: string) =>
-  `<defs><linearGradient id="${id}" x1="0" y1="0" x2="280" y2="200"><stop offset="0%" stop-color="${dot}" stop-opacity="0.6" /><stop offset="100%" stop-color="${dot}" stop-opacity="0.03" /></linearGradient></defs>`;
+const hasArticles = manifest.documents.some(isNativeArticle);
+const ext = { target: '_blank', rel: 'noopener noreferrer' };
+// Monochrome provider marks (currentColor), their <title> dropped: the name beside each mark labels it.
+// SpaceXAI's mark is stima-api's (web/next/public/images/providers/v1/spacexai.svg).
+const mark = (svg: string) => svg.replace(/<title>[\s\S]*?<\/title>/, '');
+const providers = [
+  ['OpenAI', openai], ['Anthropic', anthropic], ['Google', google], ['SpaceXAI', spacexai],
+  ['DeepSeek', deepseek], ['Meta', meta], ['Qwen', qwen], ['Mistral', mistral],
+].map(([name, svg]) => ({ name, svg: mark(svg) }));
+const more = (count: number) => `and ${count - providers.length} more`;
 ---
 <BaseLayout doc={doc} buildId={manifest.buildId}>
   <main class="landing" id="main">
-    <section class="hero">
-      <h1 class="hero__title">Build with Apertis</h1>
-      <p class="hero__sub">
-        One API key for models across leading providers.
-        Smart routing, auto-failover, and free prompt caching built in.
-      </p>
-      <button type="button" class="hero__search" data-open-surface="search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-        <span>Search docs or ask AI...</span>
-        <kbd>⌘K</kbd>
-      </button>
+    <section class="shell-container hero" aria-labelledby="hero-title">
+      <h1 class="hero__title" id="hero-title">Build with Apertis</h1>
+      <p class="hero__lead">Guides, API reference and articles for building with every leading model through one API key.</p>
+      <div class="hero__actions">
+        <a data-slot="button" data-variant="default" class={buttonVariants({ size: 'lg' })} href="/getting-started/quick-start/">Get started<ArrowRight className="size-4" aria-hidden="true" /></a>
+        <a data-slot="button" data-variant="outline" class={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'bg-card')} href="https://apertis.ai/setting?tab=keys" {...ext}>Create an API key<ArrowUpRight className="size-4" aria-hidden="true" /></a>
+      </div>
+      <ul class="providers" aria-label="Model providers">
+        {providers.map((p) => <li><span class="providers__mark" aria-hidden="true" set:html={p.svg} />{p.name}</li>)}
+        <li class="providers__more" data-feed-providers>{more(feed.providers)}</li>
+      </ul>
     </section>
-    <section class="features">
-      {features.map((f) => (
-        <a class="feature-card" href={f.link} {...(f.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-          <span class="feature-card__badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={f.icon} />
-            <span>{f.badge}</span>
-          </span>
-          <h3 class="feature-card__title">{f.title}</h3>
-          <p class="feature-card__desc">{f.description}</p>
-          <span class="feature-card__cta">
-            <span>{f.cta}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-          </span>
-          <svg class="feature-card__art" viewBox="0 0 280 200" fill="none" aria-hidden="true" set:html={gradient(f.art) + f.lines} />
-        </a>
-      ))}
+
+    <section class="shell-container home-section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">New models</h2>
+      <p class="home-section__lead">The latest additions to the catalog, available with the same key.</p>
+      <NewModels models={feed.models} />
+      <p class="home-section__more"><a href="https://apertis.ai/models" {...ext}><span>Browse all <span data-feed-total>{feed.total}</span> models</span><ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
+    </section>
+
+    <section class="shell-container home-section" id="start" aria-labelledby="start-title">
+      <h2 id="start-title">Start building</h2>
+      <StartBuilding />
+    </section>
+
+    <section class="shell-container home-section" aria-labelledby="latest-title">
+      <h2 id="latest-title">Latest</h2>
+      <div class="latest">
+        <div>
+          <h3>Release notes</h3>
+          <ReleaseNotes notes={feed.notes} />
+          <p class="home-section__more"><a href="https://apertis.ai/changelog" {...ext}>All release notes<ArrowUpRight className="size-3.5" aria-hidden="true" /></a></p>
+        </div>
+        <div>
+          <h3>From the blog</h3>
+          {hasArticles ? <ArticleList limit={3} /> : (
+            <p class="latest__soon">Guides, engineering notes and model deep dives are on their way.</p>
+          )}
+          <p class="home-section__more"><a href="/blog/">{hasArticles ? 'All articles' : 'Visit the blog'}<ArrowRight className="size-3.5" aria-hidden="true" /></a></p>
+        </div>
+      </div>
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  // Swap in the live feed (functions/_nimbus/home-feed.ts): refill each list by cloning its first row and
+  // setting the `data-f` fields from the same views the build used. Any failure keeps the build's copy.
+  import { modelView, noteView, type HomeFeed, type View } from '../components/home/feed.ts';
+
+  const fill = (list: Element | null, views: View[]) => {
+    const row = list?.firstElementChild;
+    if (!list || !row || !views.length) return;
+    list.replaceChildren(...views.map((v) => {
+      const li = row.cloneNode(true) as Element;
+      for (const el of li.querySelectorAll<HTMLElement>('[data-f]')) {
+        const value = v[el.dataset.f!] ?? '';
+        if (el.dataset.f === 'href') { el.setAttribute('href', value); continue; }
+        el.textContent = value;
+        el.hidden = !value;
+        if (el instanceof HTMLTimeElement) el.dateTime = v.datetime ?? '';
+      }
+      return li;
+    }));
+  };
+
+  fetch('/_nimbus/home-feed', { priority: 'low' } as RequestInit)
+    .then((r) => (r.ok ? (r.json() as Promise<HomeFeed>) : null))
+    .then((feed) => {
+      if (!feed || !Array.isArray(feed.models) || !Array.isArray(feed.notes)) return;
+      fill(document.querySelector('[data-feed="models"]'), feed.models.map(modelView));
+      fill(document.querySelector('[data-feed="notes"]'), feed.notes.map(noteView));
+      const total = document.querySelector('[data-feed-total]');
+      if (total && feed.total > 0) total.textContent = String(feed.total);
+      const more = document.querySelector('[data-feed-providers]');
+      if (more && feed.providers > 8) more.textContent = `and ${feed.providers - 8} more`;
+    })
+    .catch(() => {});
+</script>

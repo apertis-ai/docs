@@ -1,30 +1,35 @@
 ---
-// Emitted as dist/404.html: Pages then answers unknown paths with a real 404 instead of SPA fallback.
-// No shell, as before; only the reading-layout tokens and the reader's stored theme.
-import { TITLE_SUFFIX } from '../contracts/page.ts';
-import '../styles/tokens.css';
+// Emitted as dist/404.html: Pages answers unknown paths with it (a real 404, not SPA fallback), and
+// _redirects rewrites retired routes to it. The site shell, so a lost reader can search or go back; not a
+// manifest document: no canonical (it has no URL of its own), never indexed, no Markdown.
+import { ArrowLeft, Search } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { ManifestDocument } from '../contracts/manifest.ts';
+import { manifest } from '../manifest/manifest.ts';
+
+const doc: ManifestDocument = {
+  id: 'page:404', sourcePath: '', servedPath: '/404.html', canonicalUrl: '', title: 'Page Not Found',
+  eligibility: { publish: true, search: false, agent: false, rag: false }, markdown: null, contentSha256: '',
+};
 ---
-<!doctype html>
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>{'Page Not Found' + TITLE_SUFFIX}</title>
-    <script is:inline>try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
-  </head>
-  <body>
-    <main>
-      <p class="code">404</p>
-      <h1>Page Not Found</h1>
-      <p><a href="/">Back to the documentation</a></p>
-    </main>
-  </body>
-</html>
-<style is:global>
-  body { margin: 0; background: var(--bg); color: var(--body); font: 17px/1.65 var(--font); }
-  main { max-width: 68ch; margin: 18vh auto 0; padding: 0 24px; }
-  .code { margin: 0 0 12px; color: var(--muted); font: 500 12px/16px var(--mono); letter-spacing: 0.08em; }
-  h1 { margin: 0 0 12px; color: var(--ink); font-size: 35px; font-weight: 600; line-height: 1.2; }
-  a { color: var(--link); text-underline-offset: 3px; }
+<BaseLayout doc={doc} buildId={manifest.buildId} noindex>
+  <main class="shell-container not-found" id="main">
+    <p class="not-found__code">404</p>
+    <h1>Page not found</h1>
+    <p>This page doesn't exist or has moved. Search the docs, or start again from the documentation home.</p>
+    <p class="not-found__actions">
+      <button type="button" data-slot="button" class={buttonVariants()} data-open-surface="search"><Search className="size-4" aria-hidden="true" />Search the docs</button>
+      <a data-slot="button" class={cn(buttonVariants({ variant: 'outline' }), 'bg-card')} href="/"><ArrowLeft className="size-4" aria-hidden="true" />Back to the documentation</a>
+    </p>
+  </main>
+</BaseLayout>
+<style>
+  .not-found { padding-block: 14vh 18vh; }
+  .not-found > * { max-width: 60ch; }
+  .not-found__code { margin: 0 0 12px; color: var(--muted); font: 500 var(--fs-xs)/16px var(--mono); letter-spacing: 0.08em; }
+  h1 { margin: 0 0 12px; color: var(--ink); font-size: var(--fs-5xl); font-weight: 600; line-height: 1.2; }
+  p { color: var(--body); }
+  .not-found__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 </style>

@@ -10,10 +10,12 @@
 import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
-import PageActions from '../components/shell/PageActions.astro';
+import PageActions from '../components/shell/PageActions.tsx';
+import TocMobile from '../components/shell/TocMobile.tsx';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import { isNativeArticle, parseRelated } from '../contracts/articles.ts';
 import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import type { RouteInventory } from '../contracts/navigation.ts';
@@ -31,18 +33,25 @@ interface Props {
   buildId: string;
   /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
   headings?: Heading[];
+  /** A native article (src/pages/blog): its front matter replaces the sidebar category and the docs entry. */
+  article?: { category: string; author: string; description: string };
 }
-const { doc, buildId, headings = [] } = Astro.props;
+const { doc, buildId, headings = [], article } = Astro.props;
 const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
 const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
 // Converter output (never git at build time): last legacy commit author date and reading time.
 const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
 if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
-const entry = await getEntry('docs', doc.servedPath.slice(1, -1));
-if (!entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
-const header = pageHeaderParts(await Astro.slots.render('default'), entry.data.description);
-const category = nav?.trail[0];
-const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1));
+if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
+const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
+const category = article ? article.category : nav?.trail[0];
+// Published articles that name this page in their `related` front matter (drafts have no manifest entry).
+const native = article ? [] : manifest.documents.filter(isNativeArticle);
+const related = native.length
+  ? (await getCollection('articles')).filter((e) => parseRelated(e.data.related).includes(doc.servedPath))
+    .flatMap((e) => native.filter((d) => d.servedPath === `/blog/${e.id}/`))
+  : [];
 ---
 <BaseLayout doc={doc} buildId={buildId} nav={nav}>
   <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
@@ -66,21 +75,31 @@ const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
           {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
             <dl class="doc-meta">
-              <div><dt>Updated</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
+              {article && <div><dt>Author</dt><dd>{article.author}</dd></div>}
+              <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
             </dl>
-            {doc.markdown && <PageActions markdownPath={doc.markdown.path} />}
           </div>
+          {doc.markdown && (
+            <div class="doc-header__actions" data-pagefind-ignore="all">
+              <PageActions client:idle markdownPath={doc.markdown.path} />
+            </div>
+          )}
         </header>
         {hasToc && (
-          <details class="toc-mobile" data-pagefind-ignore="all">
-            <summary>On this page<Fragment set:html={chevron} /></summary>
+          <TocMobile client:visible>
             <Toc headings={headings} />
-          </details>
+          </TocMobile>
         )}
         <hr class="doc-header__rule" />
         <Fragment set:html={header.body} />
       </article>
+      {related.length > 0 && (
+        <section class="related-articles" aria-labelledby="related-articles-title" data-pagefind-ignore="all">
+          <h2 id="related-articles-title">Related articles</h2>
+          <ul>{related.map((d) => <li><a href={d.servedPath}>{d.title}</a></li>)}</ul>
+        </section>
+      )}
       {nav && (nav.prev || nav.next) && (
         <nav class="pagination" aria-label="Docs pages">
           {nav.prev ? <a class="pagination__prev" href={nav.prev.href}><span>Previous</span>{nav.prev.label}</a> : <span />}

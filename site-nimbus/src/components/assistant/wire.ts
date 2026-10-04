@@ -6,6 +6,14 @@ export const ASK_PATH = '/api/ask';
 export const MAX_QUESTION = 2000;
 export const QUERY_LIMIT_MESSAGE = 'You have reached the query limit. Please refresh to continue.';
 
+// The Turnstile sitekey of the legacy widget (src/components/UnifiedSearchModal/AskAITab.tsx), unless the
+// build names another one in PUBLIC_TURNSTILE_SITEKEY. A local preview build sets Cloudflare's always-pass test
+// sitekey there (`1x00000000000000000000AA`, assistant/README.md): local hosts are not on the real key's domain
+// list, and test tokens verify only against the matching test secret, never a deployment's real secret. The
+// choice is the build's, never the page's host (dist.check: no host-dependent client behaviour).
+export const REAL_SITE_KEY = '0x4AAAAAACS2SzpYBFytHb_E';
+export const turnstileSiteKey = (configured?: string) => configured?.trim() || REAL_SITE_KEY;
+
 export interface AskRequest {
   question: string;
   sessionId: string;

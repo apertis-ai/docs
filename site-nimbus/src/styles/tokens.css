@@ -1,59 +1,81 @@
-/* Apertis reading-layout tokens (#8, openspec docs-shell-interfaces "Reading layout and page header").
+/* Apertis tokens: the ONE token file (openspec docs-shell-interfaces "Reading layout and page header",
+   Palette as revised on 2026-09-29, and "Shell alignment, header, footer and homepage").
+   Neutral surfaces and near-black ink, and no brand hue (the teal was removed on 2026-10-02): the logo is
+   monochrome, focus rings and link hover or active states are ink. Primary actions use an inverted
+   neutral fill.
    One light set (the default) and one dark set, selected only by data-theme on <html> (the shell's theme
-   switch); never by prefers-color-scheme. Contrast is checked by test/m3r-tokens.test.ts:
-   --ink, --body and --desc >= 7:1 on --bg; --muted, --link and the admonition accents >= 4.5:1 on --bg
-   and --panel. Colours are #rrggbb so the test can read them. */
+   switch); never by prefers-color-scheme. Every shadcn/ui token (src/styles/app.css @theme) maps onto
+   these names and has no value of its own. Contrast is checked by test/m3r-tokens.test.ts. Colours that
+   test reads are #rrggbb. */
 :root {
-  --bg: #faf8f3;
-  --panel: #f2efe7;
-  --ink: #1c1b18;
-  --body: #34322d;
-  --desc: #4a4740;
-  --muted: #6b675e;
-  --line: rgba(28, 27, 24, 0.14);
-  --line-strong: rgba(28, 27, 24, 0.26);
-  --hover: rgba(28, 27, 24, 0.05);
-  /* Apertis teal: #0d9488 is the brand; links use its darker step to reach 4.5:1 on paper. */
-  --accent: #0f766e;
-  --accent-brand: #0d9488;
-  --accent-soft: rgba(13, 148, 136, 0.1);
-  --link: #0f766e;
-  --on-accent: #ffffff;
+  --bg: #fafafa; /* page */
+  --card: #ffffff; /* cards, popovers, dialogs, sheets */
+  --panel: #f4f4f4; /* code, table heads, admonitions, muted fills */
+  --ink: #0a0a0a; /* headings, primary labels */
+  --body: #262626; /* prose */
+  --desc: #404040; /* page-header description */
+  --muted: #5e5e5e; /* labels, meta, sidebar and TOC entries */
+  --line: #e5e5e5; /* hairlines */
+  --line-strong: #d4d4d4; /* input and control borders */
+  --hover: #efefef; /* neutral hover and selected fill */
+  --link: #0a0a0a; /* links at rest: ink, underlined in prose */
+  --primary: #171717; /* inverted neutral fill: Create account, primary actions */
+  --primary-fg: #fafafa;
   --error: #b42318;
   --adm-note: #1d4ed8;
   --adm-tip: #166534;
-  --adm-info: #0e7490;
+  --adm-info: #6d28d9;
   --adm-warning: #92400e;
   --adm-danger: #b91c1c;
-  --navbar-bg: rgba(250, 248, 243, 0.88);
-  --shadow: 0 10px 30px rgba(28, 27, 24, 0.1);
+  --navbar-bg: rgb(250, 250, 250);
+  --overlay: rgba(10, 10, 10, 0.4);
+  --shadow: 0 12px 32px rgba(10, 10, 10, 0.08), 0 1px 2px rgba(10, 10, 10, 0.04);
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'LINE Seed', var(--font);
   --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  /* The one type scale (Inter and the system monospace; no web font beyond Inter). The reading sizes
+     (17 body, 35/25/20 headings, 30/23 on mobile) are the ones m3-browser pins. */
+  --fs-2xs: 11px; /* mono labels */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-ui: 14px; /* controls, navigation */
+  --fs-md: 15px;
+  --fs-base: 16px; /* inputs (no iOS zoom), sheet links */
+  --fs-body: 17px; /* prose */
+  --fs-lg: 18px;
+  --fs-xl: 20px; /* h3 */
+  --fs-2xl: 23px; /* h2 on mobile */
+  --fs-3xl: 25px; /* h2 */
+  --fs-4xl: 30px; /* h1 on mobile, homepage h2 */
+  --fs-5xl: 35px; /* h1 */
+  --fs-6xl: 48px; /* homepage hero */
+  --radius: 8px;
+  --border: var(--line); /* the shadcn hairline name, scoped to [data-slot] in app.css */
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --bg: #1b1a17;
-  --panel: #24221e;
-  --ink: #f2efe8;
-  --body: #dcd8cd;
-  --desc: #c4bfb3;
-  --muted: #a39e92;
-  --line: rgba(242, 239, 232, 0.14);
-  --line-strong: rgba(242, 239, 232, 0.26);
-  --hover: rgba(242, 239, 232, 0.06);
-  --accent: #14b8a6;
-  --accent-brand: #14b8a6;
-  --accent-soft: rgba(20, 184, 166, 0.14);
-  --link: #14b8a6;
-  --on-accent: #0b2a26;
+  --bg: #121212;
+  --card: #181818;
+  --panel: #1f1f1f;
+  --ink: #fafafa;
+  --body: #e5e5e5;
+  --desc: #d4d4d4;
+  --muted: #a3a3a3;
+  --line: #2a2a2a;
+  --line-strong: #3a3a3a;
+  --hover: #262626;
+  --link: #fafafa;
+  --primary: #fafafa;
+  --primary-fg: #0a0a0a;
   --error: #fda29b;
   --adm-note: #93c5fd;
   --adm-tip: #86efac;
-  --adm-info: #67e8f9;
+  --adm-info: #c4b5fd;
   --adm-warning: #fcd34d;
   --adm-danger: #fca5a5;
-  --navbar-bg: rgba(27, 26, 23, 0.88);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --navbar-bg: rgb(18, 18, 18);
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }

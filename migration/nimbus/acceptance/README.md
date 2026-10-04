@@ -254,7 +254,7 @@ document of that generation.
 ## Paired performance (`scripts/nimbus/paired-perf.mjs`)
 
 ```sh
-PLAYWRIGHT=<...> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --build-id <candidate buildId> --out perf.json [--page /p/ ...]
+PLAYWRIGHT=<...> PAKO=<pako/index.js> node scripts/nimbus/paired-perf.mjs run --legacy <legacy origin> --candidate <candidate origin> --build-id <candidate buildId> --out perf.json [--page /p/ ...]
 node scripts/nimbus/paired-perf.mjs gate perf.json [shard2.json ...] --build-id <candidate buildId> --out merged.json   # re-gates raw samples, no browser
 ```
 
@@ -281,6 +281,47 @@ average, and the failures. The exit status is 0 only when every page and profile
 
 **Symmetric origins.** Measure the candidate through the same kind of origin as the legacy server. For
 example, reach both through one hostname: the candidate preview listens on `0.0.0.0` for this.
+
+## Paired performance in CI (`.github/workflows/nimbus-paired-perf.yml`)
+
+The full published page set takes about 5.5 hours on one machine: every page is 5 alternating rounds per
+side and two profiles, and the mobile profile downloads every response at 200 KB/s. The workflow splits
+the page set, not the protocol, across 12 GitHub-hosted runners:
+
+- `legacy` downloads the recorded legacy build from the `nimbus-legacy-baseline` release and refuses it
+  unless its sha256 equals `migration/nimbus/legacy-baseline.sha256`. It is not rebuilt: webpack module
+  ids and the search index order depend on the build machine, so a Linux rebuild of `baseSha` differs
+  from the recorded baseline (about 1 KB of JS, 2 KB of search payload). `candidate` builds the
+  checked-out commit.
+- Each `shard` runner serves both builds itself (legacy on 8791, the candidate with the root Pages
+  Function on 8806) and runs `paired-perf.mjs run` for pages `i, i + 12, ...` with system Google Chrome.
+  Legacy and candidate are therefore still paired on one machine in one window, and no shard shares a
+  CPU with another. A page whose run produces no valid samples is retried up to 3 times; a page with
+  none after that fails the shard.
+- Byte metrics are gzip level 9 sizes computed with pako 2.1.0 (`PAKO`, installed outside the
+  repository like Playwright). `node:zlib` depends on how Node was built: the recorded baseline came from
+  Homebrew Node, which links macOS libz 1.2.12, while the official binaries (CI) bundle Chromium zlib
+  1.3.1, and the legacy CSS gzips to 25,887 and 25,892 bytes respectively. pako reproduces the macOS libz
+  sizes byte for byte (447 legacy and candidate assets, 0 differences), so the recorded baseline holds
+  on any platform.
+- `gate` re-gates every raw sample with `paired-perf.mjs gate --set full`, then the PoC pages out of the
+  same samples with `--set poc`, and uploads `paired-perf-first-run`.
+- **One re-measure for timing (operator decision on #4, 2026-10-02).** Timing on shared GitHub-hosted
+  runners varies between runs of the same build (desktop `/installation/bolt_diy/` LCP: candidate
+  median 248 ms in one run, 364 ms in the next, limit 358). When every failure of the first run is a
+  timing exceedance (`lcp`, `tbt`, `searchOpenMs`) on at most 7 pages
+  (`scripts/nimbus/paired-perf-remeasure.mjs`), `remeasure` measures those pages again in full (5
+  alternating rounds, both profiles) on a fresh runner. `verdict` then gates the re-measured samples in
+  place of the first ones. A second exceedance fails. Bytes, legacy identity, coverage and invalid
+  samples are never re-measured. Both runs stay in the artifacts (`paired-perf-first-run`,
+  `perf-remeasure`); `verdict` uploads `paired-perf-result` and names the re-measured pages.
+- `scripts/nimbus/paired-perf-ci.sh` is one runner's work (serve both sites, measure the given pages),
+  shared by `shard` and `remeasure`.
+
+It runs on pull requests that touch the candidate, the Pages Function, the budgets or the two perf scripts,
+and on `workflow_dispatch` once the workflow is on the default branch. It uses no secrets. The legacy
+byte medians must still equal the recorded baseline, so a legacy build that differs from the baseline
+fails the gate rather than shifting it.
 
 ## Local runs
 

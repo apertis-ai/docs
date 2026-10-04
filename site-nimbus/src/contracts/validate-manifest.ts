@@ -13,6 +13,7 @@ import {
   type ManifestDocument,
 } from './manifest.ts';
 import { MANIFEST_KINDS, type InventoryRoute } from './navigation.ts';
+import { isNativeArticle } from './articles.ts';
 import { TITLE_SUFFIX } from './page.ts';
 
 const HEX12 = /^[0-9a-f]{12}$/;
@@ -77,7 +78,17 @@ export function validateManifest(
 
     const eligibility = isObject(d.eligibility) ? d.eligibility : null;
     const row = rows.get(d.id ?? null);
-    if (!row) {
+    // A native article has no inventory row by construction: its identity follows from its slug, it is
+    // eligible everywhere, and no inventory row may name its id or path (converter/articles.ts).
+    const native = str(d.sourcePath) && isNativeArticle({ sourcePath: d.sourcePath });
+    if (native) {
+      const slug = /^site-nimbus\/src\/articles\/([a-z0-9-]+)\.md$/.exec(d.sourcePath!)?.[1];
+      if (!slug || d.id !== `blog:${slug}` || d.servedPath !== `/blog/${slug}/` || d.canonicalUrl !== `${MANIFEST_SITE}/blog/${slug}/`) {
+        errors.push(`${at}: native article identity must be blog:<slug> at /blog/<slug>/ from site-nimbus/src/articles/<slug>.md`);
+      }
+      if (!eligibility || ELIGIBILITY_KEYS.some((k) => eligibility[k] !== true)) errors.push(`${at}: a native article is eligible everywhere`);
+      if (row || inventory.some((r) => r.path === d.servedPath || `${r.path}/` === d.servedPath)) errors.push(`${at}: native article collides with an inventory route`);
+    } else if (!row) {
       errors.push(`${at}: no inventory row with this documentId`);
     } else {
       if (!(MANIFEST_KINDS as readonly string[]).includes(row.kind)) {

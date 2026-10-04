@@ -67,6 +67,15 @@
     "timing": "For lcp, tbt and searchOpenMs, run legacy and candidate in the same window on the same machine, alternating per page, and require candidate median <= max(paired legacy median x 1.10, paired legacy median + 50 ms). The recorded timing baseline is informational.",
     "enforcement": "Every page and profile is gated; a single exceedance fails the performance gate. Budgets are not re-derived from candidate results and are never relaxed without a recorded decision on #4."
   },
+  "budgetDecisions": [
+    {
+      "page": "/",
+      "metric": "dataGzip",
+      "limit": 1536,
+      "decision": "https://github.com/apertis-ai/docs/issues/4#issuecomment-5963541670",
+      "reason": "The homepage refreshes its new models and release notes after load from /_nimbus/home-feed (about 1.06 KB gzip). Both profiles, both page sets; every other budget is unchanged."
+    }
+  ],
   "baseline": {
     "measuredAt": "2026-09-28T18:07:31.267Z",
     "raw": "migration/nimbus/baseline/perf-legacy.json",

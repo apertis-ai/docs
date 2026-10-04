@@ -580,6 +580,23 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await page.context().close();
   });
 
+  test('losing the connection after the index loaded turns an empty search into a visible error, not "No results"', async () => {
+    const page = await newPage();
+    page.on('console', () => {}); // Pagefind logs the failed chunk
+    await goto(page, '/');
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.keyboard.type(target.title);
+    await page.locator('#aa-results [role="option"]').first().waitFor();
+    await page.route('**/pagefind/**', (route: any) => route.abort());
+    await page.fill('#aa-q', 'zzqxvnonexistentword');
+    await page.waitForFunction(() => /could not be completed/.test(document.getElementById('aa-status')?.textContent ?? ''), null, { timeout: 10000 });
+    // Back online, the same empty search reports no results.
+    await page.unroute('**/pagefind/**');
+    await page.fill('#aa-q', 'zzqxvnonexistentwords');
+    await page.waitForFunction(() => /^No results for/.test(document.getElementById('aa-status')?.textContent ?? ''), null, { timeout: 10000 });
+    await page.context().close();
+  });
+
   test('with site storage blocked, search and Ask Docs still work (in-memory session)', async () => {
     const page = await newPage();
     await page.addInitScript(() => {

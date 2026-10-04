@@ -1,24 +1,16 @@
 import { defineConfig } from 'astro/config';
 import nimbus, { defineConfig as defineNimbusConfig } from '@cloudflare/nimbus-docs';
+import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 import publication from './converter/integration.ts';
 
 import { manifest } from './src/manifest/manifest.ts';
 import { searchIndex } from './src/search/index-build.ts';
-
-// Shiki stops tokenizing a line after `tokenizeTimeLimit` (500 ms by default), so on a loaded machine the
-// same code block renders with different tokens and the build is no longer deterministic (#13). Astro
-// exposes no option for it; Shiki passes the same options object to `preprocess` and then to the
-// tokenizer, and 0 means no limit.
-const noTokenizeTimeLimit = {
-  name: 'apertis:no-tokenize-time-limit',
-  preprocess(_code: string, options: { tokenizeTimeLimit?: number }) {
-    options.tokenizeTimeLimit = 0;
-  },
-};
+import { noTokenizeTimeLimit } from './src/lib/shiki.ts';
 
 // Static output only; `npm run preview` serves dist/ with the repo-root Pages Functions.
-// React 19 and @astrojs/react are pinned in package.json but not registered: registering
-// them emits an unreferenced ~190 KB renderer. Add `react()` with the first `client:*` island.
+// React renders the vendored shadcn/ui components: at build time only, unless an island asks for
+// `client:*` (search/Ask Docs, the navigation sheet, page actions, the hero code tabs, the mobile TOC).
 export default defineConfig({
   site: 'https://docs.apertis.ai',
   output: 'static',
@@ -28,7 +20,9 @@ export default defineConfig({
   build: { format: 'directory' },
   // Legacy Docusaurus renders straight quotes; keep HTML text equal to the clean Markdown artifacts.
   markdown: { smartypants: false, shikiConfig: { transformers: [noTokenizeTimeLimit] } },
+  vite: { plugins: [tailwindcss()] },
   integrations: [
+    react(),
     nimbus(
       defineNimbusConfig({
         site: 'https://docs.apertis.ai',

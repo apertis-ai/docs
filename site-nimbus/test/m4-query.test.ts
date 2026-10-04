@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { queryVariants, searchWithVariants } from '../src/search/query.ts';
+import { excerptMatches, queryVariants, searchWithVariants } from '../src/search/query.ts';
 
 test('punctuated queries also search their parts; words, identifiers and hyphens are unchanged', () => {
   assert.deepEqual(queryVariants('chat/completions'), ['chat/completions', 'chat completions']);
@@ -56,6 +56,18 @@ test('the top 10 re-rank by how much of the query names the page: title or URL p
   assert.deepEqual((await searchWithVariants('base url', async () => [vision, guide])).map((r) => r.id), ['guide', 'vision']);
 });
 
+test('the URL section does not name every page under it, and singular/plural name the same word', async () => {
+  // "api key": every /api/* page used to be named by "api" (its leading segment) and "key" missed "keys",
+  // so the API keys page tied with an unrelated endpoint page and kept the lower Pagefind score.
+  const endpoint = hit('endpoint', 9, { url: '/api/text-generation/chat-completions/', meta: { title: 'Chat Completions' } });
+  const keys = hit('keys', 2, { url: '/authentication/api-keys/', meta: { title: 'API Keys' } });
+  assert.deepEqual((await searchWithVariants('api key', async () => [endpoint, keys])).map((r) => r.id), ['keys', 'endpoint']);
+  // Deeper segments still name the page: "streaming" is in the path only.
+  const streaming = hit('streaming', 1, { url: '/api/text-generation/streaming/', meta: { title: 'Streams' } });
+  const other = hit('other', 9, { url: '/api/text-generation/responses/', meta: { title: 'Responses' } });
+  assert.deepEqual((await searchWithVariants('streaming', async () => [other, streaming])).map((r) => r.id), ['streaming', 'other']);
+});
+
 test('a result that fails to load fails the search instead of being ranked silently', async () => {
   const broken = { id: 'x', score: 1, data: () => Promise.reject(new Error('fragment aborted')) };
   await assert.rejects(searchWithVariants('api key', async () => [broken]), /fragment aborted/);
@@ -69,4 +81,14 @@ test('a superseded search loads no fragments (Pagefind caches and mutates them p
   assert.deepEqual(ids, ['a', 'b']);
   await searchWithVariants('api key', async () => [hit('a'), hit('b')], () => true);
   assert.equal(loads, 2);
+});
+
+test('a result is shown only when a word it highlights shares a 3-letter start with a typed word (UX canary F9)', () => {
+  // Pagefind's fuzzy fallback highlights single letters of a nonsense query: those are not matches.
+  assert.equal(excerptMatches('zzqqxx', 'set <mark>x</mark> to the <mark>z</mark> axis'), false);
+  assert.equal(excerptMatches('stream', 'enable <mark>streaming</mark> responses'), true);
+  assert.equal(excerptMatches('strem', 'enable <mark>streaming</mark> responses'), true, 'a typo keeps its prefix');
+  assert.equal(excerptMatches('API keys', 'create an <mark>API</mark> <mark>key</mark>'), true);
+  assert.equal(excerptMatches('go', 'the <mark>Go</mark> SDK'), true, 'a short word needs only its own length');
+  assert.equal(excerptMatches('anything', 'an excerpt without highlights'), true, 'nothing highlighted: nothing to judge, keep it');
 });

@@ -56,11 +56,20 @@ test('every output file derives from a publishable manifest entry or is referenc
   // #13: published inventory rows of kind `generated` with an HTML route (/search).
   const generated = inventory.routes.filter((r: InventoryRoute) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical)
     .map((r: InventoryRoute) => `${r.path.slice(1)}/index.html`);
-  const html = [...pages, ...generated, '404.html'];
-  const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((m) => m[1]));
-  // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too.
+  // The /blog/ index (openspec docs-routing-publication "Native articles", operator review 2026-10-03): served
+  // with or without articles, never a manifest document.
+  const html = [...pages, ...generated, 'blog/index.html', '404.html'];
+  // Astro islands reference their component and renderer chunks from <astro-island> attributes.
+  const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
+  // and so is every root-absolute url() in a referenced stylesheet (the display font is not preloaded).
   for (let i = 0; i < referenced.length; i++) {
-    if (!referenced[i].endsWith('.js') || !files.includes(referenced[i])) continue;
+    if (!files.includes(referenced[i])) continue;
+    if (referenced[i].endsWith('.css')) {
+      for (const m of read(referenced[i]).matchAll(/url\(\s*["']?\/([^"')#?]+)/g)) if (!referenced.includes(m[1])) referenced.push(m[1]);
+      continue;
+    }
+    if (!referenced[i].endsWith('.js')) continue;
     const dir = path.posix.dirname(referenced[i]);
     for (const m of read(referenced[i]).matchAll(/(?:from|import\()\s*["'`](\.\.?\/[^"'`]+)["'`]/g)) {
       const dep = path.posix.join(dir, m[1]);
@@ -130,6 +139,9 @@ test('no simulated or canned Ask Docs answer path ships (baseline defect 6)', ()
   assert.ok(scripts.some((s) => s.includes('apertis-docs:open')), 'the assistant client is not in the output');
   const canned = /Local preview response|isLocalPreview|location\.hostname|["'](localhost|127\.0\.0\.1|::1)["']/;
   assert.deepEqual(scripts.filter((s) => canned.test(s)).map((s) => s.match(canned)![0]), []);
+  // The shipped client carries the real Turnstile sitekey, never Cloudflare's test keys (a preview build's choice).
+  assert.ok(scripts.some((s) => s.includes('0x4AAAAAACS2SzpYBFytHb_E')), 'the real Turnstile sitekey is not in the output');
+  assert.deepEqual(scripts.filter((s) => /[`"'][123]x0{20}AA[`"']/.test(s)).length, 0, 'a Turnstile test sitekey ships');
 });
 
 // ---- #7 conversion and publication manifest (run after `npm run build`) ----
@@ -264,10 +276,13 @@ test('m8: retired routes are in no publication channel and every path they had a
   const rewritten = new Set(rules.map(([from]) => from));
   for (const [, to, status] of rules) assert.deepEqual([to, status], [RETIRED_TARGET, '200']);
   assert.equal(files.some((f) => f === rel(RETIRED_TARGET) || f.startsWith(`${rel(RETIRED_TARGET)}/`)), false);
+  // The /blog/ index supersedes the retired legacy /blog row, and only it (docs-routing-publication "Native
+  // articles"): blog/index.html is its one file; every other retired /blog/** path stays unserved.
+  const index = (r: InventoryRoute, f: string) => r.path === '/blog' && f === 'blog/index.html';
   for (const r of retired) {
-    const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f));
+    const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f) && !index(r, f));
     if (servedBy.length) for (const from of [r.path, `${r.path}/`, `${r.path}.html`]) assert.ok(rewritten.has(from), `${from} is served by ${servedBy} and not rewritten`);
-    assert.equal(files.some((f) => f.startsWith(`${rel(r.path)}/`) || f === `${rel(r.path)}.md`), false, `${r.path} emitted`);
+    assert.equal(files.some((f) => (f.startsWith(`${rel(r.path)}/`) && !index(r, f)) || f === `${rel(r.path)}.md`), false, `${r.path} emitted`);
   }
   assert.deepEqual([...rewritten].sort(), ['/404', '/404.html', '/404/']);
   const text = [read('sitemap.xml'), ...fragments().map((f) => f.url)].join('\n');

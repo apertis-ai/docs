@@ -1,7 +1,7 @@
 // Search-relevance and performance measurement for the Docusaurus -> Nimbus migration (issue #5).
 //
 //   PLAYWRIGHT=<path to playwright/index.mjs> node scripts/nimbus/measure.mjs search <baseUrl> [--scope poc|full]
-//   PLAYWRIGHT=<path to playwright/index.mjs> node scripts/nimbus/measure.mjs perf   <baseUrl> [--runs 5] [--page /path/] [--set poc|full]
+//   PLAYWRIGHT=<...> PAKO=<path to pako/index.js> node scripts/nimbus/measure.mjs perf   <baseUrl> [--runs 5] [--page /path/] [--set poc|full]
 //   (`--set full` measures budgets.fullCorpus.pages, the #13 full published page set; default is the PoC protocol.pages)
 //
 // Both modes drive the reader-facing surface: search opens with Cmd/Ctrl+K, takes typed input,
@@ -10,10 +10,19 @@
 // machine; compare only runs taken with the same harness. Protocol and budgets:
 // migration/nimbus/budgets.json. Playwright is intentionally not a root dependency.
 import fs from 'node:fs';
-import zlib from 'node:zlib';
 import os from 'node:os';
 
 const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
+// Byte metrics are gzip level 9 sizes from pako (zlib 1.2 in JavaScript), not node:zlib: Node's zlib
+// depends on how Node was built (Homebrew links macOS libz 1.2.12, the official binaries bundle Chromium
+// zlib 1.3.1, and their level-9 sizes differ). pako reproduces the recorded baseline's macOS libz sizes
+// byte for byte (447 legacy and candidate assets, 17.7 MB, 0 differences) on every platform. perf only.
+let gzipSize;
+async function loadGzip() {
+  const m = await import(process.env.PAKO ?? 'pako');
+  const pako = m.default ?? m;
+  gzipSize = (body) => pako.gzip(body, { level: 9 }).length;
+}
 const root = new URL('../../migration/nimbus/', import.meta.url);
 const budgets = JSON.parse(fs.readFileSync(new URL('budgets.json', root), 'utf8'));
 const { queries, hitRule } = JSON.parse(fs.readFileSync(new URL('search-queries.json', root), 'utf8'));
@@ -135,7 +144,7 @@ async function measurePage(browser, path, profile) {
     const bucket = ph === 'search' ? 'search'
       : type === 'document' ? 'html' : type === 'script' ? 'js' : type === 'stylesheet' ? 'css'
       : ['image', 'font', 'media'].includes(type) ? 'media' : 'data';
-    pending.push(res.body().then((body) => { bytes[bucket] += zlib.gzipSync(body, { level: 9 }).length; }, () => { bytes.unreadable++; }));
+    pending.push(res.body().then((body) => { bytes[bucket] += gzipSize(body); }, () => { bytes.unreadable++; }));
   });
   const quiet = async () => {
     const deadline = Date.now() + 120000;
@@ -165,6 +174,7 @@ async function measurePage(browser, path, profile) {
 }
 
 async function perf() {
+  await loadGzip();
   const runs = Number(opt('runs', budgets.protocol.runs));
   const browser = await chromium.launch({ channel: 'chrome' });
   const out = {};
