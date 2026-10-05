@@ -14,6 +14,7 @@ import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
 import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
+import { codeText, parseCurl } from '../src/components/try-it/curl.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -340,4 +341,30 @@ test('m8: every internal link in every converted page resolves to a built file (
     assert.deepEqual(hrefs.filter((h) => !builtFile(h)), [], `${d.id}: unresolved internal links`);
   }
   assert.ok(n > 100, `${n} internal links checked`);
+});
+
+// ---- docs-reader-features: Try it (openspec docs-api-reference-ux "Try it") ----
+test('try it: exactly the cURL samples to api.apertis.ai/v1 carry data-try-it', () => {
+  let marked = 0;
+  for (const f of publishedHtml()) {
+    for (const m of article(read(f)).matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
+      const eligible = !('reason' in parseCurl(codeText(m[2])));
+      assert.equal(/\sdata-try-it\b/.test(m[1]), eligible, `${f}: ${codeText(m[2]).slice(0, 80)}`);
+      if (eligible) marked++;
+    }
+  }
+  assert.ok(marked >= 30, `${marked} blocks marked`);
+});
+
+test('try it: only pages with a marked sample load its script or styles, and none loads the panel up front', () => {
+  let pages = 0;
+  for (const f of publishedHtml()) {
+    const html = read(f);
+    const scripts = html.match(/<script[^>]+src="\/_astro\/TryIt\.astro[^"]*"/g) ?? [];
+    const marked = /<pre\b[^>]*\sdata-try-it\b/.test(article(html));
+    assert.equal(scripts.length, marked ? 1 : 0, f);
+    assert.doesNotMatch(html, /try-it-panel|\.try-it[\w-]*\s*\{/, f);
+    if (marked) pages++;
+  }
+  assert.ok(pages >= 15, `${pages} pages with Try it`);
 });
