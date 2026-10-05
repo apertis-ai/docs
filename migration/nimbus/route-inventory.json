@@ -6824,7 +6824,29 @@
       "sidebar": null,
       "listed": false,
       "eligibility": {
-        "publish": false,
+        "publish": true,
+        "search": false,
+        "agent": false,
+        "rag": false
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "path": "/llms-full.txt",
+      "kind": "static",
+      "documentId": "generated:/llms-full.txt",
+      "disposition": "preserve",
+      "note": "Introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): the Markdown artifact of every /llms.txt entry, in the same order, each after a Source line; generated at build (converter/integration.ts publicationFiles).",
+      "poc": false,
+      "built": false,
+      "live": null
+    },
+    {
+      "sidebar": null,
+      "listed": false,
+      "eligibility": {
+        "publish": true,
         "search": false,
         "agent": false,
         "rag": false
@@ -6834,10 +6856,10 @@
         "rag": false
       },
       "path": "/llms.txt",
-      "kind": "absent",
-      "documentId": null,
-      "disposition": "absent-at-baseline",
-      "note": "Returns 404 at baseline. May only be introduced under the publication contract.",
+      "kind": "static",
+      "documentId": "generated:/llms.txt",
+      "disposition": "preserve",
+      "note": "Absent at baseline (live 404); introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): the llmstxt.org index of every publish+agent manifest entry, one entry per Markdown artifact with its description, generated at build (converter/integration.ts publicationFiles).",
       "poc": false,
       "built": false,
       "live": {
@@ -6900,6 +6922,28 @@
         "images": [],
         "articleSha256": "8681b916fbf1036feb403934e52c0b1004e86b7b3e5826337e1a55ef10717a92"
       }
+    },
+    {
+      "sidebar": null,
+      "listed": false,
+      "eligibility": {
+        "publish": false,
+        "search": false,
+        "agent": false,
+        "rag": false
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "path": "/mcp",
+      "kind": "runtime",
+      "documentId": "runtime:/mcp",
+      "disposition": "reserved-runtime",
+      "note": "Introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): POST handled by functions/mcp.ts (stateless docs MCP server over /llms.txt and /llms-full.txt); every other method answers 405. No document may be emitted at this path.",
+      "poc": false,
+      "built": false,
+      "live": null
     },
     {
       "path": "/opensource",

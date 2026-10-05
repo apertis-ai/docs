@@ -2417,9 +2417,16 @@
       "note": "Introduced under the publication contract: clean Markdown artifact of default:intro (#13)."
     },
     {
+      "path": "/llms-full.txt",
+      "scope": "full",
+      "status": 200,
+      "note": "Introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): text/plain corpus of every /llms.txt artifact."
+    },
+    {
       "path": "/llms.txt",
       "scope": "full",
-      "status": 404
+      "status": 200,
+      "note": "Introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): text/plain llmstxt.org index of the publish+agent pages (content type pinned by test/routes.check.ts)."
     },
     {
       "path": "/markdown-page",
@@ -2430,6 +2437,12 @@
       "path": "/markdown-page/",
       "scope": "full",
       "status": 404
+    },
+    {
+      "path": "/mcp",
+      "scope": "full",
+      "status": 405,
+      "note": "Introduced by openspec change docs-reader-features (docs-agent-access, operator 2026-10-05): the docs MCP server answers POST only (functions/mcp.ts); GET is 405 with Allow: POST."
     },
     {
       "path": "/opensource",
