@@ -5,6 +5,11 @@
       "commit": "55608c9",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer)",
       "links": { "added": ["/getting-started/quick-start"], "removed": ["https://playground.apertis.ai"] }
+    },
+    "api:sdks/mcp-server": {
+      "commit": "0590457",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
+      "links": { "added": ["/llms.txt", "/llms-full.txt"] }
     }
   }
 }
