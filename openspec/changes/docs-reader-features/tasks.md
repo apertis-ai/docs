@@ -21,7 +21,7 @@
 ## 5. Shell extras (packet D)
 
 - [ ] 5.1 The "Edit this page" link and the print stylesheet.
-- [ ] 5.2 Page feedback: blocked until the operator approves a storage binding.
+- [ ] 5.2 Page feedback on D1 (`FEEDBACK_DB`, operator 2026-10-05) with schema SQL in the repo; the production D1 and Pages binding are created by the lead before the merge (packet G).
 
 ## 6. Integration
 
