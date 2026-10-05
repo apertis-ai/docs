@@ -394,11 +394,11 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
   });
 
   for (const [status, body, expected] of [
-    [400, { error: 'Missing Turnstile token' }, 'Ask Docs could not answer (HTTP 400): Missing Turnstile token'],
-    [403, { error: 'Turnstile verification failed', codes: ['invalid-input-response'] }, 'Ask Docs could not answer (HTTP 403): Turnstile verification failed'],
+    [400, { error: 'Missing Turnstile token' }, 'Ask Docs could not accept this question. Reload the page and try again.'],
+    [403, { error: 'Turnstile verification failed', codes: ['invalid-input-response'] }, 'Ask Docs could not accept this question. Reload the page and try again.'],
     [429, { error: 'Query limit reached for this session' }, 'You have reached the query limit. Please refresh to continue.'],
-    [500, { error: 'An error occurred processing your request', traceId: 't-1' }, 'Ask Docs could not answer (HTTP 500): An error occurred processing your request'],
-    [502, '<html>Bad gateway</html>', 'Ask Docs could not answer (HTTP 502): <html>Bad gateway</html>'],
+    [500, { error: 'Jina API error: timeout', traceId: 't-1' }, 'Ask Docs is unavailable right now. Please try again in a moment. (Reference: t-1)'],
+    [502, '<html>Bad gateway</html>', 'Ask Docs is unavailable right now. Please try again in a moment.'],
   ] as const) {
     test(`HTTP ${status} is shown in the panel`, async () => {
       const page = await newPage();
