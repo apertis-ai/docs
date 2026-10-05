@@ -60,7 +60,10 @@ function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
   const dropped = req.headers.filter(([name]) => !KEY_HEADERS.has(name.toLowerCase()) && !CORS_HEADERS.has(name.toLowerCase())).map(([name]) => name);
   const id = `try-it-${Math.random().toString(36).slice(2)}`;
   const key = el('input', { type: 'password', autocomplete: 'off', spellcheck: false, placeholder: 'sk-...' });
-  const body = req.body === null ? null : el('textarea', { spellcheck: false, rows: Math.min(16, req.body.split('\n').length + 1), value: req.body });
+  // The sample's body keeps the indentation of the shell command; a parseable one is re-indented to read as JSON.
+  const pretty = (b: string) => { try { return JSON.stringify(JSON.parse(b), null, 2); } catch { return b; } };
+  const initial = req.body === null ? null : pretty(req.body);
+  const body = initial === null ? null : el('textarea', { spellcheck: false, rows: Math.min(16, initial.split('\n').length + 1), value: initial });
   const send = el('button', { type: 'button', className: 'try-it__send', textContent: 'Send' });
   const cancel = el('button', { type: 'button', className: 'try-it__cancel', textContent: 'Cancel', disabled: true });
   const closeBtn = el('button', { type: 'button', className: 'try-it__close', textContent: '×' });

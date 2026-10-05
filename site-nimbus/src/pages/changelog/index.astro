@@ -52,7 +52,8 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
           <div class="note__body">
             <h2>{n.title}</h2>
             {n.description && <p class="note__desc">{n.description}</p>}
-            {n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t}</li>)}</ul>}
+            {/* The body repeats the items (as headings or a list), so they show only for a note without a body. */}
+            {!n.content && n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t.replace(/^\s*[-*]\s+/, '')}</li>)}</ul>}
             {n.content && <div class="note__content" set:html={body(n.content)} />}
             {n.abridged && <p class="note__desc"><a href={ORIGINAL_NOTES} target="_blank" rel="noopener">Full notes on apertis.ai</a></p>}
           </div>
