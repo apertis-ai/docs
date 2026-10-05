@@ -48,6 +48,31 @@ document.addEventListener('click', (e) => {
 });
 syncThemeButtons();
 
+// Footer service status, as the apertis.ai FooterStatus: BetterStack's public status JSON (CORS *), fetched once
+// the footer comes near the viewport. `aggregate_state` operational is normal; degraded, downtime and
+// maintenance are issues; anything else, or a failed fetch, is unknown.
+const STATUS_LABELS = { normal: 'All Systems Operational', issues: 'Some Systems are Experiencing Issues', unknown: 'System status unavailable' };
+for (const el of $$<HTMLAnchorElement>('[data-footer-status]')) {
+  const show = (state: keyof typeof STATUS_LABELS) => {
+    el.querySelector('.footer__status-indicator')!.className = `footer__status-indicator ${state}`;
+    el.querySelector('.footer__status-text')!.textContent = STATUS_LABELS[state];
+    el.setAttribute('aria-label', `Service status: ${STATUS_LABELS[state]}`);
+  };
+  const check = () => fetch('https://status.apertis.ai/index.json', { credentials: 'omit' })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((body) => {
+      const state = body?.data?.attributes?.aggregate_state;
+      show(state === 'operational' ? 'normal' : ['degraded', 'downtime', 'maintenance'].includes(state) ? 'issues' : 'unknown');
+    })
+    .catch(() => show('unknown'));
+  const seen = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    seen.disconnect();
+    check();
+  }, { rootMargin: '320px 0px' });
+  seen.observe(el);
+}
+
 // Navigation sheet (NavSheet.tsx, hydrated on idle): the header's menu button hands its click over the
 // bridge, so a click before hydration still opens the sheet.
 for (const b of $$('[data-drawer-open]')) b.addEventListener('click', () => send('nav'));

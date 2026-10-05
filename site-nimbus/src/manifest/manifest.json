@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "d9aefa377ff99dbea3c094504ffbed9f99305a9f",
-  "buildId": "d9aefa377ff99dbea3c094504ffbed9f99305a9f.84b55a0d387f",
+  "sourceSha": "60bf3df944f20045534e3852a8d03058ea79d334",
+  "buildId": "60bf3df944f20045534e3852a8d03058ea79d334.aee81d3f4485",
   "documents": [
     {
       "id": "page:index",
@@ -969,9 +969,9 @@
       },
       "markdown": {
         "path": "/help/faq.md",
-        "sha256": "1bcac7a7ba1a61d7cfc1989eafc5961b331f41104377b8384252152c4f8363fb"
+        "sha256": "7f9192c9aeb86fc56c1fac2590bac1d31e451b95013194644ad3735399db4667"
       },
-      "contentSha256": "1bcac7a7ba1a61d7cfc1989eafc5961b331f41104377b8384252152c4f8363fb"
+      "contentSha256": "7f9192c9aeb86fc56c1fac2590bac1d31e451b95013194644ad3735399db4667"
     },
     {
       "id": "default:help/ideas",
