@@ -445,6 +445,7 @@ test('llms-full.txt holds the bytes of every llms.txt artifact, in the same orde
   assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
   for (const [i, f] of full.entries()) assert.ok(Buffer.from(f.markdown).equals(fs.readFileSync(path.join(dist, order[i].markdown!.path))), order[i].id);
   assert.equal(read('llms-full.txt'), llmsFiles(manifest, routes, dist)['llms-full.txt']);
+});
 
 // ---- docs-reader-features: Try it (openspec docs-api-reference-ux "Try it") ----
 test('try it: exactly the cURL samples to api.apertis.ai/v1 carry data-try-it', () => {
