@@ -147,3 +147,43 @@ In addition to tools, the server exposes three read-only resources:
 - All API keys in tool output are masked (first 4 + last 4 characters)
 - New keys are shown in full **once** — save them immediately
 - Keep `APERTIS_API_KEY` out of source control; use your MCP client's env-var expansion
+
+## Docs MCP server (this documentation)
+
+The docs MCP server is a different server from `@apertis/mcp-server` above. It needs no API key and never sees your account: it lets an agent search and read these documentation pages, so its answers follow the current docs rather than its training data.
+
+| | |
+|---|---|
+| Endpoint | `https://docs.apertis.ai/mcp` (MCP Streamable HTTP, stateless, no key) |
+| `search_docs` | `query`, optional `limit` (1–10): ranked pages with title, URL and a text snippet |
+| `get_page` | `url` (a docs.apertis.ai URL or path, as `search_docs` returns it): the page as Markdown |
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http apertis-docs https://docs.apertis.ai/mcp
+```
+
+**Cursor**: add to `~/.cursor/mcp.json`, or `.cursor/mcp.json` in a project:
+
+```json
+{
+  "mcpServers": {
+    "apertis-docs": { "url": "https://docs.apertis.ai/mcp" }
+  }
+}
+```
+
+**VS Code**: add to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "apertis-docs": { "type": "http", "url": "https://docs.apertis.ai/mcp" }
+  }
+}
+```
+
+Any other client that supports remote (Streamable HTTP) MCP servers connects to the same URL.
+
+The same pages are also plain files: [`/llms.txt`](/llms.txt) lists every page with a one-line description and a link to its Markdown, and [`/llms-full.txt`](/llms-full.txt) holds all of them in one file.
