@@ -120,7 +120,7 @@
     "readingMinutes": 6
   },
   "api:text-generation/messages": {
-    "updated": "2026-10-05T18:54:19+08:00",
+    "updated": "2026-10-05T19:20:32+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -128,7 +128,7 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-10-05T18:54:19+08:00",
+    "updated": "2026-10-05T19:20:32+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {

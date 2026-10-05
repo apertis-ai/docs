@@ -140,10 +140,34 @@ The `thinking` parameter enables Claude's extended thinking capability for more 
 | `type` | string | `"enabled"` or `"disabled"` |
 | `budget_tokens` | integer | Token budget for thinking (1024-32768) |
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-0" aria-controls="code-tabs-2-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-1" aria-controls="code-tabs-2-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-2" aria-controls="code-tabs-2-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-2-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 4096,
+        "thinking": {"type": "enabled", "budget_tokens": 10240},
+        "messages": [
+            {"role": "user", "content": "Solve this complex math problem step by step..."}
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 # Extended Thinking Example
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=4096,
     thinking={
         "type": "enabled",
@@ -154,6 +178,30 @@ message = client.messages.create(
     ]
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+// Extended Thinking Example
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 4096,
+  thinking: {
+    type: 'enabled',
+    budget_tokens: 10240
+  },
+  messages: [
+    { role: 'user', content: 'Solve this complex math problem step by step...' }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 ### Extended Parameters (OpenAI-compatible)
 
@@ -216,9 +264,33 @@ console.log(message.content[0].text);
 
 ### With System Prompt
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-0" aria-controls="code-tabs-3-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-1" aria-controls="code-tabs-3-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-2" aria-controls="code-tabs-3-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-3-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "system": "You are a helpful assistant that speaks like a pirate.",
+        "messages": [
+            {"role": "user", "content": "Tell me about the weather."}
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     system="You are a helpful assistant that speaks like a pirate.",
     messages=[
@@ -227,11 +299,56 @@ message = client.messages.create(
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  system: 'You are a helpful assistant that speaks like a pirate.',
+  messages: [
+    { role: 'user', content: 'Tell me about the weather.' }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### Multi-turn Conversation
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-0" aria-controls="code-tabs-4-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-1" aria-controls="code-tabs-4-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-2" aria-controls="code-tabs-4-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-4-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "messages": [
+            {"role": "user", "content": "What is Python?"},
+            {"role": "assistant", "content": "Python is a high-level programming language..."},
+            {"role": "user", "content": "How do I install it?"}
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-4-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is Python?"},
@@ -240,6 +357,27 @@ message = client.messages.create(
     ]
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-4-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    { role: 'user', content: 'What is Python?' },
+    { role: 'assistant', content: 'Python is a high-level programming language...' },
+    { role: 'user', content: 'How do I install it?' }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 ### Streaming
 
@@ -278,6 +416,38 @@ SSE events returned:
 
 ### Vision (Image Input)
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-0" aria-controls="code-tabs-5-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-1" aria-controls="code-tabs-5-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-2" aria-controls="code-tabs-5-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-5-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {"type": "base64", "media_type": "image/png", "data": "<BASE64_IMAGE_DATA>"}
+                    },
+                    {"type": "text", "text": "What do you see in this image?"}
+                ]
+            }
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-5-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 import base64
 
@@ -285,7 +455,7 @@ with open("image.png", "rb") as f:
     image_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     messages=[
         {
@@ -309,9 +479,80 @@ message = client.messages.create(
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-5-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+import fs from 'node:fs';
+
+const imageData = fs.readFileSync('image.png').toString('base64');
+
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: 'image/png',
+            data: imageData
+          }
+        },
+        {
+          type: 'text',
+          text: 'What do you see in this image?'
+        }
+      ]
+    }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### PDF Document Input
 
 Claude can analyze PDF documents directly. Use the `document` content type with base64-encoded PDF data:
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-0" aria-controls="code-tabs-6-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-1" aria-controls="code-tabs-6-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-2" aria-controls="code-tabs-6-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-6-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 4096,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "document",
+                        "source": {"type": "base64", "media_type": "application/pdf", "data": "<BASE64_PDF_DATA>"}
+                    },
+                    {"type": "text", "text": "Summarize this document."}
+                ]
+            }
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-6-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 import base64
@@ -320,7 +561,7 @@ with open("document.pdf", "rb") as f:
     pdf_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=4096,
     messages=[
         {
@@ -343,6 +584,45 @@ message = client.messages.create(
     ]
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-6-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+import fs from 'node:fs';
+
+const pdfData = fs.readFileSync('document.pdf').toString('base64');
+
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 4096,
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'document',
+          source: {
+            type: 'base64',
+            media_type: 'application/pdf',
+            data: pdfData
+          }
+        },
+        {
+          type: 'text',
+          text: 'Summarize this document.'
+        }
+      ]
+    }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 #### Document Source Options
 
