@@ -1,5 +1,6 @@
 ---
 title: "Cline (prev. Claude Dev)"
+description: "Configure the Cline VS Code extension to use Apertis models through its OpenAI Compatible API provider."
 ---
 
 # <img src="/img/cline.svg" width="36" alt="" style="display:inline-block;vertical-align:middle;margin-right:8px" /> Cline (prev. Claude Dev)

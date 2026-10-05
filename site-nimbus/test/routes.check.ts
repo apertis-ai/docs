@@ -53,3 +53,26 @@ test('POST /api/ask reaches the root Pages Function', async () => {
   assert.equal(res.status, 500);
   assert.deepEqual(await res.json(), { error: 'Server configuration error' });
 });
+
+// docs-agent-access: the llms files are text/plain, and /mcp is the docs MCP Pages Function (POST only).
+for (const path of ['/llms.txt', '/llms-full.txt']) {
+  test(`${path} is served as UTF-8 text/plain`, async () => {
+    const res = await get(path);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get('content-type') ?? '', /^text\/plain;\s*charset=utf-8$/i);
+    assert.match(await res.text(), path === '/llms.txt' ? /^# Apertis Documentation\n/ : /^Source: https:\/\/docs\.apertis\.ai\//);
+  });
+}
+
+test('GET /mcp is 405 with Allow: POST', async () => {
+  const res = await get('/mcp');
+  assert.equal(res.status, 405);
+  assert.equal(res.headers.get('allow'), 'POST');
+});
+
+test('POST /mcp reaches the docs MCP server, which reads the deployed llms files', async () => {
+  const rpc = async (body: unknown) => (await get('/mcp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json() as Promise<{ result: any }>;
+  assert.equal((await rpc({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18' } })).result.protocolVersion, '2025-06-18');
+  const page = await rpc({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'get_page', arguments: { url: '/api/' } } });
+  assert.equal(page.result.content[0].text, await (await get('/api/index.md')).text());
+});

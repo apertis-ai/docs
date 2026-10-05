@@ -2,7 +2,7 @@
 //   1. copy src/content/public/** (clean Markdown artifacts, bundled images) into dist verbatim;
 //   2. set contentSha256 of every published entry without Markdown (page:index) from its built <main>
 //      (under CI or M2_CHECK=1 a difference fails the build instead: the committed manifest is stale);
-//   3. write sitemap.xml and the retired-route _redirects (publicationFiles);
+//   3. write sitemap.xml and the retired-route _redirects (publicationFiles), llms.txt and llms-full.txt (llmsFiles);
 //      every build starts from a cleared content-layer cache, and a page that uses a Shiki class
 //      missing from _nimbus/shiki.css fails the build (shikiClassErrors);
 //   4. fail the build unless validateManifest(manifest, { inventory, outDir: dist }) returns [] and
@@ -14,9 +14,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
 
-import type { ManifestV1 } from '../src/contracts/manifest.ts';
-import type { InventoryRoute } from '../src/contracts/navigation.ts';
-import { validateManifest } from '../src/contracts/validate-manifest.ts';
+import { llmsFull, llmsIndex, type LlmsPage } from '../src/agent/llms.ts';
+import { leadSentence, topLevelParagraphs } from '../src/components/shell/page-header.ts';
+import { buildNavigation } from '../src/components/shell/navigation.ts';
+import { MANIFEST_SITE, type ManifestV1 } from '../src/contracts/manifest.ts';
+import type { InventoryRoute, SidebarId } from '../src/contracts/navigation.ts';
+import { decodeEntities, validateManifest } from '../src/contracts/validate-manifest.ts';
 import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, assertStaticClean, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
 
 /**
@@ -52,7 +55,7 @@ export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }
   if (changed) writeManifest(siteRoot, manifest);
 
   const inventory = readInventory(REPO_ROOT);
-  for (const [rel, body] of Object.entries(publicationFiles(manifest, inventory, outDir))) {
+  for (const [rel, body] of Object.entries({ ...publicationFiles(manifest, inventory, outDir), ...llmsFiles(manifest, inventory, outDir) })) {
     if (fs.existsSync(path.join(outDir, rel))) throw new Error(`m2: ${rel} is already emitted by the build; refusing to overwrite`);
     fs.writeFileSync(path.join(outDir, rel), body);
   }
@@ -131,6 +134,51 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
   if (served(RETIRED_TARGET)) throw new Error(`m2: ${RETIRED_TARGET} must not exist in dist`);
   if (rules.length) files._redirects = `# Retired routes (decision on #4) answer 404: rewritten to a path nothing serves.\n${rules.join('\n')}\n`;
   return files;
+}
+
+/** `llms.txt` and `llms-full.txt` (openspec docs-agent-access), from the built pages and artifacts in `outDir`. */
+export function llmsFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
+  const pages = llmsPages(manifest, inventory, outDir);
+  return { 'llms.txt': llmsIndex(pages), 'llms-full.txt': llmsFull(pages) };
+}
+
+/** H2 of a sidebar's top-level items (only api:index today), named as the navbar names the sidebar. */
+const SIDEBAR_SECTIONS: Record<SidebarId, string> = { tutorialSidebar: 'Docs', apiSidebar: 'API Reference' };
+
+/**
+ * The `/llms.txt` entries: every publish+agent manifest document (native articles included when the manifest
+ * marks them so), grouped under its top-level sidebar category in sidebar order (Docs, then API Reference),
+ * then `Other` for unlisted documents. The description is the built page header's, as plain text; a page
+ * whose header has none (its body opens with code or a heading) takes the first body paragraph whose first
+ * sentence the header rule would accept (leadSentence). A page with neither fails the build: give its
+ * source a front-matter `description`.
+ */
+export function llmsPages(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): LlmsPage[] {
+  const placed = new Map(buildNavigation(inventory, manifest.documents).entries.map((e) => [e.id, e]));
+  const sidebars = Object.keys(SIDEBAR_SECTIONS);
+  const rank = (id: string) => { const e = placed.get(id); return e ? [sidebars.indexOf(e.sidebar.sidebar), e.sidebar.order] : [sidebars.length, 0]; };
+  return manifest.documents.filter((d) => d.eligibility.publish && d.eligibility.agent)
+    .map((d) => ({ d, r: rank(d.id) }))
+    .sort((a, b) => a.r[0] - b.r[0] || a.r[1] - b.r[1])
+    .map(({ d }) => {
+      if (!d.markdown) throw new Error(`m2: ${d.id} is agent-eligible without a Markdown artifact`);
+      const html = fs.readFileSync(path.join(outDir, `.${d.servedPath}index.html`), 'utf8');
+      const rule = html.indexOf('<hr class="doc-header__rule">');
+      if (rule < 0) throw new Error(`m2: ${d.servedPath}index.html has no page header rule (src/layouts/DocLayout.astro)`);
+      const body = html.slice(rule, html.lastIndexOf('</article>'));
+      const lead = /<p class="doc-header__desc"[^>]*>([\s\S]*?)<\/p>/.exec(html)?.[1]
+        ?? topLevelParagraphs(body).map(([, , s, e]) => leadSentence(body.slice(s, e))).find(Boolean);
+      if (!lead) throw new Error(`m2: ${d.id} has no description for llms.txt; give ${d.sourcePath} a front-matter description`);
+      const e = placed.get(d.id);
+      return {
+        title: d.title,
+        url: d.canonicalUrl,
+        markdownUrl: `${MANIFEST_SITE}${d.markdown.path}`,
+        description: decodeEntities(lead.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim(),
+        section: e ? e.sidebar.trail[0] ?? SIDEBAR_SECTIONS[e.sidebar.sidebar] : 'Other',
+        markdown: fs.readFileSync(path.join(outDir, d.markdown.path), 'utf8'),
+      };
+    });
 }
 
 export default function publication(): AstroIntegration {

@@ -1,5 +1,6 @@
 ---
 title: "Why Choose Apertis?"
+description: "Why teams choose Apertis: price and performance routing, an OpenAI-compatible API, unified billing and automatic failover across providers."
 ---
 
 # Why Choose Apertis?
