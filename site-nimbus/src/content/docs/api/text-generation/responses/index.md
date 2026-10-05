@@ -19,15 +19,66 @@ The Responses API uses `input` instead of `messages`. You can provide either a s
 
 ## HTTP Request
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-0" aria-controls="code-tabs-1-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-1" aria-controls="code-tabs-1-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-2" aria-controls="code-tabs-1-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-1-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
 ```bash
 curl https://api.apertis.ai/v1/responses \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4.1",
+        "model": "gpt-5.2",
         "input": "What is the capital of France?"
     }'
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.responses.create(
+    model="gpt-5.2",
+    input="What is the capital of France?"
+)
+
+print(response.output_text)
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'What is the capital of France?'
+});
+
+console.log(response.output_text);
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 ## Authentication
 
