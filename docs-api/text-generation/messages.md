@@ -12,17 +12,56 @@ This endpoint exclusively routes to Anthropic-type channels, ensuring full compa
 
 ## HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
     -d '{
-        "model": "claude-sonnet-4.5",
+        "model": "claude-opus-4-5-20251101",
         "max_tokens": 1024,
         "messages": [
             {"role": "user", "content": "Hello, Claude!"}
         ]
     }'
+```
+
+```python tab="Python"
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai"
+)
+
+message = client.messages.create(
+    model="claude-opus-4-5-20251101",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Hello, Claude!"}
+    ]
+)
+
+print(message.content[0].text)
+```
+
+```typescript tab="TypeScript"
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai'
+});
+
+const message: Anthropic.Message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    { role: 'user', content: 'Hello, Claude!' }
+  ]
+});
+
+const block = message.content[0];
+if (block.type === 'text') console.log(block.text);
 ```
 
 :::note
@@ -72,10 +111,24 @@ The `thinking` parameter enables Claude's extended thinking capability for more 
 | `type` | string | `"enabled"` or `"disabled"` |
 | `budget_tokens` | integer | Token budget for thinking (1024-32768) |
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 4096,
+        "thinking": {"type": "enabled", "budget_tokens": 10240},
+        "messages": [
+            {"role": "user", "content": "Solve this complex math problem step by step..."}
+        ]
+    }'
+```
+
+```python tab="Python"
 # Extended Thinking Example
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=4096,
     thinking={
         "type": "enabled",
@@ -85,6 +138,21 @@ message = client.messages.create(
         {"role": "user", "content": "Solve this complex math problem step by step..."}
     ]
 )
+```
+
+```typescript tab="TypeScript"
+// Extended Thinking Example
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 4096,
+  thinking: {
+    type: 'enabled',
+    budget_tokens: 10240
+  },
+  messages: [
+    { role: 'user', content: 'Solve this complex math problem step by step...' }
+  ]
+});
 ```
 
 ### Extended Parameters (OpenAI-compatible)
@@ -148,9 +216,23 @@ console.log(message.content[0].text);
 
 ### With System Prompt
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "system": "You are a helpful assistant that speaks like a pirate.",
+        "messages": [
+            {"role": "user", "content": "Tell me about the weather."}
+        ]
+    }'
+```
+
+```python tab="Python"
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     system="You are a helpful assistant that speaks like a pirate.",
     messages=[
@@ -159,11 +241,37 @@ message = client.messages.create(
 )
 ```
 
+```typescript tab="TypeScript"
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  system: 'You are a helpful assistant that speaks like a pirate.',
+  messages: [
+    { role: 'user', content: 'Tell me about the weather.' }
+  ]
+});
+```
+
 ### Multi-turn Conversation
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "messages": [
+            {"role": "user", "content": "What is Python?"},
+            {"role": "assistant", "content": "Python is a high-level programming language..."},
+            {"role": "user", "content": "How do I install it?"}
+        ]
+    }'
+```
+
+```python tab="Python"
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is Python?"},
@@ -171,6 +279,18 @@ message = client.messages.create(
         {"role": "user", "content": "How do I install it?"}
     ]
 )
+```
+
+```typescript tab="TypeScript"
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    { role: 'user', content: 'What is Python?' },
+    { role: 'assistant', content: 'Python is a high-level programming language...' },
+    { role: 'user', content: 'How do I install it?' }
+  ]
+});
 ```
 
 ### Streaming
@@ -210,14 +330,36 @@ SSE events returned:
 
 ### Vision (Image Input)
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 1024,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {"type": "base64", "media_type": "image/png", "data": "<BASE64_IMAGE_DATA>"}
+                    },
+                    {"type": "text", "text": "What do you see in this image?"}
+                ]
+            }
+        ]
+    }'
+```
+
+```python tab="Python"
 import base64
 
 with open("image.png", "rb") as f:
     image_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=1024,
     messages=[
         {
@@ -241,18 +383,70 @@ message = client.messages.create(
 )
 ```
 
+```typescript tab="TypeScript"
+import fs from 'node:fs';
+
+const imageData = fs.readFileSync('image.png').toString('base64');
+
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: 'image/png',
+            data: imageData
+          }
+        },
+        {
+          type: 'text',
+          text: 'What do you see in this image?'
+        }
+      ]
+    }
+  ]
+});
+```
+
 ### PDF Document Input
 
 Claude can analyze PDF documents directly. Use the `document` content type with base64-encoded PDF data:
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/messages \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: <APERTIS_API_KEY>" \
+    -d '{
+        "model": "claude-opus-4-5-20251101",
+        "max_tokens": 4096,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "document",
+                        "source": {"type": "base64", "media_type": "application/pdf", "data": "<BASE64_PDF_DATA>"}
+                    },
+                    {"type": "text", "text": "Summarize this document."}
+                ]
+            }
+        ]
+    }'
+```
+
+```python tab="Python"
 import base64
 
 with open("document.pdf", "rb") as f:
     pdf_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-opus-4-5-20251101",
     max_tokens=4096,
     messages=[
         {
@@ -274,6 +468,36 @@ message = client.messages.create(
         }
     ]
 )
+```
+
+```typescript tab="TypeScript"
+import fs from 'node:fs';
+
+const pdfData = fs.readFileSync('document.pdf').toString('base64');
+
+const message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 4096,
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'document',
+          source: {
+            type: 'base64',
+            media_type: 'application/pdf',
+            data: pdfData
+          }
+        },
+        {
+          type: 'text',
+          text: 'Summarize this document.'
+        }
+      ]
+    }
+  ]
+});
 ```
 
 #### Document Source Options
