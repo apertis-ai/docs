@@ -52,6 +52,8 @@ async function newPage(turnstile: TurnstileMode | { value: TurnstileMode } = 'ok
           }; })();`,
       });
     }
+    // The footer's service status (the apertis.ai footer's BetterStack JSON): stubbed, not counted.
+    if (url === 'https://status.apertis.ai/index.json') return route.fulfill({ json: { data: { attributes: { aggregate_state: 'operational' } } }, headers: { 'access-control-allow-origin': '*' } });
     // The shell's Google Fonts stylesheet is inherited from legacy (docusaurus.config.js); aborted, not counted.
     if (!url.startsWith('https://challenges.cloudflare.com/') && !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url)) offOrigin.push(url);
     return route.abort();
