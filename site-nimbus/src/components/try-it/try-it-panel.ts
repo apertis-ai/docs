@@ -1,8 +1,9 @@
-// Try it panel (openspec docs-api-reference-ux "Try it"), imported by TryIt.astro on the first open. It sends
-// the sample's request with the reader's key: one fetch, only to https://api.apertis.ai, with the key in the
-// Authorization header. The key lives in the password input and in a local variable of send(); it is never
-// stored, logged or put in a URL, and closing the panel removes the input with it.
-import { API_ORIGIN, parseCurl } from './curl.ts';
+// Try it panel (openspec docs-api-reference-ux "Try it"), loaded by TryIt.astro on the first open as a plain
+// script that exposes window.apertisTryIt. It sends the sample's request with the reader's key: one fetch, only
+// to https://api.apertis.ai, with the key in the Authorization header. The key lives in the password input and
+// in a local variable of send(); it is never stored, logged or put in a URL, and closing the panel removes the
+// input with it.
+import { API_ORIGIN, CORS_HEADERS, parseCurl } from './curl.ts';
 
 // Panel styles, added on the first open (tokens from src/styles/tokens.css; inputs as the Ask Docs form: a
 // hairline that turns muted on focus, never an ink frame).
@@ -40,7 +41,7 @@ const CSS = `
 `;
 const panels = new WeakMap<HTMLElement, () => void>();
 // The sample's own credential headers are placeholders; the reader's key replaces them.
-const KEY_HEADERS = new Set(['authorization', 'x-api-key']);
+const KEY_HEADERS = new Set(['authorization', 'x-api-key', 'api-key']);
 
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, props: object = {}, ...children: (Node | string)[]): HTMLElementTagNameMap[K] => {
   const node = Object.assign(document.createElement(tag), props);
@@ -48,13 +49,15 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, props: object = {}, .
   return node;
 };
 
-export function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
+function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
   const close = panels.get(pre);
   if (close) return close();
   const req = parseCurl(pre.querySelector('code')?.textContent ?? '');
   if ('reason' in req) return;
   if (!document.getElementById('try-it-css')) document.head.append(el('style', { id: 'try-it-css', textContent: CSS }));
 
+  const sent = req.headers.filter(([name]) => !KEY_HEADERS.has(name.toLowerCase()) && CORS_HEADERS.has(name.toLowerCase()));
+  const dropped = req.headers.filter(([name]) => !KEY_HEADERS.has(name.toLowerCase()) && !CORS_HEADERS.has(name.toLowerCase())).map(([name]) => name);
   const id = `try-it-${Math.random().toString(36).slice(2)}`;
   const key = el('input', { type: 'password', autocomplete: 'off', spellcheck: false, placeholder: 'sk-...' });
   const body = req.body === null ? null : el('textarea', { spellcheck: false, rows: Math.min(16, req.body.split('\n').length + 1), value: req.body });
@@ -70,6 +73,7 @@ export function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
       el('p', { className: 'try-it__req' }, el('span', { className: 'try-it__method', textContent: req.method }), el('code', { textContent: req.url })),
       closeBtn),
     el('p', { className: 'try-it__notice', textContent: 'Requests run with your API key and are billed to your account. The key stays on this page and is sent only to api.apertis.ai.' }),
+    ...(dropped.length ? [el('p', { className: 'try-it__notice try-it__dropped', textContent: `Not sent from the browser: ${dropped.join(', ')} (the gateway's CORS policy does not allow it).` })] : []),
     el('label', { className: 'try-it__field' }, el('span', { textContent: 'API key' }), key),
     ...(body ? [el('label', { className: 'try-it__field' }, el('span', { textContent: 'Body (JSON)' }), body)] : []),
     el('div', { className: 'try-it__actions' }, send, cancel),
@@ -94,7 +98,7 @@ export function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
     if (!apiKey) return show('Enter your API key to send the request.', 'error');
     const url = new URL(req.url);
     if (url.origin !== API_ORIGIN) return show(`Refused: requests go only to ${API_ORIGIN}.`, 'error');
-    const headers = new Headers(req.headers.filter(([name]) => !KEY_HEADERS.has(name.toLowerCase())));
+    const headers = new Headers(sent);
     headers.set('Authorization', `Bearer ${apiKey}`);
     if (payload !== undefined && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
 
@@ -148,3 +152,5 @@ export function toggle(pre: HTMLElement, trigger: HTMLButtonElement) {
   trigger.setAttribute('aria-controls', id);
   key.focus();
 }
+
+(window as unknown as { apertisTryIt: typeof toggle }).apertisTryIt = toggle;
