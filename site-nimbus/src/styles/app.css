@@ -10,6 +10,8 @@
 @source '../components';
 @source '../layouts';
 @source '../pages';
+/* The /models/ and /changelog/ snapshots are upstream prose, not class names (components/catalog). */
+@source not '../components/catalog/*.json';
 @import 'tw-animate-css';
 
 /* dark: follows the theme switch (data-theme on <html>), never the OS setting. */
