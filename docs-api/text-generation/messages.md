@@ -12,17 +12,56 @@ This endpoint exclusively routes to Anthropic-type channels, ensuring full compa
 
 ## HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
     -d '{
-        "model": "claude-sonnet-4.5",
+        "model": "claude-opus-4-5-20251101",
         "max_tokens": 1024,
         "messages": [
             {"role": "user", "content": "Hello, Claude!"}
         ]
     }'
+```
+
+```python tab="Python"
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai"
+)
+
+message = client.messages.create(
+    model="claude-opus-4-5-20251101",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Hello, Claude!"}
+    ]
+)
+
+print(message.content[0].text)
+```
+
+```typescript tab="TypeScript"
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai'
+});
+
+const message: Anthropic.Message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    { role: 'user', content: 'Hello, Claude!' }
+  ]
+});
+
+const block = message.content[0];
+if (block.type === 'text') console.log(block.text);
 ```
 
 :::note

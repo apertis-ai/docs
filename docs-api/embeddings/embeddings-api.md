@@ -4,23 +4,46 @@ Apertis provides the Embedding API for developers to convert text into vectors a
 
 ## Usage (Example in Python)
 
-```python
-import http.client
-import json
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/embeddings \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "jina-embeddings-v3",
+        "input": "The food was delicious and the waiter..."
+    }'
+```
 
-conn = http.client.HTTPSConnection("api.apertis.ai")
-payload = json.dumps({
-   "model": "text-embedding-3-large",
-   "input": "The food was delicious and the waiter..."
-})
-headers = {
-   'Authorization': 'Bearer <APERTIS_API_KEY>',
-   'Content-Type': 'application/json'
-}
-conn.request("POST", "/v1/embeddings", payload, headers)
-res = conn.getresponse()
-data = res.read()
-print(data.decode("utf-8"))
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.embeddings.create(
+    model="jina-embeddings-v3",
+    input="The food was delicious and the waiter..."
+)
+
+print(response.data[0].embedding)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.embeddings.create({
+  model: 'jina-embeddings-v3',
+  input: 'The food was delicious and the waiter...'
+});
+
+console.log(response.data[0].embedding);
 ```
 
 ## Parameters
