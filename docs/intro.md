@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "A tour of the Apertis console: sign in, create an API key, add credits and review your request logs."
 ---
 
 # Quick Overview
