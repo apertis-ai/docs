@@ -112,9 +112,6 @@ const tealAtRest = () => {
   const hits: string[] = [];
   for (const el of document.querySelectorAll('body *')) {
     if (!el.checkVisibility({ visibilityProperty: true } as CheckVisibilityOptions)) continue;
-    // The one exception (operator request 2026-10-05): the footer trust icons match the apertis.ai footer, whose
-    // PCI DSS, DPA and MFA icons are teal (#0f766e light, #5eead4 dark).
-    if (el.closest('.footer__trust-icon')) continue;
     const cs = getComputedStyle(el);
     const name = `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}.${[...el.classList].slice(0, 2).join('.')}`;
     if (teal(cs.backgroundColor)) hits.push(`${name} background ${cs.backgroundColor}`);
@@ -194,7 +191,7 @@ test('the footer follows the apertis.ai footer: brand column, five link columns,
 
 test('the footer service status follows status.apertis.ai as the apertis.ai footer does, and the AWS mark keeps its orange smile', { skip }, async () => {
   for (const [body, label, dot] of [
-    [{ data: { attributes: { aggregate_state: 'operational' } } }, 'All Systems Operational', 'rgb(16, 185, 129)'],
+    [{ data: { attributes: { aggregate_state: 'operational' } } }, 'All Systems Operational', 'rgb(34, 197, 94)'],
     [{ data: { attributes: { aggregate_state: 'degraded' } } }, 'Some Systems are Experiencing Issues', 'rgb(217, 119, 6)'],
     [null, 'System status unavailable', 'rgb(168, 162, 158)'],
   ] as const) {
