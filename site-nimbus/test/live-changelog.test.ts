@@ -34,7 +34,7 @@ function parseRss(text: string) {
 test('the committed copy is valid: newest first, unique versions, a category tag on every note', () => {
   assert.deepEqual(changelogNotes(snapshot), snapshot);
   assert.ok(snapshot.length > 10);
-  for (const n of snapshot) assert.deepEqual(Object.keys(n).sort(), ['category', 'content', 'date', 'description', 'items', 'title', 'version']);
+  for (const n of snapshot) assert.deepEqual(Object.keys(n).sort(), ['abridged', 'category', 'content', 'date', 'description', 'items', 'title', 'version']);
 });
 
 test('release notes without a category tag, with non-text items or a repeated version are rejected', () => {
@@ -100,4 +100,17 @@ test('the served /changelog/rss.xml parses as RSS 2.0, newest first, with unique
   const dates = feed.items.map((i) => Date.parse(i.pubDate));
   for (let i = 1; i < dates.length; i++) assert.ok(dates[i] <= dates[i - 1], `item ${i} is newer than item ${i - 1}`);
   for (const i of feed.items) assert.ok(i.link.endsWith(`/changelog/#${i.guid}`) && i.category && i.isPermaLink === 'false', i.guid);
+});
+
+test('a note whose body names a legacy key route or a fixed model count keeps its summary and drops the body', () => {
+  const [a, b, c] = changelogNotes([
+    note('2.0.3', '2026-10-02', { content: 'Now 470+ AI models.' }),
+    note('2.0.2', '2026-10-01', { content: 'Create a key at https://apertis.ai/token' }),
+    note('2.0.1', '2026-09-01'),
+  ]);
+  assert.deepEqual([a.abridged, a.content, a.title, a.items], [true, '', 'Models Added', ['A model']]);
+  assert.deepEqual([b.abridged, b.content], [true, '']);
+  assert.deepEqual([c.abridged, c.content], [false, '## A model']);
+  // Re-validating the snapshot keeps the flag although the body is gone.
+  assert.equal(changelogNotes([a, b, c])[0].abridged, true);
 });

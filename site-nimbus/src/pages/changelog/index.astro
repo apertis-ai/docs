@@ -8,7 +8,7 @@
 import { micromark } from 'micromark';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import notes from '../../components/catalog/changelog.json';
-import { FEED_PATH, changelogNotes } from '../../components/catalog/changelog.ts';
+import { FEED_PATH, ORIGINAL_NOTES, changelogNotes } from '../../components/catalog/changelog.ts';
 import { displayDate } from '../../components/shell/page-header.ts';
 import type { ManifestDocument } from '../../contracts/manifest.ts';
 import { manifest } from '../../manifest/manifest.ts';
@@ -54,6 +54,7 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
             {n.description && <p class="note__desc">{n.description}</p>}
             {n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t}</li>)}</ul>}
             {n.content && <div class="note__content" set:html={body(n.content)} />}
+            {n.abridged && <p class="note__desc"><a href={ORIGINAL_NOTES} target="_blank" rel="noopener">Full notes on apertis.ai</a></p>}
           </div>
         </li>
       ))}

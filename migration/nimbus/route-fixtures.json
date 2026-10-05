@@ -23,6 +23,7 @@
     "/api/sdks/llamaindex",
     "/api/sdks/python-sdk",
     "/api/text-generation/context-compression",
+    "/api/text-generation/prompt-cache",
     "/api/utilities/billing-credits",
     "/api/utilities/fallback-models",
     "/api/utilities/models",
