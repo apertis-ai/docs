@@ -95,6 +95,15 @@ test('endpoint: a cross-origin Origin header is rejected; same-origin and absent
   assert.equal(same.status, 204);
 });
 
+test('endpoint: a declared Content-Length over 4 KB is a 400 before the body is read', async () => {
+  const request = new Request('http://127.0.0.1:8807/_nimbus/feedback', {
+    method: 'POST', headers: { 'content-type': 'application/json', 'content-length': '5000' }, body: '{}',
+  });
+  const res = await call(request);
+  assert.equal(res.status, 400);
+  assert.equal(request.bodyUsed, false);
+});
+
 test('endpoint: a body over 4 KB is a 400', async () => {
   const res = await call(req({ path: PATH, helpful: true, comment: 'x'.repeat(5000) }));
   assert.equal(res.status, 400);
