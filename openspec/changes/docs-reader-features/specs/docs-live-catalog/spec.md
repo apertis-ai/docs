@@ -6,12 +6,13 @@
 - the copyable model ID;
 - the provider and category;
 - the context length;
-- the prices, with the units and charge type that apertis.ai shows for that model;
-- a Deprecated label with its date when deprecated.
+- the prices, with the units and charge type that apertis.ai's catalog list shows for that model.
+
+apertis.ai excludes deprecated models from its catalog, so `/models/` excludes them too and shows no deprecation label (packet E finding).
 
 Readers can filter by text, provider and category. Without JavaScript, the full table is shown.
 
-The page renders from a build-time snapshot, and then swaps in the edge-cached live data from `/_nimbus/catalog`. An upstream failure answers 502 and is not cached, and the page then keeps the snapshot. Models that apertis.ai excludes SHALL NOT appear anywhere in the candidate: not in HTML, the snapshot, the search index, `llms*` or MCP.
+The page renders from a build-time snapshot, and then swaps in the edge-cached live data from `/_nimbus/catalog`. An upstream failure answers 502 and is not cached, and the page then keeps the snapshot. Models that apertis.ai excludes SHALL NOT appear in any catalog output: `/models/`, its snapshot, `/_nimbus/catalog`, the search index, `llms*` or MCP. Release-note text is apertis.ai's public changelog reproduced as published, so it may name models the catalog no longer lists.
 
 #### Scenario: Prices match apertis.ai
 - **WHEN** a model in the snapshot is compared with `https://apertis.ai/models/<model id>`
@@ -19,7 +20,7 @@ The page renders from a build-time snapshot, and then swaps in the edge-cached l
 
 #### Scenario: Hidden model
 - **WHEN** a model ID is in the catalog's `hidden_model_ids`, or is otherwise excluded by apertis.ai
-- **THEN** no candidate output contains it
+- **THEN** no catalog output contains it
 
 ### Requirement: Changelog page and feed
 `/changelog/` SHALL list the public release notes (`https://apertis.ai/api/changelog`), newest first. Each note shows its version, date, category tag, title and description; its items are rendered as text, never as raw HTML. Readers can filter by category. Without JavaScript, all notes are listed.
