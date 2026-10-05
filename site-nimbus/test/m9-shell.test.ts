@@ -112,6 +112,9 @@ const tealAtRest = () => {
   const hits: string[] = [];
   for (const el of document.querySelectorAll('body *')) {
     if (!el.checkVisibility({ visibilityProperty: true } as CheckVisibilityOptions)) continue;
+    // The one exception (operator request 2026-10-05): the footer trust icons match the apertis.ai footer, whose
+    // PCI DSS, DPA and MFA icons are teal (#0f766e light, #5eead4 dark).
+    if (el.closest('.footer__trust-icon')) continue;
     const cs = getComputedStyle(el);
     const name = `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}.${[...el.classList].slice(0, 2).join('.')}`;
     if (teal(cs.backgroundColor)) hits.push(`${name} background ${cs.backgroundColor}`);
@@ -172,21 +175,102 @@ test('the footer follows the apertis.ai footer: brand column, five link columns,
       brand: [...document.querySelector('footer .footer__brand')!.children].map((e) => e.textContent!.trim()),
       columns: [...document.querySelectorAll('footer .footer__columns > div')].map((c) => [c.querySelector('.footer__title')!.textContent, [...c.querySelectorAll('a')].map(link)]),
       titles: [...document.querySelectorAll('footer .footer__title')].map((p) => getComputedStyle(p).textTransform),
-      trust: [...document.querySelectorAll('footer .footer__trust li')].map((li) => li.textContent!.replace(/\s+/g, ' ').trim()),
+      trust: [...document.querySelectorAll('footer .footer__trust li')].map((li) => [li.querySelector('strong')!.textContent, li.querySelector('small')!.textContent, li.querySelector('svg') ? 'icon' : 'no icon']),
       bottom: [...document.querySelectorAll<HTMLAnchorElement>('footer .footer__legal a')].map(link),
       copyright: document.querySelector('footer .footer__copyright')!.textContent,
     };
   });
   const ext = ([label, href]: string[]) => [label, href, ...(href.startsWith('/') || href.startsWith('mailto:') ? ['', ''] : EXT)];
-  assert.deepEqual(f.brand, ['Apertis', 'Apertis AI by STIMA AI LLC.', 'Service status']);
+  assert.deepEqual(f.brand, ['Apertis', 'Apertis AI by STIMA AI LLC.', 'Checking system status']);
   assert.deepEqual(f.columns, Object.entries(FOOTER_COLUMNS).map(([title, links]) => [title, links.map(ext)]));
   assert.ok(f.titles.every((t: string) => t === 'none'), 'sentence-case headings');
-  assert.deepEqual(f.trust, ['AWS Partner Network Member', 'PCI DSS via Stripe', 'DPA Available', 'MFA Supported']);
+  assert.deepEqual(f.trust, [['AWS', 'Partner Network Member', 'icon'], ['PCI DSS', 'via Stripe', 'icon'], ['DPA', 'Available', 'icon'], ['MFA', 'Supported', 'icon']]);
   assert.deepEqual(f.bottom, FOOTER_BOTTOM.map(ext));
   assert.match(f.copyright!, /^© \d{4} STIMA AI LLC$/);
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
   for (const [, href] of Object.values(FOOTER_COLUMNS).flat().filter(([, h]) => h.startsWith('/') && h !== '/blog/')) assert.ok(served.has(href), `${href} is published`);
   await context.close();
+});
+
+test('the footer service status follows status.apertis.ai as the apertis.ai footer does, and the AWS mark keeps its orange smile', { skip }, async () => {
+  for (const [body, label, dot] of [
+    [{ data: { attributes: { aggregate_state: 'operational' } } }, 'All Systems Operational', 'rgb(16, 185, 129)'],
+    [{ data: { attributes: { aggregate_state: 'degraded' } } }, 'Some Systems are Experiencing Issues', 'rgb(217, 119, 6)'],
+    [null, 'System status unavailable', 'rgb(168, 162, 158)'],
+  ] as const) {
+    const { context, page } = await open('/getting-started/quick-start/');
+    await page.route('https://status.apertis.ai/index.json', (r: any) => (body ? r.fulfill({ json: body, headers: { 'access-control-allow-origin': '*' } }) : r.fulfill({ status: 503 })));
+    await page.locator('[data-footer-status]').scrollIntoViewIfNeeded();
+    await page.waitForFunction((l: string) => document.querySelector('.footer__status-text')?.textContent === l, label);
+    assert.equal(await page.locator('[data-footer-status]').getAttribute('aria-label'), `Service status: ${label}`);
+    assert.equal(await page.locator('.footer__status-indicator').evaluate((e: Element) => getComputedStyle(e).backgroundColor), dot);
+    await context.close();
+  }
+  for (const theme of ['light', 'dark']) {
+    const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440], theme);
+    const aws = await page.locator('.footer__aws').evaluate((svg: SVGElement) => [...svg.querySelectorAll('path')].map((p) => getComputedStyle(p).fill));
+    const ink = await page.evaluate(() => getComputedStyle(document.querySelector('.footer__trust-copy strong')!).color);
+    assert.deepEqual(aws, [ink, 'rgb(255, 153, 0)'], `${theme}: wordmark in the text colour, smile in AWS orange`);
+    await context.close();
+  }
+});
+
+test('the sidebar keeps its scroll position when a sidebar link opens another page', { skip }, async () => {
+  const { context, page } = await open('/getting-started/quick-start/', { viewport: { width: 1440, height: 700 } });
+  const sidebar = page.locator('.doc-page__sidebar');
+  await sidebar.evaluate((s: HTMLElement) => { s.scrollTop = s.scrollHeight; });
+  const top = await sidebar.evaluate((s: HTMLElement) => s.scrollTop);
+  assert.ok(top > 200, `the sidebar scrolls (${top})`);
+  const link = page.locator('.doc-page__sidebar a.sidebar__link:not([aria-current])').last();
+  const href = await link.getAttribute('href');
+  await Promise.all([page.waitForURL(`**${href}`), link.click()]);
+  assert.equal(await page.locator('.doc-page__sidebar a[aria-current="page"]').getAttribute('href'), href);
+  assert.ok(Math.abs(await sidebar.evaluate((s: HTMLElement) => s.scrollTop) - top) <= 2, 'scroll position kept');
+  // A page opened directly shows its own entry, even far down the sidebar.
+  const fresh = await context.newPage();
+  await fresh.goto(base + href!, { waitUntil: 'load' });
+  const inView = await fresh.evaluate(() => {
+    const s = document.querySelector('.doc-page__sidebar')!.getBoundingClientRect(), a = document.querySelector('.doc-page__sidebar [aria-current="page"]')!.getBoundingClientRect();
+    return a.top >= s.top && a.bottom <= s.bottom;
+  });
+  assert.ok(inView, 'the current entry is in view');
+  await context.close();
+});
+
+test('installation title icons are one colour: black in light, white in dark', { skip }, async () => {
+  for (const [theme, rgb] of [['light', [0, 0, 0]], ['dark', [255, 255, 255]]] as const) {
+    const { context, page } = await open('/installation/claude-code/', VIEWS[1440], theme);
+    for (const path of ['/installation/claude-code/', '/installation/cursor/', '/installation/cline/']) {
+      await page.goto(base + path, { waitUntil: 'load' });
+      const icon = page.locator('.doc-header h1 img');
+      await icon.evaluate((img: HTMLImageElement) => img.decode());
+      // The rendered pixels of the icon, sampled from a screenshot: every opaque pixel is the theme colour.
+      const shot = await icon.screenshot({ omitBackground: false });
+      const colours = await page.evaluate(async ({ b64, bg }: { b64: string; bg: number[] }) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${b64}`;
+        await img.decode();
+        const c = Object.assign(document.createElement('canvas'), { width: img.width, height: img.height }).getContext('2d')!;
+        c.drawImage(img, 0, 0);
+        const d = c.getImageData(0, 0, img.width, img.height).data;
+        const far = [];
+        for (let i = 0; i < d.length; i += 4) {
+          const px = [d[i], d[i + 1], d[i + 2]];
+          const ink = px.some((v, k) => Math.abs(v - bg[k]) > 60);
+          if (ink) far.push(px);
+        }
+        return far;
+      }, { b64: shot.toString('base64'), bg: theme === 'light' ? [255, 255, 255] : [0, 0, 0] });
+      assert.ok(colours.length > 20, `${theme} ${path}: icon pixels found`);
+      // Anti-aliased edges blend the theme colour with the background, so they stay grey: no pixel may carry a hue,
+      // and the strongest pixel is the theme colour itself.
+      const hued = colours.filter((px: number[]) => Math.max(...px) - Math.min(...px) > 40);
+      assert.deepEqual(hued.slice(0, 3), [], `${theme} ${path}: ${hued.length}/${colours.length} pixels carry a colour`);
+      const strongest = colours.reduce((m: number[], px: number[]) => (Math.abs(px[0] - rgb[0]) < Math.abs(m[0] - rgb[0]) ? px : m));
+      assert.ok(strongest.every((v: number, k: number) => Math.abs(v - rgb[k]) <= 16), `${theme} ${path}: strongest pixel ${strongest} is ${rgb}`);
+    }
+    await context.close();
+  }
 });
 
 test('the navbar destinations are unchanged in the header and in the navigation sheet', { skip }, async () => {
