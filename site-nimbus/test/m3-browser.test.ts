@@ -6,6 +6,7 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
@@ -581,6 +582,42 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.notEqual(await page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
   await reduced.context.close();
   await context.close();
+});
+
+// ---- Print layout (openspec docs-reader-shell-extras "Print layout") ----
+test('print shows only the page header and the article, in the light palette, wrapped and labelled', { skip }, async () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'apertis-print-'));
+  const proof: string[] = [];
+  for (const pathname of [CHAT, QS]) {
+    const { context, page } = await open(pathname);
+    // Dark, so forcing the light palette under print (not just the default) is what gets proven.
+    await page.click('.navbar__right [data-theme-toggle]');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), 'dark', pathname);
+    await page.emulateMedia({ media: 'print' });
+    const display = (sel: string) => page.evaluate((s: string) => { const e = document.querySelector(s); return e && getComputedStyle(e).display; }, sel);
+    for (const sel of ['.navbar', '.breadcrumbs', '.doc-page__sidebar', '.doc-page__toc', '.toc-mobile',
+      'article .doc-header__actions', 'article .doc-header__edit', '.pagination', '.footer', '.ask-docs-trigger', '#apertis-assistant']) {
+      const got = await display(sel);
+      assert.ok(got === 'none' || got === null, `${pathname}: ${sel} still shows under print (${got})`);
+    }
+    for (const sel of ['article .doc-header h1', 'article .doc-meta', 'article']) assert.notEqual(await display(sel), 'none', `${pathname}: ${sel} is hidden under print`);
+    assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 250, 250)', `${pathname}: print palette is not light`);
+    assert.equal(await page.$eval('article .doc-header h1', (e: Element) => getComputedStyle(e).color), 'rgb(10, 10, 10)', `${pathname}: ink is not forced light`);
+    const pre = await page.evaluate(() => { const p = document.querySelector<HTMLElement>('.docs-content pre'); return p && getComputedStyle(p).whiteSpace; });
+    if (pre) assert.equal(pre, 'pre-wrap', `${pathname}: code does not wrap`);
+    const ext = await page.evaluate(() => {
+      const a = document.querySelector<HTMLAnchorElement>('.docs-content a[href^="http"]');
+      return a && { after: getComputedStyle(a, '::after').content, href: a.href };
+    });
+    if (ext) assert.ok(ext.after.includes(ext.href), `${pathname}: external link URL is not appended (${JSON.stringify(ext)})`);
+    const file = path.join(outDir, `${pathname.replace(/\//g, '_')}.pdf`);
+    await page.pdf({ path: file, printBackground: true });
+    const shot = file.replace(/\.pdf$/, '.png');
+    await page.screenshot({ path: shot, fullPage: true });
+    proof.push(file, shot);
+    await context.close();
+  }
+  console.log('print proof:', proof.join(', '));
 });
 
 test('no GitHub raw or other-release requests and no uncaught page errors', { skip }, () => {
