@@ -207,7 +207,8 @@ test('page actions read the same-origin .md from the page meta and report failur
   ]);
   await page.click('.page-actions__toggle');
   const [popup] = await Promise.all([context.waitForEvent('page'), page.click('.page-actions__menu [data-action="view"]')]);
-  await popup.waitForLoadState('domcontentloaded');
+  // A noopener popup can report about:blank at domcontentloaded; wait for the navigation itself.
+  await popup.waitForURL(md);
   assert.equal(popup.url(), md);
   await page.keyboard.press('Escape');
 
@@ -361,7 +362,9 @@ test('the desktop TOC follows the legacy rule: h3s show only under the active h2
   await page.waitForFunction(() => document.querySelector('.doc-page__toc a.active')?.textContent?.trim() === 'Request Timeout');
   assert.deepEqual(await visible(), ['HTTP Request', 'Optional Headers', 'Optional Parameters', 'Context Compression', 'Request Timeout']);
   await page.goto(base + '/api/', { waitUntil: 'load' });
-  assert.deepEqual(await visible(), ['Quick Links', 'Text Generation', 'Multimodal', 'Utilities', 'SDKs & Libraries', 'Base URL', 'Authentication']);
+  // "Choosing an API format" (docs-reader-features) is now the first h2, so it is active at the top and the
+  // Quick Links h3s stay hidden.
+  assert.deepEqual(await visible(), ['Choosing an API format', 'Quick Links', 'Base URL', 'Authentication']);
   await context.close();
 });
 
@@ -445,10 +448,11 @@ test('every document page opens with the header block: tag, title, description, 
     assert.ok((await text('article .doc-header__desc')).length > 10, p);
     assert.ok(await page.isVisible('article .doc-meta'), p);
   }
-  // No qualifying description (the body opens with code; later paragraphs are never borrowed): no element
-  // and no gap, the meta row follows the title at its usual distance.
-  await page.goto(base + CHAT, { waitUntil: 'load' });
-  assert.equal(await page.$('article .doc-header__desc'), null);
+  // No qualifying description (no front-matter description, and later paragraphs are never borrowed): no
+  // element and no gap, the meta row follows the title at its usual distance. Chat Completions gained a
+  // front-matter description in docs-reader-features (llms.txt), so the example is now Responses.
+  await page.goto(base + '/api/text-generation/responses/', { waitUntil: 'load' });
+  assert.equal(await page.$('article .doc-header__desc') === null, true);
   const gap = await page.evaluate(() => {
     const h1 = document.querySelector('article .doc-header h1')!.getBoundingClientRect();
     const meta = document.querySelector<HTMLElement>('article .doc-header__meta')!;
