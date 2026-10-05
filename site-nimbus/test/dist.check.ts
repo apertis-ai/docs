@@ -57,8 +57,9 @@ test('every output file derives from a publishable manifest entry or is referenc
   const generated = inventory.routes.filter((r: InventoryRoute) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical)
     .map((r: InventoryRoute) => `${r.path.slice(1)}/index.html`);
   // The /blog/ index (openspec docs-routing-publication "Native articles", operator review 2026-10-03): served
-  // with or without articles, never a manifest document.
-  const html = [...pages, ...generated, 'blog/index.html', '404.html'];
+  // with or without articles, never a manifest document; so are /models/ and /changelog/ (openspec
+  // docs-live-catalog), whose live data and feed are Pages Functions, not files.
+  const html = [...pages, ...generated, 'blog/index.html', 'models/index.html', 'changelog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
