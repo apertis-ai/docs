@@ -41,13 +41,14 @@ export function releaseNotes(data: unknown): ReleaseNote[] {
 }
 
 /**
- * The `count` most recently added models: enabled, not deprecated, and not a `:variant` of another model
- * (such as `:free`); a record without an id, name, provider, category or added time is skipped, not shown.
+ * The `count` most recently added models: enabled, not deprecated, not in the catalog's `hidden_model_ids`
+ * (apertis.ai never shows those; docs-live-catalog), and not a `:variant` of another model (such as `:free`);
+ * a record without an id, name, provider, category or added time is skipped, not shown.
  */
-export function newModels(records: unknown, count = NEW_MODELS): NewModel[] {
+export function newModels(records: unknown, count = NEW_MODELS, hidden: ReadonlySet<string> = new Set()): NewModel[] {
   if (!Array.isArray(records)) throw new Error('new models: expected a list');
   const models = records
-    .filter((r) => r && r.is_enabled !== false && !r.is_deprecated && text(r.model_id) && !r.model_id.includes(':')
+    .filter((r) => r && r.is_enabled !== false && !r.is_deprecated && text(r.model_id) && !hidden.has(r.model_id) && !r.model_id.includes(':')
       && text(r.display_name) && text(r.provider) && text(r.category) && Number.isFinite(r.created_at) && r.created_at > 0)
     .sort((a, b) => b.created_at - a.created_at)
     .slice(0, count)
@@ -77,7 +78,9 @@ export async function fetchFeed(fetcher: typeof fetch): Promise<HomeFeed> {
   const total = Number(catalog?.pagination?.total);
   const providers = catalog?.aggregations?.providers?.length ?? 0;
   if (!(total > 0) || !(providers > 0)) throw new Error(`${SOURCES.models}: no model or provider count`);
-  return { notes: releaseNotes(notes), models: newModels(catalog.models), total, providers };
+  const hidden = catalog?.hidden_model_ids;
+  if (!Array.isArray(hidden)) throw new Error(`${SOURCES.models}: no hidden_model_ids`);
+  return { notes: releaseNotes(notes), models: newModels(catalog.models, NEW_MODELS, new Set(hidden)), total, providers };
 }
 
 /** "1M", "262K": a context window for a model card. */

@@ -49,12 +49,12 @@ const label = (category: string) => views.find((v) => v['category-key'] === cate
                 <a data-f="href" href={v.href} target="_blank" rel="noopener noreferrer"><span data-f="name">{v.name}</span></a>
                 <code class="catalog__id" data-f="id" title="Model ID">{v.id}</code>
               </th>
-              <td data-f="provider">{v.provider}</td>
-              <td data-f="category">{v.category}</td>
-              <td data-f="context">{v.context}</td>
-              <td data-f="charge">{v.charge}</td>
-              <td data-f="input">{v.input}</td>
-              <td data-f="output">{v.output}</td>
+              <td data-f="provider" data-label="Provider">{v.provider}</td>
+              <td data-f="category" data-label="Category">{v.category}</td>
+              <td data-f="context" data-label="Context">{v.context}</td>
+              <td data-f="charge" data-label="Billing">{v.charge}</td>
+              <td data-f="input" data-label="Input">{v.input}</td>
+              <td data-f="output" data-label="Output">{v.output}</td>
             </tr>
           ))}
         </tbody>
@@ -86,6 +86,17 @@ const label = (category: string) => views.find((v) => v['category-key'] === cate
   .catalog__table tbody th a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .catalog__table td { color: var(--desc); font-variant-numeric: tabular-nums; }
   .catalog__id { display: block; margin-top: 2px; color: var(--muted); user-select: all; cursor: copy; }
+  /* Phones: each model is a card with its prices under the name, instead of a table scrolled sideways. */
+  @media (max-width: 640px) {
+    .catalog__scroll { overflow: visible; border: 0; border-radius: 0; }
+    .catalog__table, .catalog__table tbody { display: block; }
+    .catalog__table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .catalog__table tbody tr:not([hidden]) { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
+    .catalog__table tbody tr > * { padding: 0; border: 0; white-space: normal; }
+    .catalog__table tbody th { grid-column: 1 / -1; }
+    .catalog__table td::before { content: attr(data-label); display: block; color: var(--muted); font-size: var(--fs-xs); }
+    .catalog__table td:empty { display: none; }
+  }
   .catalog__empty, .catalog__note { margin: 16px 0 0; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
 </style>
 
