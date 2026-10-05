@@ -235,7 +235,7 @@ test('without JavaScript the navigation and landing links still work and no dead
   ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
   // Two header rows (canary step 5a): logo and account actions, then the section tabs with Blog.
-  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', 'https://apertis.ai/changelog']);
+  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', '/changelog/']);
   await context.close();
 });
 

@@ -1,0 +1,149 @@
+---
+// The model catalog (openspec docs-live-catalog "Model catalog page"): every model apertis.ai lists, with its
+// copyable ID, provider, category, context window, billing and prices, as apertis.ai shows them
+// (components/catalog/models.ts). Rendered at build time from models.json, so without JavaScript the full table
+// is there; the script below reveals the text, provider and category filters and swaps in /_nimbus/catalog
+// after load. Like the /blog/ index, the page is not a manifest document: it is never indexed and has no
+// Markdown.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import catalog from '../../components/catalog/models.json';
+import { modelView, type CatalogModel } from '../../components/catalog/models.ts';
+import type { ManifestDocument } from '../../contracts/manifest.ts';
+import { manifest } from '../../manifest/manifest.ts';
+
+const doc: ManifestDocument = {
+  id: 'page:models', sourcePath: '', servedPath: '/models/', canonicalUrl: 'https://docs.apertis.ai/models/', title: 'Models',
+  eligibility: { publish: true, search: false, agent: false, rag: false }, markdown: null, contentSha256: '',
+};
+const views = (catalog.models as CatalogModel[]).map(modelView);
+const options = (key: string) => [...new Set(views.map((v) => v[key]))].sort((a, b) => a.localeCompare(b));
+const label = (category: string) => views.find((v) => v['category-key'] === category)!.category;
+---
+<BaseLayout doc={doc} buildId={manifest.buildId}>
+  <main class="shell-container catalog" id="main">
+    <div class="catalog__intro">
+      <h1>Models</h1>
+      <p>Every model you can call through Apertis with one API key. Prices are in USD, per million tokens unless the model is billed per request; pass the model ID as <code>model</code> in your request.</p>
+    </div>
+    <form class="catalog__filters" data-filters hidden role="search" aria-label="Filter models" onsubmit="return false">
+      <input type="search" name="q" placeholder="Filter by name or ID" aria-label="Filter by name or ID" autocomplete="off" />
+      <select name="provider" aria-label="Provider">
+        <option value="">All providers</option>
+        {options('provider-key').map((p) => <option value={p}>{p}</option>)}
+      </select>
+      <select name="category" aria-label="Category">
+        <option value="">All categories</option>
+        {options('category-key').map((c) => <option value={c}>{label(c)}</option>)}
+      </select>
+      <output class="catalog__count" data-count aria-live="polite">{views.length} models</output>
+    </form>
+    <div class="catalog__scroll" role="region" aria-label="Model catalog" tabindex="0">
+      <table class="catalog__table">
+        <thead>
+          <tr><th scope="col">Model</th><th scope="col">Provider</th><th scope="col">Category</th><th scope="col">Context</th><th scope="col">Billing</th><th scope="col">Input</th><th scope="col">Output</th></tr>
+        </thead>
+        <tbody data-rows>
+          {views.map((v) => (
+            <tr data-search={v.search} data-provider={v['provider-key']} data-category={v['category-key']}>
+              <th scope="row">
+                <a data-f="href" href={v.href} target="_blank" rel="noopener noreferrer"><span data-f="name">{v.name}</span></a>
+                <code class="catalog__id" data-f="id" title="Model ID">{v.id}</code>
+              </th>
+              <td data-f="provider">{v.provider}</td>
+              <td data-f="category">{v.category}</td>
+              <td data-f="context">{v.context}</td>
+              <td data-f="charge">{v.charge}</td>
+              <td data-f="input">{v.input}</td>
+              <td data-f="output">{v.output}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="catalog__empty" data-empty hidden>No model matches these filters.</p>
+    <p class="catalog__note">Usage-based models are billed per audio second or character; their rates are on each model's page at apertis.ai. Prices shown are base rates; your account's plan may change the final charge.</p>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  .catalog { padding-block: 72px 24px; }
+  .catalog__intro { max-width: 720px; }
+  .catalog__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
+  .catalog__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+  .catalog__intro code, .catalog__id { font-family: var(--mono); font-size: var(--fs-xs); }
+  .catalog__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 32px; }
+  .catalog__filters[hidden] { display: none; }
+  .catalog__filters input, .catalog__filters select { height: 36px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; font-size: var(--fs-ui); }
+  .catalog__filters input { flex: 1 1 240px; min-width: 0; }
+  .catalog__count { margin-left: auto; color: var(--muted); font-size: var(--fs-ui); }
+  .catalog__scroll { margin-top: 16px; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .catalog__table { width: 100%; border-spacing: 0; font-size: var(--fs-ui); }
+  .catalog__table th, .catalog__table td { padding: 10px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
+  .catalog__table thead th { color: var(--muted); font-weight: 500; }
+  .catalog__table tbody tr:last-child > * { border-bottom: 0; }
+  .catalog__table tbody th { font-weight: 500; }
+  .catalog__table tbody th a { color: var(--ink); }
+  .catalog__table tbody th a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .catalog__table td { color: var(--desc); font-variant-numeric: tabular-nums; }
+  .catalog__id { display: block; margin-top: 2px; color: var(--muted); user-select: all; cursor: copy; }
+  .catalog__empty, .catalog__note { margin: 16px 0 0; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
+</style>
+
+<script>
+  // Filters (revealed only here, so without JavaScript the full table stands) and the live swap from
+  // functions/_nimbus/catalog.ts: rows are refilled by cloning the first one and setting its `data-f` fields
+  // from the same views the build used. Any failure keeps the build's copy. A click on a model ID copies it.
+  import { modelView, type Catalog, type View } from '../../components/catalog/models.ts';
+
+  const form = document.querySelector<HTMLFormElement>('[data-filters]')!;
+  const rows = document.querySelector('[data-rows]')!;
+  const count = document.querySelector('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+
+  const apply = () => {
+    const q = (form.elements.namedItem('q') as HTMLInputElement).value.trim().toLowerCase();
+    const provider = (form.elements.namedItem('provider') as HTMLSelectElement).value;
+    const category = (form.elements.namedItem('category') as HTMLSelectElement).value;
+    let shown = 0;
+    for (const tr of rows.children as HTMLCollectionOf<HTMLElement>) {
+      const { search = '', provider: p, category: c } = tr.dataset;
+      tr.hidden = !(search.includes(q) && (!provider || p === provider) && (!category || c === category));
+      if (!tr.hidden) shown++;
+    }
+    count.textContent = `${shown} ${shown === 1 ? 'model' : 'models'}`;
+    empty.hidden = shown > 0;
+  };
+  form.addEventListener('input', apply);
+  form.hidden = false;
+
+  const fill = (views: View[]) => {
+    const template = rows.firstElementChild;
+    if (!template || !views.length) return;
+    rows.replaceChildren(...views.map((v) => {
+      const tr = template.cloneNode(true) as HTMLElement;
+      Object.assign(tr.dataset, { search: v.search, provider: v['provider-key'], category: v['category-key'] });
+      for (const el of tr.querySelectorAll<HTMLElement>('[data-f]')) {
+        if (el.dataset.f === 'href') el.setAttribute('href', v.href);
+        else el.textContent = v[el.dataset.f!] ?? '';
+      }
+      return tr;
+    }));
+    // A provider or category the build did not know becomes an option too.
+    for (const [name, key] of [['provider', 'provider-key'], ['category', 'category-key']] as const) {
+      const select = form.elements.namedItem(name) as HTMLSelectElement;
+      const known = new Set([...select.options].map((o) => o.value));
+      for (const v of views) if (!known.has(v[key])) { select.add(new Option(name === 'category' ? v.category : v[key], v[key])); known.add(v[key]); }
+    }
+    apply();
+  };
+
+  rows.addEventListener('click', (e) => {
+    const id = (e.target as Element).closest('.catalog__id');
+    if (id?.textContent) navigator.clipboard?.writeText(id.textContent).then(() => { count.textContent = `Copied ${id.textContent}`; }, () => {});
+  });
+
+  fetch('/_nimbus/catalog', { priority: 'low' } as RequestInit)
+    .then((r) => (r.ok ? (r.json() as Promise<Catalog>) : null))
+    .then((catalog) => { if (catalog && Array.isArray(catalog.models)) fill(catalog.models.map(modelView)); })
+    .catch(() => {});
+</script>

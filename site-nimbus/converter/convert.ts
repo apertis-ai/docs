@@ -107,7 +107,8 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
   }
 
   const bySource = new Map(ctx.inventory.filter((r) => r.sourcePath).map((r) => [r.sourcePath, r]));
-  const paths = new Set(ctx.inventory.filter((r) => r.disposition !== 'absent-at-baseline').map((r) => r.path));
+  // Plus the standalone /models/ page (openspec docs-live-catalog), which is no inventory row or document.
+  const paths = new Set([...ctx.inventory.filter((r) => r.disposition !== 'absent-at-baseline').map((r) => r.path), '/models']);
   const assets: BundledAsset[] = [];
   const base = canonicalPath(row);
 
