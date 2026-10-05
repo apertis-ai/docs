@@ -29,7 +29,7 @@ const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 const text = (html: string) => html.replace(/<[^>]*>/g, '').trim();
 
 /** Top-level `<p>` elements of `html`: [start, end, innerStart, innerEnd]. */
-function topLevelParagraphs(html: string): [number, number, number, number][] {
+export function topLevelParagraphs(html: string): [number, number, number, number][] {
   const out: [number, number, number, number][] = [];
   let depth = 0;
   let open: [number, number] | null = null;
@@ -70,6 +70,13 @@ export function firstSentenceEnd(inner: string): number {
   return end >= 0 ? end : inner.length;
 }
 
+/** The first sentence of a paragraph's inner HTML, or null when it is under 4 words or ends with ':'. */
+export function leadSentence(inner: string): string | null {
+  const sentence = inner.slice(0, firstSentenceEnd(inner)).trim();
+  const words = text(sentence).split(/\s+/).filter(Boolean);
+  return words.length < 4 || text(sentence).endsWith(':') ? null : sentence;
+}
+
 export function pageHeaderParts(html: string, frontDescription?: string): PageHeaderParts {
   const m = /^\s*(<h1\b[\s\S]*?<\/h1>)/.exec(html);
   if (!m) throw new Error('page header: the rendered body must start with its <h1> (converter/convert.ts guarantees one)');
@@ -81,11 +88,9 @@ export function pageHeaderParts(html: string, frontDescription?: string): PageHe
   if (!p || body.slice(0, p[0]).trim() !== '') return none; // the opening block is not a paragraph
   const [start, end, innerStart, innerEnd] = p;
   const inner = body.slice(innerStart, innerEnd);
-  const cut = firstSentenceEnd(inner);
-  const sentence = inner.slice(0, cut).trim();
-  const words = text(sentence).split(/\s+/).filter(Boolean);
-  if (words.length < 4 || text(sentence).endsWith(':')) return none;
-  const rest = inner.slice(cut).trim();
+  const sentence = leadSentence(inner);
+  if (!sentence) return none;
+  const rest = inner.slice(firstSentenceEnd(inner)).trim();
   const lead = rest ? `${body.slice(start, innerStart)}${rest}${body.slice(innerEnd, end)}` : '';
   return { h1, description: sentence, body: body.slice(0, start) + lead + body.slice(end) };
 }

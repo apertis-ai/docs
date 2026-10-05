@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e707b600c883c59e6adce08a7e25f618ebb15d84",
-  "buildId": "e707b600c883c59e6adce08a7e25f618ebb15d84.c397060a3a89",
+  "sourceSha": "0590457ad1a5c4d6a65f50afb3d857ce52989704",
+  "buildId": "0590457ad1a5c4d6a65f50afb3d857ce52989704.096f6b187a70",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "8dc74af3d09d938c22a92e44fd227e58396b885c45e397dfe9a6893f767c7dd4"
+        "sha256": "1f4b813f4ef428cc88173a46bb2e58572fd0566414e7669376f95712c6faf91e"
       },
-      "contentSha256": "8dc74af3d09d938c22a92e44fd227e58396b885c45e397dfe9a6893f767c7dd4"
+      "contentSha256": "1f4b813f4ef428cc88173a46bb2e58572fd0566414e7669376f95712c6faf91e"
     },
     {
       "id": "api:audio-video/audio",
@@ -249,9 +249,9 @@
       },
       "markdown": {
         "path": "/api/sdks/mcp-server.md",
-        "sha256": "48a911234daa76262255ce21a4ec6c038110c394b7054d986f9aa37517e20106"
+        "sha256": "da0768901cb89ff2c58346d3d1608fd5dfb0b92cd4b4c984a5428db8cd26a88b"
       },
-      "contentSha256": "48a911234daa76262255ce21a4ec6c038110c394b7054d986f9aa37517e20106"
+      "contentSha256": "da0768901cb89ff2c58346d3d1608fd5dfb0b92cd4b4c984a5428db8cd26a88b"
     },
     {
       "id": "api:sdks/python-sdk/index",

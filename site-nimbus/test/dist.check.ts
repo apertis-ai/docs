@@ -13,7 +13,11 @@ import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
-import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
+import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
+import { readArticles } from '../converter/articles.ts';
+import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
+import { decodeEntities } from '../src/contracts/validate-manifest.ts';
+import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -79,7 +83,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   // #7: clean Markdown artifacts at their manifest paths (agent-eligible entries only).
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
   // #13: root files derived from the manifest and inventory; their content is checked below.
-  const derived = ['sitemap.xml', '_redirects'];
+  // docs-agent-access adds /llms.txt and /llms-full.txt (from the publish+agent entries), checked below too.
+  const derived = ['sitemap.xml', '_redirects', 'llms.txt', 'llms-full.txt'];
   const allowed = new Set([...html, ...referenced, ...markdown, ...derived, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
@@ -294,7 +299,9 @@ test('m8: retired routes are in no publication channel and every path they had a
   assert.deepEqual([...rewritten].sort(), ['/404', '/404.html', '/404/']);
   const text = [read('sitemap.xml'), ...fragments().map((f) => f.url)].join('\n');
   for (const r of retired) assert.equal(text.includes(`https://docs.apertis.ai${r.path}<`) || fragments().some((f) => f.url.replace(/\/$/, '') === r.path), false, r.path);
-  assert.equal(files.some((f) => /^llms/.test(f)), false, 'llms files are not produced by this candidate');
+  // docs-agent-access supersedes "no llms* outputs": they exist, and no retired path is in them.
+  const agentKeys = new Set(parseIndex(read('llms.txt')).map((e) => pageKey(e.markdownUrl)));
+  for (const r of retired) assert.equal(agentKeys.has(r.path), false, `${r.path} in llms.txt`);
 });
 
 test('every recorded post-cutover content change matches its built page', () => {
@@ -357,4 +364,45 @@ test('m8: every internal link in every converted page resolves to a built file (
     assert.deepEqual(hrefs.filter((h) => !builtFile(h)), [], `${d.id}: unresolved internal links`);
   }
   assert.ok(n > 100, `${n} internal links checked`);
+});
+
+// ---- docs-agent-access: /llms.txt and /llms-full.txt ----
+const agentDocs = manifest.documents.filter((d) => d.eligibility.publish && d.eligibility.agent);
+const mdUrl = (d: (typeof manifest.documents)[number]) => `${MANIFEST_SITE}${d.markdown!.path}`;
+
+test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar sections, each with a description', () => {
+  const body = read('llms.txt');
+  const entries = parseIndex(body);
+  assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
+  assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
+  assert.equal(entries.length, 78);
+  assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
+  for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
+  // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
+  assert.equal(entries.some((e) => pageKey(e.markdownUrl) === '/'), false);
+  for (const a of readArticles(root).filter((x) => x.draft)) assert.equal(entries.some((e) => e.markdownUrl.includes(`/blog/${a.slug}`)), false, a.slug);
+  assert.deepEqual([...new Set(entries.map((e) => e.section))], ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security',
+    'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
+  assert.equal(body, llmsFiles(manifest, routes, dist)['llms.txt']);
+});
+
+test('an llms.txt description is the page header description wherever the page shows one', () => {
+  const byUrl = new Map(parseIndex(read('llms.txt')).map((e) => [e.markdownUrl, e.description]));
+  let n = 0;
+  for (const d of agentDocs) {
+    const header = /<p class="doc-header__desc"[^>]*>([\s\S]*?)<\/p>/.exec(read(`${d.servedPath.slice(1)}index.html`))?.[1];
+    if (header === undefined) continue;
+    assert.equal(byUrl.get(mdUrl(d)), decodeEntities(header.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim(), d.id);
+    n++;
+  }
+  assert.ok(n > 50, `${n} header descriptions compared`);
+});
+
+test('llms-full.txt holds the bytes of every llms.txt artifact, in the same order, each under its Source line', () => {
+  const byMd = new Map(agentDocs.map((d) => [mdUrl(d), d]));
+  const order = parseIndex(read('llms.txt')).map((e) => byMd.get(e.markdownUrl)!);
+  const full = parseFull(read('llms-full.txt'));
+  assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
+  for (const [i, f] of full.entries()) assert.ok(Buffer.from(f.markdown).equals(fs.readFileSync(path.join(dist, order[i].markdown!.path))), order[i].id);
+  assert.equal(read('llms-full.txt'), llmsFiles(manifest, routes, dist)['llms-full.txt']);
 });
