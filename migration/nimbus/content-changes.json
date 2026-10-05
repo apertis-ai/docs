@@ -7,7 +7,7 @@
       "links": { "added": ["/getting-started/quick-start"], "removed": ["https://playground.apertis.ai"] }
     },
     "api:index": {
-      "commit": "pending",
+      "commit": "4a16726",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
       "links": { "added": ["/api/text-generation/prompt-cache"], "removed": [] }
     }
