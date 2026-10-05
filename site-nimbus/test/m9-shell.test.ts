@@ -34,7 +34,7 @@ const FOOTER_COLUMNS = {
 };
 const FOOTER_BOTTOM = [['Security & Compliance', `${A}/trust`], ['DPA requests', `${A}/trust/dpa`], ['Service Status', 'https://status.apertis.ai']];
 // Navbar destinations ("Preserved reader-facing shell" and the Blog tab), in tab order, then the account actions.
-const NAV = ['/intro', '/api', '/blog/', 'https://apertis.ai/changelog', 'https://apertis.ai/login', 'https://apertis.ai/register'];
+const NAV = ['/intro', '/api', '/blog/', '/changelog/', 'https://apertis.ai/login', 'https://apertis.ai/register'];
 
 // The homepage feed rows as shown: each `data-f` field's text (or href, or "" when hidden), per list.
 type Row = Record<string, string>;
@@ -275,7 +275,8 @@ test('the navbar destinations are unchanged in the header and in the navigation 
   // Reading order of the two header rows (canary step 5a): logo and account actions, then the section tabs.
   assert.deepEqual(await page.$$eval('header.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href'))), ['/', ...NAV.slice(4), ...NAV.slice(0, 4)]);
   const ext = await page.$$eval('header.navbar a[target]', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel]));
-  assert.deepEqual(ext, [...NAV.slice(4), NAV[3]].map((h) => [h, ...EXT]));
+  // Release Notes is the docs' own /changelog/ (openspec docs-live-catalog), so only the account actions open apertis.ai.
+  assert.deepEqual(ext, NAV.slice(4).map((h) => [h, ...EXT]));
   await context.close();
   const mobile = await open('/api/', VIEWS[390]);
   await mobile.page.click('[data-drawer-open]');
@@ -298,9 +299,11 @@ test('static parts are server-rendered without hydration; homepage links all res
   // The homepage body links each internal destination once: the quick start, the start items and the blog.
   const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
   assert.deepEqual(body.sort(), ['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro']);
-  // /blog/ is the articles index, not a manifest document; it is served with or without articles.
-  for (const href of internal) assert.ok(href === '/blog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
+  // /blog/ is the articles index and /changelog/ the release notes (openspec docs-live-catalog), not manifest
+  // documents; both are always served.
+  for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
   assert.equal((await page.request.get(base + '/blog/')).status(), 200);
+  assert.equal((await page.request.get(base + '/changelog/')).status(), 200);
   // The legacy feature-card destinations stay on the homepage (the Playground is gone, 2026-10-03), with SDKs.
   const features = await page.$$eval('main a.feature-card', (as: HTMLAnchorElement[]) => as.map((a) => [a.getAttribute('href'), a.target, a.rel].join(' ')));
   assert.deepEqual(features.sort(), ['/intro', '/installation/models', '/api', '/installation/claude-code', '/installation/scripts', '/billing/subscription-plans'].map((f) => `${f}  `).sort());
