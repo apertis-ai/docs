@@ -58,6 +58,10 @@ const related = native.length
   <link slot="head" rel="stylesheet" href="/_nimbus/shiki.css" />
   <div class:list={['doc-page', { 'doc-page--sidebar': nav }]}>
     {nav && <aside class="doc-page__sidebar"><Sidebar nav={nav} /></aside>}
+    {/* Every page load renders the sidebar afresh. Keep its scroll position across pages of the same sidebar
+        (identified by its first link), so the reader stays where they clicked; when the current page's entry is
+        still out of view (search, prev/next, a deep link), centre it. Inline, so it runs before the first paint. */}
+    {nav && <script is:inline>(()=>{const s=document.currentScript.previousElementSibling,k='apertis-docs:sidebar-scroll',id=s.querySelector('a')?.getAttribute('href')||'';try{const v=JSON.parse(sessionStorage.getItem(k)||'null');if(v&&v.id===id)s.scrollTop=v.top}catch(e){}const a=s.querySelector('[aria-current="page"]');if(a){const r=a.getBoundingClientRect(),b=s.getBoundingClientRect();if(r.top<b.top||r.bottom>b.bottom)s.scrollTop+=r.top-b.top-(b.height-r.height)/2}addEventListener('pagehide',()=>{try{sessionStorage.setItem(k,JSON.stringify({id,top:s.scrollTop}))}catch(e){}})})()</script>}
     <main class="doc-page__main" id="main">
       {nav && (
         <nav class="breadcrumbs" aria-label="Breadcrumbs">

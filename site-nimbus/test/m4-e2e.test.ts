@@ -52,6 +52,8 @@ async function newPage(turnstile: TurnstileMode | { value: TurnstileMode } = 'ok
           }; })();`,
       });
     }
+    // The footer's service status (the apertis.ai footer's BetterStack JSON): stubbed, not counted.
+    if (url === 'https://status.apertis.ai/index.json') return route.fulfill({ json: { data: { attributes: { aggregate_state: 'operational' } } }, headers: { 'access-control-allow-origin': '*' } });
     // The shell's Google Fonts stylesheet is inherited from legacy (docusaurus.config.js); aborted, not counted.
     if (!url.startsWith('https://challenges.cloudflare.com/') && !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url)) offOrigin.push(url);
     return route.abort();
@@ -394,11 +396,11 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
   });
 
   for (const [status, body, expected] of [
-    [400, { error: 'Missing Turnstile token' }, 'Ask Docs could not answer (HTTP 400): Missing Turnstile token'],
-    [403, { error: 'Turnstile verification failed', codes: ['invalid-input-response'] }, 'Ask Docs could not answer (HTTP 403): Turnstile verification failed'],
+    [400, { error: 'Missing Turnstile token' }, 'Ask Docs could not accept this question. Reload the page and try again.'],
+    [403, { error: 'Turnstile verification failed', codes: ['invalid-input-response'] }, 'Ask Docs could not accept this question. Reload the page and try again.'],
     [429, { error: 'Query limit reached for this session' }, 'You have reached the query limit. Please refresh to continue.'],
-    [500, { error: 'An error occurred processing your request', traceId: 't-1' }, 'Ask Docs could not answer (HTTP 500): An error occurred processing your request'],
-    [502, '<html>Bad gateway</html>', 'Ask Docs could not answer (HTTP 502): <html>Bad gateway</html>'],
+    [500, { error: 'Jina API error: timeout', traceId: 't-1' }, 'Ask Docs is unavailable right now. Please try again in a moment. (Reference: t-1)'],
+    [502, '<html>Bad gateway</html>', 'Ask Docs is unavailable right now. Please try again in a moment.'],
   ] as const) {
     test(`HTTP ${status} is shown in the panel`, async () => {
       const page = await newPage();
@@ -494,7 +496,7 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await ask(page, 'What is Apertis?');
     const alert = page.locator('.aa-msg[data-state="error"]');
     await alert.waitFor({ timeout: 20000 });
-    assert.equal(await alert.textContent(), 'Ask Docs could not answer (HTTP 500): Server configuration error');
+    assert.equal(await alert.textContent(), 'Ask Docs is unavailable right now. Please try again in a moment.');
     await page.context().close();
   });
 

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { askBody, currentPageContext, errorMessage, isInternalHref, QUERY_LIMIT_MESSAGE, readAnswer, REAL_SITE_KEY, sourceLinks, turnstileSiteKey } from '../src/components/assistant/wire.ts';
+import { askBody, currentPageContext, errorMessage, isInternalHref, QUERY_LIMIT_MESSAGE, readAnswer, REAL_SITE_KEY, REJECTED_MESSAGE, sourceLinks, turnstileSiteKey, UNAVAILABLE_MESSAGE } from '../src/components/assistant/wire.ts';
 
 const wire = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../../migration/nimbus/fixtures/ask-wire.json'), 'utf8'));
 const wireCase = (name: string) => wire.cases.find((c: { name: string }) => c.name === name);
@@ -60,17 +60,26 @@ test('frames without content, extra fields and junk are ignored', async () => {
     { text: 'a', end: 'done' });
 });
 
-test('error responses are shown with their wire text; 429 is the fixed legacy message', async () => {
+test('error responses show a reader-facing message; the server detail goes to the console; 429 is the fixed legacy message', async (t) => {
+  const warned: unknown[] = [];
+  t.mock.method(console, 'warn', (...args: unknown[]) => { warned.push(args); });
   const res = (status: number, body: unknown) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status });
-  for (const name of ['empty', 'no-session', 'no-turnstile', 'question-too-long', 'bad-turnstile', 'missing-server-bindings']) {
+  for (const name of ['empty', 'no-session', 'no-turnstile', 'question-too-long', 'bad-turnstile']) {
     const c = wireCase(name);
-    const msg = await errorMessage(res(c.status, c.json));
-    assert.ok(msg.includes(`HTTP ${c.status}`) && msg.includes(c.json.error), `${name}: ${msg}`);
+    assert.ok(c.status >= 400 && c.status < 500, name);
+    assert.equal(await errorMessage(res(c.status, c.json)), REJECTED_MESSAGE, name);
   }
+  assert.equal(await errorMessage(res(wireCase('missing-server-bindings').status, wireCase('missing-server-bindings').json)), UNAVAILABLE_MESSAGE);
   assert.equal(await errorMessage(res(429, wireCase('session-limit').json)), QUERY_LIMIT_MESSAGE);
-  assert.match(await errorMessage(res(500, { error: 'Apertis API error: 502', details: 'upstream' })), /HTTP 500\): Apertis API error: 502: upstream/);
-  assert.match(await errorMessage(res(502, '<html>Bad gateway</html>')), /HTTP 502\): <html>Bad gateway/);
-  assert.equal(await errorMessage(res(503, '')), 'Ask Docs could not answer (HTTP 503).');
+  warned.length = 0;
+  const upstream = await errorMessage(res(500, { error: 'Jina API error: timeout', traceId: '0f8a6c1e-2b3d-4e5f-8a9b-0c1d2e3f4a5b' }));
+  assert.equal(upstream, `${UNAVAILABLE_MESSAGE} (Reference: 0f8a6c1e-2b3d-4e5f-8a9b-0c1d2e3f4a5b)`);
+  assert.doesNotMatch(upstream, /Jina|timeout|HTTP/);
+  assert.match(JSON.stringify(warned), /Jina API error: timeout/, 'the detail is kept in the console');
+  assert.equal(await errorMessage(res(500, { error: 'x', traceId: '<img src=x>' })), UNAVAILABLE_MESSAGE, 'a malformed traceId is not shown');
+  assert.equal(await errorMessage(res(502, '<html>Bad gateway</html>')), UNAVAILABLE_MESSAGE);
+  assert.match(JSON.stringify(warned.at(-1)), /Bad gateway/);
+  assert.equal(await errorMessage(res(503, '')), UNAVAILABLE_MESSAGE);
 });
 
 test('source links are internal, unique documentation links', () => {

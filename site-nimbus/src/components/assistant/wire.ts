@@ -73,18 +73,25 @@ export async function readAnswer(
   }
 }
 
-/** The reader-facing message for a non-2xx answer, as the legacy client showed it. */
+export const REJECTED_MESSAGE = 'Ask Docs could not accept this question. Reload the page and try again.';
+export const UNAVAILABLE_MESSAGE = 'Ask Docs is unavailable right now. Please try again in a moment.';
+
+/**
+ * The reader-facing message for a non-2xx answer. The server's detail (for example "Jina API error: timeout")
+ * goes to the console, not the panel; the traceId, when the server sent one, is shown so a report can be matched
+ * with the server log.
+ */
 export async function errorMessage(res: Response): Promise<string> {
   if (res.status === 429) return QUERY_LIMIT_MESSAGE;
-  let detail = '';
   const text = await res.text().catch(() => '');
+  let body: { error?: unknown; details?: unknown; traceId?: unknown } | null = null;
   try {
-    const json = JSON.parse(text);
-    detail = [json?.error, json?.details].filter((s) => typeof s === 'string' && s).join(': ');
-  } catch {
-    detail = text.trim().slice(0, 300);
-  }
-  return `Ask Docs could not answer (HTTP ${res.status})${detail ? `: ${detail}` : '.'}`;
+    body = JSON.parse(text);
+  } catch {}
+  const traceId = typeof body?.traceId === 'string' && /^[\w-]{1,64}$/.test(body.traceId) ? body.traceId : '';
+  console.warn('Ask Docs error', { status: res.status, error: body?.error, details: body?.details, traceId, body: body ? undefined : text.trim().slice(0, 300) });
+  const message = res.status >= 400 && res.status < 500 ? REJECTED_MESSAGE : UNAVAILABLE_MESSAGE;
+  return traceId ? `${message} (Reference: ${traceId})` : message;
 }
 
 /** A root-relative same-origin path. Rejects `//host`, backslash tricks such as `/\\host` (URL parsers treat `\\` as `/`) and schemes. */

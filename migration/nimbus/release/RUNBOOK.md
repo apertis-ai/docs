@@ -73,7 +73,7 @@ approval.
 
 Roll back immediately when any of these happens:
 - a route fixture fails;
-- any HTML page or asset answers 5xx;
+- any HTML page or asset answers 5xx to a client request (Early Hints subrequests excluded, see below);
 - search scores below 24/24;
 - any planning or unpublished material is served;
 - Ask Docs fails both smoke questions, after one retry each. One upstream timeout alone is not a reason, because it also occurs on legacy.
@@ -81,10 +81,19 @@ Roll back immediately when any of these happens:
 
 During the first 24 hours, watch the `apertis.ai` zone's HTTP analytics, filtered by host `docs.apertis.ai`, path and status. Pages Functions metrics are per project and count only exceptions, so they cannot show these.
 
-Before step 4, record the previous 7 days' shares of 404 and of 5xx responses on `docs.apertis.ai`. The legacy baseline is not clean: in the week before 2026-10-04, 22% of responses were 404 and 9.5% were 5xx, most of them 504 on HTML pages. Roll back if any of these holds:
+**Exclude Early Hints subrequests from every 5xx count** (GraphQL `httpRequestsAdaptiveGroups` filter `userAgent_notlike: "%early hints%"`).
+- Cloudflare's Early Hints prefetcher sends its own subrequests, with the user agent `bastion early hints` or `nginx-ssl early hints`. Many of them end in 504, which no client ever sees.
+- They are counted on the requested path, `/api/ask` included. In release attempt 2, a smoke GET on `/api/ask` produced one such 504.
+- In the 7 days before release attempt 2, 2,766 of the 2,781 5xx responses were Early Hints subrequests. The other 15 were `/api/ask` 500s from the period of the bad production key. Client-facing 5xx on HTML pages and assets was 0.
+- After release attempt 2, every 5xx in the first hours was an Early Hints subrequest.
+
+Before step 4, record the previous 7 days' shares of 404 and of client-facing 5xx responses on `docs.apertis.ai`. Counting all user agents, the legacy week before 2026-10-05 had 19.4% 404 and 9.4% 5xx. Without Early Hints, 5xx was 0.05%, all of it on `/api/ask`. Roll back if any of these holds, with 5xx counted without Early Hints:
 - `/api/ask` 5xx responses exceed 5% of its requests over any hour, or reach twice the recorded share;
-- 404 or 5xx responses on HTML paths reach twice the recorded share over any 6 hours;
+- any client-facing 5xx on an HTML page or asset;
+- 404 responses on HTML paths reach twice the recorded share over any 6 hours. Against the legacy baseline this is about 39%, far above Nimbus's own share (1.25% in its first 10 minutes). After the observation window, record Nimbus's own share as the baseline for the next release.
 - any of the smoke checks' own requests gets a 5xx.
+
+`/api/ask` gets a few requests an hour, so one failure exceeds 5%. Before rolling back, attribute it: check the user agent, and whether the same question fails again on legacy. One upstream timeout alone is not a reason (see the smoke rules above).
 
 **Rollback.**
 1. Pages: run "Rollback to this deployment" on the recorded rollback point in the dashboard, or call the API:
@@ -109,6 +118,18 @@ Nothing is deleted during a rollback: deployments, artifacts, tables and variabl
 - Legacy Ask Docs failed the same way, so the threshold was right to stop the release, but the cause was not in the candidate.
 - After the operator replaced the key and production was redeployed (`35a51747`), legacy Ask Docs answers.
 - Pages reads secrets only when a deployment is created. After a secret changes, retry the serving deployment.
+
+## Release attempt 2 (2026-10-05)
+
+- #21 was merged as `3aca276` at 00:11 UTC, after legacy Ask Docs answered 4/4 with a real Turnstile token and the preflight passed.
+- At 00:12:22 `docs.apertis.ai` and `docs.stima.tech` served buildId `d9aefa377ff99dbea3c094504ffbed9f99305a9f.84b55a0d387f` (deployment `f49f2c4e`). The after-release preflight passed.
+- Smoke results:
+  - route fixtures passed 228/228;
+  - search scored 24/24 with keyboard focus;
+  - Markdown, the home feed and the 404s for private paths answered as expected;
+  - Ask Docs answered 2/2 with citations to existing pages, and the real widget answered in the UI.
+- The 5xx alarm in the first zone check was entirely Early Hints subrequests. This section's thresholds were corrected after that.
+- The rollback point stays `35a51747` until the observation window closes.
 
 ## After the release (separate approvals)
 
