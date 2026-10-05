@@ -3,7 +3,7 @@
 // GET /_nimbus/catalog: the /models/ page's live data (site-nimbus/src/components/catalog/models.ts), every
 // page of the public model catalog filtered as apertis.ai filters it, fetched server-side and kept in the edge
 // cache for ten minutes. Any upstream failure answers 502 and is not cached; the page then keeps the build's
-// copy. Only GET is exported: other methods fall through to the static 404.
+// copy. Only GET is exported: other methods answer 405.
 import { fetchCatalog } from '../../site-nimbus/src/components/catalog/models.ts'
 
 const TTL = 600

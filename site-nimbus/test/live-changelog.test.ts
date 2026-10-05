@@ -1,6 +1,7 @@
 // The changelog page's data and feed (openspec docs-live-catalog "Changelog page and feed"): the committed copy
 // is what changelog.ts accepts, and /changelog/rss.xml parses as RSS 2.0 with the notes newest first, each with
-// a unique guid; an upstream failure answers 503 with Retry-After and is not cached.
+// a unique guid; an upstream failure answers 503 with Retry-After and is not cached. With PREVIEW_URL set, the
+// served feed is checked too.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -87,4 +88,16 @@ test('GET /changelog/rss.xml: edge-cached for ten minutes; an upstream failure a
   } finally {
     globalThis.fetch = real;
   }
+});
+
+test('the served /changelog/rss.xml parses as RSS 2.0, newest first, with unique guids', { skip: process.env.PREVIEW_URL ? false : 'set PREVIEW_URL' }, async () => {
+  const res = await fetch(`${process.env.PREVIEW_URL!.replace(/\/$/, '')}/changelog/rss.xml`);
+  assert.equal(res.status, 200);
+  const feed = parseRss(await res.text());
+  assert.deepEqual([feed.root, feed.version], ['rss', '2.0']);
+  assert.ok(feed.items.length > 10);
+  assert.equal(new Set(feed.items.map((i) => i.guid)).size, feed.items.length);
+  const dates = feed.items.map((i) => Date.parse(i.pubDate));
+  for (let i = 1; i < dates.length; i++) assert.ok(dates[i] <= dates[i - 1], `item ${i} is newer than item ${i - 1}`);
+  for (const i of feed.items) assert.ok(i.link.endsWith(`/changelog/#${i.guid}`) && i.category && i.isPermaLink === 'false', i.guid);
 });
