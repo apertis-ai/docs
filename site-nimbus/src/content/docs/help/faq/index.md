@@ -274,7 +274,7 @@ response = client.chat.completions.create(
 
 ### Is there a model playground?
 
-Yes! Visit [playground.apertis.ai](https://playground.apertis.ai) to test models interactively.
+No. The Apertis Playground has been retired. To try a model, send your first request with the [Quick Start](/getting-started/quick-start), or compare models in the [model catalog](https://apertis.ai/models).
 
 ---
 
