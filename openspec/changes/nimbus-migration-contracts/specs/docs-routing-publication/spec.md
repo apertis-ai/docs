@@ -72,7 +72,7 @@ The operator decided on 2026-09-30 (canary review) that the candidate carries ar
 - the `/blog/` index offers a category filter once the published articles span two or more categories; without JavaScript every article stays listed;
 - the `/blog/` index supersedes the retired legacy `/blog` row (and only it), with or without published articles (operator review 2026-10-03: readers should see that articles live here): the retirement rewrite no longer applies there. Without articles the index says the first articles are on their way; it is not a manifest document, so it has no Markdown, search record or sitemap URL. Every other retired `/blog/**` path keeps answering 404.
 
-The candidate emits no `llms*` outputs at all, so articles have none either.
+Articles are not `agent`-eligible for `llms*` outputs unless a later change says so. The no-`llms*` rule that stood here was superseded on 2026-10-05 by the operator (change `docs-reader-features`, `docs-agent-access`): `/llms.txt` and `/llms-full.txt` derive from the `publish`- and `agent`-eligible manifest entries.
 
 #### Scenario: No published article
 - **WHEN** the candidate is built with no article, or only drafts
