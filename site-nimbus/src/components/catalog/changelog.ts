@@ -9,7 +9,20 @@ import { getJson } from './models.ts';
 export const CHANGELOG_SOURCE = 'https://apertis.ai/api/changelog';
 export const FEED_PATH = '/changelog/rss.xml';
 
-export interface Note extends ReleaseNote { category: string; items: string[]; content: string }
+export interface Note extends ReleaseNote {
+  category: string;
+  items: string[];
+  content: string;
+  /** The body was left out: it names a legacy API-key route or a fixed model count (see ACTIVATION below). */
+  abridged: boolean;
+}
+
+// What the developer-activation guard (scripts/check-developer-activation.mjs, openspec
+// developer-activation-docs) forbids in anything this site publishes. Older release notes say "470+ models"
+// or link apertis.ai/token; such a note keeps its title, description and items, and its body is replaced
+// by a link to the original on apertis.ai rather than rewritten.
+const ACTIVATION = [/apertis\.ai\/token\b/i, /apertis\.ai\/setting\?tab=apikeys\b/i, /[?&]utm_(?:source|medium|campaign|term|content)=/i, /\b\d{2,4}\+\s+(?:AI\s+)?models\b/i];
+export const ORIGINAL_NOTES = 'https://apertis.ai/changelog';
 
 /** The release notes, newest first with unique versions; throws on anything the page or feed could not show. */
 export function changelogNotes(data: unknown): Note[] {
@@ -19,7 +32,8 @@ export function changelogNotes(data: unknown): Note[] {
     if (typeof category !== 'string' || !/^[a-z0-9-]+$/.test(category)) throw new Error(`release notes: entry ${i} category ${String(category)} is not a tag`);
     if (!Array.isArray(items) || items.some((t) => typeof t !== 'string')) throw new Error(`release notes: entry ${i} items are not text`);
     if (typeof content !== 'string') throw new Error(`release notes: entry ${i} content is not text`);
-    return { ...n, category, items, content };
+    const abridged = (e as { abridged?: unknown }).abridged === true || ACTIVATION.some((re) => re.test(content));
+    return { ...n, category, items, content: abridged ? '' : content, abridged };
   });
   if (new Set(notes.map((n) => n.version)).size !== notes.length) throw new Error('release notes: repeated versions');
   return notes;

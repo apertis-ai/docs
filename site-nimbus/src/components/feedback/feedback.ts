@@ -25,6 +25,17 @@ export function publishedPaths(docs: readonly { servedPath: string; eligibility:
   return new Set(docs.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
 }
 
+/**
+ * The same set from the deployment's own /sitemap.xml, which lists exactly the publish-eligible manifest
+ * entries (no-slash URLs except `/` and slash-canonical ones): the function reads it through the static
+ * assets instead of bundling the manifest, whose JSON import attribute the Pages build's wrangler cannot parse.
+ */
+export function publishedFromSitemap(xml: string): Set<string> {
+  const paths = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname.replace(/\/?$/, '/'));
+  if (!paths.length) throw new Error('sitemap lists no URL');
+  return new Set(paths);
+}
+
 /** Throws a one-line message naming what failed; never partially valid. */
 export function parseFeedback(bodyBytes: number, body: unknown, published: ReadonlySet<string>): Feedback {
   if (bodyBytes > LIMITS.MAX_BODY_BYTES) throw new Error(`body exceeds ${LIMITS.MAX_BODY_BYTES} bytes`);

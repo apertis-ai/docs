@@ -20,6 +20,7 @@ import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
 import { codeText, parseCurl } from '../src/components/try-it/curl.ts';
+import { publishedFromSitemap, publishedPaths } from '../src/components/feedback/feedback.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -473,4 +474,9 @@ test('try it: only pages with a marked sample load its script or styles, and non
     if (marked) pages++;
   }
   assert.ok(pages >= 15, `${pages} pages with Try it`);
+});
+
+test('feedback: the published paths read from the built sitemap are exactly the publish-eligible manifest entries', () => {
+  // functions/_nimbus/feedback.ts validates `path` against this set at runtime.
+  assert.deepEqual([...publishedFromSitemap(read('sitemap.xml'))].sort(), [...publishedPaths(manifest.documents)].sort());
 });
