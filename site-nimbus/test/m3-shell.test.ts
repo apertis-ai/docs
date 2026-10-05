@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { editUrl } from '../src/components/shell/edit-link.ts';
 import { buildNavigation, pageNavigation, tocTree, type SidebarNode } from '../src/components/shell/navigation.ts';
 import { aiToolUrls, markdownUrl, promptFor } from '../src/components/shell/page-actions.ts';
 import type { ManifestDocument } from '../src/contracts/manifest.ts';
@@ -102,6 +103,12 @@ test('AI tool links carry the spec prompt with the same-release Markdown URL', (
     chatgpt: `https://chatgpt.com/?hints=search&prompt=${encodeURIComponent(prompt)}`,
     cursor: `https://cursor.com/link/prompt?text=${encodeURIComponent(prompt)}`,
   });
+});
+
+test('the edit URL is the GitHub editor at the source, for a converted doc and a native article alike', () => {
+  assert.equal(editUrl('docs/getting-started/quick-start.md'), 'https://github.com/apertis-ai/docs/edit/main/docs/getting-started/quick-start.md');
+  assert.equal(editUrl('site-nimbus/src/articles/launch-week.md'), 'https://github.com/apertis-ai/docs/edit/main/site-nimbus/src/articles/launch-week.md');
+  assert.throws(() => editUrl('site-nimbus/src/content/docs/getting-started/quick-start/index.mdoc'), /generated/);
 });
 
 test('the TOC nests h3 under the preceding h2 and ignores other depths', () => {
