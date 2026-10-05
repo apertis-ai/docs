@@ -203,6 +203,7 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
       let k = j + 1;
       while (k < lines.length && !closes(lines[k])) k++;
       if (k >= lines.length) fail(j + 1, 'unclosed code fence');
+      if (panels.some((p) => p.label === meta[2])) fail(j + 1, `tab="${meta[2]}" repeats a label of this tab group`);
       panels.push({ label: meta[2], open: `${f[2]}${meta[1]}`, body: lines.slice(j + 1, k + 1) });
       end = k + 1;
       let m = end;

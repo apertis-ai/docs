@@ -53,6 +53,8 @@ export async function handleFeedback(request: Request, db: FeedbackDB | undefine
     return json(400, { error: 'Content-Type must be application/json' });
   }
 
+  // Refuse a declared oversize body before reading it; the byte check below still covers a missing header.
+  if (Number(request.headers.get('content-length') ?? 0) > LIMITS.MAX_BODY_BYTES) return json(400, { error: 'body too large' });
   const bytes = await request.arrayBuffer();
   let body: unknown;
   try {

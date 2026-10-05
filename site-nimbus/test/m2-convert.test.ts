@@ -113,6 +113,7 @@ test('untagged adjacent fences and a lone tagged fence render as plain code bloc
   fails('- item\n  ```bash tab="cURL"\n  x\n  ```', /tab=/);
   fails(':::tip\n```bash tab="cURL"\nx\n```\n:::', /tab=/);
   fails('```bash tab=cURL\nx\n```', /code fence meta/);
+  fails('```bash tab="cURL"\nx\n```\n\n```sh tab="cURL"\ny\n```', /repeats a label/);
 });
 
 test('the <main> text hash collapses whitespace, strips tags and decodes entities', () => {
