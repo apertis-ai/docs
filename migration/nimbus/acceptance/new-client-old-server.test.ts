@@ -12,7 +12,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { askBody, errorMessage, QUERY_LIMIT_MESSAGE, readAnswer, sourceLinks } from '../../../site-nimbus/src/components/assistant/wire.ts'
+import { askBody, errorMessage, QUERY_LIMIT_MESSAGE, readAnswer, REJECTED_MESSAGE, sourceLinks, UNAVAILABLE_MESSAGE } from '../../../site-nimbus/src/components/assistant/wire.ts'
 import { delta, ENV, loadLegacyHandler, providers, readAll, sse, VALID, withGlobalFetch, type Script } from '../../../assistant/test/harness.ts'
 
 const legacy = await loadLegacyHandler()
@@ -44,16 +44,16 @@ test('the answer streams to [DONE] and its citation renders as a source link', a
   })
 })
 
-test('400 shows the legacy body', async () => {
+test('400 shows the reader-facing rejected message', async () => {
   const r = await ask({}, askBody('a'.repeat(2001), 'new-client-400', 'tok'))
   assert.equal(r.status, 400)
-  assert.equal(r.message, 'Ask Docs could not answer (HTTP 400): Question too long (max 2000 characters)')
+  assert.equal(r.message, REJECTED_MESSAGE)
 })
 
-test('403 shows the legacy Turnstile body', async () => {
+test('403 shows the reader-facing rejected message', async () => {
   const r = await ask({ turnstile: { success: false, codes: ['timeout-or-duplicate'] } }, askBody(VALID.question, 'new-client-403', 'tok', page))
   assert.equal(r.status, 403)
-  assert.equal(r.message, 'Ask Docs could not answer (HTTP 403): Turnstile verification failed')
+  assert.equal(r.message, REJECTED_MESSAGE)
 })
 
 test('429 shows the fixed legacy limit message', async () => {
@@ -62,10 +62,11 @@ test('429 shows the fixed legacy limit message', async () => {
   assert.deepEqual(r, { status: 429, message: QUERY_LIMIT_MESSAGE })
 })
 
-test('500 shows the legacy error text', async () => {
+test('500 shows the reader-facing unavailable message, not the upstream detail', async () => {
   const r = await ask({ jina: { status: 502, text: 'upstream' } }, askBody(VALID.question, 'new-client-500', 'tok', page))
   assert.equal(r.status, 500)
-  assert.match(r.message!, /^Ask Docs could not answer \(HTTP 500\): Jina API error: 502/)
+  assert.ok(r.message!.startsWith(UNAVAILABLE_MESSAGE), r.message)
+  assert.doesNotMatch(r.message!, /Jina|502/)
 })
 
 test('an upstream that closes without [DONE] keeps the partial answer and reads as interrupted', async () => {
