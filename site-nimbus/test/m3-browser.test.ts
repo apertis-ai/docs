@@ -589,6 +589,8 @@ test('no GitHub raw or other-release requests and no uncaught page errors', { sk
   const allowed = new Set(['fonts.googleapis.com', 'fonts.gstatic.com', 'challenges.cloudflare.com']);
   // A `blob:` URL (Turnstile's worker) belongs to the origin that created it: judge that origin.
   const origin = (u: string) => { const url = new URL(u); return url.protocol === 'blob:' ? new URL(url.pathname) : url; };
-  assert.deepEqual(external.filter((u) => { const url = origin(u); return url.protocol !== 'https:' || !allowed.has(url.host); }), []);
+  // The footer's service status reads BetterStack's public status JSON, as the apertis.ai footer does.
+  const allowedUrls = new Set(['https://status.apertis.ai/index.json']);
+  assert.deepEqual(external.filter((u) => { const url = origin(u); return !allowedUrls.has(u) && (url.protocol !== 'https:' || !allowed.has(url.host)); }), []);
   assert.deepEqual(errors, []);
 });
