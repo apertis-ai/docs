@@ -1,11 +1,13 @@
 // openspec docs-api-reference-ux "SDK samples": every tab sample (a fence tagged tab="<Label>") in the legacy
 // sources passes its syntax check, every model ID it names is in the committed public catalog snapshot
 // (test/fixtures/catalog-model-ids.json), and the five SDK sample pages carry their tab groups.
-// Checks: bash -n, python3 -m py_compile, node --check (.mjs for JavaScript, .mts with type stripping for TypeScript).
+// Checks: bash -n, python3 -m py_compile, node --check on .mjs (JavaScript, and TypeScript after Node's type stripping,
+// which throws on invalid TypeScript syntax). Not `node --check x.mts`: Node 25 passes any .mts that has an import.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import { stripTypeScriptTypes } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -19,11 +21,11 @@ const SDK_PAGES: Record<string, string[]> = {
   'docs-api/text-generation/messages.md': ['cURL', 'Python', 'TypeScript'],
   'docs-api/utilities/models.md': ['cURL', 'Python', 'JavaScript'],
 };
-const CHECKS: Record<string, { ext: string; cmd: (file: string) => [string, string[]] }> = {
+const CHECKS: Record<string, { ext: string; cmd: (file: string) => [string, string[]]; prepare?: (code: string) => string }> = {
   bash: { ext: '.sh', cmd: (f) => ['bash', ['-n', f]] },
   python: { ext: '.py', cmd: (f) => ['python3', ['-m', 'py_compile', f]] },
   javascript: { ext: '.mjs', cmd: (f) => [process.execPath, ['--check', f]] },
-  typescript: { ext: '.mts', cmd: (f) => [process.execPath, ['--check', f]] },
+  typescript: { ext: '.mjs', cmd: (f) => [process.execPath, ['--check', f]], prepare: (code) => stripTypeScriptTypes(code) },
 };
 // Model IDs named by a sample: request fields, the models endpoint path and models.retrieve().
 const MODEL_REFS = [/["']?\bmodel["']?\s*[:=]\s*["']([^"']+)["']/g, /\/v1\/models\/([A-Za-z0-9._:/-]+)/g, /\bretrieve\(\s*["']([^"']+)["']/g];
@@ -62,7 +64,9 @@ test('every tab sample passes its syntax check', () => {
     for (const [n, s] of samples.entries()) {
       const check = CHECKS[s.lang] ?? assert.fail(`${s.file}:${s.line}: no syntax check for language ${JSON.stringify(s.lang)}`);
       const file = path.join(dir, `sample-${n}${check.ext}`);
-      fs.writeFileSync(file, s.code);
+      let code = s.code;
+      try { code = check.prepare?.(code) ?? code; } catch (e) { assert.fail(`${s.file}:${s.line} (${s.label}): ${(e as Error).message}`); }
+      fs.writeFileSync(file, code);
       const [cmd, args] = check.cmd(file);
       const r = spawnSync(cmd, args, { cwd: dir, encoding: 'utf8' });
       assert.equal(r.status, 0, `${s.file}:${s.line} (${s.label}): ${cmd} ${args[0]}\n${r.stderr}`);
