@@ -100,3 +100,21 @@ export function parseCurl(text: string): CurlRequest | { reason: string } {
   const body = data.length ? data.join('&') : null;
   return { method: method ?? (body === null ? 'GET' : 'POST'), url, headers, body };
 }
+
+const ENTITY: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+/** Source text of a rendered code block's inner HTML (Shiki spans stripped, entities decoded). Build-time only. */
+export function codeText(html: string): string {
+  return html.replace(/<[^>]*>/g, '').replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) =>
+    e[0] === '#' ? String.fromCodePoint(e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : Number(e.slice(1))) : ENTITY[e] ?? m);
+}
+
+/** DocLayout: adds `data-try-it` to every `<pre>` in `html` whose code is an eligible sample. */
+export function markTryIt(html: string): { html: string; count: number } {
+  let count = 0;
+  const out = html.replace(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g, (m, attrs: string, inner: string) => {
+    if ('reason' in parseCurl(codeText(inner))) return m;
+    count++;
+    return `<pre${attrs} data-try-it>${inner}</pre>`;
+  });
+  return { html: out, count };
+}
