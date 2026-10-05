@@ -27,13 +27,13 @@ The operator asked on 2026-10-05 to close all of them except zh-TW localisation,
 - `/models/`, the live model catalog with prices and deprecation labels, and `/changelog/`, the release notes with category tags, with a live RSS feed at `/changelog/rss.xml`. The navbar's Release Notes item now points to `/changelog/`.
 - An "Edit this page" link to the authoritative source file on GitHub.
 - A print stylesheet.
-- "Was this page helpful?" feedback. It ships only together with an operator-approved storage binding; without one, no widget is rendered.
+- "Was this page helpful?" feedback, stored in a D1 database bound as `FEEDBACK_DB` (operator decision 2026-10-05). The database and its Pages binding are created before the merge.
 
 ## Non-goals
 
 - zh-TW or any other localisation.
 - Changing `/api/ask`, retrieval, or the indexer.
-- Any production configuration, DNS, secret or database change made by this change. A storage binding for feedback is a separate, operator-approved step.
+- Any production configuration, DNS, secret or database change other than the feedback D1 database and its binding, which the operator approved on 2026-10-05.
 - Real-key API calls in tests.
 
 ## Capabilities
