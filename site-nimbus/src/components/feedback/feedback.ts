@@ -6,6 +6,7 @@
 // (confirmed: 19 unrelated DOM errors with the root `@cloudflare/workers-types` package installed).
 // `functions/_nimbus/feedback.ts` stays the one file that carries that reference, as a thin wrapper
 // around `handleFeedback`. No identifier, cookie or IP is ever part of the stored shape.
+import type { ManifestDocument } from '../../contracts/manifest.ts';
 export const LIMITS = { MAX_BODY_BYTES: 4096, MAX_COMMENT: 1000 } as const;
 
 export interface Feedback {
@@ -21,7 +22,7 @@ export interface FeedbackDB {
 }
 
 /** The set of paths a submission's `path` may name: every published document's `servedPath`. */
-export function publishedPaths(docs: readonly { servedPath: string; eligibility: { publish: boolean; [k: string]: unknown } }[]): Set<string> {
+export function publishedPaths(docs: readonly Pick<ManifestDocument, 'servedPath' | 'eligibility'>[]): Set<string> {
   return new Set(docs.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
 }
 

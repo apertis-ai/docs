@@ -476,7 +476,11 @@ test('try it: only pages with a marked sample load its script or styles, and non
   assert.ok(pages >= 15, `${pages} pages with Try it`);
 });
 
-test('feedback: the published paths read from the built sitemap are exactly the publish-eligible manifest entries', () => {
-  // functions/_nimbus/feedback.ts validates `path` against this set at runtime.
-  assert.deepEqual([...publishedFromSitemap(read('sitemap.xml'))].sort(), [...publishedPaths(manifest.documents)].sort());
+test('feedback: the published paths read from the built sitemap are the publish-eligible manifest entries plus /search/', () => {
+  // functions/_nimbus/feedback.ts validates `path` against this set at runtime. The sitemap also lists the
+  // /search/ page, which is published but not a manifest document (it has no feedback widget).
+  const docs = publishedPaths(manifest.documents);
+  const sitemap = publishedFromSitemap(read('sitemap.xml'));
+  assert.deepEqual([...docs].filter((p) => !sitemap.has(p)), []);
+  assert.deepEqual([...sitemap].filter((p) => !docs.has(p)), ['/search/']);
 });
