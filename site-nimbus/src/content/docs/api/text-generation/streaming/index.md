@@ -1,5 +1,6 @@
 ---
 title: "Streaming Output"
+description: "Stream a chat completion token by token through the OpenAI-compatible API by setting stream to true."
 ---
 
 # Streaming Output

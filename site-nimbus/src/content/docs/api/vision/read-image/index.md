@@ -1,5 +1,6 @@
 ---
 title: "Read Image with LLM"
+description: "Send an image URL in a chat completion request so a vision-capable model can describe or analyze it."
 ---
 
 # Read Image with LLM

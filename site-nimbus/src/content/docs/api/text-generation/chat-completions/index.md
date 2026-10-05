@@ -1,5 +1,6 @@
 ---
 title: "Chat Completion"
+description: "Generate a model response for a conversation with the OpenAI-compatible POST /v1/chat/completions endpoint."
 ---
 
 # Chat Completion
