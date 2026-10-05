@@ -19,18 +19,76 @@ This endpoint exclusively routes to Anthropic-type channels, ensuring full compa
 
 ## HTTP Request
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-0" aria-controls="code-tabs-1-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-1" aria-controls="code-tabs-1-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-2" aria-controls="code-tabs-1-2-panel" aria-selected="false" tabindex="-1">TypeScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-1-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
 ```bash
 curl https://api.apertis.ai/v1/messages \
     -H "Content-Type: application/json" \
     -H "x-api-key: <APERTIS_API_KEY>" \
     -d '{
-        "model": "claude-sonnet-4.5",
+        "model": "claude-opus-4-5-20251101",
         "max_tokens": 1024,
         "messages": [
             {"role": "user", "content": "Hello, Claude!"}
         ]
     }'
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai"
+)
+
+message = client.messages.create(
+    model="claude-opus-4-5-20251101",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Hello, Claude!"}
+    ]
+)
+
+print(message.content[0].text)
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-2-panel" data-tab="TypeScript">
+<p class="code-tabs__label" data-pagefind-ignore>TypeScript</p>
+
+```typescript
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai'
+});
+
+const message: Anthropic.Message = await client.messages.create({
+  model: 'claude-opus-4-5-20251101',
+  max_tokens: 1024,
+  messages: [
+    { role: 'user', content: 'Hello, Claude!' }
+  ]
+});
+
+const block = message.content[0];
+if (block.type === 'text') console.log(block.text);
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 <aside class="admonition admonition-note">
 <p class="admonition-title">Note</p>

@@ -12,7 +12,7 @@
     "readingMinutes": 10
   },
   "api:embeddings/embeddings-api": {
-    "updated": "2026-01-26T14:30:18+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/guide": {
@@ -112,7 +112,7 @@
     "readingMinutes": 3
   },
   "api:text-generation/chat-completions": {
-    "updated": "2026-04-11T13:13:11+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 2
   },
   "api:text-generation/context-compression": {
@@ -120,7 +120,7 @@
     "readingMinutes": 6
   },
   "api:text-generation/messages": {
-    "updated": "2026-03-01T01:53:08+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -128,7 +128,7 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-03-02T00:37:53+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {
@@ -148,7 +148,7 @@
     "readingMinutes": 4
   },
   "api:utilities/models": {
-    "updated": "2026-02-11T15:11:39+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 2
   },
   "api:utilities/recommend": {

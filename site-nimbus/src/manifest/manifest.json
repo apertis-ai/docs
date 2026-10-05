@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "60bf3df944f20045534e3852a8d03058ea79d334",
-  "buildId": "60bf3df944f20045534e3852a8d03058ea79d334.c397060a3a89",
+  "sourceSha": "13a119e86f5544fe2aca325769aca05bb3e78bf4",
+  "buildId": "13a119e86f5544fe2aca325769aca05bb3e78bf4.1f438022c06a",
   "documents": [
     {
       "id": "page:index",
@@ -87,9 +87,9 @@
       },
       "markdown": {
         "path": "/api/embeddings/embeddings-api.md",
-        "sha256": "7a46a34abb8b0a030d1aa21f1473c723e4e8a9ffee32a9543e6d576c1023b745"
+        "sha256": "52daf9caea55210bd09e3662506072ba9d08564ac531571b78e9c2cc61a6a28c"
       },
-      "contentSha256": "7a46a34abb8b0a030d1aa21f1473c723e4e8a9ffee32a9543e6d576c1023b745"
+      "contentSha256": "52daf9caea55210bd09e3662506072ba9d08564ac531571b78e9c2cc61a6a28c"
     },
     {
       "id": "api:embeddings/guide",
@@ -537,9 +537,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/chat-completions.md",
-        "sha256": "30f3d60e03aa24ed39dbaf470892a6b3b1ac1f41b82e250f1b8b3a368c2326d8"
+        "sha256": "4f6ae8b7de799f3de697bee93be59d82fd604da96cb0b9bfbeb2ecf5be9cea26"
       },
-      "contentSha256": "30f3d60e03aa24ed39dbaf470892a6b3b1ac1f41b82e250f1b8b3a368c2326d8"
+      "contentSha256": "4f6ae8b7de799f3de697bee93be59d82fd604da96cb0b9bfbeb2ecf5be9cea26"
     },
     {
       "id": "api:text-generation/context-compression",
@@ -573,9 +573,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/messages.md",
-        "sha256": "d93bbebc86d5f1ca6d9330453c0731022a3b1e8c09653f4ae1710beca2d29dfb"
+        "sha256": "5d04a5ead63fe7991ee7116a28ba383b88f2af204be827553f692c219154e4a4"
       },
-      "contentSha256": "d93bbebc86d5f1ca6d9330453c0731022a3b1e8c09653f4ae1710beca2d29dfb"
+      "contentSha256": "5d04a5ead63fe7991ee7116a28ba383b88f2af204be827553f692c219154e4a4"
     },
     {
       "id": "api:text-generation/prompt-cache",
@@ -609,9 +609,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/responses.md",
-        "sha256": "2c56cc0f5ba0d075221654de9cc0095f6b03055ae92aa9e10eb6307c5f759717"
+        "sha256": "ff16f5409fd1036e69f23e95e72167a24a155926aac4dc40c7ca17828a38fb41"
       },
-      "contentSha256": "2c56cc0f5ba0d075221654de9cc0095f6b03055ae92aa9e10eb6307c5f759717"
+      "contentSha256": "ff16f5409fd1036e69f23e95e72167a24a155926aac4dc40c7ca17828a38fb41"
     },
     {
       "id": "api:text-generation/streaming",
@@ -699,9 +699,9 @@
       },
       "markdown": {
         "path": "/api/utilities/models.md",
-        "sha256": "5c87f7310c29e66ae76fddc97e64de064cbe233fcde2876241e7fef4886faff0"
+        "sha256": "e0472b998899aad39e173adcb558dd5a75da0f1afe0313fd3f2e1e568e7a9f89"
       },
-      "contentSha256": "5c87f7310c29e66ae76fddc97e64de064cbe233fcde2876241e7fef4886faff0"
+      "contentSha256": "e0472b998899aad39e173adcb558dd5a75da0f1afe0313fd3f2e1e568e7a9f89"
     },
     {
       "id": "api:utilities/recommend",
