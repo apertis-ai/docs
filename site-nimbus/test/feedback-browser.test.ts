@@ -33,6 +33,9 @@ test('No, a comment and Send show the confirmation (sent) or the error (no bindi
   const section = page.locator('.page-feedback');
   await page.waitForFunction(() => !document.querySelector('.page-feedback')?.hasAttribute('hidden'));
   assert.equal(await section.getAttribute('hidden'), null, 'the widget is revealed once the script runs');
+  // [hidden]'s UA rule loses to .page-feedback__form's `display: flex` at equal specificity unless shell.css
+  // beats it explicitly; this is form/choices before any choice, not merely their [hidden] attribute.
+  assert.equal(await section.locator('.page-feedback__form').isVisible(), false, 'no comment box before a choice');
 
   await section.getByRole('button', { name: 'No', exact: true }).click();
   assert.equal(await section.getByRole('button', { name: 'No', exact: true }).getAttribute('aria-pressed'), 'true');
@@ -50,6 +53,9 @@ test('No, a comment and Send show the confirmation (sent) or the error (no bindi
     // (the repo's own UX canary: "focus never lands on <body>").
     assert.equal(await page.evaluate(() => document.activeElement?.tagName), 'P');
     assert.equal(await page.evaluate(() => document.activeElement === document.querySelector('.page-feedback__status')), true);
+    // Choices and form are [hidden] after success: a second click must not be possible, never only in markup.
+    assert.equal(await section.locator('.page-feedback__choices').isVisible(), false, 'no second Yes/No after success');
+    assert.equal(await section.locator('.page-feedback__form').isVisible(), false, 'no second Send after success');
   } else {
     assert.match(text, /Feedback was not sent/);
     assert.equal(await status.getAttribute('data-state'), 'error');

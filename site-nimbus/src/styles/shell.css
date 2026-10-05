@@ -684,6 +684,9 @@ html:not(.js) .article-filter { display: none; }
 /* "Was this page helpful?" (openspec docs-reader-shell-extras "Page feedback"), outside <article>. Server-rendered
    [hidden]; src/layouts/DocLayout.astro's inline script reveals it. */
 .page-feedback { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+/* [hidden]'s UA rule and .page-feedback__choices/__form's `display: flex` are both specificity 0,1,0; the
+   author rule wins by source order. This beats it (0,2,0), same fix as [data-f][hidden] above. */
+.page-feedback [hidden] { display: none; }
 .page-feedback__prompt { margin: 0 0 12px; color: var(--ink); font-weight: 500; }
 .page-feedback__choices { display: flex; gap: 8px; }
 .page-feedback__choice { height: 32px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
