@@ -10,7 +10,7 @@ import { NEW_MODELS, SOURCES, fetchFeed, modelView, newModels, noteView, release
 
 const snapshot = JSON.parse(fs.readFileSync(SNAPSHOT, 'utf8'));
 const record = (id: string, created: number, extra = {}) => ({ model_id: id, display_name: id.toUpperCase(), provider: 'OpenAI', category: 'chat', context_length: '1000000', created_at: created, is_enabled: true, is_deprecated: false, description: 'A model.', ...extra });
-const catalog = (models: unknown[]) => ({ success: true, data: { models, pagination: { total: 382 }, aggregations: { providers: [{ name: 'OpenAI', count: 50 }] } } });
+const catalog = (models: unknown[]) => ({ success: true, data: { models, pagination: { total: 382 }, aggregations: { providers: [{ name: 'OpenAI', count: 50 }] }, hidden_model_ids: [] } });
 
 test('the committed copy is valid: newest-first release notes and the newest models, with counts', () => {
   assert.deepEqual(releaseNotes(snapshot.notes), snapshot.notes);
@@ -44,6 +44,8 @@ test('new models: newest first, skipping disabled, deprecated, :variant and inco
   assert.ok(long.length <= 160 && long.endsWith('word…'), long);
   assert.throws(() => newModels(records, 4), /only 3 of 4/);
   assert.throws(() => newModels({}), /expected a list/);
+  // A model apertis.ai hides (hidden_model_ids) never reaches the homepage.
+  assert.deepEqual(newModels(records, 2, new Set(['newest'])).map((m) => m.id), ['stt', 'old']);
 });
 
 test('views: the text each row shows, with encoded links; an empty field stays empty so its element hides', () => {

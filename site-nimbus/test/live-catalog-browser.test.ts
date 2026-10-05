@@ -97,12 +97,25 @@ test('models: the live catalog replaces the rows; text, provider and category fi
   }
 });
 
-test('models on a phone: the table scrolls inside its frame, the page does not', { skip }, async () => {
+test('models on a phone: each model is a card with its prices in view, nothing scrolls sideways', { skip }, async () => {
   const { page, close } = await open('/models/', { viewport: { width: 390, height: 844 } }, (r) => r.abort());
   try {
-    const m = await page.evaluate(() => ({ doc: document.documentElement.scrollWidth, view: innerWidth, frame: document.querySelector('.catalog__scroll')!.scrollWidth }));
+    const m = await page.evaluate(() => {
+      const frame = document.querySelector<HTMLElement>('.catalog__scroll')!;
+      const input = document.querySelector<HTMLElement>('.catalog__table tbody tr td[data-f="input"]')!;
+      const r = input.getBoundingClientRect();
+      return { doc: document.documentElement.scrollWidth, view: innerWidth, frame: frame.scrollWidth - frame.clientWidth,
+        input: input.innerText.trim(), label: getComputedStyle(input, '::before').content, right: r.right, display: getComputedStyle(input.parentElement!).display };
+    });
     assert.ok(m.doc <= m.view, `page is ${m.doc}px wide in a ${m.view}px viewport`);
-    assert.ok(m.frame > m.view, 'the table is wider than the phone and scrolls in its frame');
+    assert.equal(m.frame, 0, 'the catalog does not scroll sideways');
+    assert.equal(m.display, 'grid');
+    assert.equal(m.label, '"Input"', 'the price carries its label');
+    assert.match(m.input, /^\$/);
+    assert.ok(m.right <= m.view, `the input price ends at ${m.right}px`);
+    // The filter still hides cards (a grid row must not override [hidden]).
+    await page.fill('.catalog__filters input', 'no-such-model-zzz');
+    assert.equal(await page.$$eval('.catalog__table tbody tr', (trs: HTMLElement[]) => trs.filter((t) => t.offsetParent !== null).length), 0);
   } finally {
     await close();
   }
