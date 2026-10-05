@@ -9,6 +9,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { manifest } from '../src/manifest/manifest.ts';
+import { editUrl } from '../src/components/shell/edit-link.ts';
 import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
@@ -197,6 +198,16 @@ test('m2: article links are root-absolute and equal the legacy internal link set
     // Legacy extras: the breadcrumb home link, the GitHub edit link and Cloudflare's mailto obfuscation.
     const legacy = expectedLinks(d.id, row.live!.links).filter((h) => h.startsWith('/') && h !== '/' && !h.startsWith('/cdn-cgi/'));
     assert.deepEqual(hrefs.filter((h) => h.startsWith('/')).sort(), [...new Set(legacy)].sort(), d.id);
+  }
+});
+
+test('docs-reader-shell-extras: every converted page carries one Edit-this-page target, set from the client only', () => {
+  for (const d of converted) {
+    const html = article(read(`${d.servedPath.slice(1)}index.html`));
+    assert.deepEqual([...html.matchAll(/data-edit="([^"]+)"/g)].map((m) => m[1]), [editUrl(d.sourcePath)], d.id);
+    // The View link follows the same rule (comment in DocLayout.astro): no built page ever has a static
+    // href to GitHub's editor, so the article's own link set (checked above) never grows from this.
+    assert.doesNotMatch(html, /<a[^>]+href="https:\/\/github\.com\/apertis-ai\/docs\/edit\//, d.id);
   }
 });
 

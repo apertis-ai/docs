@@ -33,6 +33,10 @@ for (const el of $$('[data-open-surface]')) {
   el.addEventListener('click', () => (el.dataset.openSurface === 'ask' ? openAskDocs() : openSearch()));
 }
 
+// "Edit this page" (docs-reader-shell-extras): the href is set here, from the client only, so the built
+// HTML carries no `href`, and the article's static link set (test:dist) stays exactly the body's links.
+for (const el of $$<HTMLAnchorElement>('a[data-edit]')) el.href = el.dataset.edit!;
+
 // Theme: light default, the reader's choice persists under the legacy `theme` key. Styling only. Delegated,
 // so the switch inside the navigation sheet (mounted later) works too.
 const root = document.documentElement;
