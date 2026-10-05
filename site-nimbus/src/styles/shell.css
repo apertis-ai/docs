@@ -567,11 +567,23 @@ button { font: inherit; color: inherit; }
 .pagination a span { color: var(--muted); }
 .pagination__next { grid-column: 2; text-align: right; }
 
+/* Title icons (the legacy pages put an <img> in their H1, e.g. /installation/cursor/): one colour per theme,
+   black in light and white in dark, whatever colours the SVG file carries. */
+.doc-header h1 img { filter: brightness(0); }
+[data-theme='dark'] .doc-header h1 img { filter: brightness(0) invert(1); }
+
 /* Footer: brand column and grouped links in the shared container, then the copyright row. */
 .footer { margin-top: 96px; border-top: 1px solid var(--line); background: var(--bg); }
 .footer__inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 4fr); gap: 48px; padding-block: 56px 40px; }
 .footer__line { margin: 12px 0 16px; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
-.footer__status { color: var(--muted); font-size: var(--fs-sm); text-decoration: underline; text-underline-offset: 3px; }
+.footer__status { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; color: var(--muted); font-size: var(--fs-sm); line-height: 21px; }
+/* Status dot, as the apertis.ai footer: green operational, amber issues, grey pulsing while checking, grey unknown. */
+.footer__status-indicator { width: 8px; height: 8px; flex-shrink: 0; border-radius: 999px; background: #a8a29e; }
+.footer__status-indicator.loading { animation: footer-status-pulse 2s ease-in-out infinite; }
+.footer__status-indicator.normal { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16); }
+.footer__status-indicator.issues { background: #d97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15); }
+@keyframes footer-status-pulse { 50% { opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) { .footer__status-indicator.loading { animation: none; } }
 .footer__columns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; }
 .footer__columns ul { margin: 0; padding: 0; list-style: none; }
 .footer__title { margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; }
@@ -580,9 +592,16 @@ button { font: inherit; color: inherit; }
 .footer__columns a { color: var(--ink); font-size: var(--fs-ui); }
 .footer__badge { font-size: var(--fs-2xs); padding: 0 6px; }
 .footer__bottom { padding-bottom: 32px; }
-.footer__trust { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; padding: 20px 0; border-top: 1px solid var(--line); list-style: none; color: var(--muted); font-size: var(--fs-sm); }
-.footer__trust a { color: var(--muted); }
-.footer__trust span { color: var(--ink); font-weight: 500; }
+/* Trust badges, as the apertis.ai footer: icon, then the name over the fact. */
+.footer__trust { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; margin: 0; padding: 20px 0; border-top: 1px solid var(--line); list-style: none; }
+.footer__trust a { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--muted); }
+.footer__trust-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 36px; width: 36px; height: 24px; color: #0f766e; }
+.footer__trust-icon svg { display: block; width: 18px; height: 18px; }
+.footer__trust-icon .footer__aws { width: 23px; height: 23px; color: var(--ink); }
+[data-theme='dark'] .footer__trust-icon { color: #5eead4; }
+.footer__trust-copy { display: grid; gap: 2px; }
+.footer__trust-copy strong { color: var(--ink); font-size: 13px; font-weight: 500; line-height: 1; }
+.footer__trust-copy small { color: var(--muted); font-size: 12px; line-height: 1.15; }
 .footer__legal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding-top: 16px; border-top: 1px solid var(--line); }
 .footer__copyright { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
 .footer__legal ul { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; }
