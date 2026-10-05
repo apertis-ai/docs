@@ -41,7 +41,7 @@ const state = (page: any) => page.evaluate(() => [...document.querySelectorAll('
     roles: [...g.querySelectorAll('.code-tabs__panel')].map((p) => p.getAttribute('role')),
     labels: [...g.querySelectorAll('.code-tabs__label')].filter(visible).map((l) => l.textContent),
     focused: g.contains(document.activeElement) ? document.activeElement!.textContent : null,
-    copies: [...g.querySelectorAll('.code-tabs__panel')].map((p) => p.querySelectorAll('.nb-code-copy').length),
+    copies: [...g.querySelectorAll('.code-tabs__panel')].map((p) => p.querySelectorAll('.nb-code-copy:not(.try-it-open)').length),
   };
 }));
 
@@ -62,7 +62,7 @@ test('a group renders as one tablist with only the selected panel shown, each pa
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const panel = page.locator('.code-tabs').first().locator('.code-tabs__panel[data-tab="Python"]');
   await panel.hover();
-  await panel.locator('.nb-code-copy').click();
+  await panel.locator('.nb-code-copy:not(.try-it-open)').click();
   assert.match(await page.evaluate(() => navigator.clipboard.readText()), /^from openai import OpenAI\n/);
   await context.close();
 });
