@@ -235,6 +235,31 @@ test('m2: HTML and clean Markdown carry the same code blocks for every converted
 // ---- #9 assistant mount and search-index content ----
 const publishedHtml = () => manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
 
+test('code tab groups: the tab script ships only on pages with a group, before it, and every group is complete', () => {
+  const SAMPLE_PAGES = ['/api/text-generation/chat-completions/', '/api/text-generation/responses/', '/api/embeddings/embeddings-api/', '/api/text-generation/messages/', '/api/utilities/models/'];
+  const withTabs: string[] = [];
+  for (const f of publishedHtml()) {
+    const html = read(f);
+    const first = html.indexOf('<div class="code-tabs">');
+    if (first < 0) {
+      assert.doesNotMatch(html, /__apertisCodeTabs|class="code-tabs/, `${f}: tab code without a group`);
+      continue;
+    }
+    withTabs.push(`/${f.replace(/index\.html$/, '')}`);
+    const defined = html.indexOf('window.__apertisCodeTabs =');
+    assert.ok(defined >= 0 && defined < first && html.indexOf('window.__apertisCodeTabs =', defined + 1) < 0, `${f}: tab script defined once, before the first group`);
+    const groups = html.slice(first).split('<div class="code-tabs">').slice(1);
+    for (const g of groups) {
+      const tabs = [...g.matchAll(/<button type="button" role="tab" class="code-tabs__tab" id="([^"]+)" aria-controls="([^"]+)"[^>]*>([^<]*)<\/button>/g)];
+      const panels = [...g.matchAll(/<div class="code-tabs__panel" id="([^"]+)" data-tab="([^"]+)">\s*<p class="code-tabs__label" data-pagefind-ignore>([^<]*)<\/p>\s*(?:<figure[^>]*>)?<pre class="astro-code/g)];
+      assert.ok(tabs.length >= 2, `${f}: a group has ${tabs.length} tabs`);
+      assert.deepEqual(panels.map((p) => [p[1], p[2], p[3]]), tabs.map((t) => [t[2], t[3], t[3]]), `${f}: tabs and panels match`);
+      assert.match(g, /<\/div>\s*<script>__apertisCodeTabs\(document\.currentScript\.parentNode\)<\/script>\s*<\/div>/, `${f}: group init`);
+    }
+  }
+  assert.deepEqual(SAMPLE_PAGES.filter((p) => !withTabs.includes(p)), [], 'SDK sample pages without a tab group');
+});
+
 test('m4: every published page mounts the assistant dialog exactly once', () => {
   for (const f of publishedHtml()) assert.equal(read(f).match(/\bid="apertis-assistant"/g)?.length ?? 0, 1, f);
 });

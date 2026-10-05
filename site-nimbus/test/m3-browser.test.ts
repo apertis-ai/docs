@@ -561,6 +561,8 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.ok(Math.abs(mid.width - top.width) < 0.5 && mid.aside === top.aside && mid.title === top.title, 'no layout shift in the rail');
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
   await page.waitForFunction(() => document.querySelector('.toc-progress__value')!.textContent === '100%');
+  // The active link's colour transitions (0.16s); compare colours once it has settled, not mid-transition.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))).then(() => undefined));
   // A plain list, as on the Claude docs (operator review 2026-10-04): no tree glyph, h3s indented under their h2,
   // and only the current section in the ink colour.
   const toc = await page.evaluate(() => {

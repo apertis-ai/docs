@@ -1,0 +1,62 @@
+---
+// Code tab groups (openspec docs-api-reference-ux "Code tab groups", "Persisted language choice"). The converter
+// emits each group as .code-tabs: a hidden .code-tabs__list of .code-tabs__tab buttons and one .code-tabs__panel
+// (data-tab="<Label>", a .code-tabs__label for readers without JavaScript) per fence, then an inline call of
+// __apertisCodeTabs(group). DocLayout renders this component, before the body, on pages with a group only, so
+// other pages load no tab code. Inline, not a module: each group switches to tabs (persisted choice applied)
+// as soon as it is parsed, so it never paints with every panel open and then collapses.
+// WAI-ARIA tabs with automatic activation: arrow keys, Home and End. Selecting a label selects it in every
+// group on the page and persists it under apertis-docs:code-tab; blocked storage falls back to the first tab.
+// The clicked tab keeps its viewport position when groups above it change height.
+---
+<style is:inline>
+.code-tabs { margin: 1.4em 0 1.6em; }
+.code-tabs__list:not([hidden]) { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); }
+.code-tabs__tab { margin-bottom: -1px; padding: 6px 12px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 500 var(--fs-ui)/1.4 var(--font); cursor: pointer; }
+.code-tabs__tab:hover { color: var(--ink); }
+.code-tabs__tab[aria-selected='true'] { border-bottom-color: var(--ink); color: var(--ink); }
+.code-tabs__tab:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.docs-content .code-tabs__label { margin: 1em 0 0.4em; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; }
+.docs-content .code-tabs__panel pre { margin-top: 0; }
+.code-tabs--ready .code-tabs__label { display: none; }
+.docs-content .code-tabs--ready pre { margin: 10px 0 0; }
+</style>
+<script is:inline>
+window.__apertisCodeTabs = (() => {
+  const KEY = 'apertis-docs:code-tab', groups = [];
+  let chosen = null;
+  try { chosen = localStorage.getItem(KEY); } catch (e) { /* storage blocked: first tab */ }
+  const show = (g, label) => g.tabs.forEach((t, x) => {
+    const on = g.labels[x] === label;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+    g.panels[x].hidden = !on;
+  });
+  const choose = (tab, label) => {
+    const top = tab.getBoundingClientRect().top;
+    chosen = label;
+    for (const g of groups) if (g.labels.includes(label)) show(g, label);
+    try { localStorage.setItem(KEY, label); } catch (e) { /* storage blocked: this page only */ }
+    tab.focus();
+    scrollBy(0, tab.getBoundingClientRect().top - top);
+  };
+  return (el) => {
+    const tabs = [...el.querySelectorAll('.code-tabs__tab')], panels = [...el.querySelectorAll('.code-tabs__panel')];
+    const g = { tabs, panels, labels: panels.map((p) => p.dataset.tab) };
+    groups.push(g);
+    panels.forEach((p, x) => { p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', tabs[x].id); });
+    show(g, g.labels.includes(chosen) ? chosen : g.labels[0]);
+    el.querySelector('.code-tabs__list').hidden = false;
+    el.classList.add('code-tabs--ready');
+    tabs.forEach((t, x) => {
+      t.addEventListener('click', () => choose(t, g.labels[x]));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length, to = { ArrowRight: (x + 1) % n, ArrowLeft: (x + n - 1) % n, Home: 0, End: n - 1 }[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        choose(tabs[to], g.labels[to]);
+      });
+    });
+  };
+})();
+</script>
