@@ -12,6 +12,7 @@ import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
 import PageActions from '../components/shell/PageActions.tsx';
 import TocMobile from '../components/shell/TocMobile.tsx';
+import CodeTabs from '../components/CodeTabs.astro';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
 import { getCollection, getEntry } from 'astro:content';
@@ -46,6 +47,8 @@ const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1
 if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
 const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
 const category = article ? article.category : nav?.trail[0];
+// Code tab groups (converter output) need the inline tab script before the first group; other pages get none.
+const hasCodeTabs = header.body.includes('<div class="code-tabs">');
 // Published articles that name this page in their `related` front matter (drafts have no manifest entry).
 const native = article ? [] : manifest.documents.filter(isNativeArticle);
 const related = native.length
@@ -98,6 +101,7 @@ const related = native.length
           </TocMobile>
         )}
         <hr class="doc-header__rule" />
+        {hasCodeTabs && <CodeTabs />}
         <Fragment set:html={header.body} />
       </article>
       {related.length > 0 && (
