@@ -3,7 +3,7 @@
 // GET /changelog/rss.xml: the public Apertis release notes as RSS 2.0 (site-nimbus/src/components/catalog/
 // changelog.ts), fetched server-side and kept in the edge cache for ten minutes. Pages Functions route this
 // file name to exactly that path. Any upstream failure answers 503 with Retry-After and is not cached. Only
-// GET is exported: other methods fall through to the static 404.
+// GET is exported: other methods answer 405.
 import { fetchChangelog, rss } from '../../site-nimbus/src/components/catalog/changelog.ts'
 
 const TTL = 600
