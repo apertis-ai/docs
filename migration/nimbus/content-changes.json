@@ -1,0 +1,10 @@
+{
+  "note": "Content edits made after the cutover. dist.check compares each page with the frozen legacy link sets in route-inventory.json; an edit that changes a page's links is recorded here, against the commit that made it and the decision that allowed it. Every entry must still match the built page.",
+  "documents": {
+    "default:help/faq": {
+      "commit": "55608c9",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer)",
+      "links": { "added": ["/getting-started/quick-start"], "removed": ["https://playground.apertis.ai"] }
+    }
+  }
+}

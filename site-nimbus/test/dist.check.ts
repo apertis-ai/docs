@@ -148,6 +148,13 @@ test('no simulated or canned Ask Docs answer path ships (baseline defect 6)', ()
 const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
+// Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
+type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] } };
+const contentChanges: Record<string, ContentChange> = JSON.parse(fs.readFileSync(path.join(root, '../migration/nimbus/content-changes.json'), 'utf8')).documents;
+const expectedLinks = (id: string, legacy: string[]) => {
+  const c = contentChanges[id]?.links;
+  return [...legacy.filter((h) => !c?.removed?.includes(h)), ...(c?.added ?? [])];
+};
 
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
@@ -188,7 +195,7 @@ test('m2: article links are root-absolute and equal the legacy internal link set
     const hrefs = [...new Set([...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="([^"#][^"]*)"/g)].map((m) => m[1]))];
     assert.deepEqual(hrefs.filter((h) => !/^(\/|[a-z][a-z0-9+.-]*:)/i.test(h)), [], `${d.id}: relative hrefs`);
     // Legacy extras: the breadcrumb home link, the GitHub edit link and Cloudflare's mailto obfuscation.
-    const legacy = row.live!.links.filter((h) => h.startsWith('/') && h !== '/' && !h.startsWith('/cdn-cgi/'));
+    const legacy = expectedLinks(d.id, row.live!.links).filter((h) => h.startsWith('/') && h !== '/' && !h.startsWith('/cdn-cgi/'));
     assert.deepEqual(hrefs.filter((h) => h.startsWith('/')).sort(), [...new Set(legacy)].sort(), d.id);
   }
 });
@@ -290,6 +297,18 @@ test('m8: retired routes are in no publication channel and every path they had a
   assert.equal(files.some((f) => /^llms/.test(f)), false, 'llms files are not produced by this candidate');
 });
 
+test('every recorded post-cutover content change matches its built page', () => {
+  for (const [id, c] of Object.entries(contentChanges)) {
+    const d = converted.find((x) => x.id === id);
+    assert.ok(d, `${id}: not a converted page`);
+    assert.match(c.commit, /^[0-9a-f]{7,40}$/, `${id}: commit`);
+    assert.ok(c.decision, `${id}: decision`);
+    const hrefs = new Set([...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&')));
+    for (const h of c.links.added ?? []) assert.ok(hrefs.has(h), `${id}: added link ${h} is not on the page`);
+    for (const h of c.links.removed ?? []) assert.ok(!hrefs.has(h), `${id}: removed link ${h} is still on the page`);
+  }
+});
+
 test('m8: every converted page keeps the legacy external links and images (content parity)', () => {
   const amp = (s: string) => s.replace(/&amp;/g, '&');
   // Legacy /assets/images/<name>-<32 hex>.<ext> and the candidate /assets/images/<name>-<16 hex>.<ext> are one image.
@@ -300,7 +319,7 @@ test('m8: every converted page keeps the legacy external links and images (conte
     const body = article(read(`${d.servedPath.slice(1)}index.html`));
     const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => amp(m[1])));
     // Legacy extras outside the body: the "Edit this page" GitHub link and Cloudflare's email obfuscation.
-    const external = row.live!.links.filter((h) => !h.startsWith('/') && !h.startsWith('https://github.com/apertis-ai/docs/tree/main/'));
+    const external = expectedLinks(d.id, row.live!.links).filter((h) => !h.startsWith('/') && !h.startsWith('https://github.com/apertis-ai/docs/tree/main/'));
     assert.deepEqual(external.filter((h) => !hrefs.has(h)), [], `${d.id}: external links lost`);
     const srcs = new Set([...body.matchAll(/<img[^>]+src="([^"]+)"/g)].map((m) => image(amp(m[1]))));
     assert.deepEqual(row.live!.images.map(image).filter((s) => !srcs.has(s)), [], `${d.id}: images lost`);
