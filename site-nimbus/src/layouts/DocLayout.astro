@@ -123,6 +123,24 @@ const related = native.length
           {nav.next && <a class="pagination__next" href={nav.next.href}><span>Next</span>{nav.next.label}</a>}
         </nav>
       )}
+      {/* "Was this page helpful?" (openspec docs-reader-shell-extras "Page feedback"): outside <article>, so it
+          is outside both the search index (rootSelector: 'article') and the article link set test/dist.check.ts
+          reads from <article>...</article>. Server-rendered hidden; the script below reveals it, so a reader
+          without JavaScript sees no dead control. POST /_nimbus/feedback is functions/_nimbus/feedback.ts. */}
+      <section class="page-feedback" data-feedback={doc.servedPath} data-pagefind-ignore="all" hidden>
+        <p class="page-feedback__prompt">Was this page helpful?</p>
+        <div class="page-feedback__choices" role="group" aria-label="Was this page helpful?">
+          <button type="button" class="page-feedback__choice" data-choice="yes" aria-pressed="false">Yes</button>
+          <button type="button" class="page-feedback__choice" data-choice="no" aria-pressed="false">No</button>
+        </div>
+        <form class="page-feedback__form" hidden>
+          <label for="page-feedback-comment">Comment (optional)</label>
+          <textarea id="page-feedback-comment" maxlength="1000" rows="3"></textarea>
+          <button type="submit" class="page-feedback__send">Send</button>
+        </form>
+        <p class="page-feedback__status" role="status" aria-live="polite" tabindex="-1"></p>
+      </section>
+      <script is:inline>(()=>{const r=document.currentScript.previousElementSibling,p=r.getAttribute('data-feedback'),c=r.querySelector('.page-feedback__choices'),f=r.querySelector('.page-feedback__form'),s=r.querySelector('.page-feedback__status'),t=r.querySelector('textarea');let h=null;r.hidden=false;c.addEventListener('click',e=>{const b=e.target.closest('[data-choice]');if(!b)return;h=b.dataset.choice==='yes';for(const x of c.querySelectorAll('[data-choice]'))x.setAttribute('aria-pressed',String(x===b));f.hidden=false;t.focus()});f.addEventListener('submit',async e=>{e.preventDefault();s.removeAttribute('data-state');s.textContent='';try{const res=await fetch('/_nimbus/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({path:p,helpful:h,comment:t.value||undefined})});if(res.status!==204)throw new Error();s.textContent='Thanks for the feedback.';s.dataset.state='ok';c.hidden=true;f.hidden=true;s.focus()}catch{s.textContent='Feedback was not sent.';s.dataset.state='error'}})})()</script>
     </main>
     {body.count > 0 && <TryIt />}
     {hasToc && (
