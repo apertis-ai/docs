@@ -634,7 +634,10 @@ docs-routing-publication "Native articles"). None is committed yet, so nothing b
     the turn ends. A turn that was still streaming is stored as interrupted.
 - **Errors:**
   - 429 shows the legacy fixed message.
-  - Any other non-2xx shows `Ask Docs could not answer (HTTP <status>): <error>[: <details>]`.
+  - Any other 4xx shows `Ask Docs could not accept this question. Reload the page and try again.`
+  - 5xx and anything else show `Ask Docs is unavailable right now. Please try again in a moment.`
+  - When the server sent a `traceId`, the message ends with `(Reference: <traceId>)`. The server's `error` and
+    `details` go to the browser console (`console.warn`), not the panel.
   - Network failures are shown in the panel.
 - **Citations:** internal Markdown links render as links and source pills.
   - Internal means root-relative and same-origin.
