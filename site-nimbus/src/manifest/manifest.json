@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "60bf3df944f20045534e3852a8d03058ea79d334",
-  "buildId": "60bf3df944f20045534e3852a8d03058ea79d334.c397060a3a89",
+  "sourceSha": "0590457ad1a5c4d6a65f50afb3d857ce52989704",
+  "buildId": "0590457ad1a5c4d6a65f50afb3d857ce52989704.7aae83173c62",
   "documents": [
     {
       "id": "page:index",
@@ -249,9 +249,9 @@
       },
       "markdown": {
         "path": "/api/sdks/mcp-server.md",
-        "sha256": "48a911234daa76262255ce21a4ec6c038110c394b7054d986f9aa37517e20106"
+        "sha256": "da0768901cb89ff2c58346d3d1608fd5dfb0b92cd4b4c984a5428db8cd26a88b"
       },
-      "contentSha256": "48a911234daa76262255ce21a4ec6c038110c394b7054d986f9aa37517e20106"
+      "contentSha256": "da0768901cb89ff2c58346d3d1608fd5dfb0b92cd4b4c984a5428db8cd26a88b"
     },
     {
       "id": "api:sdks/python-sdk/index",
