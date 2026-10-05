@@ -124,9 +124,30 @@ The `reasoning` parameter configures the model's reasoning behavior:
 | `effort` | string | Reasoning effort level: `low`, `medium`, `high` |
 | `summary` | string | Summary style: `auto`, `concise`, `detailed` |
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-0" aria-controls="code-tabs-2-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-1" aria-controls="code-tabs-2-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-2" aria-controls="code-tabs-2-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-2-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Solve this complex math problem...",
+        "reasoning": {"effort": "high", "summary": "detailed"}
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 response = client.responses.create(
-    model="o1-preview",
+    model="gpt-5.2",
     input="Solve this complex math problem...",
     reasoning={
         "effort": "high",
@@ -134,6 +155,26 @@ response = client.responses.create(
     }
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Solve this complex math problem...',
+  reasoning: {
+    effort: 'high',
+    summary: 'detailed'
+  }
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 ### Text Parameter
 
@@ -208,19 +249,78 @@ console.log(response.output_text);
 
 Use the `tools` parameter to enable web search:
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-0" aria-controls="code-tabs-3-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-1" aria-controls="code-tabs-3-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-2" aria-controls="code-tabs-3-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-3-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What are the latest news about AI?",
+        "tools": [{"type": "web_search_preview"}]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What are the latest news about AI?",
     tools=[{"type": "web_search_preview"}]
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'What are the latest news about AI?',
+  tools: [{ type: 'web_search_preview' }]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### With Reasoning
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-0" aria-controls="code-tabs-4-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-1" aria-controls="code-tabs-4-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-4-2" aria-controls="code-tabs-4-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-4-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Prove the Pythagorean theorem step by step.",
+        "reasoning": {"effort": "high", "summary": "detailed"}
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-4-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 response = client.responses.create(
-    model="o1-preview",
+    model="gpt-5.2",
     input="Prove the Pythagorean theorem step by step.",
     reasoning={
         "effort": "high",
@@ -229,11 +329,52 @@ response = client.responses.create(
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-4-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Prove the Pythagorean theorem step by step.',
+  reasoning: {
+    effort: 'high',
+    summary: 'detailed'
+  }
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### Streaming
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-0" aria-controls="code-tabs-5-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-1" aria-controls="code-tabs-5-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-5-2" aria-controls="code-tabs-5-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-5-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Write a short story about a robot.",
+        "stream": true
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-5-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 stream = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="Write a short story about a robot.",
     stream=True
 )
@@ -243,11 +384,56 @@ for event in stream:
         print(event.delta, end="", flush=True)
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-5-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const stream = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Write a short story about a robot.',
+  stream: true
+});
+
+for await (const event of stream) {
+  if (event.type === 'response.output_text.delta') process.stdout.write(event.delta);
+}
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### Multi-turn Conversation
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-0" aria-controls="code-tabs-6-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-1" aria-controls="code-tabs-6-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-6-2" aria-controls="code-tabs-6-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-6-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": [
+            {"role": "user", "content": "What is Python?"},
+            {"role": "assistant", "content": "Python is a high-level programming language..."},
+            {"role": "user", "content": "How do I install it?"}
+        ]
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-6-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input=[
         {"role": "user", "content": "What is Python?"},
         {"role": "assistant", "content": "Python is a high-level programming language..."},
@@ -256,39 +442,190 @@ response = client.responses.create(
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-6-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: [
+    { role: 'user', content: 'What is Python?' },
+    { role: 'assistant', content: 'Python is a high-level programming language...' },
+    { role: 'user', content: 'How do I install it?' }
+  ]
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### With Instructions
 
 Use `instructions` to provide high-level guidance for model behavior:
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-7-0" aria-controls="code-tabs-7-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-7-1" aria-controls="code-tabs-7-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-7-2" aria-controls="code-tabs-7-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-7-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "instructions": "You are a helpful coding assistant. Always provide code examples.",
+        "input": "How do I read a file in Python?"
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-7-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     instructions="You are a helpful coding assistant. Always provide code examples.",
     input="How do I read a file in Python?"
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-7-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  instructions: 'You are a helpful coding assistant. Always provide code examples.',
+  input: 'How do I read a file in Python?'
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### Stateful Conversations
 
 Use `store` and `previous_response_id` for multi-turn conversations with state:
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-8-0" aria-controls="code-tabs-8-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-8-1" aria-controls="code-tabs-8-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-8-2" aria-controls="code-tabs-8-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-8-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "My name is Alice.",
+        "store": true
+    }'
+
+# Follow-up request - reference the previous response
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What is my name?",
+        "previous_response_id": "<RESPONSE_ID>"
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-8-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 # First request - store the response
 response1 = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="My name is Alice.",
     store=True
 )
 
 # Follow-up request - reference the previous response
 response2 = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What's my name?",
     previous_response_id=response1.id
 )
 ```
 
+</div>
+<div class="code-tabs__panel" id="code-tabs-8-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+// First request - store the response
+const response1 = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'My name is Alice.',
+  store: true
+});
+
+// Follow-up request - reference the previous response
+const response2 = await client.responses.create({
+  model: 'gpt-5.2',
+  input: "What's my name?",
+  previous_response_id: response1.id
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
+
 ### With Function Calling
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-9-0" aria-controls="code-tabs-9-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-9-1" aria-controls="code-tabs-9-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-9-2" aria-controls="code-tabs-9-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-9-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What is the weather in Tokyo?",
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {"type": "string"}
+                        },
+                        "required": ["location"]
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto"
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-9-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 tools = [
@@ -309,12 +646,47 @@ tools = [
 ]
 
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What's the weather in Tokyo?",
     tools=tools,
     tool_choice="auto"
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-9-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const tools = [
+  {
+    type: 'function',
+    function: {
+      name: 'get_weather',
+      description: 'Get the current weather',
+      parameters: {
+        type: 'object',
+        properties: {
+          location: { type: 'string' }
+        },
+        required: ['location']
+      }
+    }
+  }
+];
+
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: "What's the weather in Tokyo?",
+  tools,
+  tool_choice: 'auto'
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 ## Response Format
 
@@ -417,9 +789,34 @@ This means you can use **any model** with the Responses API - the conversion is 
 
 The Responses API supports [context compression](/api/text-generation/context-compression) to automatically reduce token usage for long conversations. Enable it via the request body or HTTP headers:
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-10-0" aria-controls="code-tabs-10-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-10-1" aria-controls="code-tabs-10-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-10-2" aria-controls="code-tabs-10-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-10-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
+```bash
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": [
+            {"role": "user", "content": "Explain distributed systems"},
+            {"role": "assistant", "content": "Distributed systems are..."},
+            {"role": "user", "content": "Summarize the key points"}
+        ],
+        "compression": {"enabled": true, "strategy": "on", "model": "gemini-3-flash-preview"}
+    }'
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-10-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
 ```python
 response = client.responses.create(
-    model="o4-mini",
+    model="gpt-5.2",
     input=[
         {"role": "user", "content": "Explain distributed systems"},
         {"role": "assistant", "content": "Distributed systems are..."},
@@ -430,11 +827,37 @@ response = client.responses.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4.1-mini"
+            "model": "gemini-3-flash-preview"
         }
     }
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-10-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: [
+    { role: 'user', content: 'Explain distributed systems' },
+    { role: 'assistant', content: 'Distributed systems are...' },
+    // ... long conversation history ...
+    { role: 'user', content: 'Summarize the key points' }
+  ],
+  compression: {
+    enabled: true,
+    strategy: 'on',
+    model: 'gemini-3-flash-preview'
+  }
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 See [Context Compression](/api/text-generation/context-compression) for full configuration options and strategies.
 
