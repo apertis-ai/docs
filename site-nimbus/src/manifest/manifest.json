@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "60bf3df944f20045534e3852a8d03058ea79d334",
-  "buildId": "60bf3df944f20045534e3852a8d03058ea79d334.c397060a3a89",
+  "sourceSha": "40f6b4cc9c4b3ace2cfaba4d3f78f2f7146f5628",
+  "buildId": "40f6b4cc9c4b3ace2cfaba4d3f78f2f7146f5628.1d30afc0d1b5",
   "documents": [
     {
       "id": "page:index",
@@ -1239,9 +1239,9 @@
       },
       "markdown": {
         "path": "/installation/models.md",
-        "sha256": "fb8d8d0c899624542793bb6abdc804e2f3389481f77bb14a73de8fee5480a89e"
+        "sha256": "d56d3117ed25f0087ec6d2a7159729302d519561f4c209934fa184ee91ac925b"
       },
-      "contentSha256": "fb8d8d0c899624542793bb6abdc804e2f3389481f77bb14a73de8fee5480a89e"
+      "contentSha256": "d56d3117ed25f0087ec6d2a7159729302d519561f4c209934fa184ee91ac925b"
     },
     {
       "id": "default:installation/opencode",
