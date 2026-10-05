@@ -309,6 +309,23 @@ test('every recorded post-cutover content change matches its built page', () => 
   }
 });
 
+test('/api/ Choosing an API format compares and links the three formats', () => {
+  // docs-reader-features, "Choosing an API format": WHEN the reader opens /api/#choosing-an-api-format,
+  // THEN a table compares the three formats and links the chat-completions, responses and messages pages.
+  const body = article(read('api/index.html'));
+  assert.ok(/<h2[^>]+id="choosing-an-api-format"/.test(body), 'missing heading id');
+  const table = body.match(/<table>[\s\S]*?<\/table>/)?.[0];
+  assert.ok(table, 'missing comparison table');
+  const headers = [...table!.matchAll(/<th>([^<]*)<\/th>/g)].map((m) => m[1]);
+  assert.deepEqual(headers, ['', 'Chat Completions', 'Responses', 'Messages']);
+  // Site convention (matched by every other converted page's internal links): no trailing slash,
+  // even though the spec scenario text writes one.
+  const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1]));
+  for (const h of ['/api/text-generation/chat-completions', '/api/text-generation/responses', '/api/text-generation/messages']) {
+    assert.ok(hrefs.has(h), `missing link ${h}`);
+  }
+});
+
 test('m8: every converted page keeps the legacy external links and images (content parity)', () => {
   const amp = (s: string) => s.replace(/&amp;/g, '&');
   // Legacy /assets/images/<name>-<32 hex>.<ext> and the candidate /assets/images/<name>-<16 hex>.<ext> are one image.
