@@ -888,18 +888,16 @@ html.aa-scroll-lock { overflow: hidden; }
   .navbar, #shell-drawer, .breadcrumbs, .doc-page__sidebar, .doc-page__toc, .toc-mobile,
   .doc-header__actions, .doc-header__edit, .related-articles, .pagination, .footer,
   .ask-docs-trigger, #apertis-assistant, .nb-code-copy, .heading-anchor,
-  [class*="tryit"], [data-tryit] {
+  .try-it, .try-it-open, [data-feedback], .code-tabs__list {
     display: none !important;
   }
   .doc-page, .doc-page--sidebar { display: block; }
   .doc-page__main { padding: 0; }
   .doc-header { display: block; margin-bottom: 0; }
   .docs-content, .docs-content pre { max-width: 100%; }
-  /* Packet B tabs (.code-tabs, .code-tabs__tab, .code-tabs__panel[data-tab]): every sample prints, labelled,
-     instead of only the one JS would show. */
-  .code-tabs__tab { display: none !important; }
+  /* Code tab groups: every sample prints under its no-JS label instead of only the selected one. */
   .code-tabs__panel { display: block !important; }
-  .code-tabs__panel[data-tab]::before { content: attr(data-tab); display: block; font-weight: 600; margin: 1em 0 0.25em; }
+  .code-tabs--ready .code-tabs__label { display: block !important; }
   /* Code wraps instead of being clipped or scrolled. */
   .docs-content pre { overflow-x: visible; white-space: pre-wrap; word-break: break-word; }
   /* An external link's URL follows its text. */
