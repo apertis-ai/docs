@@ -21,7 +21,7 @@ Print uses the light palette.
 - **THEN** the output shows the title, the meta row and the full article, including every tab sample, and no site chrome
 
 ### Requirement: Page feedback
-Document pages SHALL end with "Was this page helpful?", offering Yes and No and an optional comment of at most 1000 characters. The answer is sent with `POST /_nimbus/feedback` as `{path, helpful, comment?}` and stored in the D1 database bound as `FEEDBACK_DB` (operator decision 2026-10-05: D1), as one row of `path`, `helpful`, `comment` and `created_at`. `path` SHALL be the served path of a published document; anything else is rejected with 400. The reader then sees a confirmation, or a visible error if the request fails. No identifier, cookie or IP address is stored.
+Document pages SHALL end with "Was this page helpful?", offering Yes and No and an optional comment of at most 1000 characters. The answer is sent with `POST /_nimbus/feedback` as `{path, helpful, comment?}` and stored in the D1 database bound as `FEEDBACK_DB` (operator decision 2026-10-05: D1), as one row of `path`, `helpful`, `comment` and `created_at`. `path` SHALL be the served path of a page the deployment's `/sitemap.xml` lists (the published documents and `/search/`); anything else is rejected with 400. The function reads that sitemap through the static assets rather than bundling the manifest. The reader then sees a confirmation, or a visible error if the request fails. No identifier, cookie or IP address is stored.
 
 Without the binding, the endpoint answers 503. Feedback that cannot be stored SHALL NOT be reported as sent. The production binding SHALL be in place before the deployment that first renders the widget.
 

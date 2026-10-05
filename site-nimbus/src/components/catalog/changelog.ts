@@ -18,9 +18,9 @@ export interface Note extends ReleaseNote {
 }
 
 // What the developer-activation guard (scripts/check-developer-activation.mjs, openspec
-// developer-activation-docs) forbids in anything this site publishes. Older release notes say "470+ models"
-// or link apertis.ai/token; such a note keeps its title, description and items, and its body is replaced
-// by a link to the original on apertis.ai rather than rewritten.
+// developer-activation-docs) forbids in anything this site publishes. Some older release notes state a fixed
+// model count or link the legacy API-key route; such a note keeps its title, description and items, and its
+// body is replaced by a link to the original on apertis.ai rather than rewritten.
 const ACTIVATION = [/apertis\.ai\/token\b/i, /apertis\.ai\/setting\?tab=apikeys\b/i, /[?&]utm_(?:source|medium|campaign|term|content)=/i, /\b\d{2,4}\+\s+(?:AI\s+)?models\b/i];
 export const ORIGINAL_NOTES = 'https://apertis.ai/changelog';
 
