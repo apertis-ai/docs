@@ -1,0 +1,57 @@
+/* The one stylesheet entry: Tailwind v4 (theme and utilities only, no preflight: the reading layout in
+   shell.css is the base), the shell and reading layout, and the shadcn/ui token mapping. Unlayered CSS
+   would beat every utility, so the shell sits in the base layer below the utilities. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import './shell.css' layer(base);
+/* Explicit sources: Tailwind scans only the files that hold class names, never the docs Markdown, the
+   converter or tests (their prose would emit utilities such as .container or .collapse). */
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@source '../components';
+@source '../layouts';
+@source '../pages';
+@import 'tw-animate-css';
+
+/* dark: follows the theme switch (data-theme on <html>), never the OS setting. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* shadcn/ui tokens (new-york, neutral, cssVariables). Every one maps to src/styles/tokens.css. */
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-card: var(--card);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-secondary: var(--panel);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--panel);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--hover);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--error);
+  --color-border: var(--line);
+  --color-input: var(--line-strong);
+  --color-ring: var(--ink);
+  --color-body: var(--body);
+  --color-desc: var(--desc);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --text-xs: var(--fs-xs);
+  --text-sm: var(--fs-ui);
+  --text-base: var(--fs-base);
+  --text-lg: var(--fs-lg);
+  --text-xl: var(--fs-xl);
+  --font-sans: var(--font);
+  --font-mono: var(--mono);
+}
+
+/* Without preflight, shadcn parts get their border reset here, scoped to their data-slot. */
+@layer base {
+  [data-slot] { border-width: 0; border-style: solid; border-color: var(--border); }
+  :is(button, input, textarea)[data-slot] { background-color: transparent; }
+}
