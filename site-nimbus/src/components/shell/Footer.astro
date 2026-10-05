@@ -19,7 +19,7 @@ const columns: { title: string; links: [string, string, string?][] }[] = [
 // Trust badges as the apertis.ai footer draws them (Footer.tsx FooterTrustBadgeIcon): the AWS mark (wordmark in the
 // text colour, smile in AWS orange) and stroke icons for PCI DSS, DPA and MFA.
 const trust = [['aws', 'AWS', 'Partner Network Member', 'https://aws.amazon.com/partners/'], ['pci', 'PCI DSS', 'via Stripe', `${site}/trust`], ['dpa', 'DPA', 'Available', `${site}/trust/dpa`], ['mfa', 'MFA', 'Supported', `${site}/trust`]];
-const stroke = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+const stroke = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' } as const;
 const bottom = [['Security & Compliance', `${site}/trust`], ['DPA requests', `${site}/trust/dpa`], ['Service Status', 'https://status.apertis.ai']];
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 const attrs = (href: string) => (href.startsWith('/') || href.startsWith('mailto:') ? {} : external);
