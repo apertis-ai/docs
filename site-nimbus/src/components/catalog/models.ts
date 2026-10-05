@@ -105,7 +105,7 @@ export async function fetchCatalog(fetcher: typeof fetch): Promise<Catalog> {
     if (!page.more) break;
   }
   const models = visibleModels(rows, hidden);
-  if (!models.length) throw new Error('models: no visible model');
+  if (!models.length) throw new Error('models: nothing to show');
   if (new Set(models.map((m) => m.id)).size !== models.length) throw new Error('models: repeated model ids across pages');
   return { version: first!.version, models };
 }
