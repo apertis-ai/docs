@@ -246,7 +246,7 @@ test('code tab groups: the tab script ships only on pages with a group, before i
     const groups = html.slice(first).split('<div class="code-tabs">').slice(1);
     for (const g of groups) {
       const tabs = [...g.matchAll(/<button type="button" role="tab" class="code-tabs__tab" id="([^"]+)" aria-controls="([^"]+)"[^>]*>([^<]*)<\/button>/g)];
-      const panels = [...g.matchAll(/<div class="code-tabs__panel" id="([^"]+)" data-tab="([^"]+)">\s*<p class="code-tabs__label" data-pagefind-ignore>([^<]*)<\/p>\s*<pre class="astro-code/g)];
+      const panels = [...g.matchAll(/<div class="code-tabs__panel" id="([^"]+)" data-tab="([^"]+)">\s*<p class="code-tabs__label" data-pagefind-ignore>([^<]*)<\/p>\s*(?:<figure[^>]*>)?<pre class="astro-code/g)];
       assert.ok(tabs.length >= 2, `${f}: a group has ${tabs.length} tabs`);
       assert.deepEqual(panels.map((p) => [p[1], p[2], p[3]]), tabs.map((t) => [t[2], t[3], t[3]]), `${f}: tabs and panels match`);
       assert.match(g, /<\/div>\s*<script>__apertisCodeTabs\(document\.currentScript\.parentNode\)<\/script>\s*<\/div>/, `${f}: group init`);
