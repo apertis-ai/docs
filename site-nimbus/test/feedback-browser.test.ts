@@ -46,10 +46,21 @@ test('No, a comment and Send show the confirmation (sent) or the error (no bindi
   if (expect === 'sent') {
     assert.match(text, /Thanks for the feedback/);
     assert.equal(await status.getAttribute('data-state'), 'ok');
+    // On success the form that held focus (Send) is hidden; focus must move to the status, never drop to <body>
+    // (the repo's own UX canary: "focus never lands on <body>").
+    assert.equal(await page.evaluate(() => document.activeElement?.tagName), 'P');
+    assert.equal(await page.evaluate(() => document.activeElement === document.querySelector('.page-feedback__status')), true);
   } else {
     assert.match(text, /Feedback was not sent/);
     assert.equal(await status.getAttribute('data-state'), 'error');
   }
+  assert.notEqual(await page.evaluate(() => document.activeElement?.tagName), 'BODY');
   assert.deepEqual(errors, []);
+
+  // Hidden in print (packet D's print stylesheet is not in this tree yet; its own rules can extend this).
+  await page.emulateMedia({ media: 'print' });
+  assert.equal(await section.isVisible(), false, '[data-feedback] is display:none under @media print');
+  await page.emulateMedia({ media: 'screen' });
+
   await context.close();
 });
