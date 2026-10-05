@@ -12,14 +12,46 @@ The Responses API uses `input` instead of `messages`. You can provide either a s
 
 ## HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/responses \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4.1",
+        "model": "gpt-5.2",
         "input": "What is the capital of France?"
     }'
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.responses.create(
+    model="gpt-5.2",
+    input="What is the capital of France?"
+)
+
+print(response.output_text)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'What is the capital of France?'
+});
+
+console.log(response.output_text);
 ```
 
 ## Authentication
