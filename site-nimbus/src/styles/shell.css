@@ -1,0 +1,864 @@
+/* Apertis shell: header, sidebar, page header, TOC, footer, page actions, navigation sheet, homepage and
+   docs typography (openspec docs-shell-interfaces "Reading layout and page header" and "Shell alignment,
+   header, footer and homepage"). Colours come from tokens.css only; theme is data-theme on <html>, styling
+   only. Loaded through app.css in the base layer, below the Tailwind utilities of the shadcn parts. */
+@import './tokens.css';
+
+/* LINE Seed (the Apertis brand face; SIL OFL 1.1, see src/fonts/LINESeed-OFL.txt) for display text only.
+   Only a Regular Latin subset ships (19,968 bytes), the same file stima-api serves: cut with fontTools from
+   LINESeedTW_TTF_Rg.ttf to the 136 code points of its Latin subset, keeping every name record: OFL requires each copy to
+   carry the copyright notice and the licence, and the font's own name records carry both. Display text
+   is set at 400, never faux-bolded. */
+@font-face {
+  font-family: 'LINE Seed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/LINESeedTW_Rg-latin.woff2') format('woff2');
+  unicode-range: U+0000-024F, U+0250-02AF, U+1E00-1EFF, U+2000-22FF, U+25A0-25FF, U+FB00-FB06, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* Two header rows (Claude Docs pattern): 56 px top row, 43 px tab row, 1 px hairline. */
+  --navbar-top: 56px;
+  --navbar-height: 100px;
+  --sidebar-width: 324px;
+  --measure: 68ch;
+  /* The one content container: header, homepage sections and footer share its edges. */
+  --container: 1280px;
+  --gutter: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* The modal search locks scrolling (overflow: hidden); a stable gutter keeps the page from shifting. */
+  scrollbar-gutter: stable;
+  scroll-padding-top: calc(var(--navbar-height) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-synthesis-weight: none;
+  background: var(--bg);
+  color: var(--body);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+body[data-scroll-locked] { overflow: hidden; }
+
+a { color: var(--link); text-decoration: none; }
+/* Link hover: muted links turn ink; prose links (already ink) darken their underline (.docs-content a). */
+:is(.footer, .sidebar, .toc, .breadcrumbs) a:hover { color: var(--ink); }
+
+button { font: inherit; color: inherit; }
+
+/* Small labels in the text face, as on the Claude docs (operator review 2026-10-03): the page's category,
+   the sidebar categories, the TOC title and the pager hints. Muted, sentence case as written. */
+.doc-header__tag, .sidebar__heading, .doc-page__toc-title, .pagination a span {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 20px;
+}
+/* Mono small labels: eyebrows and the reading-progress figure. */
+.label, .toc-progress {
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 300;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--primary);
+  color: var(--primary-fg);
+}
+.skip-link:focus { top: 8px; }
+
+.shell-container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Document pages keep the sidebar/content/TOC grid (below); there the header and footer share that grid's
+   outer edges instead: the sidebar's content left (40 px) and the TOC's content right. Beyond the frame
+   width the grid, header and footer are centred together (canary review step 3). */
+[data-frame='docs'] .shell-container {
+  max-width: calc(var(--sidebar-width) + 828px + 273px);
+  margin-inline: auto;
+  padding-left: 40px;
+  padding-right: 20px;
+}
+
+.icon-button { color: var(--ink); }
+.icon-moon, [data-theme='dark'] .icon-sun { display: none; }
+[data-theme='dark'] .icon-moon { display: block; }
+
+/* Header: sticky, translucent, hairline bottom, two rows; its content sits in the shared container.
+   Top row: logo left, search centred, actions right. Second row: section tabs, the current one underlined. */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--navbar-height);
+  border-bottom: 1px solid var(--line);
+  background: var(--navbar-bg);
+}
+.navbar__inner { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; height: var(--navbar-top); }
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  color: var(--ink);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.brand__mark { display: block; flex: none; width: 22px; height: 22px; color: var(--ink); }
+.navbar .brand { justify-self: start; }
+
+.navbar__tabs { height: calc(var(--navbar-height) - var(--navbar-top) - 1px); }
+.navbar__links { display: flex; align-items: stretch; gap: 28px; height: 100%; }
+.navbar__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  transition: color 0.16s ease, box-shadow 0.16s ease;
+}
+.navbar__links a:hover { color: var(--ink); }
+.navbar__links a.active { color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); }
+
+.navbar__right { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.navbar__sep { width: 1px; height: 20px; margin: 0 4px; background: var(--line); }
+
+.navbar__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 200px;
+  height: 32px;
+  margin-right: 4px;
+  padding: 0 6px 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+.navbar__search:hover { background: var(--hover); color: var(--ink); }
+.navbar__search span { flex: 1; text-align: left; }
+.navbar__search kbd {
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  font: 500 var(--fs-2xs)/16px var(--mono);
+}
+.navbar__compact { display: none; align-items: center; gap: 4px; margin-left: auto; }
+
+/* Navigation sheet (NavSheet.tsx): links, account actions and, on docs pages, the sidebar. */
+.drawer__head {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--navbar-height);
+  padding: 0 12px 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px 18px 32px; }
+.drawer__menu { display: flex; flex-direction: column; }
+
+/* Docs page grid */
+.doc-page {
+  display: grid;
+  grid-template-columns: minmax(0, 828px) 273px;
+  justify-content: center;
+  min-height: calc(100vh - var(--navbar-height));
+}
+.doc-page--sidebar {
+  grid-template-columns: var(--sidebar-width) minmax(0, 828px) 273px; /* also [data-frame='docs'] above */
+  justify-content: center;
+}
+
+.doc-page__sidebar {
+  position: sticky;
+  top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height));
+  overflow-y: auto;
+  border-right: 1px solid var(--line);
+  padding: 28px 32px 40px 40px;
+  scrollbar-width: thin;
+}
+
+.doc-page__main { position: relative; min-width: 0; padding: 40px 16px 64px 20px; }
+
+.doc-page__toc {
+  position: sticky;
+  top: var(--navbar-height);
+  align-self: start;
+  max-height: calc(100vh - var(--navbar-height));
+  overflow-y: auto;
+  padding: 40px 20px 24px 8px;
+}
+.doc-page__toc-title { margin: 0 0 12px; color: var(--muted); }
+
+/* Sidebar: same data and order, restyled. */
+.sidebar__list { margin: 0; padding: 0; list-style: none; }
+.sidebar__list--l1 { display: flex; flex-direction: column; gap: 22px; }
+.sidebar__list--l2, .sidebar__list--l3, .sidebar__list--l4 { display: flex; flex-direction: column; gap: 2px; }
+.sidebar__list--l3, .sidebar__list--l4 { padding: 4px 0 4px 12px; margin-left: 2px; border-left: 1px solid var(--line); }
+.sidebar__heading { margin: 0 0 8px; color: var(--muted); }
+.sidebar__link, .sidebar__group > summary {
+  display: block;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 5px;
+  color: var(--body);
+  font-size: var(--fs-ui);
+  line-height: 21px;
+  transition: color 0.16s ease, background-color 0.16s ease;
+}
+.sidebar__link:hover, .sidebar__group > summary:hover { color: var(--ink); background: var(--hover); }
+.sidebar__link[aria-current='page'] { color: var(--ink); font-weight: 500; background: var(--hover); }
+.sidebar__group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+}
+.sidebar__group > summary::-webkit-details-marker { display: none; }
+.sidebar__group > summary::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin: 0 6px 4px 0;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  opacity: 0.56;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.sidebar__group:not([open]) > summary::after { transform: rotate(-45deg); margin-bottom: 0; }
+.sidebar__console {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+}
+.sidebar__console:hover { background: var(--hover); }
+
+/* Table of contents: tree glyphs, active entry, reading progress. */
+.toc, .docs-content .toc { margin: 0; padding: 0; list-style: none; }
+.toc ul, .docs-content .toc ul { margin: 0; padding: 0 0 0 16px; list-style: none; }
+.docs-content .toc li + li { margin-top: 0; }
+/* Desktop rule kept from legacy: an h2's h3 list shows only while that h2 or one of its h3s is active. */
+.doc-page__toc .toc ul { display: none; }
+.doc-page__toc .toc > li:has(a.active) > ul { display: block; }
+/* A plain list, as on the Claude docs (operator review 2026-10-04): h3s indent under their h2, and only the
+   current section is in the ink colour. */
+.toc a {
+  display: block;
+  padding: 3px 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  line-height: 20px;
+  transition: color 0.16s ease;
+}
+.toc a:hover { color: var(--ink); }
+.toc a.active { color: var(--ink); font-weight: 500; }
+
+.toc-progress { display: none; align-items: center; gap: 10px; margin: 20px 0 0; color: var(--muted); }
+.js .toc-progress { display: flex; }
+.toc-progress__bar { flex: 1; height: 2px; overflow: hidden; background: var(--line); }
+.toc-progress__fill { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.12s linear; }
+.toc-progress__value { width: 4ch; font-variant-numeric: tabular-nums; text-align: right; }
+
+.toc-mobile { margin: 0 0 20px; border: 1px solid var(--line); border-radius: 8px; }
+.toc-mobile > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  color: var(--ink);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+.toc-mobile > summary::-webkit-details-marker { display: none; }
+.toc-mobile > summary svg { flex: 0 0 auto; color: var(--muted); transition: transform 0.2s ease; }
+.toc-mobile[open] > summary svg { transform: rotate(180deg); }
+.docs-content .toc-mobile .toc { margin: 0 14px 12px; }
+
+/* Breadcrumbs (mobile) */
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.breadcrumbs li + li::before { content: '/'; margin-right: 8px; color: var(--muted); }
+.breadcrumbs a { display: inline-flex; color: var(--muted); }
+.breadcrumbs [aria-current='page'] { color: var(--ink); font-weight: 500; }
+
+/* Page header: category tag, title, description, meta row, then a hairline. The page actions follow the
+   meta row in the DOM (the phone order) and sit at the right of the title row on wider screens, as in
+   the Claude Docs page header. */
+.doc-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; justify-items: start; }
+.doc-header > * { grid-column: 1 / -1; }
+.doc-header > h1 { grid-column: 1; }
+.doc-header__actions { grid-column: 2; grid-row: 1; align-self: center; justify-self: end; }
+.doc-header:has(> .doc-header__tag) > .doc-header__actions { grid-row: 2; }
+.doc-header__tag { margin: 0 0 8px; color: var(--muted); }
+.docs-content .doc-header h1 { margin: 0; }
+.docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
+.doc-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  justify-self: stretch;
+  margin-top: 20px;
+}
+.doc-meta { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 0; color: var(--muted); font-size: var(--fs-sm); line-height: 20px; }
+.doc-meta > div { display: flex; gap: 4px; }
+.doc-meta > div + div::before { content: '·'; margin: 0 8px; }
+.doc-meta dd { margin: 0; color: var(--ink); }
+.doc-header__rule { height: 0; margin: 32px 0 36px; border: 0; border-top: 1px solid var(--line); }
+
+/* Page actions */
+/* Hidden (space kept) until the island is ready: no dead action without JavaScript or before hydration. */
+.page-actions { position: relative; visibility: hidden; }
+.page-actions[data-ready] { visibility: visible; }
+.page-actions__split {
+  display: inline-flex;
+  align-items: stretch;
+  height: 32px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
+.page-actions__primary, .page-actions__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+}
+.page-actions__primary { gap: 8px; padding: 0 12px; font-size: var(--fs-ui); font-weight: 500; }
+/* Scoped to the split: app.css resets every [data-slot] border (same layer, later, same specificity). */
+.page-actions__split > .page-actions__toggle { width: 32px; border-left: 1px solid var(--line-strong); }
+.page-actions__primary:hover, .page-actions__toggle:hover, .page-actions__toggle[aria-expanded='true'] { background: var(--hover); }
+/* Menu items: an icon tile, then the title and a one-line description. */
+.page-actions__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+}
+/* The menu item under the pointer gets the neutral fill only (Radix focuses it on hover, and Chrome can
+   count that focus as visible); keyboard focus away from the pointer adds a thin muted ring (>= 3:1 on
+   the card) around the whole item, never a side bar. */
+.page-actions__menu [role='menuitem']:focus-visible:not(:hover) { box-shadow: inset 0 0 0 1px var(--muted); }
+/* The status floats under the split button as a small card, so it never overlaps the description text. */
+.docs-content .page-actions__status {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: 320px;
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.08);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  line-height: 18px;
+}
+.page-actions__status:empty { display: none; }
+.page-actions__status[data-state='error'] { color: var(--error); }
+
+/* Docs content: the article fills the column; prose keeps a reading measure, code and tables do not. */
+.docs-content { max-width: 792px; color: var(--body); font-size: var(--fs-body); line-height: 1.65; }
+.docs-content > :where(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6, aside), .doc-header__desc { max-width: var(--measure); }
+.docs-content h1 { margin: 0 0 32px; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+.docs-content h2 { margin: 2.4em 0 0.7em; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; line-height: 1.3; letter-spacing: -0.005em; }
+.docs-content h3 { margin: 1.9em 0 0.6em; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 400; line-height: 1.4; }
+.docs-content h4 { margin: 1.6em 0 0.5em; color: var(--ink); font-size: var(--fs-body); font-weight: 600; }
+.docs-content .doc-header__rule + h2, .docs-content .doc-header__rule + h3 { margin-top: 0; }
+.docs-content p { margin: 0 0 1.1em; }
+.docs-content ul, .docs-content ol { margin: 1.1em 0; padding-left: 1.3em; }
+.docs-content li + li { margin-top: 0.3em; }
+.docs-content li::marker { color: var(--muted); }
+.docs-content strong { color: var(--ink); font-weight: 600; }
+.docs-content a:not(.heading-anchor) {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--link) 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.docs-content a:not(.heading-anchor):hover { text-decoration-color: currentColor; }
+.docs-content .page-actions a, .docs-content .toc a { text-decoration: none; }
+.docs-content img { max-width: 100%; height: auto; }
+.docs-content hr:not(.doc-header__rule) { margin: 2em 0; border: 0; border-top: 1px solid var(--line); }
+.docs-content blockquote { margin: 1.2em 0; padding: 0 0 0 16px; border-left: 2px solid var(--line-strong); color: var(--desc); }
+.docs-content code:not(pre code) {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.86em;
+}
+.docs-content figure { margin: 0; }
+/* Nimbus emits Shiki tokens as --shiki-light / --shiki-dark variables (_nimbus/shiki.css). */
+.astro-code, .astro-code span { color: var(--shiki-light); }
+[data-theme='dark'] .astro-code, [data-theme='dark'] .astro-code span { color: var(--shiki-dark); }
+/* GitHub light/dark token colours are tuned for white and #24292e; clamp their lightness so every token
+   class stays >= 4.5:1 on the paper panels (m3 browser check). */
+@supports (color: oklch(from red l c h)) {
+  .astro-code span { color: oklch(from var(--shiki-light) min(l, 0.5) c h); }
+  [data-theme='dark'] .astro-code span { color: oklch(from var(--shiki-dark) max(l, 0.74) c h); }
+}
+.docs-content pre {
+  position: relative;
+  max-width: 100%;
+  margin: 1.4em 0 1.6em;
+  padding: 16px 18px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel) !important;
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+}
+.docs-content pre code { font-family: inherit; }
+.heading-anchor { margin-left: 8px; color: var(--muted); opacity: 0; text-decoration: none; }
+:is(h2, h3, h4):hover > .heading-anchor, .heading-anchor:focus-visible { opacity: 1; }
+.nb-code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--muted);
+  opacity: 0.8;
+  cursor: pointer;
+}
+.nb-code-copy:hover, .nb-code-copy:focus-visible { opacity: 1; color: var(--ink); }
+.nb-code-copy svg { width: 16px; height: 16px; }
+.docs-content table {
+  margin: 1.4em 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  /* Auto layout, wraps to the column, and scrolls in its own box when it cannot fit. */
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.docs-content th, .docs-content td { padding: 11px 12px; border-bottom: 1px solid var(--line); font-size: var(--fs-sm); line-height: 20px; text-align: left; vertical-align: top; }
+.docs-content th { background: var(--panel); color: var(--muted); font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+.docs-content tr:last-child td { border-bottom: 0; }
+.docs-content tr:hover td { background: var(--hover); }
+
+/* Admonitions (#7 emits aside.admonition.admonition-<type> > p.admonition-title): hairline panel, a
+   type-coloured stripe and a mono label. note, tip, info, warning/caution, danger. */
+.admonition {
+  --adm: var(--adm-note);
+  margin: 1.4em 0;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--adm);
+  border-radius: 6px;
+  background: var(--panel);
+}
+.admonition-tip { --adm: var(--adm-tip); }
+.admonition-info { --adm: var(--adm-info); }
+.admonition-warning, .admonition-caution { --adm: var(--adm-warning); }
+.admonition-danger { --adm: var(--adm-danger); }
+.docs-content .admonition-title {
+  margin: 0 0 6px;
+  color: var(--adm);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.docs-content .admonition > :last-child { margin-bottom: 0; }
+.docs-content .admonition p { font-size: var(--fs-base); }
+
+/* Prev / next */
+.pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 792px; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); }
+.pagination a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: var(--fs-md);
+  font-weight: 500;
+}
+.pagination a:hover { background: var(--hover); }
+.pagination a span { color: var(--muted); }
+.pagination__next { grid-column: 2; text-align: right; }
+
+/* Footer: brand column and grouped links in the shared container, then the copyright row. */
+.footer { margin-top: 96px; border-top: 1px solid var(--line); background: var(--bg); }
+.footer__inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 4fr); gap: 48px; padding-block: 56px 40px; }
+.footer__line { margin: 12px 0 16px; color: var(--muted); font-size: var(--fs-ui); line-height: 1.6; }
+.footer__status { color: var(--muted); font-size: var(--fs-sm); text-decoration: underline; text-underline-offset: 3px; }
+.footer__columns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; }
+.footer__columns ul { margin: 0; padding: 0; list-style: none; }
+.footer__title { margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; }
+.footer__columns li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.footer__columns li + li { margin-top: 8px; }
+.footer__columns a { color: var(--ink); font-size: var(--fs-ui); }
+.footer__badge { font-size: var(--fs-2xs); padding: 0 6px; }
+.footer__bottom { padding-bottom: 32px; }
+.footer__trust { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; padding: 20px 0; border-top: 1px solid var(--line); list-style: none; color: var(--muted); font-size: var(--fs-sm); }
+.footer__trust a { color: var(--muted); }
+.footer__trust span { color: var(--ink); font-weight: 500; }
+.footer__legal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.footer__copyright { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.footer__legal ul { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; }
+.footer__legal a { color: var(--muted); font-size: var(--fs-sm); }
+.doc-page ~ .footer, .doc-page + .footer { margin-top: 0; }
+
+/* Ask Docs trigger (opens #9's panel through apertis-docs:open) */
+.ask-docs-trigger {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+  box-shadow: var(--shadow);
+}
+
+/* Homepage (revised 2026-10-02, after the OpenAI developers, Claude docs and claude.dev homepages): a
+   left-aligned hero with the providers row, "Models", "Start building" and "Latest", in one rhythm
+   (heading, optional line, content), 80 px apart. No eyebrows or pills; one primary action. */
+.landing { padding-bottom: 32px; }
+.hero { padding-top: 72px; }
+.hero__title { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-6xl); font-weight: 400; line-height: 1.12; letter-spacing: -0.02em; }
+.hero__lead { max-width: 62ch; margin: 16px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.6; }
+.hero__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.providers { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 48px 0 0; padding: 20px 0 0; border-top: 1px solid var(--line); list-style: none; color: var(--muted); font-size: var(--fs-ui); font-weight: 500; }
+.providers li { display: inline-flex; align-items: center; gap: 8px; }
+.providers__mark { display: inline-flex; color: var(--ink); }
+.providers__mark svg { width: 18px; height: 18px; }
+.home-section { padding-top: 80px; }
+.home-section h2 { margin: 0 0 20px; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
+.home-section h2:has(+ .home-section__lead) { margin-bottom: 6px; }
+.home-section__lead { margin: 0 0 24px; color: var(--muted); font-size: var(--fs-base); line-height: 1.6; }
+/* "Models": the featured models as shadcn Cards, four across. */
+.models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+/* A feed field with nothing to show (feed.ts views) is hidden: important, because this file is the base layer and the badge's inline-flex utility would otherwise win. */
+[data-f][hidden] { display: none !important; }
+.model-card { display: block; height: 100%; color: var(--ink); }
+.model-card [data-slot='card'] { transition: border-color 0.16s ease; }
+.model-card:hover [data-slot='card'] { border-color: var(--line-strong); }
+.model-card__name { font-size: var(--fs-body); font-weight: 600; line-height: 1.35; }
+.model-card:hover .model-card__name { text-decoration: underline; text-underline-offset: 3px; }
+.model-card__meta { color: var(--muted); font-size: var(--fs-sm); }
+.model-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.model-card__line { display: -webkit-box; overflow: hidden; color: var(--desc); font-size: var(--fs-ui); line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+/* "Start building": shadcn Items without a border or fill; hover underlines the title. */
+.start { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 40px; }
+.start-item:hover [data-slot='item-title'] { text-decoration: underline; text-underline-offset: 3px; }
+/* "Latest": release notes, and the newest articles beside them once one is published. */
+.latest { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; }
+.latest__soon { margin: 0; padding: 16px 0; border-top: 1px solid var(--line); color: var(--desc); font-size: var(--fs-ui); line-height: 1.6; }
+.providers__more { color: var(--muted); font-weight: 400; }
+.latest h3 { margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 500; line-height: 20px; }
+.release-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.release-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.release-row__date { color: var(--muted); font: var(--fs-sm)/20px var(--mono); white-space: nowrap; }
+.release-row__text { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; min-width: 0; }
+.release-row__desc { font-size: var(--fs-md); font-weight: 500; }
+.release-row__title { color: var(--muted); font-size: var(--fs-sm); }
+.release-row:hover .release-row__desc { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Native articles (claude.dev blog index pattern): dated rows with hairlines; the /blog/ index puts a
+   short intro column beside the list. */
+.article-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+html:not(.js) .article-filter { display: none; }
+.article-filter button { height: 32px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+.article-filter button:hover { color: var(--ink); }
+.article-filter button[aria-pressed='true'] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.related-articles { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.related-articles h2 { margin: 0 0 12px; font-size: var(--fs-lg); }
+.related-articles ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.related-articles a { color: var(--ink); font-weight: 500; text-decoration: none; }
+.related-articles a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.article-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.article-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.article-row:hover .article-row__title { text-decoration: underline; text-underline-offset: 3px; }
+.article-row__date, .article-row__time { color: var(--muted); font: var(--fs-sm)/20px var(--mono); white-space: nowrap; }
+.article-row__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: var(--fs-md); font-weight: 500; transition: color 0.16s ease; }
+.article-row__category { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); font: var(--fs-2xs)/16px var(--mono); }
+.home-section__more { margin: 20px 0 0; }
+.home-section__more a { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-size: var(--fs-ui); font-weight: 500; }
+.home-section__more a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.blog-index { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 56px; padding-block: 72px 24px; }
+.blog-index__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
+.blog-index__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+.blog-index__empty { margin: 0; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+.blog-index__empty a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Search and Ask Docs (#9, Assistant.tsx): one native <dialog>. Search is a modal Command dialog; Ask Docs
+   a non-blocking sheet docked right on desktop and at the bottom at <= 640 px. Neutral tokens only. */
+.aa {
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font: var(--fs-ui)/1.5 var(--font);
+}
+.aa::backdrop { background: var(--overlay); }
+/* Open and close: the search dialog fades in and settles from slightly above; Ask Docs slides in from the
+   right (from below as a bottom sheet). Discrete transitions keep the closing frame visible; no motion with
+   prefers-reduced-motion (below). */
+.aa, .aa::backdrop {
+  transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), overlay 0.24s allow-discrete, display 0.24s allow-discrete;
+}
+.aa:not([open]), .aa:not([open])::backdrop { opacity: 0; }
+.aa[data-surface='search']:not([open]) { transform: translateY(-8px) scale(0.98); }
+.aa[data-surface='ask']:not([open]) { transform: translateX(24px); }
+@starting-style {
+  .aa[open], .aa[open]::backdrop { opacity: 0; }
+  .aa[data-surface='search'][open] { transform: translateY(-8px) scale(0.98); }
+  .aa[data-surface='ask'][open] { transform: translateX(24px); }
+}
+.aa[data-surface='search'] { width: min(640px, calc(100vw - 32px)); margin: 80px auto auto; max-height: calc(100vh - 120px); }
+.aa[data-surface='ask'] {
+  position: fixed; inset: calc(var(--navbar-height) + 12px) 16px 16px auto; margin: 0; width: min(420px, calc(100vw - 32px));
+  height: auto; max-height: none; z-index: 1000;
+}
+html.aa-scroll-lock { overflow: hidden; }
+/* With room to spare, the open Ask Docs panel (420 px, 16 px from the edge) takes its own column instead of
+   covering the page; narrower screens keep it docked over the page. */
+@media (min-width: 1500px) {
+  body { transition: padding-right 0.2s ease; }
+  html[data-ask-open] body { padding-right: 452px; }
+}
+/* The panels set display; keep the hidden attribute authoritative. */
+.aa [hidden] { display: none; }
+.aa-frame { display: flex; flex-direction: column; max-height: inherit; height: 100%; }
+.aa-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.aa-search { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.aa-command { min-height: 0; border-radius: 0; background: transparent; }
+.aa-status { margin: 12px; color: var(--muted); text-align: center; }
+.aa-status:empty { display: none; }
+.aa-results { margin: 0; padding: 6px; list-style: none; overflow-y: auto; }
+.aa-results li { border-radius: 6px; }
+/* The selected result has the neutral fill; while the keyboard moves the selection it also gets a thin
+   muted ring (>= 3:1 on the card) around the whole row, never a side bar. */
+.aa-results li[aria-selected='true'] { background: var(--hover); }
+.aa-results[data-nav='keyboard'] li[aria-selected='true'] { box-shadow: inset 0 0 0 1px var(--muted); }
+/* The focused search field: its hairline darkens to muted (>= 3:1), no frame around it. */
+.aa [data-slot='command-input-wrapper']:focus-within { box-shadow: inset 0 -1px 0 var(--muted); }
+.aa-results a { display: block; padding: 8px 10px; color: inherit; text-decoration: none; }
+.aa-results .aa-title { display: block; color: var(--ink); font-weight: 600; }
+.aa-results .aa-path { display: block; color: var(--muted); font: var(--fs-xs)/1.5 var(--mono); }
+.aa-results .aa-excerpt { display: block; color: var(--body); font-size: var(--fs-sm); }
+.aa-results mark { background: transparent; color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--line-strong); }
+.aa-ask { display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 12px; gap: 8px; }
+.aa-context { margin: 0; color: var(--muted); font-size: var(--fs-xs); }
+.aa-chip { display: inline-block; margin-left: 4px; padding: 1px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); }
+.aa-messages { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.aa-msg { padding: 8px 10px; border-radius: 8px; color: var(--body); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* No conversation yet: say what Ask Docs is for instead of an empty panel. */
+.aa-messages:empty::before { content: 'Ask about setup, models, billing or the API. Answers come from these docs and cite the pages they use.'; margin: auto 8px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.6; text-align: center; white-space: normal; }
+/* The answer has not started streaming yet: show that it is on its way. */
+.aa-msg[data-role='assistant'][data-state='streaming']:empty::before { content: 'Searching the docs…'; color: var(--muted); animation: aa-wait 1.4s ease-in-out infinite; }
+@keyframes aa-wait { 50% { opacity: 0.45; } }
+.aa-msg[data-role='user'] { align-self: flex-end; max-width: 85%; background: var(--panel); color: var(--ink); }
+.aa-msg[data-role='assistant'] { border: 1px solid var(--line); }
+.aa-msg[data-state='error'] { border-color: var(--error); color: var(--error); }
+.aa-msg a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.aa-msg[data-role='assistant']:not([data-state='error']) { white-space: normal; }
+.aa-msg > :is(p, ol, ul, pre, blockquote, h4, .aa-table) { margin: 0 0 8px; }
+.aa-msg > :is(p, ol, ul, pre, blockquote, h4, .aa-table):last-of-type { margin-bottom: 0; }
+.aa-msg :is(ol, ul) { padding-left: 20px; }
+.aa-msg h4 { font-size: var(--fs-ui); }
+.aa-msg code { padding: 1px 4px; border-radius: 4px; background: var(--panel); font: var(--fs-xs) var(--mono); }
+.aa-msg pre { padding: 8px 10px; border-radius: 6px; background: var(--panel); overflow-x: auto; white-space: pre; }
+.aa-msg pre code { padding: 0; background: none; }
+.aa-msg blockquote { padding-left: 10px; border-left: 3px solid var(--line); color: var(--muted); }
+.aa-table { overflow-x: auto; }
+.aa-msg table { border-collapse: collapse; font-size: var(--fs-sm); }
+.aa-msg :is(th, td) { padding: 4px 8px; border: 1px solid var(--line); text-align: left; }
+.aa-note { display: block; margin-top: 6px; color: var(--adm-warning); font-size: var(--fs-xs); white-space: normal; }
+.aa-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; white-space: normal; }
+.aa-msg .aa-sources a { padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; font-size: var(--fs-xs); text-decoration: none; }
+.aa-ask-status { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
+.aa-ask-status:empty { display: none; }
+.aa-ask-status[data-kind='error'] { padding: 8px 10px; border: 1px solid var(--error); border-radius: 8px; color: var(--error); }
+.aa-form { display: flex; gap: 8px; align-items: flex-end; padding: 8px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--card); transition: border-color 0.16s ease; }
+.aa-form:focus-within { border-color: var(--muted); }
+.aa-form textarea { flex: 1; border: 0; outline: 0; resize: none; font: inherit; font-size: var(--fs-base); color: var(--ink); background: none; }
+.aa-foot { display: flex; justify-content: space-between; align-items: center; min-height: 24px; color: var(--muted); font-size: var(--fs-xs); }
+.aa-turnstile:empty { display: none; }
+@media (max-width: 640px) {
+  .aa[data-surface='search'] { width: auto; max-width: none; margin: auto 0 0; max-height: 90vh; border-radius: 16px 16px 0 0; }
+  .aa[data-surface='ask'] { inset: auto 0 0 0; width: auto; max-width: none; height: min(82vh, 680px); border-radius: 14px 14px 0 0; }
+  .aa:not([open])[data-surface] { transform: translateY(32px); }
+  @starting-style { .aa[open][data-surface] { transform: translateY(32px); } }
+}
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+@media (min-width: 997px) {
+  .breadcrumbs, .toc-mobile { display: none; }
+  /* 997-1023 px: the sheet carries the links only; the page shows its own sidebar. */
+  #shell-drawer .drawer__sidebar { display: none; }
+}
+
+
+/* Below 1024 px the header links, search box and account actions move into the navigation sheet. */
+@media (max-width: 1023px) {
+  /* One header row: the tab row and the account actions live in the navigation sheet. */
+  :root { --navbar-height: 57px; }
+  .navbar__inner { display: flex; }
+  .navbar__tabs, .navbar__right { display: none; }
+  .navbar__compact { display: flex; }
+  .models { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .latest { grid-template-columns: minmax(0, 1fr); }
+  .home-section { padding-top: 64px; }
+  .footer__inner { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .footer__columns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .blog-index { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; }
+}
+
+@media (max-width: 996px) {
+  /* clip, not hidden, and never on <html>: html overflow would stop body[data-scroll-locked] reaching the viewport. */
+  body { max-width: 100%; overflow-x: clip; }
+  .navbar .brand { min-width: 0; margin-right: 0; }
+  .doc-page, .doc-page--sidebar { display: block; }
+  .doc-page__sidebar, .doc-page__toc { display: none; }
+  .doc-page__main { padding: 20px 20px 48px; }
+  [data-frame='docs'] .shell-container { max-width: none; padding-inline: 20px; }
+  .doc-header { display: block; }
+  .doc-header__meta { margin-top: 24px; }
+  .doc-header__actions { margin-top: 20px; }
+  .page-actions__split { display: flex; }
+  .page-actions__primary { flex: 1; }
+  .docs-content .page-actions__status { position: static; width: auto; }
+  .doc-header__rule { margin: 24px 0 28px; }
+  :is(.toc-mobile, astro-island:has(> .toc-mobile)) + .doc-header__rule { margin-top: 0; }
+  .doc-header { margin-bottom: 20px; }
+  .docs-content, .docs-content pre { max-width: 100%; }
+  .docs-content h1 { font-size: var(--fs-4xl); }
+  .docs-content h2 { font-size: var(--fs-2xl); }
+  .docs-content .doc-header__desc { font-size: var(--fs-lg); }
+  /* Wide tables scroll inside their own box. */
+  .docs-content table { white-space: nowrap; }
+  .docs-content table::after { content: '→ Scroll to see more'; display: block; padding: 0.5rem; color: var(--muted); font-size: 0.75rem; font-style: italic; text-align: center; }
+  #shell-drawer .sidebar__link, #shell-drawer .sidebar__group > summary { font-size: var(--fs-base); }
+}
+
+@media (max-width: 640px) {
+  :root { --gutter: 20px; }
+  .ask-docs-trigger { width: 42px; height: 42px; padding: 0; justify-content: center; right: 16px; bottom: 16px; }
+  .ask-docs-trigger span { display: none; }
+  .hero { padding-top: 48px; }
+  .hero__title { font-size: var(--fs-5xl); }
+  .models { grid-template-columns: minmax(0, 1fr); }
+  .providers { gap: 10px 20px; margin-top: 36px; }
+  .start { grid-template-columns: minmax(0, 1fr); }
+  .article-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; }
+  .article-row__date { grid-column: 1 / -1; }
+  .release-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; }
+  .release-row__date { grid-column: 1 / -1; }
+  .home-section { padding-top: 64px; }
+  .home-section h2 { font-size: var(--fs-3xl); }
+  .footer { margin-top: 64px; }
+  .footer__columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after, .aa::backdrop { transition: none !important; scroll-behavior: auto !important; }
+  .aa-msg::before { animation: none !important; }
+}

@@ -1,0 +1,120 @@
+---
+// The one page frame for every manifest document: sidebar (from the inventory `sidebar` fields),
+// breadcrumbs, the <article> (page header, mobile "On this page", body), prev/next and the table of
+// contents, inside BaseLayout (head, navbar, drawer, footer, AssistantRoot). The Props below are the
+// interface #7's routes render against and must stay compatible.
+// Reading layout (#8): the page header (category tag, the body's H1, description, meta row with the page
+// actions) opens the <article>, because the search index takes each page's title from the <h1> in
+// <article> (src/search/index-build.ts). Header chrome carries data-pagefind-ignore; the View link gets
+// its href from the client only, so the article's static links stay the body's links.
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/shell/Sidebar.astro';
+import Toc from '../components/shell/Toc.astro';
+import PageActions from '../components/shell/PageActions.tsx';
+import TocMobile from '../components/shell/TocMobile.tsx';
+import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
+import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
+import { getCollection, getEntry } from 'astro:content';
+import { isNativeArticle, parseRelated } from '../contracts/articles.ts';
+import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
+import type { ManifestDocument } from '../contracts/manifest.ts';
+import type { RouteInventory } from '../contracts/navigation.ts';
+import { manifest } from '../manifest/manifest.ts';
+import inventoryFile from '../../../migration/nimbus/route-inventory.json' with { type: 'json' };
+
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  doc: ManifestDocument;
+  buildId: string;
+  /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
+  headings?: Heading[];
+  /** A native article (src/pages/blog): its front matter replaces the sidebar category and the docs entry. */
+  article?: { category: string; author: string; description: string };
+}
+const { doc, buildId, headings = [], article } = Astro.props;
+const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
+const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
+// Converter output (never git at build time): last legacy commit author date and reading time.
+const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
+if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
+const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1));
+if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
+const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
+const category = article ? article.category : nav?.trail[0];
+// Published articles that name this page in their `related` front matter (drafts have no manifest entry).
+const native = article ? [] : manifest.documents.filter(isNativeArticle);
+const related = native.length
+  ? (await getCollection('articles')).filter((e) => parseRelated(e.data.related).includes(doc.servedPath))
+    .flatMap((e) => native.filter((d) => d.servedPath === `/blog/${e.id}/`))
+  : [];
+---
+<BaseLayout doc={doc} buildId={buildId} nav={nav}>
+  <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
+  <link slot="head" rel="stylesheet" href="/_nimbus/shiki.css" />
+  <div class:list={['doc-page', { 'doc-page--sidebar': nav }]}>
+    {nav && <aside class="doc-page__sidebar"><Sidebar nav={nav} /></aside>}
+    <main class="doc-page__main" id="main">
+      {nav && (
+        <nav class="breadcrumbs" aria-label="Breadcrumbs">
+          <ol>
+            <li><a href="/" aria-label="Home page"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/></svg></a></li>
+            {nav.trail.map((label) => <li><span>{label}</span></li>)}
+            <li><span aria-current="page">{nav.entry.label}</span></li>
+          </ol>
+        </nav>
+      )}
+      <article class="docs-content">
+        <header class="doc-header">
+          {category && <p class="doc-header__tag" data-pagefind-ignore>{category}</p>}
+          <Fragment set:html={header.h1} />
+          {header.description && <p class="doc-header__desc" set:html={header.description} />}
+          <div class="doc-header__meta" data-pagefind-ignore="all">
+            <dl class="doc-meta">
+              {article && <div><dt>Author</dt><dd>{article.author}</dd></div>}
+              <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
+              <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
+            </dl>
+          </div>
+          {doc.markdown && (
+            <div class="doc-header__actions" data-pagefind-ignore="all">
+              <PageActions client:idle markdownPath={doc.markdown.path} />
+            </div>
+          )}
+        </header>
+        {hasToc && (
+          <TocMobile client:visible>
+            <Toc headings={headings} />
+          </TocMobile>
+        )}
+        <hr class="doc-header__rule" />
+        <Fragment set:html={header.body} />
+      </article>
+      {related.length > 0 && (
+        <section class="related-articles" aria-labelledby="related-articles-title" data-pagefind-ignore="all">
+          <h2 id="related-articles-title">Related articles</h2>
+          <ul>{related.map((d) => <li><a href={d.servedPath}>{d.title}</a></li>)}</ul>
+        </section>
+      )}
+      {nav && (nav.prev || nav.next) && (
+        <nav class="pagination" aria-label="Docs pages">
+          {nav.prev ? <a class="pagination__prev" href={nav.prev.href}><span>Previous</span>{nav.prev.label}</a> : <span />}
+          {nav.next && <a class="pagination__next" href={nav.next.href}><span>Next</span>{nav.next.label}</a>}
+        </nav>
+      )}
+    </main>
+    {hasToc && (
+      <aside class="doc-page__toc" aria-label="On this page">
+        <p class="doc-page__toc-title">On this page</p>
+        <Toc headings={headings} />
+        <div class="toc-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="toc-progress__bar"><span class="toc-progress__fill"></span></span><span class="toc-progress__value">0%</span>
+        </div>
+      </aside>
+    )}
+  </div>
+</BaseLayout>
