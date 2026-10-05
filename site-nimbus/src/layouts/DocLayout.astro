@@ -13,6 +13,8 @@ import Toc from '../components/shell/Toc.astro';
 import PageActions from '../components/shell/PageActions.tsx';
 import TocMobile from '../components/shell/TocMobile.tsx';
 import CodeTabs from '../components/CodeTabs.astro';
+import TryIt from '../components/try-it/TryIt.astro';
+import { markTryIt } from '../components/try-it/curl.ts';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
 import { getCollection, getEntry } from 'astro:content';
@@ -46,6 +48,8 @@ if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-met
 const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1));
 if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
 const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
+// Try it marks its cURL samples here, at build time; pages without one render no TryIt (and load none of it).
+const body = markTryIt(header.body);
 const category = article ? article.category : nav?.trail[0];
 // Code tab groups (converter output) need the inline tab script before the first group; other pages get none.
 const hasCodeTabs = header.body.includes('<div class="code-tabs">');
@@ -102,7 +106,7 @@ const related = native.length
         )}
         <hr class="doc-header__rule" />
         {hasCodeTabs && <CodeTabs />}
-        <Fragment set:html={header.body} />
+        <Fragment set:html={body.html} />
       </article>
       {related.length > 0 && (
         <section class="related-articles" aria-labelledby="related-articles-title" data-pagefind-ignore="all">
@@ -117,6 +121,7 @@ const related = native.length
         </nav>
       )}
     </main>
+    {body.count > 0 && <TryIt />}
     {hasToc && (
       <aside class="doc-page__toc" aria-label="On this page">
         <p class="doc-page__toc-title">On this page</p>
