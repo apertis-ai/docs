@@ -11,7 +11,7 @@
 ---
 <style is:inline>
 .code-tabs { margin: 1.4em 0 1.6em; }
-/* The hairline is an inset shadow, not a border: the selected underline covers it without overflowing the
+/* The hairline is an inset shadow, not a border: the selected tab's bottom border covers it without overflowing the
    list, which would give the horizontally scrollable list a vertical scrollbar too. */
 .code-tabs__list:not([hidden]) { display: flex; gap: 4px; overflow-x: auto; overflow-y: hidden; box-shadow: inset 0 -1px var(--line); }
 .code-tabs__tab { padding: 6px 12px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 500 var(--fs-ui)/1.4 var(--font); cursor: pointer; }
