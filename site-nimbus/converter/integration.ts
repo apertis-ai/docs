@@ -2,7 +2,7 @@
 //   1. copy src/content/public/** (clean Markdown artifacts, bundled images) into dist verbatim;
 //   2. set contentSha256 of every published entry without Markdown (page:index) from its built <main>
 //      (under CI or M2_CHECK=1 a difference fails the build instead: the committed manifest is stale);
-//   3. write sitemap.xml, the retired-route _redirects, llms.txt and llms-full.txt (publicationFiles);
+//   3. write sitemap.xml and the retired-route _redirects (publicationFiles), llms.txt and llms-full.txt (llmsFiles);
 //      every build starts from a cleared content-layer cache, and a page that uses a Shiki class
 //      missing from _nimbus/shiki.css fails the build (shikiClassErrors);
 //   4. fail the build unless validateManifest(manifest, { inventory, outDir: dist }) returns [] and
@@ -55,7 +55,7 @@ export function finalize(outDir: string, siteRoot = SITE_ROOT, { check = false }
   if (changed) writeManifest(siteRoot, manifest);
 
   const inventory = readInventory(REPO_ROOT);
-  for (const [rel, body] of Object.entries(publicationFiles(manifest, inventory, outDir))) {
+  for (const [rel, body] of Object.entries({ ...publicationFiles(manifest, inventory, outDir), ...llmsFiles(manifest, inventory, outDir) })) {
     if (fs.existsSync(path.join(outDir, rel))) throw new Error(`m2: ${rel} is already emitted by the build; refusing to overwrite`);
     fs.writeFileSync(path.join(outDir, rel), body);
   }
@@ -116,7 +116,6 @@ export const RETIRED_TARGET = '/__retired';
  *   One supersession (operator, 2026-09-30): once a native article is published, the blog index at
  *   `/blog/` lists the native articles, so the retired legacy `/blog` row no longer rewrites it. Every
  *   other retired `/blog/**` path stays 404; native slugs can never name one (converter/articles.ts).
- * - `llms.txt` and `llms-full.txt` (openspec docs-agent-access): the publish+agent entries, see llmsPages().
  */
 export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
   const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -134,10 +133,13 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
     .flatMap((r) => [r.path, `${r.path}/`, `${r.path}.html`].map((from) => `${from} ${RETIRED_TARGET} 200`));
   if (served(RETIRED_TARGET)) throw new Error(`m2: ${RETIRED_TARGET} must not exist in dist`);
   if (rules.length) files._redirects = `# Retired routes (decision on #4) answer 404: rewritten to a path nothing serves.\n${rules.join('\n')}\n`;
-  const pages = llmsPages(manifest, inventory, outDir);
-  files['llms.txt'] = llmsIndex(pages);
-  files['llms-full.txt'] = llmsFull(pages);
   return files;
+}
+
+/** `llms.txt` and `llms-full.txt` (openspec docs-agent-access), from the built pages and artifacts in `outDir`. */
+export function llmsFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
+  const pages = llmsPages(manifest, inventory, outDir);
+  return { 'llms.txt': llmsIndex(pages), 'llms-full.txt': llmsFull(pages) };
 }
 
 /** H2 of a sidebar's top-level items (only api:index today), named as the navbar names the sidebar. */

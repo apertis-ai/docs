@@ -13,7 +13,7 @@ import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
-import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
+import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
@@ -366,7 +366,7 @@ test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar se
   for (const a of readArticles(root).filter((x) => x.draft)) assert.equal(entries.some((e) => e.markdownUrl.includes(`/blog/${a.slug}`)), false, a.slug);
   assert.deepEqual([...new Set(entries.map((e) => e.section))], ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security',
     'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
-  assert.equal(body, publicationFiles(manifest, routes, dist)['llms.txt']);
+  assert.equal(body, llmsFiles(manifest, routes, dist)['llms.txt']);
 });
 
 test('an llms.txt description is the page header description wherever the page shows one', () => {
@@ -387,5 +387,5 @@ test('llms-full.txt holds the bytes of every llms.txt artifact, in the same orde
   const full = parseFull(read('llms-full.txt'));
   assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
   for (const [i, f] of full.entries()) assert.ok(Buffer.from(f.markdown).equals(fs.readFileSync(path.join(dist, order[i].markdown!.path))), order[i].id);
-  assert.equal(read('llms-full.txt'), publicationFiles(manifest, routes, dist)['llms-full.txt']);
+  assert.equal(read('llms-full.txt'), llmsFiles(manifest, routes, dist)['llms-full.txt']);
 });
