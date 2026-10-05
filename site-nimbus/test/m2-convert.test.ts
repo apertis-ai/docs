@@ -41,6 +41,10 @@ test('relative, extensionless and absolute links resolve to inventory paths', ()
   assert.equal(out.clean.includes('](/authentication/organizations)'), true);
 });
 
+test('docs may link the standalone /models/ page, which is not in the inventory (openspec docs-live-catalog)', () => {
+  assert.match(doc('[m](/models/) [n](/models#x)').render, /\[m\]\(\/models\) \[n\]\(\/models#x\)/);
+});
+
 test('links and code inside code spans and fences are left untouched', () => {
   const out = doc('Use `[x](./nowhere)` and `<b>`.\n\n```md\n[y](./nowhere) <Tabs> {#id} :::tip\n```');
   assert.match(out.render, /`\[x\]\(\.\/nowhere\)` and `<b>`/);

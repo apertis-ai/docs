@@ -6,7 +6,7 @@
 // "Preserved reader-facing shell" and Blog as section tabs, the current one underlined. Server-rendered;
 // the search trigger only dispatches `apertis-docs:open` (shell.client.ts), Cmd/Ctrl+K belongs to #9.
 // Below 1024 px the tab row and the account actions move into the navigation sheet (NavSheet.tsx).
-import { ArrowUpRight, Menu, Moon, Search, Sun } from 'lucide-react';
+import { Menu, Moon, Search, Sun } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { SidebarId } from '../../contracts/navigation.ts';
@@ -17,12 +17,13 @@ interface Props {
 }
 const { sidebar } = Astro.props;
 const onBlog = Astro.url.pathname.startsWith('/blog/');
+const onChangelog = Astro.url.pathname.startsWith('/changelog/');
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 const links = [
   { label: 'Docs', href: '/intro', current: sidebar === 'tutorialSidebar' },
   { label: 'API Reference', href: '/api', current: sidebar === 'apiSidebar' },
   { label: 'Blog', href: '/blog/', current: onBlog },
-  { label: 'Release Notes', href: 'https://apertis.ai/changelog', current: false, external: true },
+  { label: 'Release Notes', href: '/changelog/', current: onChangelog },
 ];
 ---
 <header class="navbar">
@@ -54,7 +55,7 @@ const links = [
   <div class="shell-container navbar__tabs">
     <nav class="navbar__links" aria-label="Main">
       {links.map((l) => (
-        <a href={l.href} class:list={{ active: l.current }} aria-current={l.current ? 'true' : undefined} {...(l.external ? external : {})}>{l.label}{l.external && <ArrowUpRight className="size-3.5" aria-hidden="true" />}</a>
+        <a href={l.href} class:list={{ active: l.current }} aria-current={l.current ? 'true' : undefined}>{l.label}</a>
       ))}
     </nav>
   </div>

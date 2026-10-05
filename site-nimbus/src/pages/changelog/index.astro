@@ -1,0 +1,93 @@
+---
+// Release notes (openspec docs-live-catalog "Changelog page and feed"): the public Apertis changelog, newest
+// first, from changelog.json (components/catalog/changelog.ts). Each note has its version as anchor, date,
+// category tag, title, description and items as text; its Markdown body is rendered here, at build time, by
+// micromark, which escapes raw HTML and drops unsafe link protocols. The category filter is radio buttons and
+// CSS (:has), so it needs no JavaScript, and with none selected but All every note is listed. The live feed is
+// /changelog/rss.xml. Like the /blog/ index, the page is not a manifest document: never indexed, no Markdown.
+import { micromark } from 'micromark';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import notes from '../../components/catalog/changelog.json';
+import { FEED_PATH, changelogNotes } from '../../components/catalog/changelog.ts';
+import { displayDate } from '../../components/shell/page-header.ts';
+import type { ManifestDocument } from '../../contracts/manifest.ts';
+import { manifest } from '../../manifest/manifest.ts';
+
+const doc: ManifestDocument = {
+  id: 'page:changelog', sourcePath: '', servedPath: '/changelog/', canonicalUrl: 'https://docs.apertis.ai/changelog/', title: 'Release notes',
+  eligibility: { publish: true, search: false, agent: false, rag: false }, markdown: null, contentSha256: '',
+};
+const list = changelogNotes(notes);
+const categories = [...new Set(list.map((n) => n.category))].sort();
+const label = (c: string) => c.charAt(0).toUpperCase() + c.slice(1);
+// A note's own headings sit below its title (h2). The few raw HTML tags upstream (centred images) are dropped
+// first so they do not show as escaped text; micromark escapes whatever else is left.
+const body = (md: string) => micromark(md.replace(/<\/?[A-Za-z][^<>]*>/g, ''))
+  .replace(/<(\/?)h([1-6])>/g, (_, slash, n) => `<${slash}h${Math.min(6, Number(n) + 2)}>`);
+// One rule per category: while its radio is checked, every other note is hidden (category tags are
+// [a-z0-9-]+, changelog.ts).
+const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .note:not([data-category="${c}"]){display:none}`).join('\n');
+---
+<BaseLayout doc={doc} buildId={manifest.buildId}>
+  <link slot="head" rel="alternate" type="application/rss+xml" title="Apertis release notes" href={FEED_PATH} />
+  <style slot="head" is:inline set:html={rules} />
+  <main class="shell-container changelog" id="main">
+    <div class="changelog__intro">
+      <h1>Release notes</h1>
+      <p>What ships in Apertis: new models, features and fixes. Follow along with the <a href={FEED_PATH}>RSS feed</a>.</p>
+    </div>
+    <fieldset class="changelog__filter">
+      <legend>Category</legend>
+      <label><input type="radio" name="category" id="category-all" value="" checked />All</label>
+      {categories.map((c) => <label><input type="radio" name="category" id={`category-${c}`} value={c} />{label(c)}</label>)}
+    </fieldset>
+    <ol class="changelog__list">
+      {list.map((n) => (
+        <li class="note" id={n.version} data-category={n.category}>
+          <div class="note__meta">
+            <a class="note__version" href={`#${n.version}`}>v{n.version}</a>
+            <time datetime={n.date}>{displayDate(n.date)}</time>
+            <span class="note__tag">{label(n.category)}</span>
+          </div>
+          <div class="note__body">
+            <h2>{n.title}</h2>
+            {n.description && <p class="note__desc">{n.description}</p>}
+            {n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t}</li>)}</ul>}
+            {n.content && <div class="note__content" set:html={body(n.content)} />}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  .changelog { padding-block: 72px 24px; }
+  .changelog__intro { max-width: 720px; }
+  .changelog__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
+  .changelog__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+  .changelog__intro a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .changelog__filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 0; padding: 0; border: 0; }
+  .changelog__filter legend { float: left; margin-right: 8px; padding: 0; color: var(--muted); font-size: var(--fs-ui); line-height: 32px; }
+  .changelog__filter label { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--desc); font-size: var(--fs-ui); cursor: pointer; }
+  .changelog__filter input { position: absolute; opacity: 0; pointer-events: none; }
+  .changelog__filter label:has(:checked) { border-color: var(--ink); color: var(--ink); font-weight: 500; }
+  .changelog__filter label:has(:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .changelog__list { margin: 24px 0 0; padding: 0; list-style: none; }
+  .note { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 28px 0; border-top: 1px solid var(--line); scroll-margin-top: 96px; }
+  .note__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; color: var(--muted); font-size: var(--fs-ui); }
+  .note__version { color: var(--ink); font-family: var(--mono); font-size: var(--fs-xs); }
+  .note__tag { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; font: var(--fs-2xs)/16px var(--mono); }
+  .note__body h2 { margin: 0; color: var(--ink); font-size: var(--fs-lg); font-weight: 600; line-height: 1.4; }
+  .note__desc { margin: 6px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+  .note__items { margin: 12px 0 0; padding-left: 20px; color: var(--desc); font-size: var(--fs-ui); line-height: 1.7; }
+  .note__content { margin-top: 16px; color: var(--desc); font-size: var(--fs-ui); line-height: 1.7; overflow-wrap: anywhere; }
+  .note__content :is(h3, h4, h5, h6) { margin: 16px 0 4px; color: var(--ink); font-size: var(--fs-md); font-weight: 600; }
+  .note__content p { margin: 8px 0 0; }
+  .note__content :is(ul, ol) { margin: 8px 0 0; padding-left: 20px; }
+  .note__content a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .note__content code { font-family: var(--mono); font-size: var(--fs-xs); }
+  .note__content pre { overflow-x: auto; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+  .note__content img { max-width: 100%; height: auto; }
+  @media (max-width: 720px) { .note { grid-template-columns: minmax(0, 1fr); gap: 12px; } .note__meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; } }
+</style>

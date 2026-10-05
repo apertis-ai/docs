@@ -15,6 +15,11 @@
       "commit": "0590457",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
       "links": { "added": ["/llms.txt", "/llms-full.txt"] }
+    },
+    "default:installation/models": {
+      "commit": "40f6b4c",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
+      "links": { "added": ["/models"] }
     }
   }
 }
