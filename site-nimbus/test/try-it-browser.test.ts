@@ -25,7 +25,7 @@ before(async () => {
 after(async () => browser?.close());
 
 /** Opens PAGE with every request and console message recorded; `stub` answers api.apertis.ai (null = real). */
-async function open(stub: ((route: Any) => unknown) | null, init?: () => void) {
+async function open(stub: ((route: Any) => unknown) | null, init?: () => void, pathname = PAGE) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   if (init) await context.addInitScript(init);
   const page = await context.newPage();
@@ -36,14 +36,14 @@ async function open(stub: ((route: Any) => unknown) | null, init?: () => void) {
   page.on('console', (m: Any) => consoleText.push(m.text()));
   page.on('pageerror', (e: Error) => errors.push(e.message));
   if (stub) await page.route(`${API}**`, stub);
-  await page.goto(base + PAGE, { waitUntil: 'load' });
+  await page.goto(base + pathname, { waitUntil: 'load' });
   const api = () => requests.filter((r) => r.url.startsWith(API) && r.method !== 'OPTIONS');
   return { context, page, requests, consoleText, errors, api };
 }
 
 /** Opens the first Try it panel and enters the key. */
-async function openPanel(page: Any) {
-  await page.click('.try-it-open >> nth=0');
+async function openPanel(page: Any, trigger = '.try-it-open >> nth=0') {
+  await page.click(trigger);
   await page.locator('.try-it').waitFor();
   await page.fill('.try-it input', KEY);
 }
@@ -97,6 +97,10 @@ test('Try it loads its panel only on open, and a 200 JSON reply shows status, ti
   assert.equal(seen.headers.authorization, `Bearer ${KEY}`);
   assert.equal(seen.headers['content-type'], 'application/json');
   assert.equal(seen.body, prefilled);
+  // Only headers the gateway's CORS preflight allows (CORS_HEADERS in curl.ts).
+  const allowed = new Set(['origin', 'content-type', 'accept', 'authorization', 'x-requested-with', 'x-csrf-token', 'api-key']);
+  const NAV = /^(accept|origin|referer|user-agent|sec-ch-ua.*)$/;
+  assert.deepEqual(Object.keys(seen.headers).filter((h) => !allowed.has(h) && !NAV.test(h)), []);
   assert.equal(o.api().length, 1);
 
   // Closing removes the panel and the key with it.
@@ -136,6 +140,33 @@ test('a text/event-stream reply is shown as it arrives', { skip }, async () => {
   await page.evaluate(() => (window as unknown as { __sse: ReadableStreamDefaultController<Uint8Array> }).__sse.close());
   await page.waitForFunction(() => /HTTP 200 .*\d+ ms/.test(document.querySelector('.try-it__status')?.textContent ?? ''));
   assert.equal(await page.evaluate(() => (window as unknown as { __sseCalls: number }).__sseCalls), 1);
+  await page.click('.try-it__close');
+  await assertKeyContained(o);
+  await o.context.close();
+});
+
+test('Cancel aborts a request in flight and the panel can send again', { skip }, async () => {
+  // The API fetch never answers on its own; it rejects only when its signal aborts, as a real fetch does.
+  const o = await open((route: Any) => route.abort(), () => {
+    const real = window.fetch;
+    const w = window as unknown as { __aborted: boolean };
+    w.__aborted = false;
+    window.fetch = (input, init) => {
+      if (!String(input).startsWith('https://api.apertis.ai/')) return real(input, init);
+      return new Promise((_, reject) => init?.signal?.addEventListener('abort', () => { w.__aborted = true; reject(new DOMException('aborted', 'AbortError')); }));
+    };
+  });
+  const { page } = o;
+  await openPanel(page);
+  assert.equal(await page.isDisabled('.try-it__cancel'), true);
+  await page.click('.try-it__send');
+  await page.waitForFunction(() => /Sending/.test(document.querySelector('.try-it__status')?.textContent ?? ''));
+  assert.equal(await page.isDisabled('.try-it__send'), true);
+  await page.click('.try-it__cancel');
+  await page.waitForFunction(() => /Cancelled after \d+ ms/.test(document.querySelector('.try-it__status')?.textContent ?? ''));
+  assert.equal(await page.evaluate(() => (window as unknown as { __aborted: boolean }).__aborted), true);
+  assert.equal(await page.isDisabled('.try-it__send'), false);
+  assert.equal(await page.isDisabled('.try-it__cancel'), true);
   await page.click('.try-it__close');
   await assertKeyContained(o);
   await o.context.close();
@@ -193,6 +224,30 @@ test('real gateway: a fake key gets 401 across CORS, rendered in the panel, with
   assert.match(shown, /HTTP 401 .*\d+ ms/, `panel showed: ${shown}`);
   assert.ok((await page.textContent('.try-it__out')).trim().length > 0, 'error body shown');
   console.log(`real gateway: ${shown} | ${(await page.textContent('.try-it__out')).slice(0, 200).replace(/\s+/g, ' ')}`);
+  assert.equal(o.api().length, 1);
+  await page.click('.try-it__close');
+  await assertKeyContained(o);
+  await o.context.close();
+});
+
+test('real gateway, Messages: anthropic-version is not sent (named in the panel), and the fake key gets a rendered 401', { skip }, async () => {
+  const o = await open(null, undefined, '/api/text-generation/messages/');
+  const { page } = o;
+  await openPanel(page, '.nb-code-figure:has(pre[data-try-it]:has-text("anthropic-version")) .try-it-open');
+  assert.match(await page.textContent('.try-it__dropped'), /Not sent from the browser: anthropic-version \(the gateway's CORS policy/);
+  const [res] = await Promise.all([
+    page.waitForResponse((r: Any) => r.url() === 'https://api.apertis.ai/v1/messages' && r.request().method() === 'POST', { timeout: 30000 }),
+    page.click('.try-it__send'),
+  ]);
+  assert.equal(res.status(), 401);
+  const sentHeaders = await res.request().allHeaders();
+  assert.equal(sentHeaders['anthropic-version'], undefined);
+  assert.equal(sentHeaders['x-api-key'], undefined);
+  assert.equal(sentHeaders.authorization, `Bearer ${KEY}`);
+  await page.waitForFunction(() => /HTTP 401|Network error/.test(document.querySelector('.try-it__status')?.textContent ?? ''), null, { timeout: 30000 });
+  const shown = await status(page);
+  assert.match(shown, /HTTP 401 .*\d+ ms/, `panel showed: ${shown}`);
+  console.log(`real gateway (messages): ${shown} | ${(await page.textContent('.try-it__out')).slice(0, 200).replace(/\s+/g, ' ')}`);
   assert.equal(o.api().length, 1);
   await page.click('.try-it__close');
   await assertKeyContained(o);

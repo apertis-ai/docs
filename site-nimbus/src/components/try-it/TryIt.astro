@@ -1,15 +1,22 @@
 ---
 // Try it (openspec docs-api-reference-ux "Try it"). DocLayout renders this only on pages where markTryIt()
 // marked a code block `data-try-it`, so other pages ship none of it. The control sits beside Nimbus's copy
-// button and borrows its style; the panel module (try-it-panel.ts, with its own CSS) is imported on the first
-// open. No <style> here: Astro would inline a component style into every page of the layout.
+// button and borrows its style; the panel (try-it-panel.ts, with its own CSS) loads on the first open. No <style>
+// here: Astro would inline a component style into every page of the layout. The panel is a separate bundle
+// (`?worker&url` compiles it on its own) added as a plain script, not a Vite dynamic import: that import pulls
+// Vite's preload helper out of AssistantRoot into a shared chunk, an extra request on every page.
 ---
 <script>
+  import panelUrl from './try-it-panel.ts?worker&url';
+
+  let panel: Promise<unknown> | undefined;
+  const load = () => (panel ??= new Promise((onload, onerror) => document.head.append(Object.assign(document.createElement('script'), { src: panelUrl, onload, onerror })))
+    .catch(() => { panel = undefined; }));
   for (const pre of document.querySelectorAll<HTMLElement>('pre[data-try-it]')) {
     const btn = Object.assign(document.createElement('button'), { type: 'button', className: 'nb-code-copy try-it-open', textContent: 'Try it' });
     btn.style.cssText = 'right:46px;width:auto;padding:0 10px;font:500 var(--fs-xs)/1 var(--font)';
     btn.setAttribute('aria-expanded', 'false');
-    btn.addEventListener('click', () => import('./try-it-panel.ts').then((m) => m.toggle(pre, btn)));
+    btn.addEventListener('click', () => load().then(() => (window as unknown as { apertisTryIt?: (p: HTMLElement, b: HTMLButtonElement) => void }).apertisTryIt?.(pre, btn)));
     const host = pre.closest<HTMLElement>('.nb-code-figure') ?? pre;
     host.style.position = 'relative';
     host.append(btn);

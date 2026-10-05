@@ -13,6 +13,10 @@ export interface CurlRequest {
 }
 
 export const API_ORIGIN = 'https://api.apertis.ai';
+// The only request headers the gateway's CORS preflight allows (coordinator's OPTIONS /v1/messages with
+// Access-Control-Request-Headers authorization,content-type,anthropic-version, 2026-10-05: anthropic-version was
+// not listed, so a browser blocks any request carrying it). The panel sends no other header.
+export const CORS_HEADERS = new Set(['origin', 'content-type', 'accept', 'authorization', 'x-requested-with', 'x-csrf-token', 'api-key']);
 const API_PREFIX = `${API_ORIGIN}/v1/`;
 // Flags whose value is not part of the request the panel sends (output files, curl's own reporting).
 const SKIP_VALUE = new Set(['-o', '--output', '-w', '--write-out', '-D', '--dump-header', '-m', '--max-time']);

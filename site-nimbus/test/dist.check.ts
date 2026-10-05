@@ -62,6 +62,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const html = [...pages, ...generated, 'blog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
+  for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
   // and so is every root-absolute url() in a referenced stylesheet (the display font is not preloaded).
   for (let i = 0; i < referenced.length; i++) {
@@ -360,10 +362,12 @@ test('try it: only pages with a marked sample load its script or styles, and non
   let pages = 0;
   for (const f of publishedHtml()) {
     const html = read(f);
-    const scripts = html.match(/<script[^>]+src="\/_astro\/TryIt\.astro[^"]*"/g) ?? [];
+    // The trigger is inlined; the panel is only named in it as a URL, never a <script src> or <link>.
+    const triggers = html.match(/pre\[data-try-it\]/g) ?? [];
     const marked = /<pre\b[^>]*\sdata-try-it\b/.test(article(html));
-    assert.equal(scripts.length, marked ? 1 : 0, f);
-    assert.doesNotMatch(html, /try-it-panel|\.try-it[\w-]*\s*\{/, f);
+    assert.equal(triggers.length, marked ? 1 : 0, f);
+    assert.equal(/try-it-panel/.test(html), marked, f);
+    assert.doesNotMatch(html, /(?:src|href)="[^"]*try-it-panel|\.try-it[\w-]*\s*\{/, f);
     if (marked) pages++;
   }
   assert.ok(pages >= 15, `${pages} pages with Try it`);
