@@ -11,7 +11,7 @@
 ---
 <style is:inline>
 .code-tabs { margin: 1.4em 0 1.6em; }
-.code-tabs__list { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); }
+.code-tabs__list:not([hidden]) { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); }
 .code-tabs__tab { margin-bottom: -1px; padding: 6px 12px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 500 var(--fs-ui)/1.4 var(--font); cursor: pointer; }
 .code-tabs__tab:hover { color: var(--ink); }
 .code-tabs__tab[aria-selected='true'] { border-bottom-color: var(--ink); color: var(--ink); }
