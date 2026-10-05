@@ -18,6 +18,7 @@ import { readArticles } from '../converter/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
+import { codeText, parseCurl } from '../src/components/try-it/curl.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -65,6 +66,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const html = [...pages, ...generated, 'blog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
+  for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
   // and so is every root-absolute url() in a referenced stylesheet (the display font is not preloaded).
   for (let i = 0; i < referenced.length; i++) {
@@ -430,4 +433,31 @@ test('llms-full.txt holds the bytes of every llms.txt artifact, in the same orde
   assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
   for (const [i, f] of full.entries()) assert.ok(Buffer.from(f.markdown).equals(fs.readFileSync(path.join(dist, order[i].markdown!.path))), order[i].id);
   assert.equal(read('llms-full.txt'), llmsFiles(manifest, routes, dist)['llms-full.txt']);
+
+// ---- docs-reader-features: Try it (openspec docs-api-reference-ux "Try it") ----
+test('try it: exactly the cURL samples to api.apertis.ai/v1 carry data-try-it', () => {
+  let marked = 0;
+  for (const f of publishedHtml()) {
+    for (const m of article(read(f)).matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
+      const eligible = !('reason' in parseCurl(codeText(m[2])));
+      assert.equal(/\sdata-try-it\b/.test(m[1]), eligible, `${f}: ${codeText(m[2]).slice(0, 80)}`);
+      if (eligible) marked++;
+    }
+  }
+  assert.ok(marked >= 30, `${marked} blocks marked`);
+});
+
+test('try it: only pages with a marked sample load its script or styles, and none loads the panel up front', () => {
+  let pages = 0;
+  for (const f of publishedHtml()) {
+    const html = read(f);
+    // The trigger is inlined; the panel is only named in it as a URL, never a <script src> or <link>.
+    const triggers = html.match(/pre\[data-try-it\]/g) ?? [];
+    const marked = /<pre\b[^>]*\sdata-try-it\b/.test(article(html));
+    assert.equal(triggers.length, marked ? 1 : 0, f);
+    assert.equal(/try-it-panel/.test(html), marked, f);
+    assert.doesNotMatch(html, /(?:src|href)="[^"]*try-it-panel|\.try-it[\w-]*\s*\{/, f);
+    if (marked) pages++;
+  }
+  assert.ok(pages >= 15, `${pages} pages with Try it`);
 });
