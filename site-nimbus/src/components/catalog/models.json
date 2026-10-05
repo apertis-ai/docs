@@ -1,0 +1,4886 @@
+{
+  "version": "127",
+  "models": [
+    {
+      "id": "gpt-6.1-sol",
+      "name": "GPT-6.1 Sol",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "claude-sonnet-5.5",
+      "name": "Claude Sonnet 5.5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "perceptron-mk1.5",
+      "name": "Perceptron Mk1.5",
+      "provider": "Perceptron",
+      "category": "chat",
+      "context": 36864,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "gemini-3.5-transcribe",
+      "name": "Gemini 3.5 Transcribe",
+      "provider": "Google",
+      "category": "voice",
+      "context": 98304,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "transcribe-1-pro",
+      "name": "Transcribe 1 Pro",
+      "provider": "Fish Audio",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "universal-3-5-pro",
+      "name": "Universal-3.5 Pro",
+      "provider": "AssemblyAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gpt-6-luna-pro",
+      "name": "GPT-6 Luna Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1100000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.50"
+      }
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT-6 Luna",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1100000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.50"
+      }
+    },
+    {
+      "id": "gpt-6-sol-pro",
+      "name": "GPT-6 Sol Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1100000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "gpt-6-sol",
+      "name": "GPT-6 Sol",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1100000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "claude-opus-5.5",
+      "name": "Claude Opus 5.5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "grok-4.7",
+      "name": "Grok 4.7",
+      "provider": "SpaceXAI",
+      "category": "chat",
+      "context": 500000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.60",
+        "output": "$4.80"
+      }
+    },
+    {
+      "id": "deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "gpt-6-astra-pro",
+      "name": "GPT-6 Astra Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "gpt-6-astra",
+      "name": "GPT-6 Astra",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "mai-transcribe-2",
+      "name": "MAI-Transcribe 2",
+      "provider": "Microsoft",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "muse-spark-1.3",
+      "name": "Muse Spark 1.3",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": "$4.25"
+      }
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.75",
+        "output": "$3.75"
+      }
+    },
+    {
+      "id": "claude-fable-5.1",
+      "name": "Claude Fable 5.1",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "hy4-preview",
+      "name": "Hy4 preview",
+      "provider": "Tencent",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.834",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "glm-5.3-flash",
+      "name": "GLM 5.3 Flash",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$0.25"
+      }
+    },
+    {
+      "id": "glm-5.3",
+      "name": "GLM 5.3",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.40",
+        "output": "$4.40"
+      }
+    },
+    {
+      "id": "nemotron-3.5-asr-streaming-multilingual-0.6b",
+      "name": "Nemotron 3.5 ASR Streaming Multilingual 0.6B",
+      "provider": "NVIDIA",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "voxtral-small-24b-2507-stt",
+      "name": "Voxtral Small 24B 2507 STT",
+      "provider": "Mistral AI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "voxtral-mini-3b-2507",
+      "name": "Voxtral Mini 3B 2507",
+      "provider": "Mistral AI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gemini-3.7-flash",
+      "name": "Gemini 3.7 Flash",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.375",
+        "output": "$1.88"
+      }
+    },
+    {
+      "id": "qwen3.8-27b",
+      "name": "Qwen3.8 27B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.45",
+        "output": "$3.20"
+      }
+    },
+    {
+      "id": "qwen3-asr-1.7b",
+      "name": "Qwen3 ASR 1.7B",
+      "provider": "Qwen",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen3-asr-0.6b",
+      "name": "Qwen3 ASR 0.6B",
+      "provider": "Qwen",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen3.8-2.4t-a95b",
+      "name": "Qwen3.8 2.4T A95B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.80",
+        "output": "$5.40"
+      }
+    },
+    {
+      "id": "grok-4.6",
+      "name": "Grok 4.6",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 500000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-0813",
+      "name": "DeepSeek V4 Pro 0813",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.435",
+        "output": "$0.87"
+      }
+    },
+    {
+      "id": "nemotron-3.5-lightning:free",
+      "name": "Nemotron 3.5 Lightning (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "nemotron-3.5-lightning",
+      "name": "Nemotron 3.5 Lightning",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "muse-glimmer-30b",
+      "name": "Muse Glimmer 30B",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.35",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "gpt-transcribe",
+      "name": "GPT Transcribe",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "muse-spark-1.2",
+      "name": "Muse Spark 1.2",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": "$4.25"
+      }
+    },
+    {
+      "id": "qwen3.8-max",
+      "name": "Qwen3.8 Max",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "transcribe-1",
+      "name": "Transcribe 1",
+      "provider": "Fish Audio",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "s2-pro",
+      "name": "S2 Pro",
+      "provider": "Fish Audio",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "s1",
+      "name": "S1",
+      "provider": "Fish Audio",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "s2.1-pro",
+      "name": "S2.1 Pro",
+      "provider": "Fish Audio",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "claude-opus-5-fast",
+      "name": "Claude Opus 5 (Fast)",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "qwen3.7-flash",
+      "name": "Qwen3.7 Flash",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.03",
+        "output": "$0.13"
+      }
+    },
+    {
+      "id": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.00",
+        "output": "$25.00"
+      }
+    },
+    {
+      "id": "mai-voice-2-flash",
+      "name": "MAI-Voice-2-Flash",
+      "provider": "Microsoft",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen-audio-3.0-tts-plus",
+      "name": "Qwen Audio 3.0 TTS Plus",
+      "provider": "Qwen",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen-audio-3.0-tts-flash",
+      "name": "Qwen Audio 3.0 TTS Flash",
+      "provider": "Qwen",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "grok-stt-1.0",
+      "name": "Grok STT 1.0",
+      "provider": "xAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gemini-3.5-flash-lite",
+      "name": "Gemini 3.5 Flash-Lite",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "name": "Gemini 3.6 Flash",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.50",
+        "output": "$7.50"
+      }
+    },
+    {
+      "id": "aura-2",
+      "name": "Aura-2",
+      "provider": "Deepgram",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "speech-2.8-hd",
+      "name": "Speech 2.8 HD",
+      "provider": "MiniMax",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "speech-2.8-turbo",
+      "name": "Speech 2.8 Turbo",
+      "provider": "MiniMax",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "provider": "MoonShot AI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.00",
+        "output": "$15.00"
+      }
+    },
+    {
+      "id": "nova-3",
+      "name": "Nova-3",
+      "provider": "Deepgram",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gpt-5.6-terra-pro",
+      "name": "GPT-5.6 Terra Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$12.00"
+      }
+    },
+    {
+      "id": "gpt-5.6-luna-pro",
+      "name": "GPT-5.6 Luna Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "gpt-5.6-sol-pro",
+      "name": "GPT-5.6 Sol Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.00",
+        "output": "$30.00"
+      }
+    },
+    {
+      "id": "gpt-5.6-terra",
+      "name": "GPT-5.6 Terra",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$12.00"
+      }
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "name": "GPT-5.6 Luna",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "name": "GPT-5.6 Sol",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.00",
+        "output": "$30.00"
+      }
+    },
+    {
+      "id": "grok-4.5",
+      "name": "Grok 4.5",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 500000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "hy3",
+      "name": "Hy3",
+      "provider": "Tencent",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.14",
+        "output": "$0.58"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-lite-image",
+      "name": "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+      "provider": "Google",
+      "category": "image",
+      "context": 66000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "claude-sonnet-5",
+      "name": "Claude Sonnet 5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "fugu-ultra",
+      "name": "Fugu Ultra",
+      "provider": "Sakana",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.00",
+        "output": "$30.00"
+      }
+    },
+    {
+      "id": "glm-5.2",
+      "name": "GLM 5.2",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.41",
+        "output": "$3.99"
+      }
+    },
+    {
+      "id": "kimi-k2.7-code",
+      "name": "Kimi K2.7 Code",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.6712",
+        "output": "$3.35"
+      }
+    },
+    {
+      "id": "claude-fable-5",
+      "name": "Claude Fable 5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "nemotron-3.5-content-safety:free",
+      "name": "Nemotron 3.5 Content Safety (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "nemotron-3-ultra-550b-a55b:free",
+      "name": "Nemotron 3 Ultra (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "nemotron-3-ultra-550b-a55b",
+      "name": "Nemotron 3 Ultra",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.50",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "qwen3.7-plus",
+      "name": "Qwen3.7 Plus",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$1.60"
+      }
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "claude-opus-4-8-fast",
+      "name": "Claude Opus 4.8 (Fast)",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$50.00"
+      }
+    },
+    {
+      "id": "claude-opus-4-8",
+      "name": "Claude Opus 4.8",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "grok-build-0.1",
+      "name": "Grok Build 0.1",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "qwen3.7-max",
+      "name": "Qwen3.7 Max",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.50",
+        "output": "$7.50"
+      }
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "name": "Gemini 3.5 Flash",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.50",
+        "output": "$9.00"
+      }
+    },
+    {
+      "id": "claude-opus-4.7-fast",
+      "name": "Claude Opus 4.7 (Fast)",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$30.00",
+        "output": "$150.00"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-tts-preview",
+      "name": "Gemini 3.1 Flash TTS Preview",
+      "provider": "Google",
+      "category": "voice",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$27.50",
+        "output": null
+      }
+    },
+    {
+      "id": "gpt-4o-mini-tts-2025-12-15",
+      "name": "GPT-4o Mini TTS",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": 4096,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": null
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo",
+      "name": "Whisper Large V3 Turbo",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.33",
+        "output": null
+      }
+    },
+    {
+      "id": "gpt-4o-mini-transcribe",
+      "name": "GPT-4o Mini Transcribe",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.625",
+        "output": "$0.625"
+      }
+    },
+    {
+      "id": "gpt-4o-transcribe",
+      "name": "GPT-4o Transcribe",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": null
+      }
+    },
+    {
+      "id": "whisper-large-v3",
+      "name": "Whisper Large V3",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$9.25",
+        "output": null
+      }
+    },
+    {
+      "id": "whisper-1",
+      "name": "Whisper 1",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$75.00",
+        "output": "$75.00"
+      }
+    },
+    {
+      "id": "mistral-medium-3-5",
+      "name": "Mistral Medium 3.5",
+      "provider": "Mistral",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.50",
+        "output": "$7.50"
+      }
+    },
+    {
+      "id": "grok-4.3",
+      "name": "Grok 4.3",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "Nemotron 3 Nano Omni (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "qwen3.5-plus-20260420",
+      "name": "Qwen3.5 Plus 2026-04-20",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.40"
+      }
+    },
+    {
+      "id": "qwen3.6-max-preview",
+      "name": "Qwen3.6 Max Preview",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.30",
+        "output": "$7.80"
+      }
+    },
+    {
+      "id": "qwen3.6-flash",
+      "name": "Qwen3.6 Flash",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.14",
+        "output": "$0.28"
+      }
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.435",
+        "output": "$0.87"
+      }
+    },
+    {
+      "id": "gpt-5.5-pro",
+      "name": "GPT-5.5 Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1050000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$30.00",
+        "output": "$180.00"
+      }
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "GPT-5.5",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1050000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$24.00"
+      }
+    },
+    {
+      "id": "qwen3.6-35b-a3b",
+      "name": "Qwen3.6-35B-A3B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.40",
+        "output": "$32.40"
+      }
+    },
+    {
+      "id": "qwen3.6-27b",
+      "name": "Qwen3.6-27B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.195",
+        "output": "$1.56"
+      }
+    },
+    {
+      "id": "mimo-v2.5-pro",
+      "name": "MiMo-V2.5-Pro",
+      "provider": "Xiaomi",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "mimo-v2.5",
+      "name": "MiMo-V2.5",
+      "provider": "Xiaomi",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "gpt-image-2",
+      "name": "GPT Image 2",
+      "provider": "OpenAI",
+      "category": "image",
+      "context": 272000,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.04"
+      }
+    },
+    {
+      "id": "kimi-k2.6",
+      "name": "Kimi K2.6",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.60",
+        "output": "$2.80"
+      }
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "Claude Opus 4.7",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "claude-opus-4.6-fast",
+      "name": "Claude Opus 4.6 (Fast)",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$30.00",
+        "output": "$150.00"
+      }
+    },
+    {
+      "id": "qwen3.6-plus",
+      "name": "Qwen3.6 Plus",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.325",
+        "output": "$1.95"
+      }
+    },
+    {
+      "id": "glm-5.1",
+      "name": "GLM 5.1",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.26",
+        "output": "$3.96"
+      }
+    },
+    {
+      "id": "gemma-4-26b-a4b-it:free",
+      "name": "Gemma 4 26B A4B (Free)",
+      "provider": "Google",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "gemma-4-26b-a4b-it",
+      "name": "Gemma 4 26B A4B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.13",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "gemma-4-31b-it:free",
+      "name": "Gemma 4 31B (Free)",
+      "provider": "Google",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "name": "Gemma 4 31B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.14",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "glm-5v-turbo",
+      "name": "GLM 5V Turbo",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.20",
+        "output": "$4.00"
+      }
+    },
+    {
+      "id": "grok-4.20-multi-agent",
+      "name": "Grok 4.20 Multi-Agent",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "grok-4.20",
+      "name": "Grok 4.20",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "minimax-m2.7",
+      "name": "MiniMax M2.7",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 204800,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "mimo-v2-omni",
+      "name": "MiMo-V2-Omni",
+      "provider": "Xiaomi",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "mimo-v2-pro",
+      "name": "MiMo-V2-Pro",
+      "provider": "Xiaomi",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "name": "GPT-5.4 Nano",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$1.25"
+      }
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "name": "GPT-5.4 Mini",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.75",
+        "output": "$4.50"
+      }
+    },
+    {
+      "id": "mistral-small-2603",
+      "name": "Mistral Small 4",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "glm-5-turbo",
+      "name": "GLM 5 Turbo",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.96",
+        "output": "$3.20"
+      }
+    },
+    {
+      "id": "gemini-embedding-2-preview",
+      "name": "Gemini Embedding 2",
+      "provider": "Google",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.60",
+        "output": "$2.40"
+      }
+    },
+    {
+      "id": "grok-4.20-multi-agent-beta",
+      "name": "Grok 4.20 Multi-Agent Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "grok-4.20-beta",
+      "name": "Grok 4.20 Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "nemotron-3-super-120b-a12b:free",
+      "name": "Nemotron 3 Super (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "seed-2.0-lite",
+      "name": "Seed-2.0-Lite",
+      "provider": "ByteDance",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$1.60"
+      }
+    },
+    {
+      "id": "qwen3.5-9b",
+      "name": "Qwen3.5-9B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.15"
+      }
+    },
+    {
+      "id": "gpt-5.4-pro",
+      "name": "GPT-5.4 Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1050000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$24.00",
+        "output": "$144.00"
+      }
+    },
+    {
+      "id": "gpt-5.4",
+      "name": "GPT-5.4",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1050000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$12.00"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-lite-preview",
+      "name": "Gemini 3.1 Flash Lite Preview",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1047000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "gpt-5.3-chat",
+      "name": "GPT-5.3 Chat",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.875",
+        "output": "$7.00"
+      }
+    },
+    {
+      "id": "seed-2.0-mini",
+      "name": "Seed-2.0-Mini",
+      "provider": "ByteDance",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "qwen3.5-flash-02-23",
+      "name": "Qwen3.5-Flash",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "qwen3.5-122b-a10b",
+      "name": "Qwen3.5-122B-A10B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$3.20"
+      }
+    },
+    {
+      "id": "qwen3.5-35b-a3b",
+      "name": "Qwen3.5-35B-A3B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "qwen3.5-27b",
+      "name": "Qwen3.5-27B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$2.40"
+      }
+    },
+    {
+      "id": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro Preview",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$12.00"
+      }
+    },
+    {
+      "id": "claude-sonnet-4-6",
+      "name": "Claude Sonnet 4.6",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.40",
+        "output": "$12.00"
+      }
+    },
+    {
+      "id": "qwen3.5-397b-a17b",
+      "name": "Qwen3.5 397B A17B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.55",
+        "output": "$3.50"
+      }
+    },
+    {
+      "id": "qwen3.5-plus-02-15",
+      "name": "Qwen3.5 Plus 2026-02-15",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.26",
+        "output": "$1.56"
+      }
+    },
+    {
+      "id": "minimax-m2.5-lightning",
+      "name": "MiniMax M2.5 (Lightning)",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$2.20"
+      }
+    },
+    {
+      "id": "minimax-m2.5",
+      "name": "MiniMax M2.5",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 204800,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "glm-5",
+      "name": "GLM 5",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.60",
+        "output": "$2.20"
+      }
+    },
+    {
+      "id": "qwen3-max-thinking",
+      "name": "Qwen3 Max Thinking",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.20",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "claude-opus-4-6-thinking",
+      "name": "Claude Opus 4.6 (Thinking)",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "claude-opus-4-6",
+      "name": "Claude Opus 4.6",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "gpt-5.3-codex",
+      "name": "GPT-5.3-Codex",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.75",
+        "output": "$14.00"
+      }
+    },
+    {
+      "id": "qwen3-coder-next",
+      "name": "Qwen3 Coder Next",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.175",
+        "output": "$1.40"
+      }
+    },
+    {
+      "id": "kimi-k2.5",
+      "name": "Kimi K2.5",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.24"
+      }
+    },
+    {
+      "id": "qwen3-max-2026-01-23",
+      "name": "Qwen 3 Max (0123)",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "glm-4.7-flash",
+      "name": "GLM 4.7 Flash",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.06",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "olmo-3.1-32b-instruct",
+      "name": "Olmo 3.1 32B Instruct",
+      "provider": "Allen AI",
+      "category": "chat",
+      "context": 65536,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "seed-1.6-flash",
+      "name": "Seed 1.6 Flash",
+      "provider": "ByteDance",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "seed-1.6",
+      "name": "Seed 1.6",
+      "provider": "ByteDance",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "glm-4.7",
+      "name": "GLM 4.7",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.25"
+      }
+    },
+    {
+      "id": "gemini-3-flash-preview",
+      "name": "Gemini 3 Flash Preview",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "mistral-small-creative",
+      "name": "Mistral Small Creative",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "olmo-3-32b-think",
+      "name": "Olmo 3 32B Think",
+      "provider": "Allen AI",
+      "category": "chat",
+      "context": 65536,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.45"
+      }
+    },
+    {
+      "id": "mimo-v2-flash",
+      "name": "MiMo-V2-Flash",
+      "provider": "Xiaomi",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.09",
+        "output": "$0.29"
+      }
+    },
+    {
+      "id": "gpt-5.2-chat",
+      "name": "GPT-5.2 Chat",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "gpt-5.2-pro",
+      "name": "GPT-5.2 Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$16.00",
+        "output": "$128.00"
+      }
+    },
+    {
+      "id": "gpt-5.2",
+      "name": "GPT-5.2",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "devstral-2512",
+      "name": "Devstral 2 2512",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "glm-4.6v",
+      "name": "GLM 4.6V",
+      "provider": "Z.AI",
+      "category": "image",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.225",
+        "output": "$0.75"
+      }
+    },
+    {
+      "id": "gpt-5.1-codex-max",
+      "name": "GPT-5.1-Codex-Max",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.375",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "ministral-14b-2512",
+      "name": "Ministral 3 14B 2512",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "ministral-8b-2512",
+      "name": "Ministral 3 8B 2512",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.15"
+      }
+    },
+    {
+      "id": "ministral-3b-2512",
+      "name": "Ministral 3 3B 2512",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.10"
+      }
+    },
+    {
+      "id": "nova-2-lite-v1",
+      "name": "Nova 2 Lite",
+      "provider": "Amazon",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "deepseek-v3.2-speciale",
+      "name": "DeepSeek V3.2 Speciale",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.28",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "mistral-large-2512",
+      "name": "Mistral Large 3 2512",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.50",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "deepseek-v3.2",
+      "name": "DeepSeek V3.2",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.24"
+      }
+    },
+    {
+      "id": "tng-r1t-chimera",
+      "name": "R1T Chimera",
+      "provider": "TNG Tech",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "claude-opus-4-5-20251101",
+      "name": "Claude Opus 4.5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "olmo-3-7b-instruct",
+      "name": "Olmo 3 7B Instruct",
+      "provider": "Allen AI",
+      "category": "chat",
+      "context": 65536,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "olmo-3-7b-think",
+      "name": "Olmo 3 7B Think",
+      "provider": "Allen AI",
+      "category": "chat",
+      "context": 65536,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.12",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "gpt-5.1-codex",
+      "name": "GPT-5.1 Codex",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.375",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "gpt-5.1-chat",
+      "name": "GPT-5.1 Chat",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.625",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "gpt-5.1",
+      "name": "GPT-5.1",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.875",
+        "output": "$7.00"
+      }
+    },
+    {
+      "id": "kat-coder-pro",
+      "name": "KAT-Coder-Pro V1",
+      "provider": "Kwaipilot",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.005",
+        "output": "$0.005"
+      }
+    },
+    {
+      "id": "kimi-k2-thinking",
+      "name": "Kimi K2 Thinking",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.34",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "mistral-embed-2312",
+      "name": "Mistral Embed 2312",
+      "provider": "Mistral AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.125",
+        "output": null
+      }
+    },
+    {
+      "id": "nova-premier-v1",
+      "name": "Nova Premier 1.0",
+      "provider": "Amazon",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.13",
+        "output": "$15.63"
+      }
+    },
+    {
+      "id": "voxtral-small-24b-2507",
+      "name": "Voxtral Small 24B 2507",
+      "provider": "Mistral AI",
+      "category": "voice",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.125",
+        "output": "$0.375"
+      }
+    },
+    {
+      "id": "sonar-pro-search",
+      "name": "Sonar Pro Search",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.75",
+        "output": "$18.75"
+      }
+    },
+    {
+      "id": "minimax-m2",
+      "name": "MiniMax M2",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 196608,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.45"
+      }
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "name": "Claude Haiku 4.5",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "qwen3-vl-8b-thinking",
+      "name": "Qwen3 VL 8B Thinking",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.18",
+        "output": "$2.10"
+      }
+    },
+    {
+      "id": "qwen3-vl-8b-instruct",
+      "name": "Qwen3 VL 8B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.09",
+        "output": "$0.345"
+      }
+    },
+    {
+      "id": "llama-3.3-nemotron-super-49b-v1.5",
+      "name": "Llama 3.3 Nemotron Super 49B V1.5",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "o4-mini-deep-research",
+      "name": "o4 Mini Deep Research",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "o3-deep-research",
+      "name": "o3 Deep Research",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$10.00",
+        "output": "$40.00"
+      }
+    },
+    {
+      "id": "ernie-4.5-21b-a3b-thinking",
+      "name": "ERNIE 4.5 21B A3B Thinking",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.035",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-image",
+      "name": "Gemini 2.5 Flash Image (Nano Banana)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "gpt-5-pro",
+      "name": "GPT-5 Pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$7.50",
+        "output": "$60.00"
+      }
+    },
+    {
+      "id": "glm-4.6",
+      "name": "GLM 4.6",
+      "provider": "Z.AI",
+      "category": "chat",
+      "context": 202752,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.40"
+      }
+    },
+    {
+      "id": "deepseek-v3.2-exp",
+      "name": "DeepSeek V3.2 Exp",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.24"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-lite-preview-09-2025",
+      "name": "Gemini 2.5 Flash Lite Preview 09-2025",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-preview:thinking",
+      "name": "Gemini 2.5 Flash Preview (thinking)",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$1.75"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-preview",
+      "name": "Gemini 2.5 Flash Preview",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "qwen3-vl-235b-a22b-thinking",
+      "name": "Qwen3 VL 235B A22B Thinking",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "qwen3-vl-235b-a22b-instruct",
+      "name": "Qwen3 VL 235B A22B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "gpt-5-codex",
+      "name": "GPT-5 Codex",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.625",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "qwen3-max",
+      "name": "Qwen3 Max",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.20",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "grok-4-fast",
+      "name": "Grok 4 Fast",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.07",
+        "output": "$0.175"
+      }
+    },
+    {
+      "id": "tongyi-deepresearch-30b-a3b",
+      "name": "Tongyi DeepResearch 30B A3B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.135",
+        "output": "$0.675"
+      }
+    },
+    {
+      "id": "qwen3-coder-flash",
+      "name": "Qwen3 Coder Flash",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "qwen3-next-80b-a3b-thinking",
+      "name": "Qwen3 Next 80B A3B Thinking",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "qwen3-next-80b-a3b-instruct",
+      "name": "Qwen3 Next 80B A3B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "qwen-plus-2025-07-28:thinking",
+      "name": "Qwen Plus 2025-07-28 Thinking",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$4.00"
+      }
+    },
+    {
+      "id": "qwen-plus-2025-07-28",
+      "name": "Qwen Plus 2025-07-28",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "nemotron-nano-9b-v2",
+      "name": "Nemotron Nano 9B V2 (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 131071,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "kimi-k2-0905",
+      "name": "Kimi K2 0905",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 262000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.60",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "kimi-k2",
+      "name": "Kimi K2",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 63000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.34",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "qwen3-30b-a3b-think",
+      "name": "Qwen3 30B A3B Think",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32767,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.051",
+        "output": "$0.34"
+      }
+    },
+    {
+      "id": "qwen3-30b-a3b",
+      "name": "Qwen3 30B A3B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.15"
+      }
+    },
+    {
+      "id": "deepseek-r1t-chimera",
+      "name": "DeepSeek R1T Chimera",
+      "provider": "TNG Tech",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "deepseek-chat-v3.1",
+      "name": "DeepSeek V3.1",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$0.95"
+      }
+    },
+    {
+      "id": "gpt-4o-audio-preview",
+      "name": "GPT-4o Audio Preview",
+      "provider": "OpenAI",
+      "category": "voice",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.875",
+        "output": "$3.50"
+      }
+    },
+    {
+      "id": "mistral-medium-3.1",
+      "name": "Mistral Medium 3.1",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "gpt-5-nano-2025-08-07",
+      "name": "GPT-5 Nano",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 400000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.0175",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "gpt-oss-120b",
+      "name": "GPT OSS 120B",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.037",
+        "output": "$0.17"
+      }
+    },
+    {
+      "id": "gpt-oss-20b",
+      "name": "GPT OSS 20B",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "codestral-2508",
+      "name": "Codestral 2508",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.45",
+        "output": "$1.35"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-lite",
+      "name": "Gemini 2.5 Flash Lite",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-lite-preview-06-17",
+      "name": "Gemini 2.5 Flash Lite Preview 06-17",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.025",
+        "output": "$0.10"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash",
+      "name": "Gemini 2.5 Flash",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$0.625"
+      }
+    },
+    {
+      "id": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.3125",
+        "output": "$2.50"
+      }
+    },
+    {
+      "id": "gemini-2.5-flash-preview-05-20:thinking",
+      "name": "Gemini 2.5 Flash Preview 05-20 (thinking)",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.075",
+        "output": "$1.75"
+      }
+    },
+    {
+      "id": "codex-mini",
+      "name": "Codex Mini",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.75",
+        "output": "$3.00"
+      }
+    },
+    {
+      "id": "llama-3.2-1b-instruct",
+      "name": "Llama 3.2 1b Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": null,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.0025",
+        "output": "$0.005"
+      }
+    },
+    {
+      "id": "jina-embeddings-v5-text-small",
+      "name": "Jina Embeddings V5 Text Small",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-embeddings-v5-text-nano",
+      "name": "Jina Embeddings V5 Text Nano",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-embeddings-v2-base-es",
+      "name": "Jina Embeddings V2 Base ES",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-embeddings-v2-base-de",
+      "name": "Jina Embeddings V2 Base DE",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-embeddings-v4",
+      "name": "Jina Embeddings V4",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-embeddings-v3",
+      "name": "Jina Embeddings V3",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-colbert-v1-en",
+      "name": "Jina ColBERT V1 EN",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-colbert-v2",
+      "name": "Jina Colbert V2",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "jina-clip-v1",
+      "name": "Jina CLIP V1",
+      "provider": "Jina AI",
+      "category": "embedding",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": null
+      }
+    },
+    {
+      "id": "qwen3-coder-480b-a35b-instruct",
+      "name": "Qwen3 Coder 480B A35B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.80",
+        "output": "$0.80"
+      }
+    },
+    {
+      "id": "qwen3-coder-plus",
+      "name": "Qwen3 Coder Plus",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "qwen3-235b-a22b-07-25",
+      "name": "Qwen3 235B A22B 2507",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.70"
+      }
+    },
+    {
+      "id": "BAAI/bge-reranker-v2-m3",
+      "name": "BGE Reranker V2 M3",
+      "provider": "Reranker",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.14",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "Qwen/Qwen3-Reranker-0.6B",
+      "name": "Qwen3 Reranker 0.6B",
+      "provider": "Reranker",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.14",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "Qwen/Qwen3-Reranker-4B",
+      "name": "Qwen3 Reranker 4B",
+      "provider": "Reranker",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.28",
+        "output": "$0.28"
+      }
+    },
+    {
+      "id": "Qwen/Qwen3-Reranker-8B",
+      "name": "Qwen3 Reranker 8B",
+      "provider": "Reranker",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.56",
+        "output": "$0.56"
+      }
+    },
+    {
+      "id": "devstral-medium",
+      "name": "Devstral Medium",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.80",
+        "output": "$4.00"
+      }
+    },
+    {
+      "id": "devstral-small-2507",
+      "name": "Devstral Small 1.1",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "ERNIE-4.0-8K",
+      "name": "ERNIE 4.0 8K",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$49.72",
+        "output": "$49.72"
+      }
+    },
+    {
+      "id": "ERNIE-Lite-8K-0308",
+      "name": "ERNIE Lite 8K 0308",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$112.50",
+        "output": "$225.00"
+      }
+    },
+    {
+      "id": "ERNIE-Lite-8K-0922",
+      "name": "ERNIE Lite 8K 0922",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$112.50",
+        "output": "$225.00"
+      }
+    },
+    {
+      "id": "ERNIE-Speed-128K",
+      "name": "ERNIE Speed 128K",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.46",
+        "output": "$2.92"
+      }
+    },
+    {
+      "id": "ERNIE-Speed-8K",
+      "name": "ERNIE Speed 8K",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.46",
+        "output": "$2.92"
+      }
+    },
+    {
+      "id": "ERNIE-3.5-8K",
+      "name": "ERNIE 3.5 8K",
+      "provider": "Baidu",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.57",
+        "output": "$5.57"
+      }
+    },
+    {
+      "id": "mistral-small-3.2-24b-instruct",
+      "name": "Mistral Small 3.2 24B",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "minimax-m1",
+      "name": "MiniMax M1",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$1.65"
+      }
+    },
+    {
+      "id": "minimax-m1:extended",
+      "name": "MiniMax M1 (Extended)",
+      "provider": "MiniMax",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.55",
+        "output": "$2.20"
+      }
+    },
+    {
+      "id": "magistral-small-2506",
+      "name": "Magistral Small 2506",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 40000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.50",
+        "output": "$1.50"
+      }
+    },
+    {
+      "id": "magistral-medium-2506",
+      "name": "Magistral Medium 2506",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "magistral-medium-2506:thinking",
+      "name": "Magistral Medium 2506 (Thinking)",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "veo3-fast",
+      "name": "Veo 3 Fast",
+      "provider": "Google",
+      "category": "video",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$1.26"
+      }
+    },
+    {
+      "id": "veo3",
+      "name": "Veo 3",
+      "provider": "Google",
+      "category": "video",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$1.26"
+      }
+    },
+    {
+      "id": "veo3-pro",
+      "name": "Veo 3 Pro",
+      "provider": "Google",
+      "category": "video",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$5.60"
+      }
+    },
+    {
+      "id": "veo3-pro-frames",
+      "name": "Veo 3 Pro Frames",
+      "provider": "Google",
+      "category": "video",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$5.60"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-qwen-7b",
+      "name": "Deepseek R1 Distill Qwen 7B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "deepseek-r1-0528",
+      "name": "DeepSeek R1 0528",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.50",
+        "output": "$2.18"
+      }
+    },
+    {
+      "id": "devstral-small",
+      "name": "Devstral Small",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.09",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "mistral-medium-3",
+      "name": "Mistral Medium 3",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "phi-4-reasoning-plus",
+      "name": "Phi 4 Reasoning Plus",
+      "provider": "Microsoft",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.07",
+        "output": "$0.35"
+      }
+    },
+    {
+      "id": "deepseek-prover-v2",
+      "name": "DeepSeek Prover V2",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.70",
+        "output": "$2.00"
+      }
+    },
+    {
+      "id": "llama-guard-4-12b",
+      "name": "Llama Guard 4 12B",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.05"
+      }
+    },
+    {
+      "id": "qwen3-14b",
+      "name": "Qwen3 14B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.08",
+        "output": "$0.24"
+      }
+    },
+    {
+      "id": "qwen3-32b",
+      "name": "Qwen3 32B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "qwen3-235b-a22b",
+      "name": "Qwen3 235B A22B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "o4-mini-high",
+      "name": "o4 Mini High",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.10",
+        "output": "$4.40"
+      }
+    },
+    {
+      "id": "qwen2.5-coder-7b-instruct",
+      "name": "Qwen2.5 Coder 7B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "grok-3-beta",
+      "name": "Grok 3 Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.00",
+        "output": "$15.00"
+      }
+    },
+    {
+      "id": "grok-3-mini-beta",
+      "name": "Grok 3 Mini Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.50"
+      }
+    },
+    {
+      "id": "llama-3.3-nemotron-super-49b-v1",
+      "name": "Llama 3.3 Nemotron Super 49B v1",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.13",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "llama-4-scout",
+      "name": "Llama 4 Scout",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "llama-4-maverick",
+      "name": "Llama 4 Maverick",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "deepseek-v3-base",
+      "name": "DeepSeek V3 Base",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "deepseek-v3-search",
+      "name": "DeepSeek V3 Search",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.80",
+        "output": "$11.20"
+      }
+    },
+    {
+      "id": "qwen2.5-vl-72b-instruct",
+      "name": "Qwen2.5 VL 72B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.25",
+        "output": "$0.75"
+      }
+    },
+    {
+      "id": "qwen2.5-vl-3b-instruct",
+      "name": "Qwen2.5 VL 3B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 64000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen-vl-max",
+      "name": "Qwen VL Max",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 7500,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.80",
+        "output": "$3.20"
+      }
+    },
+    {
+      "id": "qwen2.5-vl-32b-instruct",
+      "name": "Qwen2.5 VL 32B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "deepseek-chat-v3-0324",
+      "name": "DeepSeek V3 0324",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.88"
+      }
+    },
+    {
+      "id": "o1-pro",
+      "name": "o1-pro",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$450.00",
+        "output": "$1,800.00"
+      }
+    },
+    {
+      "id": "deepseek-r1-searching",
+      "name": "DeepSeek R1 Searching",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$5.60",
+        "output": "$22.40"
+      }
+    },
+    {
+      "id": "command-a",
+      "name": "Command A",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 256000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.50",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "command-r7b-12-2024",
+      "name": "Command R7B (12-2024)",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.0375",
+        "output": "$0.15"
+      }
+    },
+    {
+      "id": "command-r-08-2024",
+      "name": "Command R (08-2024)",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.1425",
+        "output": "$0.57"
+      }
+    },
+    {
+      "id": "command-r-plus-08-2024",
+      "name": "Command R+ (08-2024)",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.38",
+        "output": "$9.50"
+      }
+    },
+    {
+      "id": "command-r-plus",
+      "name": "Command R+",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.85",
+        "output": "$14.25"
+      }
+    },
+    {
+      "id": "command-r-plus-04-2024",
+      "name": "Command R+ (04-2024)",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.85",
+        "output": "$14.25"
+      }
+    },
+    {
+      "id": "command",
+      "name": "Command",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 4096,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.95",
+        "output": "$1.90"
+      }
+    },
+    {
+      "id": "command-r",
+      "name": "Command R",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.475",
+        "output": "$1.43"
+      }
+    },
+    {
+      "id": "command-r-03-2024",
+      "name": "Command R (03-2024)",
+      "provider": "Cohere",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.475",
+        "output": "$1.43"
+      }
+    },
+    {
+      "id": "mistral-small-3.1-24b-instruct-2503",
+      "name": "Mistral Small 3.1 24B",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "olympiccoder-32b",
+      "name": "OlympicCoder 32B",
+      "provider": "Open R1",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gemma-3-1b-it",
+      "name": "Gemma 3 1B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gemma-3-12b-it",
+      "name": "Gemma 3 12B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.10"
+      }
+    },
+    {
+      "id": "gemma-3-4b-it",
+      "name": "Gemma 3 4B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.02",
+        "output": "$0.04"
+      }
+    },
+    {
+      "id": "gpt-4o-search-preview",
+      "name": "GPT-4o Search Preview",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.50",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "gpt-4o-mini-search-preview",
+      "name": "GPT-4o Mini Search Preview",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.15",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "Gemma 3 27B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.50"
+      }
+    },
+    {
+      "id": "phi-4-multimodal-instruct",
+      "name": "Phi 4 Multimodal Instruct",
+      "provider": "Microsoft",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.07",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "sonar-reasoning-pro",
+      "name": "Sonar Reasoning Pro",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "sonar-pro",
+      "name": "Sonar Pro",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.00",
+        "output": "$15.00"
+      }
+    },
+    {
+      "id": "sonar-deep-research",
+      "name": "Sonar Deep Research",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "deepseek-r1-zero",
+      "name": "DeepSeek R1 Zero",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwq-32b",
+      "name": "QwQ 32B",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 40960,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.29",
+        "output": "$0.39"
+      }
+    },
+    {
+      "id": "qwen2.5-32b-instruct",
+      "name": "Qwen2.5 32B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.79",
+        "output": "$0.79"
+      }
+    },
+    {
+      "id": "moonlight-16b-a3b-instruct",
+      "name": "Moonlight 16B A3B Instruct",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "moonshot-v1-128k",
+      "name": "Moonshot V1 128k",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$8.24",
+        "output": "$8.24"
+      }
+    },
+    {
+      "id": "moonshot-v1-32k",
+      "name": "Moonshot V1 32k",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.29",
+        "output": "$3.29"
+      }
+    },
+    {
+      "id": "moonshot-v1-8k",
+      "name": "Moonshot V1 8k",
+      "provider": "Moonshot AI",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.65",
+        "output": "$1.65"
+      }
+    },
+    {
+      "id": "gemini-2.0-flash-lite-001",
+      "name": "Gemini 2.0 Flash Lite",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.105",
+        "output": "$0.42"
+      }
+    },
+    {
+      "id": "perplexity-r1-1776",
+      "name": "Perplexity R1 1776",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$8.00"
+      }
+    },
+    {
+      "id": "mistral-saba",
+      "name": "Mistral Saba",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.60"
+      }
+    },
+    {
+      "id": "o3-mini-high",
+      "name": "o3 Mini High",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 200000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.10",
+        "output": "$4.40"
+      }
+    },
+    {
+      "id": "llama-guard-3-8b",
+      "name": "Llama Guard 3 8b",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-llama-8b",
+      "name": "DeepSeek R1 Distill Llama 8B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.04",
+        "output": "$0.04"
+      }
+    },
+    {
+      "id": "gemini-2.0-flash-001",
+      "name": "Gemini Flash 2.0",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "gemini-2.0-flash-lite-preview-02-05",
+      "name": "Gemini Flash Lite 2.0 Preview",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "gemini-2.0-pro-exp-02-05",
+      "name": "Gemini Pro 2.0 Experimental",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1048576,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "usage"
+      }
+    },
+    {
+      "id": "qwen-vl-plus",
+      "name": "Qwen VL Plus",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 7500,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.21",
+        "output": "$0.63"
+      }
+    },
+    {
+      "id": "qwen-max",
+      "name": "Qwen Max",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.60",
+        "output": "$6.40"
+      }
+    },
+    {
+      "id": "qwen-plus",
+      "name": "Qwen Plus",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.40",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "qwen-turbo",
+      "name": "Qwen Turbo",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-qwen-1.5b",
+      "name": "Deepseek R1 Distill Qwen 1.5B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.18",
+        "output": "$0.18"
+      }
+    },
+    {
+      "id": "mistral-small-24b-instruct-2501",
+      "name": "Mistral Small 3",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 28000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.07",
+        "output": "$0.14"
+      }
+    },
+    {
+      "id": "sonar-reasoning",
+      "name": "Sonar Reasoning",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 127000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "sonar",
+      "name": "Sonar",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 127072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$1.00"
+      }
+    },
+    {
+      "id": "llama-3.1-sonar-large-128k-online",
+      "name": "Llama 3.1 Sonar 70B Online",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 127072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$1.00"
+      }
+    },
+    {
+      "id": "llama-3.1-sonar-small-128k-online",
+      "name": "Llama 3.1 Sonar 8B Online",
+      "provider": "Perplexity",
+      "category": "chat",
+      "context": 127072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.20"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-qwen-32b",
+      "name": "DeepSeek R1 Distill Qwen 32B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.12",
+        "output": "$0.18"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-qwen-14b",
+      "name": "DeepSeek R1 Distill Qwen 14B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 64000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.60",
+        "output": "$1.60"
+      }
+    },
+    {
+      "id": "deepseek-r1-distill-llama-70b",
+      "name": "DeepSeek R1 Distill Llama 70B",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.23",
+        "output": "$0.69"
+      }
+    },
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek R1",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.50",
+        "output": "$2.18"
+      }
+    },
+    {
+      "id": "codestral-2501",
+      "name": "Codestral 2501",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 262144,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.90"
+      }
+    },
+    {
+      "id": "phi-4",
+      "name": "Phi-4",
+      "provider": "Microsoft",
+      "category": "chat",
+      "context": 16384,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.21",
+        "output": "$0.42"
+      }
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek V3",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 163840,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.38",
+        "output": "$0.89"
+      }
+    },
+    {
+      "id": "grok-2-vision-1212",
+      "name": "Grok 2 Vision 1212",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$6.00",
+        "output": "$30.00"
+      }
+    },
+    {
+      "id": "grok-2-1212",
+      "name": "Grok 2 1212",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$6.00",
+        "output": "$30.00"
+      }
+    },
+    {
+      "id": "llama-3.3-70b-instruct",
+      "name": "Llama 3.3 70B Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.25"
+      }
+    },
+    {
+      "id": "nova-lite-v1",
+      "name": "Nova Lite 1.0",
+      "provider": "Amazon",
+      "category": "chat",
+      "context": 300000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.18",
+        "output": "$0.72"
+      }
+    },
+    {
+      "id": "nova-micro-v1",
+      "name": "Nova Micro 1.0",
+      "provider": "Amazon",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.105",
+        "output": "$0.42"
+      }
+    },
+    {
+      "id": "nova-pro-v1",
+      "name": "Nova Pro 1.0",
+      "provider": "Amazon",
+      "category": "chat",
+      "context": 300000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.40",
+        "output": "$9.60"
+      }
+    },
+    {
+      "id": "qwq-32b-preview",
+      "name": "QwQ 32B Preview",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.12",
+        "output": "$0.18"
+      }
+    },
+    {
+      "id": "mistral-large-2411",
+      "name": "Mistral Large 2411",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$6.00",
+        "output": "$18.00"
+      }
+    },
+    {
+      "id": "mistral-large-2407",
+      "name": "Mistral Large 2407",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$6.00",
+        "output": "$18.00"
+      }
+    },
+    {
+      "id": "pixtral-large-2411",
+      "name": "Pixtral Large 2411",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "grok-vision-beta",
+      "name": "Grok Vision Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$15.00",
+        "output": "$45.00"
+      }
+    },
+    {
+      "id": "qwen-2.5-coder-32b-instruct",
+      "name": "Qwen2.5 Coder 32B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.06",
+        "output": "$0.15"
+      }
+    },
+    {
+      "id": "ministral-3b",
+      "name": "Ministral 3B",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.12",
+        "output": "$0.12"
+      }
+    },
+    {
+      "id": "ministral-8b",
+      "name": "Ministral 8B",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.30",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "llama-3.1-nemotron-70b-instruct",
+      "name": "Llama 3.1 Nemotron 70B Instruct",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.12",
+        "output": "$0.30"
+      }
+    },
+    {
+      "id": "grok-beta",
+      "name": "Grok Beta",
+      "provider": "xAI",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$15.00",
+        "output": "$45.00"
+      }
+    },
+    {
+      "id": "gemini-1.5-pro-002",
+      "name": "Gemini 1.5 Pro 002",
+      "provider": "Google",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.26",
+        "output": "$5.04"
+      }
+    },
+    {
+      "id": "llama-3.2-3b-instruct",
+      "name": "Llama 3.2 3B Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.324",
+        "output": "$0.324"
+      }
+    },
+    {
+      "id": "llama-3.2-90b-vision-instruct",
+      "name": "Llama 3.2 90B Vision Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.20",
+        "output": "$1.20"
+      }
+    },
+    {
+      "id": "llama-3.2-11b-vision-instruct",
+      "name": "Llama 3.2 11B Vision Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.049",
+        "output": "$0.049"
+      }
+    },
+    {
+      "id": "qwen-2-vl-72b-instruct",
+      "name": "Qwen2-VL 72B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.40",
+        "output": "$2.40"
+      }
+    },
+    {
+      "id": "qwen-2.5-72b-instruct",
+      "name": "Qwen2.5 72B Instruct",
+      "provider": "Alibaba",
+      "category": "chat",
+      "context": 32000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.13",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "pixtral-12b",
+      "name": "Pixtral 12B",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.10"
+      }
+    },
+    {
+      "id": "gemini-1.5-flash-exp-0827",
+      "name": "Gemini 1.5 Flash Experimental 0827",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$3.50",
+        "output": "$10.50"
+      }
+    },
+    {
+      "id": "gemma-2-9b",
+      "name": "Gemma 2 9B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.18",
+        "output": "$0.18"
+      }
+    },
+    {
+      "id": "gemma-2-27b",
+      "name": "Gemma 2 27B",
+      "provider": "Google",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.81",
+        "output": "$0.81"
+      }
+    },
+    {
+      "id": "gemini-1.5-pro-latest",
+      "name": "Gemini 1.5 Pro",
+      "provider": "Google",
+      "category": "chat",
+      "context": 2000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.26",
+        "output": "$5.04"
+      }
+    },
+    {
+      "id": "phi-3.5-mini-128k-instruct",
+      "name": "Phi-3.5 Mini 128K Instruct",
+      "provider": "Microsoft",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.03",
+        "output": "$0.09"
+      }
+    },
+    {
+      "id": "mistral-7b-instruct",
+      "name": "Mistral 7B Instruct",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.028",
+        "output": "$0.054"
+      }
+    },
+    {
+      "id": "mistral-7b-instruct-v0.3",
+      "name": "Mistral 7B Instruct v0.3",
+      "provider": "Mistral AI",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.028",
+        "output": "$0.054"
+      }
+    },
+    {
+      "id": "llama-3.1-8b-instruct",
+      "name": "Llama 3.1 8B Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 16384,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.02",
+        "output": "$0.03"
+      }
+    },
+    {
+      "id": "llama-3.1-70b-instruct",
+      "name": "Llama 3.1 70B Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 131072,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.28"
+      }
+    },
+    {
+      "id": "llama-3.1-405b",
+      "name": "Llama 3.1 405B",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$6.00",
+        "output": "$6.00"
+      }
+    },
+    {
+      "id": "llama-3.1-405b-instruct",
+      "name": "Llama 3.1 405B Instruct",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 32768,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.40",
+        "output": "$2.40"
+      }
+    },
+    {
+      "id": "llama-3-70b",
+      "name": "Llama 3 70B",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 128000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.59",
+        "output": "$0.79"
+      }
+    },
+    {
+      "id": "llama-3-8b",
+      "name": "Llama 3 8B",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 8192,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.05",
+        "output": "$0.08"
+      }
+    }
+  ]
+}
