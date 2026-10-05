@@ -22,7 +22,8 @@ before(async () => {
 });
 after(async () => browser?.close());
 
-test('Yes, a comment and Send show the confirmation (sent) or the error (no binding)', { skip }, async () => {
+// The spec scenario "Reader answers": No and a comment.
+test('No, a comment and Send show the confirmation (sent) or the error (no binding)', { skip }, async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
   const errors: string[] = [];
@@ -33,8 +34,8 @@ test('Yes, a comment and Send show the confirmation (sent) or the error (no bind
   await page.waitForFunction(() => !document.querySelector('.page-feedback')?.hasAttribute('hidden'));
   assert.equal(await section.getAttribute('hidden'), null, 'the widget is revealed once the script runs');
 
-  await section.getByRole('button', { name: 'Yes', exact: true }).click();
-  assert.equal(await section.getByRole('button', { name: 'Yes', exact: true }).getAttribute('aria-pressed'), 'true');
+  await section.getByRole('button', { name: 'No', exact: true }).click();
+  assert.equal(await section.getByRole('button', { name: 'No', exact: true }).getAttribute('aria-pressed'), 'true');
   const textarea = section.locator('textarea');
   await textarea.fill('a browser-check comment');
   await section.getByRole('button', { name: 'Send' }).click();
