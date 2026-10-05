@@ -681,6 +681,22 @@ html:not(.js) .article-filter { display: none; }
 .related-articles ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
 .related-articles a { color: var(--ink); font-weight: 500; text-decoration: none; }
 .related-articles a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* "Was this page helpful?" (openspec docs-reader-shell-extras "Page feedback"), outside <article>. Server-rendered
+   [hidden]; src/layouts/DocLayout.astro's inline script reveals it. */
+.page-feedback { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.page-feedback__prompt { margin: 0 0 12px; color: var(--ink); font-weight: 500; }
+.page-feedback__choices { display: flex; gap: 8px; }
+.page-feedback__choice { height: 32px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+.page-feedback__choice:hover { color: var(--ink); }
+.page-feedback__choice[aria-pressed='true'] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.page-feedback__form { display: flex; flex-direction: column; gap: 8px; max-width: 480px; margin-top: 12px; }
+.page-feedback__form label { color: var(--muted); font-size: var(--fs-sm); }
+.page-feedback__form textarea { padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--card); color: var(--ink); font: var(--fs-base)/1.5 var(--font); resize: vertical; }
+.page-feedback__send { align-self: flex-start; height: 32px; padding: 0 16px; border: 0; border-radius: 8px; background: var(--primary); color: var(--primary-fg); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; }
+.page-feedback__status { margin: 8px 0 0; color: var(--muted); font-size: var(--fs-sm); }
+.page-feedback__status:empty { display: none; }
+.page-feedback__status[data-state='ok'] { color: var(--adm-tip); }
+.page-feedback__status[data-state='error'] { color: var(--error); }
 .article-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
 .article-row {
   display: grid;
@@ -880,4 +896,9 @@ html.aa-scroll-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after, .aa::backdrop { transition: none !important; scroll-behavior: auto !important; }
   .aa-msg::before { animation: none !important; }
+}
+
+/* Packet D's print stylesheet is not in this tree yet; its own rules can extend this block. */
+@media print {
+  [data-feedback] { display: none; }
 }
