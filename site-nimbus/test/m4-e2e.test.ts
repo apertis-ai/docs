@@ -494,7 +494,7 @@ describe('m4 search and Ask Docs (browser)', { skip }, () => {
     await ask(page, 'What is Apertis?');
     const alert = page.locator('.aa-msg[data-state="error"]');
     await alert.waitFor({ timeout: 20000 });
-    assert.equal(await alert.textContent(), 'Ask Docs could not answer (HTTP 500): Server configuration error');
+    assert.equal(await alert.textContent(), 'Ask Docs is unavailable right now. Please try again in a moment.');
     await page.context().close();
   });
 
