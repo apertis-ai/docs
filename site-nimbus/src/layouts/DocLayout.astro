@@ -5,13 +5,15 @@
 // interface #7's routes render against and must stay compatible.
 // Reading layout (#8): the page header (category tag, the body's H1, description, meta row with the page
 // actions) opens the <article>, because the search index takes each page's title from the <h1> in
-// <article> (src/search/index-build.ts). Header chrome carries data-pagefind-ignore; the View link gets
-// its href from the client only, so the article's static links stay the body's links.
+// <article> (src/search/index-build.ts). Header chrome carries data-pagefind-ignore; the View link and the
+// Edit link (docs-reader-shell-extras) both get their href from the client only (shell.client.ts sets
+// [data-edit]), so the article's static links stay the body's links for test:dist.
 import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
 import PageActions from '../components/shell/PageActions.tsx';
 import TocMobile from '../components/shell/TocMobile.tsx';
+import { editUrl } from '../components/shell/edit-link.ts';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
 import { getCollection, getEntry } from 'astro:content';
@@ -84,6 +86,7 @@ const related = native.length
               {article && <div><dt>Author</dt><dd>{article.author}</dd></div>}
               <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
+              <div class="doc-header__edit"><a data-edit={editUrl(doc.sourcePath)} target="_blank" rel="noopener">Edit this page</a></div>
             </dl>
           </div>
           {doc.markdown && (
