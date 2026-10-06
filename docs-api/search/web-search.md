@@ -7,7 +7,7 @@ sidebar_position: 4
 Enable real-time web search for any model by adding the `:web` suffix to the model name. The system automatically searches for relevant information and integrates it into the response.
 
 :::warning Note
-Web search is only available for non-free models. Free models (e.g., `gpt-5.4-mini:free`) do not support the `:web` suffix and will return an error.
+Web search is only available for non-free models. Free models (e.g., `gemma-4-31b-it:free`) do not support the `:web` suffix and will return an error.
 :::
 
 ## Quick Start
@@ -35,7 +35,7 @@ All non-free models support the `:web` suffix:
 |----------|----------------|
 | OpenAI | `gpt-5.5:web`, `gpt-5.4-mini:web`, `o4-mini-high:web` |
 | Anthropic | `claude-sonnet-4-6:web`, `claude-opus-4-5-20251101:web` |
-| Google | `gemini-3-pro-preview:web`, `gemini-3-flash-preview:web` |
+| Google | `gemini-3.1-pro-preview:web`, `gemini-3-flash-preview:web` |
 | Others | Any available non-free model can use `:web` |
 
 ## Request Parameters
@@ -211,7 +211,7 @@ Search for the latest research papers or academic information:
 
 ```json
 {
-  "model": "gemini-3-pro-preview:web",
+  "model": "gemini-3.1-pro-preview:web",
   "messages": [
     {"role": "user", "content": "What are the important findings in 2024 research on large language models?"}
   ]
