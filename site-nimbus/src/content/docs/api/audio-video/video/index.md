@@ -1,5 +1,6 @@
 ---
 title: "Video API"
+description: "Video generation endpoints are not currently available on the Apertis API."
 ---
 
 # Video API
