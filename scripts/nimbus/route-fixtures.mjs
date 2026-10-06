@@ -64,6 +64,12 @@ async function check(base, fixturesFile, scope) {
   const pocRoutes = data.pocRoutes ?? [];
   const coverageLimits = data.pocCoverageLimits ?? [];
   const failures = [];
+  // Heading ids removed after the cutover, recorded per document in content-changes.json (dist.check
+  // verifies each recorded id is a legacy one and really gone): a fixture anchor among them is not required.
+  const docByPath = new Map(JSON.parse(fs.readFileSync(new URL('../../migration/nimbus/route-inventory.json', import.meta.url), 'utf8')).routes
+    .filter((r) => r.documentId).map((r) => [r.path.replace(/(.)\/$/, '$1'), r.documentId]));
+  const changes = JSON.parse(fs.readFileSync(new URL('../../migration/nimbus/content-changes.json', import.meta.url), 'utf8')).documents;
+  const removedAnchors = (p) => changes[docByPath.get(p.replace(/(.)\/$/, '$1'))]?.headings?.removed ?? [];
   for (const f of routes) {
     const r = await get(base + f.path);
     const where = `${f.path}`;
@@ -77,7 +83,7 @@ async function check(base, fixturesFile, scope) {
     if (f.canonical && got.canonical !== f.canonical) failures.push(`${where}: canonical ${got.canonical}, expected ${f.canonical}`);
     // Any element with the id satisfies a fragment link, whatever the candidate's markup.
     const ids = new Set([...r.body.matchAll(/\bid=["']([^"']+)["']/g)].map((m) => m[1]));
-    for (const id of f.anchors ?? []) if (!ids.has(id)) failures.push(`${where}: missing anchor #${id}`);
+    for (const id of f.anchors ?? []) if (!ids.has(id) && !removedAnchors(f.path).includes(id)) failures.push(`${where}: missing anchor #${id}`);
     if (scope === 'poc' && f.pocLinks) {
       const allowed = new Set([...pocRoutes, ...coverageLimits]);
       for (const href of got.links) {

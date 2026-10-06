@@ -59,9 +59,9 @@ apertis models --json
 Benchmark one or more models head-to-head. Reports client-measured latency (avg / p50), Apertis's **server-side** latency, throughput (tokens/sec), and the **actual measured cost** of the run.
 
 ```bash
-apertis benchmark gpt-4o-mini claude-sonnet-4-6
-apertis benchmark gpt-4o-mini -n 5 --prompt "Summarize the theory of relativity."
-apertis benchmark gpt-4o-mini --json
+apertis benchmark gpt-5.4-mini claude-sonnet-4-6
+apertis benchmark gpt-5.4-mini -n 5 --prompt "Summarize the theory of relativity."
+apertis benchmark gpt-5.4-mini --json
 ```
 
 Cost is measured from your key's `used_quota_usd` delta over the run — so it reflects real spend rather than a pricing-table estimate. (Best-effort: concurrent use of the same key during a benchmark can inflate it.)

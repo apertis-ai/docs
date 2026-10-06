@@ -64,7 +64,7 @@ Use any compatible model returned by the Apertis model catalog:
 llm = Apertis(model="gpt-5.2")
 
 # Anthropic Claude
-llm = Apertis(model="claude-sonnet-4.5")
+llm = Apertis(model="claude-sonnet-4-6")
 
 # Google Gemini
 llm = Apertis(model="gemini-3-flash-preview")
@@ -78,13 +78,13 @@ Enable [context compression](/api/text-generation/context-compression) via extra
 from llama_index.llms.openai_like import OpenAILike
 
 llm = OpenAILike(
-    model="gpt-4.1",
+    model="gpt-5.5",
     api_key="APERTIS_API_KEY",
     api_base="https://api.apertis.ai/v1",
     additional_kwargs={
         "extra_headers": {
             "X-Context-Compression": "on",
-            "X-Compression-Model": "gpt-4.1-mini",
+            "X-Compression-Model": "gpt-5.4-mini",
         }
     },
 )
@@ -96,8 +96,8 @@ response = llm.complete("Summarize the key points from our discussion")
 
 | Provider | Model ID |
 |----------|----------|
-| OpenAI | `gpt-5.2`, `gpt-4.1-mini` |
-| Anthropic | `claude-sonnet-4.5`, `claude-haiku-4.5` |
-| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
+| OpenAI | `gpt-5.2`, `gpt-5.4-mini` |
+| Anthropic | `claude-sonnet-4-6`, `claude-haiku-4.5` |
+| Google | `gemini-3.1-pro-preview`, `gemini-3-flash-preview` |
 
 For the full list of models, visit [Apertis Models](https://apertis.ai/models).
