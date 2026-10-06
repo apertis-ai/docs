@@ -15,7 +15,7 @@ Official Python SDK for the Apertis AI API, providing a comprehensive interface 
 - **Reasoning** - Chain-of-thought reasoning and extended thinking
 - **Messages API** - Anthropic-native message format compatibility
 - **Responses API** - OpenAI Responses API format support
-- **Rerank** - Document reranking for RAG systems
+- **Rerank** - `client.rerank.create()` exists, but the endpoint is not currently available
 - **Full Type Hints** - Complete type annotations for IDE support
 - **Automatic Retries** - Built-in retry logic for transient errors
 
@@ -94,7 +94,7 @@ Access models from multiple providers through a single API:
 - [Reasoning](./reasoning) - Chain-of-thought and extended thinking
 - [Messages API](./messages-api) - Anthropic-native format
 - [Responses API](./responses-api) - OpenAI Responses format
-- [Rerank](./rerank) - Document reranking for RAG
+- [Rerank](./rerank) - Not currently available
 - [Async Patterns](./async) - Asynchronous client usage
 
 ## Resources

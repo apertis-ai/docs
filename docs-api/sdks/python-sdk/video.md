@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -60,7 +60,7 @@ def main():
     base64_video = encode_video(video_path)
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -102,7 +102,7 @@ def main():
 
     for question in questions:
         response = client.chat.completions.create(
-            model="gemini-3-pro-preview",
+            model="gemini-3.1-pro-preview",
             messages=[
                 {
                     "role": "user",
@@ -129,7 +129,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -165,7 +165,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -201,7 +201,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -229,7 +229,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -261,7 +261,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         messages=[
             {
                 "role": "user",
@@ -292,7 +292,7 @@ Video analysis is available on:
 
 | Provider | Models |
 |----------|--------|
-| Google | `gemini-3-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
+| Google | `gemini-3.1-pro-preview`, `gemini-2.5-flash`, `gemini-2.0-flash` |
 | OpenAI | `gpt-5.5` (limited video support) |
 
 [View all models →](/api/utilities/models)

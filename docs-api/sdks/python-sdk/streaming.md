@@ -173,7 +173,8 @@ def main():
     )
 
     for chunk in stream:
-        if chunk.choices[0].delta.content:
+        # The final usage chunk has an empty choices list
+        if chunk.choices and chunk.choices[0].delta.content:
             print(chunk.choices[0].delta.content, end="", flush=True)
 
         # Token usage in final chunk

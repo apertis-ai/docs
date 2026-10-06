@@ -13,7 +13,7 @@ import json
 url = "https://api.apertis.ai/v1/images/generations"
 
 payload = json.dumps({
-   "model": "MODEL_NAME",
+   "model": "gpt-image-2",
    "prompt": "A cute baby sea otter",
    "n": 1,
    "size": "1024x1024"

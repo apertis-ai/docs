@@ -145,7 +145,7 @@ def main():
     )
 
     message = response.choices[0].message
-    messages.append(message)
+    messages.append(message.model_dump(exclude_none=True))
 
     # Process tool calls
     if message.tool_calls:
@@ -260,7 +260,7 @@ def main():
             {"role": "user", "content": "Get the stock prices for AAPL, GOOGL, and MSFT"}
         ],
         tools=tools,
-        parallel_tool_calls=True  # Enable parallel calls
+        extra_body={"parallel_tool_calls": True}  # Not a named SDK argument; sent in the request body
     )
 
     message = response.choices[0].message
@@ -294,4 +294,4 @@ Tool calling is supported by:
 |-----------|------|-------------|
 | `tools` | `list` | List of tool definitions |
 | `tool_choice` | `str \| dict` | Tool selection: `"auto"`, `"none"`, `"required"`, or specific function |
-| `parallel_tool_calls` | `bool` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |
+| `extra_body={"parallel_tool_calls": bool}` | `dict` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |

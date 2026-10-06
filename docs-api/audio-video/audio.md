@@ -284,6 +284,8 @@ Content-Type: application/json
 | `nova` | Energetic, youthful |
 | `shimmer` | Clear, pleasant |
 
+These voices apply to `gpt-4o-mini-tts-2025-12-15`. `gemini-3.1-flash-tts-preview` accepts only `Aoede`, `Charon`, `Fenrir`, `Kore` and `Puck`; any other voice returns HTTP 400 `voice_not_supported`.
+
 ### Example: Basic TTS
 
 **Python:**
