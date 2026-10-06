@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "01cf017703e73b8b285960ec4aae4ee3ced8871f",
-  "buildId": "01cf017703e73b8b285960ec4aae4ee3ced8871f.c57c8d2669cc",
+  "sourceSha": "42e289afb5d6862234b6314a8c9134da81c376e9",
+  "buildId": "42e289afb5d6862234b6314a8c9134da81c376e9.c57c8d2669cc",
   "documents": [
     {
       "id": "page:index",
@@ -159,9 +159,9 @@
       },
       "markdown": {
         "path": "/api/sdks/ai-sdk-provider.md",
-        "sha256": "1bc603ece4069adb9c03252ec823a1f96b43a2b3eaa905fc67b3b027583f784d"
+        "sha256": "ff09faa713a5831e485b56a077e4b016bde930789d778899f9c467f2087fdbe9"
       },
-      "contentSha256": "1bc603ece4069adb9c03252ec823a1f96b43a2b3eaa905fc67b3b027583f784d"
+      "contentSha256": "ff09faa713a5831e485b56a077e4b016bde930789d778899f9c467f2087fdbe9"
     },
     {
       "id": "api:sdks/cli",
@@ -285,9 +285,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/async.md",
-        "sha256": "31f487ab5bbc7f0a34923ec8b1f22d375ff28c78c59b09bdeb6215df604cc5a0"
+        "sha256": "7a9f1c482880019109901170f34999863628a7fac78188cadbdce5d3c7e20ec3"
       },
-      "contentSha256": "31f487ab5bbc7f0a34923ec8b1f22d375ff28c78c59b09bdeb6215df604cc5a0"
+      "contentSha256": "7a9f1c482880019109901170f34999863628a7fac78188cadbdce5d3c7e20ec3"
     },
     {
       "id": "api:sdks/python-sdk/audio",
