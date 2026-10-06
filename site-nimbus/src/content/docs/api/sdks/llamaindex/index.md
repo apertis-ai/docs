@@ -102,6 +102,6 @@ response = llm.complete("Summarize the key points from our discussion")
 |----------|----------|
 | OpenAI | `gpt-5.2`, `gpt-5.4-mini` |
 | Anthropic | `claude-sonnet-4-6`, `claude-haiku-4.5` |
-| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` |
+| Google | `gemini-3.1-pro-preview`, `gemini-3-flash-preview` |
 
 For the full list of models, visit [Apertis Models](https://apertis.ai/models).

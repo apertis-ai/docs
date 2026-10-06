@@ -99,7 +99,7 @@ def main():
     # Access search results if available
     for item in response.output:
         if item.type == "web_search_call":
-            print(f"\nSearch query: {item.query}")
+            print(f"\nSearch query: {getattr(item.action, 'query', None)}")
 
 if __name__ == "__main__":
     main()
@@ -163,7 +163,7 @@ def main():
     for item in response.output:
         if item.type == "function_call":
             print(f"Function: {item.name}")
-            print(f"Arguments: {json.dumps(item.arguments, indent=2)}")
+            print(f"Arguments: {json.dumps(json.loads(item.arguments), indent=2)}")
         elif item.type == "message":
             print(f"Message: {item.content}")
 

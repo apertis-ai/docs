@@ -197,8 +197,8 @@ All chat models support streaming:
 |----------|--------|
 | OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `gpt-5.4-nano` |
 | Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
-| Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
-| DeepSeek | `deepseek-chat` |
+| Google | `gemini-3.1-pro-preview`, `gemini-2.5-flash` |
+| DeepSeek | `deepseek-v3.2` |
 | xAI | `grok-4.3`, `grok-4-fast` |
 
 [View all models →](/api/utilities/models)

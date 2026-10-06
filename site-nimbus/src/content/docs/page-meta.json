@@ -4,7 +4,7 @@
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 6
   },
   "api:audio-video/video": {
@@ -16,7 +16,7 @@
     "readingMinutes": 1
   },
   "api:embeddings/guide": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/rerank": {
@@ -40,11 +40,11 @@
     "readingMinutes": 1
   },
   "api:sdks/litellm": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/llamaindex": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/mcp-server": {
@@ -52,7 +52,7 @@
     "readingMinutes": 5
   },
   "api:sdks/python-sdk/index": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/async": {
@@ -64,7 +64,7 @@
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/chat-completions": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/embeddings": {
@@ -84,23 +84,23 @@
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/responses-api": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/streaming": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/tool-calling": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/video": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/vision": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/web-search": {
@@ -108,7 +108,7 @@
     "readingMinutes": 2
   },
   "api:search/web-search": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 3
   },
   "api:text-generation/chat-completions": {
@@ -116,11 +116,11 @@
     "readingMinutes": 2
   },
   "api:text-generation/context-compression": {
-    "updated": "2026-10-06T14:59:11+08:00",
-    "readingMinutes": 6
+    "updated": "2026-10-06T16:40:47+08:00",
+    "readingMinutes": 7
   },
   "api:text-generation/messages": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -128,7 +128,7 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {
@@ -152,7 +152,7 @@
     "readingMinutes": 2
   },
   "api:utilities/recommend": {
-    "updated": "2026-10-06T14:59:11+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:vision/dalle": {
@@ -164,7 +164,7 @@
     "readingMinutes": 1
   },
   "api:vision/images-api": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 4
   },
   "api:vision/read-image": {

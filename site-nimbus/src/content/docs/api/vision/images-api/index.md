@@ -77,6 +77,7 @@ curl https://api.apertis.ai/v1/images/generations \
 ### Python
 
 ```python
+import base64
 from openai import OpenAI
 
 client = OpenAI(
@@ -91,13 +92,16 @@ response = client.images.generate(
     size="1024x1024"
 )
 
-print(response.data[0].url)
+# GPT image models return base64
+with open("image.png", "wb") as f:
+    f.write(base64.b64decode(response.data[0].b64_json))
 ```
 
 ### JavaScript
 
 ```javascript
 import OpenAI from 'openai';
+import fs from 'fs';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
@@ -111,7 +115,8 @@ const response = await client.images.generate({
   size: '1024x1024'
 });
 
-console.log(response.data[0].url);
+// GPT image models return base64
+fs.writeFileSync('image.png', Buffer.from(response.data[0].b64_json, 'base64'));
 ```
 
 ### With Transparent Background
@@ -206,7 +211,7 @@ curl https://api.apertis.ai/v1/images/edits \
 | `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 50MB for GPT image models |
 | `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for GPT image models |
 | `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
-| `model` | string | Yes | Model to use, e.g. `gpt-image-2`. Always set it: when omitted, the gateway falls back to `gpt-image-1`, which is no longer offered |
+| `model` | string | No | Model to use, e.g. `gpt-image-2`. Always set it: when omitted, the gateway falls back to `gpt-image-1`, which is no longer offered |
 | `n` | integer | No | Number of images to generate (1-10). Default: 1 |
 | `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `auto` |
 | `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` |
@@ -227,6 +232,7 @@ curl https://api.apertis.ai/v1/images/edits \
 #### Python
 
 ```python
+import base64
 from openai import OpenAI
 
 client = OpenAI(
@@ -242,7 +248,9 @@ response = client.images.edit(
     size="1024x1024"
 )
 
-print(response.data[0].url)
+# GPT image models return base64
+with open("image.png", "wb") as f:
+    f.write(base64.b64decode(response.data[0].b64_json))
 ```
 
 #### JavaScript
@@ -264,7 +272,8 @@ const response = await client.images.edit({
   size: '1024x1024'
 });
 
-console.log(response.data[0].url);
+// GPT image models return base64
+fs.writeFileSync('image.png', Buffer.from(response.data[0].b64_json, 'base64'));
 ```
 
 #### With Mask for Inpainting

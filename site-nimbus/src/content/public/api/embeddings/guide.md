@@ -45,7 +45,7 @@ curl -X POST "https://api.apertis.ai/v1/embeddings" \
 
 ### Parameters
 
-- `model`: The model to use, currently supports `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en`, `jina-embeddings-v2-base-de`, `jina-clip-v1`, `jina-embeddings-v2-base-es`, `jina-colbert-v1-en` from **Jina AI**.
+- `model`: The model to use, currently supports `jina-embeddings-v3`, `jina-embeddings-v4`, `jina-embeddings-v5-text-small`, `jina-embeddings-v5-text-nano`, `jina-embeddings-v2-base-de`, `jina-embeddings-v2-base-es`, `jina-clip-v1`, `jina-colbert-v1-en`, `jina-colbert-v2` from **Jina AI**.
 - `input`: The text to convert
 - `task`: The task to use, currently supports `retrieval.query`, `retrieval.passage`, `separation`, `classification`, `text-matching` and `none` from **Jina AI** with model `jina-embeddings-v3`.
 - `APERTIS_API_KEY`: Your API key

@@ -161,6 +161,6 @@ All standard OpenAI-compatible parameters are supported:
 |----------|----------|
 | OpenAI | `apertis/gpt-5.2`, `apertis/gpt-5.4-mini` |
 | Anthropic | `apertis/claude-sonnet-4-6`, `apertis/claude-haiku-4.5` |
-| Google | `apertis/gemini-3-pro-preview`, `apertis/gemini-3-flash-preview` |
+| Google | `apertis/gemini-3.1-pro-preview`, `apertis/gemini-3-flash-preview` |
 
 For the full list of models, visit [Apertis Models](https://apertis.ai/models).
