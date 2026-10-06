@@ -25,5 +25,5 @@
 
 ## 6. Integration
 
-- [ ] 6.1 Merge the packets on one branch, regenerate the converter output once, and run the full gates (build, typecheck, tests, `test:dist`, `test:routes`, perf against the budgets); visual canary in the Mac mini Chrome.
-- [ ] 6.2 Push, open the PR and merge: each needs the operator's separate approval, after the #14 observation window closes at 2026-10-06 00:15Z.
+- [x] 6.1 Merge the packets on one branch, regenerate the converter output once, and run the full gates (build, typecheck, tests, `test:dist`, `test:routes`, perf against the budgets); visual canary in the Mac mini Chrome.
+- [x] 6.2 Push, open the PR and merge: each needs the operator's separate approval, after the #14 observation window closes at 2026-10-06 00:15Z.
