@@ -19,7 +19,7 @@ When enabled, Apertis analyzes the conversation before forwarding it to the targ
 1. **Token threshold check** — Compression only triggers when the conversation exceeds a configurable token threshold
 2. **Message segmentation** — Messages are split into system prompts, compressible history, and recent turns (which are always preserved)
 3. **Cost-effectiveness check** — Compression is skipped if the cost of running the compression model exceeds the estimated savings
-4. **Summarization** — Older messages are summarized by a lightweight model (e.g., `gpt-5.4-mini`, `claude-haiku-4.5`, or `gemini-3-flash-preview`)
+4. **Summarization** — Older messages are summarized by a lightweight model (e.g., `gpt-4.1-mini`, `claude-haiku-4.5`, or `gemini-3-flash-preview`)
 5. **Injection** — The summary replaces the older messages, and recent turns are preserved verbatim
 
 <aside class="admonition admonition-info">
@@ -261,11 +261,11 @@ This sets default compression behavior for all requests made with that key, with
 
 When `model` is set to `"auto"` (default), Apertis automatically selects a cost-efficient compression model based on the target model you are calling:
 
-- **Claude models** → `claude-haiku-4.5`
-- **Gemini models** → `gemini-3-flash-preview`
-- **All other models** (OpenAI, etc.) → `gpt-5.4-mini`
+- **Claude models** → `claude-haiku-4.5` (low-cost Claude targets → `gpt-4.1-mini`)
+- **Gemini models** → `gemini-3-flash-preview` (Gemini flash targets → `gpt-4.1-mini`)
+- **All other models** (OpenAI, etc.) → `gpt-4.1-mini` (`gpt-4.1-mini` and `gpt-4o-mini` targets → `claude-haiku-4.5`)
 
-The auto-selection avoids using the same model for both compression and the target request (e.g., if you call `claude-haiku-4.5`, compression falls back to `gpt-5.4-mini` instead).
+The auto-selection avoids using the same model for both compression and the target request (e.g., if you call `claude-haiku-4.5`, compression falls back to `gpt-4.1-mini` instead).
 
 You can also specify any available model explicitly (e.g., `"gpt-5.4-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`). You can browse available models on the dashboard's Model Detail page or select from the dropdown in the API Key Compression tab.
 

@@ -56,8 +56,8 @@ Content-Type: multipart/form-data
 | Model | Best for | Notes |
 |-------|----------|-------|
 | `whisper-1` | General-purpose, multilingual | OpenAI's reliable baseline |
-| `whisper-large-v3` | Higher accuracy than whisper-1 | Routed via OpenRouter |
-| `whisper-large-v3-turbo` | Fastest, lowest cost in the whisper family | Routed via OpenRouter |
+| `whisper-large-v3` | Higher accuracy than whisper-1 | |
+| `whisper-large-v3-turbo` | Fastest, lowest cost in the whisper family | |
 | `gpt-4o-mini-transcribe` | Cheap GPT-4o-grade transcription | Returns `json` only |
 | `gpt-4o-transcribe` | Highest accuracy, especially Chinese / noisy audio | Returns `json` only — **recommended default for CJK content** |
 
@@ -276,7 +276,7 @@ Content-Type: application/json
 | Model | Best for | Notes |
 |-------|----------|-------|
 | `gpt-4o-mini-tts-2025-12-15` | Steerable voice (instruction-following) | Use the `instructions` field to set tone, accent, pacing |
-| `gemini-3.1-flash-tts-preview` | Multilingual TTS | Routed via OpenRouter |
+| `gemini-3.1-flash-tts-preview` | Multilingual TTS | Voices: `Aoede`, `Charon`, `Fenrir`, `Kore`, `Puck` |
 
 ### Available Voices
 

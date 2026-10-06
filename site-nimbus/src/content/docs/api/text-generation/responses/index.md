@@ -729,7 +729,7 @@ These models natively support the Responses API format on upstream providers:
 | **o1 Series** | `o1-pro` |
 | **o3 Series** | `o3-mini-high`, `o3-deep-research` |
 | **o4 Series** | `o4-mini-high`, `o4-mini-deep-research` |
-| **GPT-5 Series** | `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*` |
+| **GPT-5 Series** | `gpt-5.1`, `gpt-5.2`, `gpt-5.5`, `gpt-5-*` |
 | **Codex Models** | `gpt-5-codex`, `gpt-5-codex-*` |
 
 ### Responses-Only Models
@@ -739,8 +739,6 @@ Some advanced models **only** support the `/v1/responses` endpoint and cannot be
 | Model | Description |
 |-------|-------------|
 | `gpt-5-pro` | GPT-5 Pro variant |
-| `gpt-5-mini` | GPT-5 Mini |
-| `gpt-5-nano` | GPT-5 Nano |
 | `gpt-5-codex-*` | GPT-5 Codex variants |
 | `o1-pro` | O1 Pro |
 | `codex-mini` | Codex Mini |
@@ -765,8 +763,8 @@ This means you can use **any model** with the Responses API - the conversion is 
 | Provider | Example Models | Native Support |
 |----------|---------------|----------------|
 | Anthropic | `claude-sonnet-4-6`, `claude-opus-4-8` | Via fallback |
-| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` | Via fallback |
-| Meta | `llama-3.1-70b`, `llama-3.1-8b` | Via fallback |
+| Google | `gemini-3.1-pro-preview`, `gemini-3-flash-preview` | Via fallback |
+| Meta | `llama-3.1-70b-instruct`, `llama-3.1-8b-instruct` | Via fallback |
 | xAI | `grok-4.3`, `grok-4.5` | Via fallback |
 
 ## Differences from Chat Completions

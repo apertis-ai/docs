@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "70e6096674a52c143e6a236cceadabea72670e41",
-  "buildId": "70e6096674a52c143e6a236cceadabea72670e41.d194d081725b",
+  "sourceSha": "95f449ebb54c5d2ac436cbf85e0808a1db844103",
+  "buildId": "95f449ebb54c5d2ac436cbf85e0808a1db844103.d194d081725b",
   "documents": [
     {
       "id": "page:index",
@@ -51,9 +51,9 @@
       },
       "markdown": {
         "path": "/api/audio-video/audio.md",
-        "sha256": "953268d1af9dc778bb67428b9525c4f04e85a2c835e2785745e068f2f4f87343"
+        "sha256": "c11ce81b815a8d3238d8bc9ec0210f24e85c83cdfe4ab8b8fa5a31e95f0282ce"
       },
-      "contentSha256": "953268d1af9dc778bb67428b9525c4f04e85a2c835e2785745e068f2f4f87343"
+      "contentSha256": "c11ce81b815a8d3238d8bc9ec0210f24e85c83cdfe4ab8b8fa5a31e95f0282ce"
     },
     {
       "id": "api:audio-video/video",
@@ -105,9 +105,9 @@
       },
       "markdown": {
         "path": "/api/embeddings/guide.md",
-        "sha256": "35641da085e4eefdf15b093eba93131502cd3e1bbf6218284d6d658549a2bcac"
+        "sha256": "8fcb458dee22444c7580a77b236d3d38a6be62328b50e3c25e7072271e42d6e1"
       },
-      "contentSha256": "35641da085e4eefdf15b093eba93131502cd3e1bbf6218284d6d658549a2bcac"
+      "contentSha256": "8fcb458dee22444c7580a77b236d3d38a6be62328b50e3c25e7072271e42d6e1"
     },
     {
       "id": "api:embeddings/rerank",
@@ -213,9 +213,9 @@
       },
       "markdown": {
         "path": "/api/sdks/litellm.md",
-        "sha256": "186f75ab28f601fefcc32a7a1be9bf20caf4c115230abf046f352b73e3ec3e78"
+        "sha256": "5796511abacb3e4964f575305e16dd7a589d611be378fb7a73f9218222eee5d3"
       },
-      "contentSha256": "186f75ab28f601fefcc32a7a1be9bf20caf4c115230abf046f352b73e3ec3e78"
+      "contentSha256": "5796511abacb3e4964f575305e16dd7a589d611be378fb7a73f9218222eee5d3"
     },
     {
       "id": "api:sdks/llamaindex",
@@ -231,9 +231,9 @@
       },
       "markdown": {
         "path": "/api/sdks/llamaindex.md",
-        "sha256": "dcd25c2379f6cc6d164e11e84b7ae45c72d6ced071b38f42a0302e5a58ea1cf1"
+        "sha256": "ad66fb61fda35d10050a9dd9739468da9151aa6d776d0e2a378ec2814b0bcdb4"
       },
-      "contentSha256": "dcd25c2379f6cc6d164e11e84b7ae45c72d6ced071b38f42a0302e5a58ea1cf1"
+      "contentSha256": "ad66fb61fda35d10050a9dd9739468da9151aa6d776d0e2a378ec2814b0bcdb4"
     },
     {
       "id": "api:sdks/mcp-server",
@@ -267,9 +267,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/index.md",
-        "sha256": "99a3598a2c0bb37078c1cf97258e277ee5bea47bb1a6bd1ac2ce94d289546b40"
+        "sha256": "a7b6511c7cc493c1ce87afc6aaf533d4ac2170117535bfd0d904414b2daddf8b"
       },
-      "contentSha256": "99a3598a2c0bb37078c1cf97258e277ee5bea47bb1a6bd1ac2ce94d289546b40"
+      "contentSha256": "a7b6511c7cc493c1ce87afc6aaf533d4ac2170117535bfd0d904414b2daddf8b"
     },
     {
       "id": "api:sdks/python-sdk/async",
@@ -321,9 +321,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/chat-completions.md",
-        "sha256": "1820e9e9574063022a961b9ad1494986156892af96f3e8751fc7aa1dce7be765"
+        "sha256": "cf6866dff95a974b10227df6d408e090fc16b5939bc123c2cc3e9218b406cb01"
       },
-      "contentSha256": "1820e9e9574063022a961b9ad1494986156892af96f3e8751fc7aa1dce7be765"
+      "contentSha256": "cf6866dff95a974b10227df6d408e090fc16b5939bc123c2cc3e9218b406cb01"
     },
     {
       "id": "api:sdks/python-sdk/embeddings",
@@ -411,9 +411,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/responses-api.md",
-        "sha256": "302135631bcae1869f4f966a98abb01cbba41a537ca2846b97ad8902f06466c9"
+        "sha256": "ff57c8adf22fe4ac3ac34a35adccde0d8452d7c09acc29267e7d1dc667f8aad8"
       },
-      "contentSha256": "302135631bcae1869f4f966a98abb01cbba41a537ca2846b97ad8902f06466c9"
+      "contentSha256": "ff57c8adf22fe4ac3ac34a35adccde0d8452d7c09acc29267e7d1dc667f8aad8"
     },
     {
       "id": "api:sdks/python-sdk/streaming",
@@ -429,9 +429,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/streaming.md",
-        "sha256": "91eb14cde70726c828acacb0993ecb3269c5041b3e4b95000214e90bc64a23f7"
+        "sha256": "79ac69369717b014ee7c8ca3d5ff458659ecf7cfcb1416bc2f6fc4f0d952ad0e"
       },
-      "contentSha256": "91eb14cde70726c828acacb0993ecb3269c5041b3e4b95000214e90bc64a23f7"
+      "contentSha256": "79ac69369717b014ee7c8ca3d5ff458659ecf7cfcb1416bc2f6fc4f0d952ad0e"
     },
     {
       "id": "api:sdks/python-sdk/tool-calling",
@@ -447,9 +447,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/tool-calling.md",
-        "sha256": "2ffaf1d302802786c9bcb1707643fec6d91edd3328815df159167757fb937c1c"
+        "sha256": "8cd695fffb806f97f65e54887c3ea17e9ce045aa286649b428020b2cc5d656ab"
       },
-      "contentSha256": "2ffaf1d302802786c9bcb1707643fec6d91edd3328815df159167757fb937c1c"
+      "contentSha256": "8cd695fffb806f97f65e54887c3ea17e9ce045aa286649b428020b2cc5d656ab"
     },
     {
       "id": "api:sdks/python-sdk/video",
@@ -465,9 +465,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/video.md",
-        "sha256": "0ec7a67a4a8139ec1e4ea4c80f98dda33b1b34a46ffccb494f496cc4c8c62c45"
+        "sha256": "83afd447f45cb6bb216b937dcb85902a29d6d96eebd2bc04cb36b8ac6d843cea"
       },
-      "contentSha256": "0ec7a67a4a8139ec1e4ea4c80f98dda33b1b34a46ffccb494f496cc4c8c62c45"
+      "contentSha256": "83afd447f45cb6bb216b937dcb85902a29d6d96eebd2bc04cb36b8ac6d843cea"
     },
     {
       "id": "api:sdks/python-sdk/vision",
@@ -483,9 +483,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/vision.md",
-        "sha256": "fb5684e6084cf2b8c5b947ec8b94c94e929cdc790e03985a2b40fb7c43852812"
+        "sha256": "defdaa09c6139fdbcd514cf80ce90418a23856460abac3e30a0cd01a8869873e"
       },
-      "contentSha256": "fb5684e6084cf2b8c5b947ec8b94c94e929cdc790e03985a2b40fb7c43852812"
+      "contentSha256": "defdaa09c6139fdbcd514cf80ce90418a23856460abac3e30a0cd01a8869873e"
     },
     {
       "id": "api:sdks/python-sdk/web-search",
@@ -519,9 +519,9 @@
       },
       "markdown": {
         "path": "/api/search/web-search.md",
-        "sha256": "f160b5135d21c2661793026a0103fc43b0150414d26c82a40e753a9742ba9e06"
+        "sha256": "f8d990a57e734d00733a39bba69c3cdcb5de3277329b16cd00dc38a3bca5850b"
       },
-      "contentSha256": "f160b5135d21c2661793026a0103fc43b0150414d26c82a40e753a9742ba9e06"
+      "contentSha256": "f8d990a57e734d00733a39bba69c3cdcb5de3277329b16cd00dc38a3bca5850b"
     },
     {
       "id": "api:text-generation/chat-completions",
@@ -555,9 +555,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/context-compression.md",
-        "sha256": "f160a73c113f3ba03999033bfdf4a3f53d0dfd507356d17631b3635c403112c6"
+        "sha256": "e1acc721037d2a94caef963517e36c4fc92d8a8e519b7d52c34f2beda5543996"
       },
-      "contentSha256": "f160a73c113f3ba03999033bfdf4a3f53d0dfd507356d17631b3635c403112c6"
+      "contentSha256": "e1acc721037d2a94caef963517e36c4fc92d8a8e519b7d52c34f2beda5543996"
     },
     {
       "id": "api:text-generation/messages",
@@ -573,9 +573,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/messages.md",
-        "sha256": "cc06e965e499c25d43d3131a0e7164c39fb9cace84f9a3ed41cc219a204bc055"
+        "sha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
       },
-      "contentSha256": "cc06e965e499c25d43d3131a0e7164c39fb9cace84f9a3ed41cc219a204bc055"
+      "contentSha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
     },
     {
       "id": "api:text-generation/prompt-cache",
@@ -609,9 +609,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/responses.md",
-        "sha256": "5a69a8feaeaf47f23ec986fda5bcdd35e7f43eab53feb233371f07114a02ebad"
+        "sha256": "8ce5646ad30e7ab39e169dee9c32841564c5b3ec25dcd673c9bd11ab4d1ebacf"
       },
-      "contentSha256": "5a69a8feaeaf47f23ec986fda5bcdd35e7f43eab53feb233371f07114a02ebad"
+      "contentSha256": "8ce5646ad30e7ab39e169dee9c32841564c5b3ec25dcd673c9bd11ab4d1ebacf"
     },
     {
       "id": "api:text-generation/streaming",
@@ -717,9 +717,9 @@
       },
       "markdown": {
         "path": "/api/utilities/recommend.md",
-        "sha256": "a7cfdbc804384f2d77f2b09ae289024b7e6d9808641720ce85ffa7e29781d53d"
+        "sha256": "6db2ba53907329cf5f00411bce8d7b9752775f41a11f060265795c4983837200"
       },
-      "contentSha256": "a7cfdbc804384f2d77f2b09ae289024b7e6d9808641720ce85ffa7e29781d53d"
+      "contentSha256": "6db2ba53907329cf5f00411bce8d7b9752775f41a11f060265795c4983837200"
     },
     {
       "id": "api:vision/dalle",
@@ -771,9 +771,9 @@
       },
       "markdown": {
         "path": "/api/vision/images-api.md",
-        "sha256": "81aef60b50bfe1350208a2e9f77851ea84919c156c2e87a1aece95b7b58e4d22"
+        "sha256": "2c833d290323b4c08afd3b627832edd75ee4b3443909c8a9c456da1e83ad84b5"
       },
-      "contentSha256": "81aef60b50bfe1350208a2e9f77851ea84919c156c2e87a1aece95b7b58e4d22"
+      "contentSha256": "2c833d290323b4c08afd3b627832edd75ee4b3443909c8a9c456da1e83ad84b5"
     },
     {
       "id": "api:vision/read-image",

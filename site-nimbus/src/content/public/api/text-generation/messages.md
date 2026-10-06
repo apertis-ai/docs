@@ -541,7 +541,7 @@ The Messages API supports Claude models via Anthropic-type channels:
 | Model | Description |
 |-------|-------------|
 | `claude-opus-4-5-20251101` | Claude Opus 4.5 - most capable |
-| `claude-sonnet-4-6` | Claude Sonnet 4.5 - balanced |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 - balanced |
 | `claude-haiku-4.5` | Claude Haiku 4.5 - fast and efficient |
 
 > **Warning: Anthropic Channels Only**
