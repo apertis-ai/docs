@@ -1,6 +1,6 @@
 {
   "api:index": {
-    "updated": "2026-10-05T18:51:45+08:00",
+    "updated": "2026-10-06T09:43:02+08:00",
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
@@ -92,7 +92,7 @@
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/tool-calling": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T09:43:02+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/video": {
@@ -128,7 +128,7 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-10-05T19:20:32+08:00",
+    "updated": "2026-10-06T09:43:02+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {
