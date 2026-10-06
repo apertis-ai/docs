@@ -23,7 +23,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Hello, Claude!"}
@@ -45,7 +45,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         system="You are a helpful coding assistant specializing in Python.",
         messages=[
@@ -72,7 +72,7 @@ def main():
     ]
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=messages
     )
@@ -84,7 +84,7 @@ def main():
     messages.append({"role": "user", "content": "Can you show me an example in Python?"})
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=messages
     )
@@ -97,14 +97,20 @@ if __name__ == "__main__":
 
 ## Streaming
 
+The `apertis` SDK's `messages.create()` returns complete responses only. To stream the Messages API, point the Anthropic SDK at Apertis:
+
 ```python
-from apertis import Apertis
+import os
+from anthropic import Anthropic
 
 def main():
-    client = Apertis()
+    client = Anthropic(
+        api_key=os.environ["APERTIS_API_KEY"],
+        base_url="https://api.apertis.ai",
+    )
 
     with client.messages.stream(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Write a short poem about coding."}
@@ -130,7 +136,7 @@ def main():
 
     # From URL
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {
@@ -190,7 +196,7 @@ def main():
     ]
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         tools=tools,
         messages=[
@@ -211,14 +217,20 @@ if __name__ == "__main__":
 
 ## Extended Thinking
 
+`thinking` is not an argument of the `apertis` SDK's `messages.create()`. Send it with the Anthropic SDK pointed at Apertis:
+
 ```python
-from apertis import Apertis
+import os
+from anthropic import Anthropic
 
 def main():
-    client = Apertis()
+    client = Anthropic(
+        api_key=os.environ["APERTIS_API_KEY"],
+        base_url="https://api.apertis.ai",
+    )
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=16000,
         thinking={
             "type": "enabled",
@@ -251,7 +263,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Hello!"}
@@ -278,7 +290,7 @@ async def main():
     client = AsyncApertis()
 
     response = await client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "What is the capital of France?"}
@@ -302,7 +314,7 @@ def main():
     client = Apertis()
 
     message = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Explain distributed systems"},
@@ -310,12 +322,10 @@ def main():
             # ... many turns of conversation history ...
             {"role": "user", "content": "Summarize the key points"}
         ],
-        extra_body={
-            "compression": {
-                "enabled": True,
-                "strategy": "on",
-                "model": "gpt-4.1-mini"
-            }
+        compression={
+            "enabled": True,
+            "strategy": "on",
+            "model": "gpt-5.4-mini"
         }
     )
 
@@ -332,8 +342,8 @@ The Messages API supports all Claude models:
 | Model | Description |
 |-------|-------------|
 | `claude-opus-4-5-20251101` | Most capable, best for complex tasks |
-| `claude-sonnet-4.5` | Balanced performance and cost |
-| `claude-haiku-4-5-20250501` | Fastest, most cost-effective |
+| `claude-sonnet-4-6` | Balanced performance and cost |
+| `claude-haiku-4.5` | Fastest, most cost-effective |
 
 [View all models →](/api/utilities/models)
 
@@ -350,8 +360,13 @@ The Messages API supports all Claude models:
 | `temperature` | `float` | Sampling temperature (0.0 - 1.0) |
 | `top_p` | `float` | Nucleus sampling parameter |
 | `top_k` | `int` | Top-k sampling parameter |
+| `stop_sequences` | `list` | Sequences that stop generation |
 | `tools` | `list` | Tool definitions for function calling |
-| `thinking` | `dict` | Extended thinking configuration |
+| `tool_choice` | `dict` | Tool selection |
+| `metadata` | `dict` | Request metadata |
+| `compression` | `dict` | [Context compression](/api/text-generation/context-compression) settings |
+
+`messages.create()` in `apertis` 0.3.0 does not accept `stream` or `thinking`; use the Anthropic SDK for those, as shown above.
 
 ### Response Object
 

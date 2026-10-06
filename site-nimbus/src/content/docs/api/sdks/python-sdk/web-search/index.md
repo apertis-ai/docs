@@ -23,11 +23,10 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {"role": "user", "content": "What are the latest developments in AI?"}
-        ],
-        web_search=True
+        ]
     )
 
     print(response.choices[0].message.content)
@@ -45,22 +44,21 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {"role": "user", "content": "What is the current stock price of Apple?"}
-        ],
-        web_search=True
+        ]
     )
 
     message = response.choices[0].message
 
     print("Response:", message.content)
 
-    # Access citations if available
-    if hasattr(message, 'citations') and message.citations:
+    # Sources found by web search
+    if response.web_sources:
         print("\nSources:")
-        for citation in message.citations:
-            print(f"  - {citation.title}: {citation.url}")
+        for source in response.web_sources:
+            print(f"  - {source.title}: {source.url}")
 
 if __name__ == "__main__":
     main()
@@ -82,11 +80,10 @@ def main():
 
     for question in questions:
         response = client.chat.completions.create(
-            model="gpt-4.1",
+            model="gpt-5.5:web",
             messages=[
                 {"role": "user", "content": question}
-            ],
-            web_search=True
+            ]
         )
         print(f"Q: {question}")
         print(f"A: {response.choices[0].message.content}\n")
@@ -106,7 +103,7 @@ def main():
     topic = "quantum computing applications in drug discovery"
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {
                 "role": "system",
@@ -122,8 +119,7 @@ def main():
 
 Topic: {topic}"""
             }
-        ],
-        web_search=True
+        ]
     )
 
     print(response.choices[0].message.content)
@@ -141,7 +137,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {
                 "role": "user",
@@ -151,8 +147,7 @@ def main():
 - Industry trends
 Provide sources for each item."""
             }
-        ],
-        web_search=True
+        ]
     )
 
     print(response.choices[0].message.content)
@@ -170,16 +165,15 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {"role": "user", "content": "What are the current trends in renewable energy?"}
         ],
-        web_search=True,
         stream=True
     )
 
     for chunk in stream:
-        if chunk.choices[0].delta.content:
+        if chunk.choices and chunk.choices[0].delta.content:
             print(chunk.choices[0].delta.content, end="", flush=True)
 
     print()
@@ -199,7 +193,7 @@ def main():
     company = "OpenAI"
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5:web",
         messages=[
             {
                 "role": "user",
@@ -212,8 +206,7 @@ def main():
 
 Use only current, verifiable information."""
             }
-        ],
-        web_search=True
+        ]
     )
 
     print(response.choices[0].message.content)
@@ -236,9 +229,8 @@ def main():
 
     # First query
     response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages=messages,
-        web_search=True
+        model="gpt-5.5:web",
+        messages=messages
     )
 
     print("Assistant:", response.choices[0].message.content)
@@ -248,9 +240,8 @@ def main():
     messages.append({"role": "user", "content": "What are its most recent discoveries?"})
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages=messages,
-        web_search=True
+        model="gpt-5.5:web",
+        messages=messages
     )
 
     print("\nAssistant:", response.choices[0].message.content)
@@ -261,13 +252,13 @@ if __name__ == "__main__":
 
 ## Supported Models
 
-Web search is available on:
+Append `:web` to any non-free model ID, for example:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101` |
-| Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101` |
+| Google | `gemini-3.1-pro-preview`, `gemini-2.5-flash` |
 
 [View all models →](/api/utilities/models)
 
@@ -275,9 +266,13 @@ Web search is available on:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `web_search` | `bool` | Enable web search (set to `True`) |
+| `model` | `str` | Model ID with the `:web` suffix, for example `gpt-5.5:web` |
+| `web_results_count` | `int` | Number of search results to use (1-10) |
+| `web_content_length` | `str` | How much page content to use: `"short"`, `"medium"` or `"full"` |
 
-### Citation Object
+### Web Source Object
+
+Non-streaming responses list the pages used in `response.web_sources`:
 
 | Field | Type | Description |
 |-------|------|-------------|

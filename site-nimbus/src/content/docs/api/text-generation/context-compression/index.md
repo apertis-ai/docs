@@ -50,7 +50,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="gpt-4.1-mini",
+    model="gpt-5.4-mini",
     messages=[
         {"role": "user", "content": "Hello!"}
     ],
@@ -79,7 +79,7 @@ client = anthropic.Anthropic(
 )
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -88,7 +88,7 @@ message = client.messages.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4.1-mini"
+            "model": "gpt-5.4-mini"
         }
     }
 )
@@ -103,14 +103,14 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4.1-mini",
+    "model": "gpt-5.4-mini",
     "messages": [
       {"role": "user", "content": "Hello!"}
     ],
     "compression": {
       "enabled": true,
       "strategy": "on",
-      "model": "gpt-4.1-mini"
+      "model": "gpt-5.4-mini"
     }
   }'
 ```
@@ -128,7 +128,7 @@ client = OpenAI(
 )
 
 response = client.responses.create(
-    model="o4-mini",
+    model="o4-mini-high",
     input=[
         {"role": "user", "content": "Explain distributed systems"},
         {"role": "assistant", "content": "Distributed systems are..."},
@@ -139,7 +139,7 @@ response = client.responses.create(
         "compression": {
             "enabled": True,
             "strategy": "aggressive",
-            "model": "gpt-4.1-mini"
+            "model": "gpt-5.4-mini"
         }
     }
 )
@@ -154,14 +154,14 @@ curl https://api.apertis.ai/v1/responses \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "o4-mini",
+    "model": "o4-mini-high",
     "input": [
       {"role": "user", "content": "Hello!"}
     ],
     "compression": {
       "enabled": true,
       "strategy": "on",
-      "model": "gpt-4.1-mini"
+      "model": "gpt-5.4-mini"
     }
   }'
 ```
@@ -176,14 +176,14 @@ const response = await fetch('https://api.apertis.ai/v1/chat/completions', {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    model: 'gpt-4.1-mini',
+    model: 'gpt-5.4-mini',
     messages: [
       { role: 'user', content: 'Hello!' }
     ],
     compression: {
       enabled: true,
       strategy: 'on',
-      model: 'gpt-4.1-mini'
+      model: 'gpt-5.4-mini'
     }
   })
 });
@@ -205,7 +205,7 @@ curl https://api.apertis.ai/v1/chat/completions \
   -H "X-Compression-Keep-Turns: 6" \
   -H "X-Compression-Model: auto" \
   -d '{
-    "model": "gpt-4.1-mini",
+    "model": "gpt-5.4-mini",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
@@ -217,9 +217,9 @@ curl https://api.apertis.ai/v1/responses \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -H "X-Context-Compression: aggressive" \
-  -H "X-Compression-Model: gpt-4.1-mini" \
+  -H "X-Compression-Model: gpt-5.4-mini" \
   -d '{
-    "model": "o4-mini",
+    "model": "o4-mini-high",
     "input": [{"role": "user", "content": "Hello!"}]
   }'
 ```
@@ -261,13 +261,13 @@ This sets default compression behavior for all requests made with that key, with
 
 When `model` is set to `"auto"` (default), Apertis automatically selects a cost-efficient compression model based on the target model you are calling:
 
-- **Claude models** → `claude-haiku-4.5`
-- **Gemini models** → `gemini-3-flash-preview`
-- **All other models** (OpenAI, etc.) → `gpt-4.1-mini`
+- **Claude models** → `claude-haiku-4.5` (low-cost Claude targets → `gpt-4.1-mini`)
+- **Gemini models** → `gemini-3-flash-preview` (Gemini flash targets → `gpt-4.1-mini`)
+- **All other models** (OpenAI, etc.) → `gpt-4.1-mini` (`gpt-4.1-mini` and `gpt-4o-mini` targets → `claude-haiku-4.5`)
 
 The auto-selection avoids using the same model for both compression and the target request (e.g., if you call `claude-haiku-4.5`, compression falls back to `gpt-4.1-mini` instead).
 
-You can also specify any available model explicitly (e.g., `"gpt-4.1-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`). You can browse available models on the dashboard's Model Detail page or select from the dropdown in the API Key Compression tab.
+You can also specify any available model explicitly (e.g., `"gpt-5.4-mini"`, `"claude-haiku-4.5"`, `"gemini-3-flash-preview"`). You can browse available models on the dashboard's Model Detail page or select from the dropdown in the API Key Compression tab.
 
 ## Response Headers
 

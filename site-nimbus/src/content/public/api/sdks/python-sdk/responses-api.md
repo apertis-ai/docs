@@ -5,21 +5,26 @@ Use OpenAI's Responses API format for enhanced capabilities including built-in t
 ## Prerequisites
 
 ```bash
-pip install apertis
+pip install openai
 ```
+
+> **Note**
+>
+> `apertis` 0.3.0 cannot parse Responses API output: its `Response` type expects content blocks of type `text`, while the API returns `output_text`. Until that is fixed, use the OpenAI Python SDK pointed at Apertis, as the examples on this page do.
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Usage
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Explain the concept of machine learning."
     )
 
@@ -32,13 +37,14 @@ if __name__ == "__main__":
 ## Multi-Turn with Input Items
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input=[
             {"type": "message", "role": "user", "content": "What is Python?"},
             {"type": "message", "role": "assistant", "content": "Python is a high-level programming language known for its simplicity and readability."},
@@ -55,13 +61,14 @@ if __name__ == "__main__":
 ## System Instructions
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         instructions="You are a helpful coding tutor. Explain concepts clearly with examples.",
         input="How do I handle exceptions in Python?"
     )
@@ -75,13 +82,14 @@ if __name__ == "__main__":
 ## Built-in Web Search
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What are the latest news about AI regulations?",
         tools=[{"type": "web_search"}]
     )
@@ -91,7 +99,7 @@ def main():
     # Access search results if available
     for item in response.output:
         if item.type == "web_search_call":
-            print(f"\nSearch query: {item.query}")
+            print(f"\nSearch query: {getattr(item.action, 'query', None)}")
 
 if __name__ == "__main__":
     main()
@@ -100,13 +108,14 @@ if __name__ == "__main__":
 ## Code Interpreter
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Calculate the compound interest on $10,000 at 5% annual rate for 10 years, compounded monthly. Show the calculation.",
         tools=[{"type": "code_interpreter"}]
     )
@@ -121,10 +130,11 @@ if __name__ == "__main__":
 
 ```python
 import json
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     tools = [
         {
@@ -145,7 +155,7 @@ def main():
     ]
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What's the weather in London?",
         tools=tools
     )
@@ -153,7 +163,7 @@ def main():
     for item in response.output:
         if item.type == "function_call":
             print(f"Function: {item.name}")
-            print(f"Arguments: {json.dumps(item.arguments, indent=2)}")
+            print(f"Arguments: {json.dumps(json.loads(item.arguments), indent=2)}")
         elif item.type == "message":
             print(f"Message: {item.content}")
 
@@ -164,13 +174,14 @@ if __name__ == "__main__":
 ## Streaming
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     stream = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Write a short story about a robot learning to paint.",
         stream=True
     )
@@ -188,13 +199,14 @@ if __name__ == "__main__":
 ## Image Input
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input=[
             {
                 "type": "message",
@@ -219,13 +231,14 @@ if __name__ == "__main__":
 ## Response with Reasoning
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="o1",
+        model="gpt-5.5",
         input="Solve: If 3x + 7 = 22, what is x? Show your reasoning.",
         reasoning={"effort": "high"}
     )
@@ -246,13 +259,14 @@ if __name__ == "__main__":
 ## Response Metadata
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Hello, world!"
     )
 
@@ -271,13 +285,14 @@ if __name__ == "__main__":
 
 ```python
 import asyncio
-from apertis import AsyncApertis
+import os
+from openai import AsyncOpenAI
 
 async def main():
-    client = AsyncApertis()
+    client = AsyncOpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = await client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What is quantum computing?"
     )
 
@@ -292,13 +307,14 @@ if __name__ == "__main__":
 Reduce token usage for long conversations by enabling [context compression](/api/text-generation/context-compression). Apertis compresses older conversation history using a lightweight model before forwarding to the target model.
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.responses.create(
-        model="o4-mini",
+        model="o4-mini-high",
         input=[
             {"role": "user", "content": "Explain distributed systems"},
             {"role": "assistant", "content": "Distributed systems are..."},
@@ -309,7 +325,7 @@ def main():
             "compression": {
                 "enabled": True,
                 "strategy": "on",        # "on", "conservative", "aggressive"
-                "model": "gpt-4.1-mini"  # or "auto" for automatic selection
+                "model": "gpt-5.4-mini"  # or "auto" for automatic selection
             }
         }
     )
@@ -326,7 +342,7 @@ The Responses API supports:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `o1`, `o4-mini`, `o3-mini` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `o4-mini-high`, `o3-mini-high` |
 | Others | Models with Responses API compatibility |
 
 [View all models →](/api/utilities/models)

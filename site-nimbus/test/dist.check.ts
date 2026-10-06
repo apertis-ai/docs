@@ -160,7 +160,7 @@ const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
 // Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
-type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] } };
+type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] }; headings?: { removed?: string[] } };
 const contentChanges: Record<string, ContentChange> = JSON.parse(fs.readFileSync(path.join(root, '../migration/nimbus/content-changes.json'), 'utf8')).documents;
 const expectedLinks = (id: string, legacy: string[]) => {
   const c = contentChanges[id]?.links;
@@ -192,7 +192,8 @@ test('m2: every converted page keeps its inventory heading ids, and every fragme
   const byPath = new Map(routes.filter((r) => r.documentId).map((r) => [r.path, r.documentId]));
   for (const d of converted) {
     const row = routes.find((r) => r.documentId === d.id)!;
-    assert.deepEqual(row.live!.headingIds.filter((id) => !ids.get(d.id)!.has(id)), [], d.id);
+    const removed = contentChanges[d.id]?.headings?.removed ?? [];
+    assert.deepEqual(row.live!.headingIds.filter((id) => !removed.includes(id) && !ids.get(d.id)!.has(id)), [], d.id);
     for (const [, target, frag] of article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="([^"#]*)#([^"]+)"/g)) {
       const id = target ? byPath.get(target.replace(/(.)\/$/, '$1')) : d.id;
       if (id && ids.has(id)) assert.ok(ids.get(id)!.has(frag), `${d.id} links to ${target}#${frag}`);
@@ -354,6 +355,12 @@ test('every recorded post-cutover content change matches its built page', () => 
     const hrefs = new Set([...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&')));
     for (const h of c.links.added ?? []) assert.ok(hrefs.has(h), `${id}: added link ${h} is not on the page`);
     for (const h of c.links.removed ?? []) assert.ok(!hrefs.has(h), `${id}: removed link ${h} is still on the page`);
+    const ids = new Set([...read(`${d.servedPath.slice(1)}index.html`).matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
+    const legacyIds = routes.find((r) => r.documentId === id)!.live!.headingIds;
+    for (const h of c.headings?.removed ?? []) {
+      assert.ok(legacyIds.includes(h), `${id}: removed heading #${h} is not a legacy heading id`);
+      assert.ok(!ids.has(h), `${id}: removed heading #${h} is still on the page`);
+    }
   }
 });
 

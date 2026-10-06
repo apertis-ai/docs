@@ -8,7 +8,7 @@ title: "Images API"
 POST /v1/images/generations
 ```
 
-The Images API generates images from text prompts using models like DALL-E, gpt-image-1, and gpt-image-1.5.
+The Images API generates images from text prompts using GPT image models such as `gpt-image-2`.
 
 ## HTTP Request
 
@@ -17,7 +17,7 @@ curl https://api.apertis.ai/v1/images/generations \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-image-1",
+        "model": "gpt-image-2",
         "prompt": "A cute baby sea otter",
         "n": 1,
         "size": "1024x1024"
@@ -42,24 +42,20 @@ curl https://api.apertis.ai/v1/images/generations \
 
 | Model | Max Prompt Length |
 |-------|-------------------|
-| `dall-e-2` | 1000 characters |
-| `dall-e-3` | 4000 characters |
-| `gpt-image-1` | 32000 characters |
-| `gpt-image-1.5` | 32000 characters |
+| `gpt-image-2` | 32000 characters |
 
 ### Optional Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `model` | string | The model to use for image generation. Default: `dall-e-2` |
+| `model` | string | The model to use for image generation, e.g. `gpt-image-2`. See [Models](/models) for the current image models |
 | `n` | integer | Number of images to generate (1-10). Default: 1 |
 | `size` | string | Size of the generated images (see Size Options below) |
-| `quality` | string | Quality of the image: `standard`, `hd`. Default: `standard` |
+| `quality` | string | Quality of the image: `high`, `medium`, `low`, `auto`. Default: `auto` |
 | `response_format` | string | Format of the response: `url`, `b64_json`. Default: `url` |
-| `style` | string | Style of the image: `vivid`, `natural`. Default: `vivid` |
 | `user` | string | A unique identifier for the end-user |
 
-### gpt-image-1 and gpt-image-1.5 Specific Parameters
+### GPT Image Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -74,16 +70,14 @@ curl https://api.apertis.ai/v1/images/generations \
 
 | Model | Supported Sizes |
 |-------|-----------------|
-| `dall-e-2` | `256x256`, `512x512`, `1024x1024` |
-| `dall-e-3` | `1024x1024`, `1792x1024`, `1024x1792` |
-| `gpt-image-1` | `1024x1024`, `1536x1024`, `1024x1536`, `auto` |
-| `gpt-image-1.5` | `1024x1024`, `1536x1024`, `1024x1536`, `auto` |
+| `gpt-image-2` | `1024x1024`, `1536x1024`, `1024x1536`, `auto` |
 
 ## Example Usage
 
 ### Python
 
 ```python
+import base64
 from openai import OpenAI
 
 client = OpenAI(
@@ -92,19 +86,22 @@ client = OpenAI(
 )
 
 response = client.images.generate(
-    model="gpt-image-1",
+    model="gpt-image-2",
     prompt="A white siamese cat",
     n=1,
     size="1024x1024"
 )
 
-print(response.data[0].url)
+# GPT image models return base64
+with open("image.png", "wb") as f:
+    f.write(base64.b64decode(response.data[0].b64_json))
 ```
 
 ### JavaScript
 
 ```javascript
 import OpenAI from 'openai';
+import fs from 'fs';
 
 const client = new OpenAI({
   apiKey: 'sk-your-api-key',
@@ -112,20 +109,21 @@ const client = new OpenAI({
 });
 
 const response = await client.images.generate({
-  model: 'gpt-image-1',
+  model: 'gpt-image-2',
   prompt: 'A white siamese cat',
   n: 1,
   size: '1024x1024'
 });
 
-console.log(response.data[0].url);
+// GPT image models return base64
+fs.writeFileSync('image.png', Buffer.from(response.data[0].b64_json, 'base64'));
 ```
 
-### With Transparent Background (gpt-image-1)
+### With Transparent Background
 
 ```python
 response = client.images.generate(
-    model="gpt-image-1",
+    model="gpt-image-2",
     prompt="A logo of a blue bird on transparent background",
     n=1,
     size="1024x1024",
@@ -133,22 +131,9 @@ response = client.images.generate(
 )
 ```
 
-### HD Quality with DALL-E 3
-
-```python
-response = client.images.generate(
-    model="dall-e-3",
-    prompt="A stunning sunset over mountains",
-    n=1,
-    size="1792x1024",
-    quality="hd",
-    style="vivid"
-)
-```
-
 ## Response Format
 
-### DALL-E Response (with URL)
+### URL Response
 
 ```json
 {
@@ -186,7 +171,7 @@ response = client.images.generate(
 |-------|------|-------------|
 | `created` | integer | Unix timestamp of when the image was created |
 | `data` | array | Array of generated image objects |
-| `data[].url` | string | URL of the generated image (DALL-E models only, valid for 60 minutes) |
+| `data[].url` | string | URL of the generated image, for models that return URLs (valid for 60 minutes) |
 | `data[].b64_json` | string | Base64-encoded image (GPT image models, or when `response_format` is `b64_json`) |
 | `data[].revised_prompt` | string | The prompt used to generate the image (may be revised by the model) |
 | `usage` | object | Token usage information (GPT image models only) |
@@ -198,10 +183,7 @@ response = client.images.generate(
 
 | Model | Description |
 |-------|-------------|
-| `dall-e-2` | Original DALL-E model, fast generation |
-| `dall-e-3` | Higher quality, better prompt following |
-| `gpt-image-1` | Advanced model with transparent background support |
-| `gpt-image-1.5` | Latest model with enhanced image quality and transparent background support |
+| `gpt-image-2` | OpenAI image generation and editing, with transparent background support |
 
 ## Image Edits
 
@@ -209,7 +191,7 @@ response = client.images.generate(
 POST /v1/images/edits
 ```
 
-The Image Edits endpoint allows you to edit or extend existing images using models like gpt-image-1 and gpt-image-1.5.
+The Image Edits endpoint allows you to edit or extend existing images using GPT image models such as `gpt-image-2`.
 
 ### HTTP Request
 
@@ -218,7 +200,7 @@ curl https://api.apertis.ai/v1/images/edits \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -F "image=@original.png" \
     -F "prompt=Add a rainbow in the sky" \
-    -F "model=gpt-image-1" \
+    -F "model=gpt-image-2" \
     -F "size=1024x1024"
 ```
 
@@ -226,17 +208,17 @@ curl https://api.apertis.ai/v1/images/edits \
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 50MB for gpt-image-1/1.5 |
-| `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for gpt-image-1/1.5 |
+| `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 50MB for GPT image models |
+| `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for GPT image models |
 | `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
-| `model` | string | No | Model to use: `gpt-image-1`, `gpt-image-1.5`, `flux-kontext-pro`, `flux-kontext-max` |
+| `model` | string | No | Model to use, e.g. `gpt-image-2`. Always set it: when omitted, the gateway falls back to `gpt-image-1`, which is no longer offered |
 | `n` | integer | No | Number of images to generate (1-10). Default: 1 |
 | `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `auto` |
-| `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` for gpt-image-1/1.5 |
+| `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` |
 | `response_format` | string | No | Response format: `url`, `b64_json`. GPT image models always return base64 |
 | `user` | string | No | A unique identifier for the end-user |
 
-### gpt-image-1 and gpt-image-1.5 Edit Parameters
+### GPT Image Edit Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -245,17 +227,12 @@ curl https://api.apertis.ai/v1/images/edits \
 | `output_format` | string | Output format: `png`, `jpeg`, `webp`. Default: `png` |
 | `output_compression` | integer | Compression level (0-100%) for `jpeg`/`webp` output formats. Default: `100` |
 
-### gpt-image-1 Only Parameter
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `input_fidelity` | string | Control how much the model matches input image features: `high`, `low`. Default: `low` |
-
 ### Example Usage
 
 #### Python
 
 ```python
+import base64
 from openai import OpenAI
 
 client = OpenAI(
@@ -264,14 +241,16 @@ client = OpenAI(
 )
 
 response = client.images.edit(
-    model="gpt-image-1",
+    model="gpt-image-2",
     image=open("original.png", "rb"),
     prompt="Add a sunset in the background",
     n=1,
     size="1024x1024"
 )
 
-print(response.data[0].url)
+# GPT image models return base64
+with open("image.png", "wb") as f:
+    f.write(base64.b64decode(response.data[0].b64_json))
 ```
 
 #### JavaScript
@@ -286,21 +265,22 @@ const client = new OpenAI({
 });
 
 const response = await client.images.edit({
-  model: 'gpt-image-1',
+  model: 'gpt-image-2',
   image: fs.createReadStream('original.png'),
   prompt: 'Add a sunset in the background',
   n: 1,
   size: '1024x1024'
 });
 
-console.log(response.data[0].url);
+// GPT image models return base64
+fs.writeFileSync('image.png', Buffer.from(response.data[0].b64_json, 'base64'));
 ```
 
 #### With Mask for Inpainting
 
 ```python
 response = client.images.edit(
-    model="gpt-image-1",
+    model="gpt-image-2",
     image=open("original.png", "rb"),
     mask=open("mask.png", "rb"),
     prompt="Replace the masked area with a beautiful garden",

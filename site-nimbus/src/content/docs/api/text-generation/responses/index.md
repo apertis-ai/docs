@@ -190,7 +190,7 @@ The `text` parameter configures text output:
 **String Input** (simple query):
 ```json
 {
-  "model": "gpt-4.1",
+  "model": "gpt-5.5",
   "input": "What is the capital of France?"
 }
 ```
@@ -198,7 +198,7 @@ The `text` parameter configures text output:
 **Array Input** (conversation):
 ```json
 {
-  "model": "gpt-4.1",
+  "model": "gpt-5.5",
   "input": [
     {"role": "user", "content": "Hello!"},
     {"role": "assistant", "content": "Hi there!"},
@@ -220,7 +220,7 @@ client = OpenAI(
 )
 
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.5",
     input="Explain quantum computing in simple terms."
 )
 
@@ -238,7 +238,7 @@ const client = new OpenAI({
 });
 
 const response = await client.responses.create({
-  model: 'gpt-4.1',
+  model: 'gpt-5.5',
   input: 'Explain quantum computing in simple terms.'
 });
 
@@ -695,7 +695,7 @@ const response = await client.responses.create({
   "id": "resp_abc123",
   "object": "response",
   "created_at": 1699000000,
-  "model": "gpt-4.1",
+  "model": "gpt-5.5",
   "output": [
     {
       "type": "message",
@@ -726,10 +726,10 @@ These models natively support the Responses API format on upstream providers:
 
 | Model Series | Examples |
 |-------------|----------|
-| **o1 Series** | `o1`, `o1-preview`, `o4-mini`, `o1-2024-12-17` |
-| **o3 Series** | `o3`, `o3-mini`, `o3-2025-04-16` |
-| **o4 Series** | `o4-mini`, `o4-mini-2025-04-16` |
-| **GPT-5 Series** | `gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-*` |
+| **o1 Series** | `o1-pro` |
+| **o3 Series** | `o3-mini-high`, `o3-deep-research` |
+| **o4 Series** | `o4-mini-high`, `o4-mini-deep-research` |
+| **GPT-5 Series** | `gpt-5.1`, `gpt-5.2`, `gpt-5.5`, `gpt-5-*` |
 | **Codex Models** | `gpt-5-codex`, `gpt-5-codex-*` |
 
 ### Responses-Only Models
@@ -739,9 +739,6 @@ Some advanced models **only** support the `/v1/responses` endpoint and cannot be
 | Model | Description |
 |-------|-------------|
 | `gpt-5-pro` | GPT-5 Pro variant |
-| `gpt-5-chat-latest` | Latest GPT-5 chat model |
-| `gpt-5-mini` | GPT-5 Mini |
-| `gpt-5-nano` | GPT-5 Nano |
 | `gpt-5-codex-*` | GPT-5 Codex variants |
 | `o1-pro` | O1 Pro |
 | `codex-mini` | Codex Mini |
@@ -765,11 +762,10 @@ This means you can use **any model** with the Responses API - the conversion is 
 
 | Provider | Example Models | Native Support |
 |----------|---------------|----------------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini` | Via fallback |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4` | Via fallback |
-| Google | `gemini-3-pro-preview`, `gemini-3-flash-preview` | Via fallback |
-| Meta | `llama-3.1-70b`, `llama-3.1-8b` | Via fallback |
-| xAI | `grok-3`, `grok-3-reasoning` | Via fallback |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-8` | Via fallback |
+| Google | `gemini-3.1-pro-preview`, `gemini-3-flash-preview` | Via fallback |
+| Meta | `llama-3.1-70b-instruct`, `llama-3.1-8b-instruct` | Via fallback |
+| xAI | `grok-4.3`, `grok-4.5` | Via fallback |
 
 ## Differences from Chat Completions
 

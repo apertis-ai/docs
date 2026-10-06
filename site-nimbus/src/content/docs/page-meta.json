@@ -1,50 +1,50 @@
 {
   "api:index": {
-    "updated": "2026-10-06T09:43:02+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
-    "updated": "2026-05-04T12:04:35+08:00",
-    "readingMinutes": 7
+    "updated": "2026-10-06T16:40:47+08:00",
+    "readingMinutes": 6
   },
   "api:audio-video/video": {
-    "updated": "2026-01-26T14:34:18+08:00",
-    "readingMinutes": 10
+    "updated": "2026-10-06T16:19:21+08:00",
+    "readingMinutes": 1
   },
   "api:embeddings/embeddings-api": {
-    "updated": "2026-10-05T18:54:19+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/guide": {
-    "updated": "2026-01-26T14:30:18+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/rerank": {
-    "updated": "2026-01-26T14:33:43+08:00",
-    "readingMinutes": 3
+    "updated": "2026-10-06T16:19:21+08:00",
+    "readingMinutes": 1
   },
   "api:sdks/agent-sdk": {
     "updated": "2026-07-20T11:55:30+08:00",
     "readingMinutes": 2
   },
   "api:sdks/ai-sdk-provider": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:sdks/cli": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 2
   },
   "api:sdks/langchain": {
-    "updated": "2026-10-05T18:57:03+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:sdks/litellm": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/llamaindex": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/mcp-server": {
@@ -52,63 +52,63 @@
     "readingMinutes": 5
   },
   "api:sdks/python-sdk/index": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/async": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/audio": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/chat-completions": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "readingMinutes": 2
+    "updated": "2026-10-06T16:40:47+08:00",
+    "readingMinutes": 1
   },
   "api:sdks/python-sdk/embeddings": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/messages-api": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/reasoning": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/rerank": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "readingMinutes": 2
+    "updated": "2026-10-06T16:19:21+08:00",
+    "readingMinutes": 1
   },
   "api:sdks/python-sdk/responses-api": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/streaming": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/tool-calling": {
-    "updated": "2026-10-06T09:43:02+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/video": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/vision": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/web-search": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 2
   },
   "api:search/web-search": {
-    "updated": "2026-01-26T14:29:51+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 3
   },
   "api:text-generation/chat-completions": {
@@ -116,11 +116,11 @@
     "readingMinutes": 2
   },
   "api:text-generation/context-compression": {
-    "updated": "2026-03-02T00:37:53+08:00",
-    "readingMinutes": 6
+    "updated": "2026-10-06T16:40:47+08:00",
+    "readingMinutes": 7
   },
   "api:text-generation/messages": {
-    "updated": "2026-10-05T19:20:32+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -128,7 +128,7 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-10-06T09:43:02+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {
@@ -136,7 +136,7 @@
     "readingMinutes": 1
   },
   "api:text-generation/structured-output": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:utilities/billing-credits": {
@@ -144,28 +144,28 @@
     "readingMinutes": 3
   },
   "api:utilities/fallback-models": {
-    "updated": "2026-04-11T11:15:01+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 4
   },
   "api:utilities/models": {
-    "updated": "2026-10-05T18:54:19+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 2
   },
   "api:utilities/recommend": {
-    "updated": "2026-04-17T10:58:35+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 2
   },
   "api:vision/dalle": {
-    "updated": "2026-10-05T18:57:03+08:00",
+    "updated": "2026-10-06T16:12:00+08:00",
     "readingMinutes": 1
   },
   "api:vision/image-generation": {
-    "updated": "2026-10-05T19:35:13+08:00",
+    "updated": "2026-10-06T16:09:16+08:00",
     "readingMinutes": 1
   },
   "api:vision/images-api": {
-    "updated": "2026-01-26T14:34:18+08:00",
-    "readingMinutes": 5
+    "updated": "2026-10-06T16:40:47+08:00",
+    "readingMinutes": 4
   },
   "api:vision/read-image": {
     "updated": "2026-10-05T18:57:03+08:00",
@@ -200,7 +200,7 @@
     "readingMinutes": 7
   },
   "default:getting-started/quick-start": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 3
   },
   "default:help/error-codes": {
@@ -216,7 +216,7 @@
     "readingMinutes": 2
   },
   "default:help/migration-guides": {
-    "updated": "2026-06-10T11:32:17+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 4
   },
   "default:help/troubleshooting": {
@@ -232,7 +232,7 @@
     "readingMinutes": 2
   },
   "default:installation/claude-code": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 5
   },
   "default:installation/cline": {

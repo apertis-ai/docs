@@ -58,7 +58,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "What's the weather like in Tokyo?"}
         ],
@@ -142,14 +142,14 @@ def main():
 
     # First API call
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=messages,
         tools=tools,
         tool_choice="auto"
     )
 
     message = response.choices[0].message
-    messages.append(message)
+    messages.append(message.model_dump(exclude_none=True))
 
     # Process tool calls
     if message.tool_calls:
@@ -172,7 +172,7 @@ def main():
 
         # Second API call with function results
         final_response = client.chat.completions.create(
-            model="gpt-4.1",
+            model="gpt-5.5",
             messages=messages,
             tools=tools
         )
@@ -212,7 +212,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "John works at Google in San Francisco with Mary."}
         ],
@@ -259,12 +259,12 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "Get the stock prices for AAPL, GOOGL, and MSFT"}
         ],
         tools=tools,
-        parallel_tool_calls=True  # Enable parallel calls
+        extra_body={"parallel_tool_calls": True}  # Not a named SDK argument; sent in the request body
     )
 
     message = response.choices[0].message
@@ -285,10 +285,10 @@ Tool calling is supported by:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
-| Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
-| DeepSeek | `deepseek-chat` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `gpt-5.4-nano` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
+| Google | `gemini-3.1-pro-preview`, `gemini-2.5-flash` |
+| DeepSeek | `deepseek-v3.2` |
 
 [View all models →](/api/utilities/models)
 
@@ -298,4 +298,4 @@ Tool calling is supported by:
 |-----------|------|-------------|
 | `tools` | `list` | List of tool definitions |
 | `tool_choice` | `str \| dict` | Tool selection: `"auto"`, `"none"`, `"required"`, or specific function |
-| `parallel_tool_calls` | `bool` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |
+| `extra_body={"parallel_tool_calls": bool}` | `dict` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |

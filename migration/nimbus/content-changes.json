@@ -1,5 +1,5 @@
 {
-  "note": "Content edits made after the cutover. dist.check compares each page with the frozen legacy link sets in route-inventory.json; an edit that changes a page's links is recorded here, against the commit that made it and the decision that allowed it. Every entry must still match the built page.",
+  "note": "Content edits made after the cutover. dist.check compares each page with the frozen legacy link sets and heading ids in route-inventory.json; an edit that changes a page's links or removes a heading id is recorded here, against the commit that made it and the decision that allowed it. Every entry must still match the built page.",
   "documents": {
     "default:help/faq": {
       "commit": "55608c9",
@@ -20,6 +20,68 @@
       "commit": "40f6b4c",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
       "links": { "added": ["/models"] }
+    },
+    "api:audio-video/audio": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": {},
+      "headings": { "removed": ["available-models"] }
+    },
+    "api:audio-video/video": {
+      "commit": "4d70843",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/api/sdks/python-sdk/video", "/models"], "removed": ["/api/text-generation/chat-completions", "/api/utilities/models", "/api/vision/images-api"] },
+      "headings": { "removed": ["create-video", "http-request", "authentication", "parameters", "required-parameters", "optional-parameters", "image-reference-limits-by-model", "sora-2-specific-parameters", "response-format", "response-fields", "query-video-status", "http-request-1", "query-parameters", "response-format-1", "pendingprocessing", "completed", "response-fields-1", "example-usage", "python---complete-workflow", "javascript---complete-workflow", "with-frame-references-veo2-fast-frames", "sora-2-complete-workflow", "sora-2-with-character-creation", "alternative-api-v1videos", "create-video-with-reference-image", "http-request-2", "parameters-multipartform-data", "response-format-2", "get-video-status", "http-request-3", "response-format-3", "get-video-content", "http-request-4", "example-complete-workflow", "sora-2-extended-api", "create-video-sora", "http-request-5", "parameters-multipartform-data-1", "character-parameters", "response-format-4", "get-video-status-sora", "http-request-6", "response-format-5", "response-fields-2", "get-video-content-sora", "http-request-7", "response-format-6", "remix-video-sora", "http-request-8", "parameters-1", "response-format-7", "create-character", "http-request-9", "parameters-2", "response-format-8", "response-fields-3", "example-complete-sora-workflow-with-characters", "supported-models", "veo-models", "sora-models", "sora-2-chat-completions-api", "http-request-10", "parameters-3", "streaming-response", "python-example", "javascript-example", "error-responses", "related-topics"] }
+    },
+    "api:embeddings/embeddings-api": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/models"] }
+    },
+    "api:embeddings/guide": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/models"] }
+    },
+    "api:embeddings/rerank": {
+      "commit": "4d70843",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "removed": ["/api/text-generation/chat-completions", "/api/utilities/models"] },
+      "headings": { "removed": ["http-request", "authentication", "parameters", "required-parameters", "example-usage", "python", "javascript", "rag-pipeline-example", "response-format", "response-fields", "results-object", "supported-models", "error-responses", "use-cases", "best-practices", "related-topics"] }
+    },
+    "api:sdks/python-sdk/audio": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": {},
+      "headings": { "removed": ["high-quality-text-to-speech"] }
+    },
+    "api:sdks/python-sdk/rerank": {
+      "commit": "4d70843",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/api/sdks/python-sdk/embeddings"], "removed": ["/api/utilities/models", "https://apertis.ai/setting?tab=keys"] },
+      "headings": { "removed": ["prerequisites", "basic-reranking", "reranking-with-document-objects", "top-n-results", "rag-pipeline-integration", "batch-reranking", "relevance-threshold", "supported-models", "api-reference", "request-parameters", "response-object", "best-practices"] }
+    },
+    "api:sdks/python-sdk/web-search": {
+      "commit": "4d70843",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": {},
+      "headings": { "removed": ["citation-object"] }
+    },
+    "api:vision/dalle": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/models"] }
+    },
+    "api:vision/image-generation": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/models"] }
+    },
+    "api:vision/images-api": {
+      "commit": "4964df8",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (retired model IDs and gateway request contract audit, operator 2026-10-06)",
+      "links": { "added": ["/models"] },
+      "headings": { "removed": ["gpt-image-1-and-gpt-image-15-specific-parameters", "with-transparent-background-gpt-image-1", "hd-quality-with-dall-e-3", "dall-e-response-with-url", "gpt-image-1-and-gpt-image-15-edit-parameters", "gpt-image-1-only-parameter"] }
     }
   }
 }

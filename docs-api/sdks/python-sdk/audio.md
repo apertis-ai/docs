@@ -5,18 +5,23 @@ Process audio input and generate audio output, enabling voice-based applications
 ## Prerequisites
 
 ```bash
-pip install apertis
+pip install openai
 ```
+
+:::note
+`apertis` 0.3.0 has no audio methods. The examples on this page use the OpenAI Python SDK pointed at Apertis, which calls the same `/v1/audio/*` endpoints.
+:::
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Speech to Text (Transcription)
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     with open("audio.mp3", "rb") as audio_file:
         response = client.audio.transcriptions.create(
@@ -33,10 +38,11 @@ if __name__ == "__main__":
 ## Transcription with Options
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     with open("audio.mp3", "rb") as audio_file:
         response = client.audio.transcriptions.create(
@@ -62,10 +68,11 @@ if __name__ == "__main__":
 ## Translation (Audio to English)
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     # Translate non-English audio to English text
     with open("spanish_audio.mp3", "rb") as audio_file:
@@ -83,13 +90,14 @@ if __name__ == "__main__":
 ## Text to Speech
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.audio.speech.create(
-        model="tts-1",
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="alloy",
         input="Hello! Welcome to Apertis AI. How can I help you today?"
     )
@@ -104,18 +112,19 @@ if __name__ == "__main__":
     main()
 ```
 
-## High Quality Text to Speech
+## Voice, Format and Speed
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.audio.speech.create(
-        model="tts-1-hd",        # High-definition model
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="nova",            # Different voice
-        input="This is high quality text-to-speech audio.",
+        input="This is text-to-speech audio with a different voice.",
         response_format="opus",  # Opus format for better quality
         speed=1.0                # Normal speed (0.25 to 4.0)
     )
@@ -132,13 +141,14 @@ if __name__ == "__main__":
 ## Streaming Text to Speech
 
 ```python
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     response = client.audio.speech.create(
-        model="tts-1",
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="shimmer",
         input="This audio is being streamed as it's generated.",
     )
@@ -158,17 +168,18 @@ if __name__ == "__main__":
 
 ```python
 import base64
-from apertis import Apertis
+import os
+from openai import OpenAI
 
 def main():
-    client = Apertis()
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     # Read and encode audio file
     with open("question.mp3", "rb") as f:
         audio_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
     response = client.chat.completions.create(
-        model="gpt-4.1-audio-preview",
+        model="gpt-4o-audio-preview",
         messages=[
             {
                 "role": "user",
@@ -197,9 +208,10 @@ if __name__ == "__main__":
 ```python
 import asyncio
 from pathlib import Path
-from apertis import AsyncApertis
+import os
+from openai import AsyncOpenAI
 
-async def transcribe_file(client: AsyncApertis, file_path: str) -> dict:
+async def transcribe_file(client: AsyncOpenAI, file_path: str) -> dict:
     """Transcribe a single audio file."""
     with open(file_path, "rb") as f:
         response = await client.audio.transcriptions.create(
@@ -209,7 +221,7 @@ async def transcribe_file(client: AsyncApertis, file_path: str) -> dict:
     return {"file": file_path, "text": response.text}
 
 async def main():
-    client = AsyncApertis()
+    client = AsyncOpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
 
     # List of audio files to process
     audio_files = list(Path("audio_folder").glob("*.mp3"))
@@ -238,8 +250,8 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `tts-1` | Standard quality, fast |
-| `tts-1-hd` | High definition quality |
+| `gpt-4o-mini-tts-2025-12-15` | Steerable voice; accepts `instructions` for tone and pacing |
+| `gemini-3.1-flash-tts-preview` | Multilingual TTS |
 
 ### Available Voices
 
@@ -251,6 +263,8 @@ if __name__ == "__main__":
 | `onyx` | Deep, authoritative |
 | `nova` | Friendly, upbeat |
 | `shimmer` | Clear, professional |
+
+These voices apply to `gpt-4o-mini-tts-2025-12-15`. `gemini-3.1-flash-tts-preview` accepts only `Aoede`, `Charon`, `Fenrir`, `Kore` and `Puck`; any other voice returns HTTP 400 `voice_not_supported`.
 
 ## API Reference
 

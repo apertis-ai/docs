@@ -21,7 +21,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 CONFIG = {
     "api_key": "APERTIS_API_KEY",
     "base_url": "https://api.apertis.ai/v1",
-    "model": "gpt-4.1-mini",
+    "model": "gpt-5.4-mini",
     "temperature": 0.7,
     "request_timeout": 30,
 }
@@ -80,12 +80,12 @@ Enable [context compression](/api/text-generation/context-compression) via extra
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(
-    model="gpt-4.1",
+    model="gpt-5.5",
     api_key="APERTIS_API_KEY",
     base_url="https://api.apertis.ai/v1",
     default_headers={
         "X-Context-Compression": "on",
-        "X-Compression-Model": "gpt-4.1-mini",
+        "X-Compression-Model": "gpt-5.4-mini",
     },
 )
 

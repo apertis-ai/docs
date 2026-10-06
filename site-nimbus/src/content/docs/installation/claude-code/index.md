@@ -229,7 +229,7 @@ When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix
 | Standard Model ID | Coding Model ID |
 |-------------------|-----------------|
 | `claude-opus-4-8` | `code:claude-opus-4-8` |
-| `claude-sonnet-4-20250514` | `code:claude-sonnet-4-20250514` |
+| `claude-sonnet-4-6` | `code:claude-sonnet-4-6` |
 
 <aside class="admonition admonition-tip">
 <p class="admonition-title">Why <code>code:</code> prefix?</p>
