@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "ca0df371b51d06d78de0ac6254e8c7e5403c4607",
-  "buildId": "ca0df371b51d06d78de0ac6254e8c7e5403c4607.d194d081725b",
+  "sourceSha": "f63cdf0a8865e104a949986ecd23d4ee5ae7f641",
+  "buildId": "f63cdf0a8865e104a949986ecd23d4ee5ae7f641.d194d081725b",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "8dc74af3d09d938c22a92e44fd227e58396b885c45e397dfe9a6893f767c7dd4"
+        "sha256": "b986d28b8fa648741ac7a3d1ae909536fe21e4be83125fb5c85ef4956dbd0fc1"
       },
-      "contentSha256": "8dc74af3d09d938c22a92e44fd227e58396b885c45e397dfe9a6893f767c7dd4"
+      "contentSha256": "b986d28b8fa648741ac7a3d1ae909536fe21e4be83125fb5c85ef4956dbd0fc1"
     },
     {
       "id": "api:audio-video/audio",
@@ -447,9 +447,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/tool-calling.md",
-        "sha256": "94c66d8b1ebf3f6bed096895233cb33c85e612afae03ecb95b63d9dac834bf20"
+        "sha256": "b1110dbc80cac4b483917bd89e5ec6167b9739547d269bd68b09e2cbd37dfcb7"
       },
-      "contentSha256": "94c66d8b1ebf3f6bed096895233cb33c85e612afae03ecb95b63d9dac834bf20"
+      "contentSha256": "b1110dbc80cac4b483917bd89e5ec6167b9739547d269bd68b09e2cbd37dfcb7"
     },
     {
       "id": "api:sdks/python-sdk/video",
@@ -609,9 +609,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/responses.md",
-        "sha256": "5a2c5c263da2ab8b95c449b63204c0c1a55994ab36e3e667cc0bebf02b892c85"
+        "sha256": "33baf88046a4be371cfbf2df4b99c590462d7bf719f393f139a0c1bc1bc720be"
       },
-      "contentSha256": "5a2c5c263da2ab8b95c449b63204c0c1a55994ab36e3e667cc0bebf02b892c85"
+      "contentSha256": "33baf88046a4be371cfbf2df4b99c590462d7bf719f393f139a0c1bc1bc720be"
     },
     {
       "id": "api:text-generation/streaming",
