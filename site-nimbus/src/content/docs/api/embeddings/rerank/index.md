@@ -1,5 +1,6 @@
 ---
 title: "Rerank API"
+description: "The /v1/rerank endpoint is not currently available on the Apertis API."
 ---
 
 # Rerank API

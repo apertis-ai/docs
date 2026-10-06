@@ -8,7 +8,7 @@
     "readingMinutes": 6
   },
   "api:audio-video/video": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:19:21+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/embeddings-api": {
@@ -20,7 +20,7 @@
     "readingMinutes": 1
   },
   "api:embeddings/rerank": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:19:21+08:00",
     "readingMinutes": 1
   },
   "api:sdks/agent-sdk": {
@@ -80,7 +80,7 @@
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/rerank": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-06T16:19:21+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/responses-api": {
