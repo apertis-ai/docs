@@ -1,4 +1,4 @@
-# Using GPT-Image-1 and Dall-E 3
+# Using GPT Image Models
 
 ## Python Example
 
