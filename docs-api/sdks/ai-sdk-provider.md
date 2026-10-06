@@ -18,11 +18,7 @@ pnpm add @apertis/ai-sdk-provider ai
 yarn add @apertis/ai-sdk-provider ai
 ```
 
-:::warning
-Published `@apertis/ai-sdk-provider` 2.0.0-3.0.0 declares `exports.import` as `./dist/index.mjs`, which is not in the tarball, so `import { createApertis } from '@apertis/ai-sdk-provider'` fails with `ERR_MODULE_NOT_FOUND`. Until a fixed release ships, use one of:
-- `require('@apertis/ai-sdk-provider')` from CommonJS (works on Node 20.19+ and 22.12+, where `require(esm)` is unflagged).
-- [`@ai-sdk/openai-compatible`](https://www.npmjs.com/package/@ai-sdk/openai-compatible) directly: `createOpenAICompatible({ name: 'apertis', baseURL: 'https://api.apertis.ai/v1', apiKey: process.env.APERTIS_API_KEY })`.
-:::
+Use version 3.0.1 or later. Versions 2.0.0 to 3.0.0 fail with `ERR_MODULE_NOT_FOUND` when imported from an ES module.
 
 ## Setup
 
