@@ -41,6 +41,10 @@ test('relative, extensionless and absolute links resolve to inventory paths', ()
   assert.equal(out.clean.includes('](/authentication/organizations)'), true);
 });
 
+test('docs may link the standalone /models/ page, which is not in the inventory (openspec docs-live-catalog)', () => {
+  assert.match(doc('[m](/models/) [n](/models#x)').render, /\[m\]\(\/models\) \[n\]\(\/models#x\)/);
+});
+
 test('links and code inside code spans and fences are left untouched', () => {
   const out = doc('Use `[x](./nowhere)` and `<b>`.\n\n```md\n[y](./nowhere) <Tabs> {#id} :::tip\n```');
   assert.match(out.render, /`\[x\]\(\.\/nowhere\)` and `<b>`/);
@@ -82,6 +86,34 @@ test('unsupported constructs fail loudly with the file and construct', () => {
   fails('# Second H1', /one H1/);
   assert.throws(() => convertDocument('---\nslug: /x\n---\n# API Keys\n', keys, ctx), /front matter key slug/);
   assert.throws(() => convertDocument('# Not The Title\n', keys, ctx), /title/);
+});
+
+test('adjacent fences tagged tab="<Label>" become one tab group in HTML; clean Markdown keeps them as authored', () => {
+  const body = '```bash tab="cURL"\ncurl x\n```\n\n```python tab="Python & co"\nprint(1)\n```\nAfter.';
+  const out = doc(body);
+  assert.equal(out.clean, `# API Keys\n\n${body}\n`);
+  const tabs = [...out.render.matchAll(/<button type="button" role="tab" class="code-tabs__tab" id="([^"]+)"[^>]*>([^<]*)<\/button>/g)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(tabs, [['code-tabs-1-0', 'cURL'], ['code-tabs-1-1', 'Python &amp; co']]);
+  assert.match(out.render, /<div class="code-tabs">\n<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden>/);
+  assert.match(out.render, /<div class="code-tabs__panel" id="code-tabs-1-1-panel" data-tab="Python &amp; co">\n<p class="code-tabs__label" data-pagefind-ignore>Python &amp; co<\/p>\n\n```python\nprint\(1\)\n```\n\n<\/div>/);
+  assert.match(out.render, /<script>__apertisCodeTabs\(document\.currentScript\.parentNode\)<\/script>\n<\/div>\n\nAfter\./);
+  assert.doesNotMatch(out.render, /```\w* tab=/);
+  // A second group on the page gets its own ids.
+  assert.match(doc(`${body}\n\n${body}`).render, /id="code-tabs-2-1"/);
+});
+
+test('untagged adjacent fences and a lone tagged fence render as plain code blocks', () => {
+  const plain = doc('```bash\ncurl x\n```\n\n```json\n{}\n```').render;
+  assert.doesNotMatch(plain, /code-tabs/);
+  assert.match(plain, /```bash\ncurl x\n```\n\n```json\n\{\}\n```/);
+  const lone = doc('```bash tab="cURL"\ncurl x\n```\n\nText.');
+  assert.doesNotMatch(lone.render, /code-tabs|```\w* tab=/);
+  assert.match(lone.render, /```bash\ncurl x\n```\n\nText\./);
+  assert.match(lone.clean, /```bash tab="cURL"\ncurl x\n```/);
+  fails('- item\n  ```bash tab="cURL"\n  x\n  ```', /tab=/);
+  fails(':::tip\n```bash tab="cURL"\nx\n```\n:::', /tab=/);
+  fails('```bash tab=cURL\nx\n```', /code fence meta/);
+  fails('```bash tab="cURL"\nx\n```\n\n```sh tab="cURL"\ny\n```', /repeats a label/);
 });
 
 test('the <main> text hash collapses whitespace, strips tags and decodes entities', () => {

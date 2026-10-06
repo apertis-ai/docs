@@ -8,4 +8,4 @@ Access models from OpenAI, Google, Anthropic, Meta, Microsoft, Mistral, Alibaba,
 
 We aim to provide users with a unified API gateway to access all mainstream models while offering a more affordable, faster, and more stable service.
 
-Explore the current catalog through our [**Models page**](https://apertis.ai/models). Your API key type determines which models are available.
+Explore the current catalog, with prices and context windows, on the [**Models page**](/models), or browse it on [apertis.ai](https://apertis.ai/models). Your API key type determines which models are available.

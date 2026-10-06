@@ -1,3 +1,7 @@
+---
+description: "Use Apertis models in LangChain through the langchain-openai ChatOpenAI client and the Apertis base URL."
+---
+
 # LangChain
 
 ### Installing LangChain

@@ -67,6 +67,8 @@ export interface ConvertedDocument {
 const FRONT_MATTER_KEYS = new Set(['title', 'description', 'sidebar_label', 'sidebar_position']);
 const ADMONITIONS = ['note', 'tip', 'info', 'warning', 'caution', 'danger'];
 const FENCE = /^(\s*)(`{3,}|~{3,})(.*)$/;
+// Fence info string: a language, optionally followed by tab="<Label>" (code tab groups).
+const FENCE_META = /^([A-Za-z0-9_+#.-]*)(?:\s+tab="([^"]+)")?$/;
 // The one MDX construct these sources use outside code: a decorative icon before the H1 text.
 const HEADING_ICON = /^# <img src="([^"]+)" width="(\d+)" style=\{\{([^}]*)\}\} \/> (.+)$/;
 
@@ -105,7 +107,8 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
   }
 
   const bySource = new Map(ctx.inventory.filter((r) => r.sourcePath).map((r) => [r.sourcePath, r]));
-  const paths = new Set(ctx.inventory.filter((r) => r.disposition !== 'absent-at-baseline').map((r) => r.path));
+  // Plus the standalone /models/ page (openspec docs-live-catalog), which is no inventory row or document.
+  const paths = new Set([...ctx.inventory.filter((r) => r.disposition !== 'absent-at-baseline').map((r) => r.path), '/models']);
   const assets: BundledAsset[] = [];
   const base = canonicalPath(row);
 
@@ -184,6 +187,48 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
     clean.push(admonition ? (c ? `> ${c}` : '>') : c);
   };
 
+  // Code tab groups: a run of top-level fences tagged tab="<Label>", nothing but blank lines between them.
+  // The clean Markdown keeps the run as authored. The HTML source gets one .code-tabs group: a tablist,
+  // hidden until the inline script (DocLayout) runs, and one panel per fence, labelled for readers without
+  // JavaScript, holding the fence without its tab attribute. A lone tagged fence is a plain code block.
+  // Returns the index after the run's last closing fence.
+  let groups = 0;
+  const codeTabs = (start: number, group: number): number => {
+    const panels: { label: string; open: string; body: string[] }[] = [];
+    let j = start, end = start;
+    for (;;) {
+      const f = FENCE.exec(lines[j])!;
+      const meta = FENCE_META.exec(f[3].trim())!;
+      const closes = (l: string) => { const c = /^\s*(`{3,}|~{3,})\s*$/.exec(l); return !!c && c[1][0] === f[2][0] && c[1].length >= f[2].length; };
+      let k = j + 1;
+      while (k < lines.length && !closes(lines[k])) k++;
+      if (k >= lines.length) fail(j + 1, 'unclosed code fence');
+      if (panels.some((p) => p.label === meta[2])) fail(j + 1, `tab="${meta[2]}" repeats a label of this tab group`);
+      panels.push({ label: meta[2], open: `${f[2]}${meta[1]}`, body: lines.slice(j + 1, k + 1) });
+      end = k + 1;
+      let m = end;
+      while (m < lines.length && lines[m].trim() === '') m++;
+      const next = m < lines.length ? FENCE.exec(lines[m]) : null;
+      if (!next || next[1] || FENCE_META.exec(next[3].trim())?.[2] === undefined) break;
+      j = m;
+    }
+    separate(lines[start]);
+    clean.push(...lines.slice(start, end));
+    if (panels.length === 1) {
+      render.push(panels[0].open, ...panels[0].body);
+      return end;
+    }
+    const id = (p: number) => `code-tabs-${group}-${p}`;
+    render.push('', '<div class="code-tabs">',
+      `<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden>${panels.map((p, x) =>
+        `<button type="button" role="tab" class="code-tabs__tab" id="${id(x)}" aria-controls="${id(x)}-panel" aria-selected="${x === 0}" tabindex="${x === 0 ? 0 : -1}">${escapeHtml(p.label)}</button>`).join('')}</div>`);
+    panels.forEach((p, x) => render.push(
+      `<div class="code-tabs__panel" id="${id(x)}-panel" data-tab="${escapeHtml(p.label)}">`,
+      `<p class="code-tabs__label" data-pagefind-ignore>${escapeHtml(p.label)}</p>`, '', p.open, ...p.body, '', '</div>'));
+    render.push('<script>__apertisCodeTabs(document.currentScript.parentNode)</script>', '</div>', '');
+    return end;
+  };
+
   for (; i < lines.length; i++) {
     const line = lines[i];
     const n = i + 1;
@@ -195,7 +240,12 @@ export function convertDocument(source: string, row: InventoryRoute, ctx: Conver
     }
     const f = FENCE.exec(line);
     if (f) {
-      if (!/^[A-Za-z0-9_+#.-]*$/.test(f[3].trim())) fail(n, `code fence meta ${JSON.stringify(f[3].trim())} (only a language is supported)`);
+      const meta = FENCE_META.exec(f[3].trim()) ?? fail(n, `code fence meta ${JSON.stringify(f[3].trim())} (only a language and tab="<Label>" are supported)`);
+      if (meta[2] !== undefined) {
+        if (f[1] || admonition) fail(n, 'tab="..." fence indented or inside an admonition (tab groups are top-level only)');
+        i = codeTabs(i, ++groups) - 1;
+        continue;
+      }
       fence = { char: f[2][0], len: f[2].length, line: n };
       emit(line);
       continue;

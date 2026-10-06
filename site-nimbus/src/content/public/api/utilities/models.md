@@ -12,10 +12,35 @@ Returns available models in OpenAI-compatible format. The response depends on yo
 
 ### HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/models \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+for model in client.models.list():
+    print(model.id)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+for await (const model of client.models.list()) {
+  console.log(model.id);
+}
 ```
 
 - `<APERTIS_API_KEY>`: Your API key
@@ -97,9 +122,33 @@ Returns details for a single model.
 
 ### HTTP Request
 
-```bash
-curl https://api.apertis.ai/v1/models/claude-sonnet-4.5 \
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/models/gemini-2.5-flash-preview \
     -H "Authorization: Bearer <APERTIS_API_KEY>"
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+model = client.models.retrieve("gemini-2.5-flash-preview")
+print(model.id, model.owned_by)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const model = await client.models.retrieve('gemini-2.5-flash-preview');
+console.log(model.id, model.owned_by);
 ```
 
 ### Response

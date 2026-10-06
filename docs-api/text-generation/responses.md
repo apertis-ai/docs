@@ -12,14 +12,46 @@ The Responses API uses `input` instead of `messages`. You can provide either a s
 
 ## HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/responses \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4.1",
+        "model": "gpt-5.2",
         "input": "What is the capital of France?"
     }'
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.responses.create(
+    model="gpt-5.2",
+    input="What is the capital of France?"
+)
+
+print(response.output_text)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'What is the capital of France?'
+});
+
+console.log(response.output_text);
 ```
 
 ## Authentication
@@ -66,15 +98,37 @@ The `reasoning` parameter configures the model's reasoning behavior:
 | `effort` | string | Reasoning effort level: `low`, `medium`, `high` |
 | `summary` | string | Summary style: `auto`, `concise`, `detailed` |
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Solve this complex math problem...",
+        "reasoning": {"effort": "high", "summary": "detailed"}
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="o1-preview",
+    model="gpt-5.2",
     input="Solve this complex math problem...",
     reasoning={
         "effort": "high",
         "summary": "detailed"
     }
 )
+```
+
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Solve this complex math problem...',
+  reasoning: {
+    effort: 'high',
+    summary: 'detailed'
+  }
+});
 ```
 
 ### Text Parameter
@@ -150,19 +204,49 @@ console.log(response.output_text);
 
 Use the `tools` parameter to enable web search:
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What are the latest news about AI?",
+        "tools": [{"type": "web_search_preview"}]
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What are the latest news about AI?",
     tools=[{"type": "web_search_preview"}]
 )
 ```
 
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'What are the latest news about AI?',
+  tools: [{ type: 'web_search_preview' }]
+});
+```
+
 ### With Reasoning
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Prove the Pythagorean theorem step by step.",
+        "reasoning": {"effort": "high", "summary": "detailed"}
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="o1-preview",
+    model="gpt-5.2",
     input="Prove the Pythagorean theorem step by step.",
     reasoning={
         "effort": "high",
@@ -171,11 +255,33 @@ response = client.responses.create(
 )
 ```
 
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Prove the Pythagorean theorem step by step.',
+  reasoning: {
+    effort: 'high',
+    summary: 'detailed'
+  }
+});
+```
+
 ### Streaming
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "Write a short story about a robot.",
+        "stream": true
+    }'
+```
+
+```python tab="Python"
 stream = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="Write a short story about a robot.",
     stream=True
 )
@@ -185,11 +291,37 @@ for event in stream:
         print(event.delta, end="", flush=True)
 ```
 
+```javascript tab="JavaScript"
+const stream = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'Write a short story about a robot.',
+  stream: true
+});
+
+for await (const event of stream) {
+  if (event.type === 'response.output_text.delta') process.stdout.write(event.delta);
+}
+```
+
 ### Multi-turn Conversation
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": [
+            {"role": "user", "content": "What is Python?"},
+            {"role": "assistant", "content": "Python is a high-level programming language..."},
+            {"role": "user", "content": "How do I install it?"}
+        ]
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input=[
         {"role": "user", "content": "What is Python?"},
         {"role": "assistant", "content": "Python is a high-level programming language..."},
@@ -198,41 +330,135 @@ response = client.responses.create(
 )
 ```
 
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: [
+    { role: 'user', content: 'What is Python?' },
+    { role: 'assistant', content: 'Python is a high-level programming language...' },
+    { role: 'user', content: 'How do I install it?' }
+  ]
+});
+```
+
 ### With Instructions
 
 Use `instructions` to provide high-level guidance for model behavior:
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "instructions": "You are a helpful coding assistant. Always provide code examples.",
+        "input": "How do I read a file in Python?"
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     instructions="You are a helpful coding assistant. Always provide code examples.",
     input="How do I read a file in Python?"
 )
+```
+
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  instructions: 'You are a helpful coding assistant. Always provide code examples.',
+  input: 'How do I read a file in Python?'
+});
 ```
 
 ### Stateful Conversations
 
 Use `store` and `previous_response_id` for multi-turn conversations with state:
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "My name is Alice.",
+        "store": true
+    }'
+
+# Follow-up request - reference the previous response
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What is my name?",
+        "previous_response_id": "<RESPONSE_ID>"
+    }'
+```
+
+```python tab="Python"
 # First request - store the response
 response1 = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="My name is Alice.",
     store=True
 )
 
 # Follow-up request - reference the previous response
 response2 = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What's my name?",
     previous_response_id=response1.id
 )
 ```
 
+```javascript tab="JavaScript"
+// First request - store the response
+const response1 = await client.responses.create({
+  model: 'gpt-5.2',
+  input: 'My name is Alice.',
+  store: true
+});
+
+// Follow-up request - reference the previous response
+const response2 = await client.responses.create({
+  model: 'gpt-5.2',
+  input: "What's my name?",
+  previous_response_id: response1.id
+});
+```
+
 ### With Function Calling
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": "What is the weather in Tokyo?",
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {"type": "string"}
+                        },
+                        "required": ["location"]
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto"
+    }'
+```
+
+```python tab="Python"
 tools = [
     {
         "type": "function",
@@ -251,11 +477,37 @@ tools = [
 ]
 
 response = client.responses.create(
-    model="gpt-4.1",
+    model="gpt-5.2",
     input="What's the weather in Tokyo?",
     tools=tools,
     tool_choice="auto"
 )
+```
+
+```javascript tab="JavaScript"
+const tools = [
+  {
+    type: 'function',
+    function: {
+      name: 'get_weather',
+      description: 'Get the current weather',
+      parameters: {
+        type: 'object',
+        properties: {
+          location: { type: 'string' }
+        },
+        required: ['location']
+      }
+    }
+  }
+];
+
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: "What's the weather in Tokyo?",
+  tools,
+  tool_choice: 'auto'
+});
 ```
 
 ## Response Format
@@ -356,9 +608,24 @@ This means you can use **any model** with the Responses API - the conversion is 
 
 The Responses API supports [context compression](./context-compression) to automatically reduce token usage for long conversations. Enable it via the request body or HTTP headers:
 
-```python
+```bash tab="cURL"
+curl https://api.apertis.ai/v1/responses \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <APERTIS_API_KEY>" \
+    -d '{
+        "model": "gpt-5.2",
+        "input": [
+            {"role": "user", "content": "Explain distributed systems"},
+            {"role": "assistant", "content": "Distributed systems are..."},
+            {"role": "user", "content": "Summarize the key points"}
+        ],
+        "compression": {"enabled": true, "strategy": "on", "model": "gemini-3-flash-preview"}
+    }'
+```
+
+```python tab="Python"
 response = client.responses.create(
-    model="o4-mini",
+    model="gpt-5.2",
     input=[
         {"role": "user", "content": "Explain distributed systems"},
         {"role": "assistant", "content": "Distributed systems are..."},
@@ -369,10 +636,27 @@ response = client.responses.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4.1-mini"
+            "model": "gemini-3-flash-preview"
         }
     }
 )
+```
+
+```javascript tab="JavaScript"
+const response = await client.responses.create({
+  model: 'gpt-5.2',
+  input: [
+    { role: 'user', content: 'Explain distributed systems' },
+    { role: 'assistant', content: 'Distributed systems are...' },
+    // ... long conversation history ...
+    { role: 'user', content: 'Summarize the key points' }
+  ],
+  compression: {
+    enabled: true,
+    strategy: 'on',
+    model: 'gemini-3-flash-preview'
+  }
+});
 ```
 
 See [Context Compression](./context-compression) for full configuration options and strategies.

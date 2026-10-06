@@ -1,5 +1,6 @@
 ---
 title: "Chat Completion"
+description: "Generate a model response for a conversation with the OpenAI-compatible POST /v1/chat/completions endpoint."
 ---
 
 # Chat Completion
@@ -8,6 +9,12 @@ title: "Chat Completion"
 ```
 
 ## HTTP Request
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-0" aria-controls="code-tabs-1-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-1" aria-controls="code-tabs-1-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-1-2" aria-controls="code-tabs-1-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-1-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
@@ -23,6 +30,61 @@ curl https://api.apertis.ai/v1/chat/completions \
         ]
     }'
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.chat.completions.create(
+    model="<MODEL_ALIAS>",
+    messages=[
+        {
+            "role": "system",
+            "content": "<MESSAGES>"
+        }
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-1-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create({
+  model: '<MODEL_ALIAS>',
+  messages: [
+    {
+      role: 'system',
+      content: '<MESSAGES>'
+    }
+  ]
+});
+
+console.log(response.choices[0].message.content);
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 - `<APERTIS_API_KEY>`: Your API key
 - `<MODEL_ALIAS>`: The alias of the model to use
@@ -48,22 +110,77 @@ curl https://api.apertis.ai/v1/chat/completions \
 
 Add a `compression` object to automatically summarize older conversation history and reduce token usage for long conversations:
 
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-0" aria-controls="code-tabs-2-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-1" aria-controls="code-tabs-2-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-2-2" aria-controls="code-tabs-2-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-2-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
+
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4.1-mini",
+        "model": "gemini-3-flash-preview",
         "messages": [{"role": "user", "content": "Hello!"}],
-        "compression": {"enabled": true, "model": "gpt-4.1-mini"}
+        "compression": {"enabled": true, "model": "gemini-3-flash-preview"}
     }'
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.chat.completions.create(
+    model="gemini-3-flash-preview",
+    messages=[{"role": "user", "content": "Hello!"}],
+    extra_body={"compression": {"enabled": True, "model": "gemini-3-flash-preview"}}
+)
+```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-2-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create({
+  model: 'gemini-3-flash-preview',
+  messages: [{ role: 'user', content: 'Hello!' }],
+  compression: { enabled: true, model: 'gemini-3-flash-preview' }
+});
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 See [Context Compression](/api/text-generation/context-compression) for full documentation.
 
 ### Request Timeout
 
 Use the `X-Timeout` header to limit the total time a request can take, including all internal channel retries. This prevents long waits when multiple upstream providers are slow or unavailable.
+
+
+<div class="code-tabs">
+<div class="code-tabs__list" role="tablist" aria-label="Code samples" data-pagefind-ignore hidden><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-0" aria-controls="code-tabs-3-0-panel" aria-selected="true" tabindex="0">cURL</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-1" aria-controls="code-tabs-3-1-panel" aria-selected="false" tabindex="-1">Python</button><button type="button" role="tab" class="code-tabs__tab" id="code-tabs-3-2" aria-controls="code-tabs-3-2-panel" aria-selected="false" tabindex="-1">JavaScript</button></div>
+<div class="code-tabs__panel" id="code-tabs-3-0-panel" data-tab="cURL">
+<p class="code-tabs__label" data-pagefind-ignore>cURL</p>
 
 ```bash
 curl https://api.apertis.ai/v1/chat/completions \
@@ -75,6 +192,10 @@ curl https://api.apertis.ai/v1/chat/completions \
         "messages": [{"role": "user", "content": "Hello!"}]
     }'
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-1-panel" data-tab="Python">
+<p class="code-tabs__label" data-pagefind-ignore>Python</p>
 
 ```python
 from openai import OpenAI
@@ -90,6 +211,32 @@ response = client.chat.completions.create(
     extra_headers={"X-Timeout": "20000"}  # 20 seconds
 )
 ```
+
+</div>
+<div class="code-tabs__panel" id="code-tabs-3-2-panel" data-tab="JavaScript">
+<p class="code-tabs__label" data-pagefind-ignore>JavaScript</p>
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: 'your-apertis-key',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create(
+  {
+    model: 'gemini-3-flash-preview',
+    messages: [{ role: 'user', content: 'Hello!' }]
+  },
+  { headers: { 'X-Timeout': '20000' } } // 20 seconds
+);
+```
+
+</div>
+<script>__apertisCodeTabs(document.currentScript.parentNode)</script>
+</div>
+
 
 | Setting | Value |
 |---------|-------|

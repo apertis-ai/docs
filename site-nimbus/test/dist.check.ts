@@ -9,11 +9,18 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { manifest } from '../src/manifest/manifest.ts';
+import { editUrl } from '../src/components/shell/edit-link.ts';
 import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
-import { RETIRED_TARGET, publicationFiles } from '../converter/integration.ts';
+import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
+import { readArticles } from '../converter/articles.ts';
+import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
+import { decodeEntities } from '../src/contracts/validate-manifest.ts';
+import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
+import { codeText, parseCurl } from '../src/components/try-it/curl.ts';
+import { publishedFromSitemap, publishedPaths } from '../src/components/feedback/feedback.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
@@ -57,10 +64,13 @@ test('every output file derives from a publishable manifest entry or is referenc
   const generated = inventory.routes.filter((r: InventoryRoute) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical)
     .map((r: InventoryRoute) => `${r.path.slice(1)}/index.html`);
   // The /blog/ index (openspec docs-routing-publication "Native articles", operator review 2026-10-03): served
-  // with or without articles, never a manifest document.
-  const html = [...pages, ...generated, 'blog/index.html', '404.html'];
+  // with or without articles, never a manifest document; so are /models/ and /changelog/ (openspec
+  // docs-live-catalog), whose live data and feed are Pages Functions, not files.
+  const html = [...pages, ...generated, 'blog/index.html', 'models/index.html', 'changelog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
+  for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
   // and so is every root-absolute url() in a referenced stylesheet (the display font is not preloaded).
   for (let i = 0; i < referenced.length; i++) {
@@ -79,7 +89,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   // #7: clean Markdown artifacts at their manifest paths (agent-eligible entries only).
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
   // #13: root files derived from the manifest and inventory; their content is checked below.
-  const derived = ['sitemap.xml', '_redirects'];
+  // docs-agent-access adds /llms.txt and /llms-full.txt (from the publish+agent entries), checked below too.
+  const derived = ['sitemap.xml', '_redirects', 'llms.txt', 'llms-full.txt'];
   const allowed = new Set([...html, ...referenced, ...markdown, ...derived, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
@@ -200,6 +211,16 @@ test('m2: article links are root-absolute and equal the legacy internal link set
   }
 });
 
+test('docs-reader-shell-extras: every converted page carries one Edit-this-page target, set from the client only', () => {
+  for (const d of converted) {
+    const html = article(read(`${d.servedPath.slice(1)}index.html`));
+    assert.deepEqual([...html.matchAll(/data-edit="([^"]+)"/g)].map((m) => m[1]), [editUrl(d.sourcePath)], d.id);
+    // The View link follows the same rule (comment in DocLayout.astro): no built page ever has a static
+    // href to GitHub's editor, so the article's own link set (checked above) never grows from this.
+    assert.doesNotMatch(html, /<a[^>]+href="https:\/\/github\.com\/apertis-ai\/docs\/edit\//, d.id);
+  }
+});
+
 test('m2: images resolve in dist, and no Docusaurus/MDX syntax survives into HTML or Markdown', () => {
   for (const d of converted) {
     const html = read(`${d.servedPath.slice(1)}index.html`);
@@ -229,6 +250,31 @@ test('m2: HTML and clean Markdown carry the same code blocks for every converted
 
 // ---- #9 assistant mount and search-index content ----
 const publishedHtml = () => manifest.documents.filter((d) => d.eligibility.publish).map((d) => `${d.servedPath.slice(1)}index.html`);
+
+test('code tab groups: the tab script ships only on pages with a group, before it, and every group is complete', () => {
+  const SAMPLE_PAGES = ['/api/text-generation/chat-completions/', '/api/text-generation/responses/', '/api/embeddings/embeddings-api/', '/api/text-generation/messages/', '/api/utilities/models/'];
+  const withTabs: string[] = [];
+  for (const f of publishedHtml()) {
+    const html = read(f);
+    const first = html.indexOf('<div class="code-tabs">');
+    if (first < 0) {
+      assert.doesNotMatch(html, /__apertisCodeTabs|class="code-tabs/, `${f}: tab code without a group`);
+      continue;
+    }
+    withTabs.push(`/${f.replace(/index\.html$/, '')}`);
+    const defined = html.indexOf('window.__apertisCodeTabs =');
+    assert.ok(defined >= 0 && defined < first && html.indexOf('window.__apertisCodeTabs =', defined + 1) < 0, `${f}: tab script defined once, before the first group`);
+    const groups = html.slice(first).split('<div class="code-tabs">').slice(1);
+    for (const g of groups) {
+      const tabs = [...g.matchAll(/<button type="button" role="tab" class="code-tabs__tab" id="([^"]+)" aria-controls="([^"]+)"[^>]*>([^<]*)<\/button>/g)];
+      const panels = [...g.matchAll(/<div class="code-tabs__panel" id="([^"]+)" data-tab="([^"]+)">\s*<p class="code-tabs__label" data-pagefind-ignore>([^<]*)<\/p>\s*(?:<figure[^>]*>)?<pre class="astro-code/g)];
+      assert.ok(tabs.length >= 2, `${f}: a group has ${tabs.length} tabs`);
+      assert.deepEqual(panels.map((p) => [p[1], p[2], p[3]]), tabs.map((t) => [t[2], t[3], t[3]]), `${f}: tabs and panels match`);
+      assert.match(g, /<\/div>\s*<script>__apertisCodeTabs\(document\.currentScript\.parentNode\)<\/script>\s*<\/div>/, `${f}: group init`);
+    }
+  }
+  assert.deepEqual(SAMPLE_PAGES.filter((p) => !withTabs.includes(p)), [], 'SDK sample pages without a tab group');
+});
 
 test('m4: every published page mounts the assistant dialog exactly once', () => {
   for (const f of publishedHtml()) assert.equal(read(f).match(/\bid="apertis-assistant"/g)?.length ?? 0, 1, f);
@@ -294,7 +340,9 @@ test('m8: retired routes are in no publication channel and every path they had a
   assert.deepEqual([...rewritten].sort(), ['/404', '/404.html', '/404/']);
   const text = [read('sitemap.xml'), ...fragments().map((f) => f.url)].join('\n');
   for (const r of retired) assert.equal(text.includes(`https://docs.apertis.ai${r.path}<`) || fragments().some((f) => f.url.replace(/\/$/, '') === r.path), false, r.path);
-  assert.equal(files.some((f) => /^llms/.test(f)), false, 'llms files are not produced by this candidate');
+  // docs-agent-access supersedes "no llms* outputs": they exist, and no retired path is in them.
+  const agentKeys = new Set(parseIndex(read('llms.txt')).map((e) => pageKey(e.markdownUrl)));
+  for (const r of retired) assert.equal(agentKeys.has(r.path), false, `${r.path} in llms.txt`);
 });
 
 test('every recorded post-cutover content change matches its built page', () => {
@@ -306,6 +354,23 @@ test('every recorded post-cutover content change matches its built page', () => 
     const hrefs = new Set([...article(read(`${d.servedPath.slice(1)}index.html`)).matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&')));
     for (const h of c.links.added ?? []) assert.ok(hrefs.has(h), `${id}: added link ${h} is not on the page`);
     for (const h of c.links.removed ?? []) assert.ok(!hrefs.has(h), `${id}: removed link ${h} is still on the page`);
+  }
+});
+
+test('/api/ Choosing an API format compares and links the three formats', () => {
+  // docs-reader-features, "Choosing an API format": WHEN the reader opens /api/#choosing-an-api-format,
+  // THEN a table compares the three formats and links the chat-completions, responses and messages pages.
+  const body = article(read('api/index.html'));
+  assert.ok(/<h2[^>]+id="choosing-an-api-format"/.test(body), 'missing heading id');
+  const table = body.match(/<table>[\s\S]*?<\/table>/)?.[0];
+  assert.ok(table, 'missing comparison table');
+  const headers = [...table!.matchAll(/<th>([^<]*)<\/th>/g)].map((m) => m[1]);
+  assert.deepEqual(headers, ['', 'Chat Completions', 'Responses', 'Messages']);
+  // Site convention (matched by every other converted page's internal links): no trailing slash,
+  // even though the spec scenario text writes one.
+  const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1]));
+  for (const h of ['/api/text-generation/chat-completions', '/api/text-generation/responses', '/api/text-generation/messages']) {
+    assert.ok(hrefs.has(h), `missing link ${h}`);
   }
 });
 
@@ -340,4 +405,82 @@ test('m8: every internal link in every converted page resolves to a built file (
     assert.deepEqual(hrefs.filter((h) => !builtFile(h)), [], `${d.id}: unresolved internal links`);
   }
   assert.ok(n > 100, `${n} internal links checked`);
+});
+
+// ---- docs-agent-access: /llms.txt and /llms-full.txt ----
+const agentDocs = manifest.documents.filter((d) => d.eligibility.publish && d.eligibility.agent);
+const mdUrl = (d: (typeof manifest.documents)[number]) => `${MANIFEST_SITE}${d.markdown!.path}`;
+
+test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar sections, each with a description', () => {
+  const body = read('llms.txt');
+  const entries = parseIndex(body);
+  assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
+  assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
+  assert.equal(entries.length, 78);
+  assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
+  for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
+  // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
+  assert.equal(entries.some((e) => pageKey(e.markdownUrl) === '/'), false);
+  for (const a of readArticles(root).filter((x) => x.draft)) assert.equal(entries.some((e) => e.markdownUrl.includes(`/blog/${a.slug}`)), false, a.slug);
+  assert.deepEqual([...new Set(entries.map((e) => e.section))], ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security',
+    'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
+  assert.equal(body, llmsFiles(manifest, routes, dist)['llms.txt']);
+});
+
+test('an llms.txt description is the page header description wherever the page shows one', () => {
+  const byUrl = new Map(parseIndex(read('llms.txt')).map((e) => [e.markdownUrl, e.description]));
+  let n = 0;
+  for (const d of agentDocs) {
+    const header = /<p class="doc-header__desc"[^>]*>([\s\S]*?)<\/p>/.exec(read(`${d.servedPath.slice(1)}index.html`))?.[1];
+    if (header === undefined) continue;
+    assert.equal(byUrl.get(mdUrl(d)), decodeEntities(header.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim(), d.id);
+    n++;
+  }
+  assert.ok(n > 50, `${n} header descriptions compared`);
+});
+
+test('llms-full.txt holds the bytes of every llms.txt artifact, in the same order, each under its Source line', () => {
+  const byMd = new Map(agentDocs.map((d) => [mdUrl(d), d]));
+  const order = parseIndex(read('llms.txt')).map((e) => byMd.get(e.markdownUrl)!);
+  const full = parseFull(read('llms-full.txt'));
+  assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
+  for (const [i, f] of full.entries()) assert.ok(Buffer.from(f.markdown).equals(fs.readFileSync(path.join(dist, order[i].markdown!.path))), order[i].id);
+  assert.equal(read('llms-full.txt'), llmsFiles(manifest, routes, dist)['llms-full.txt']);
+});
+
+// ---- docs-reader-features: Try it (openspec docs-api-reference-ux "Try it") ----
+test('try it: exactly the cURL samples to api.apertis.ai/v1 carry data-try-it', () => {
+  let marked = 0;
+  for (const f of publishedHtml()) {
+    for (const m of article(read(f)).matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
+      const eligible = !('reason' in parseCurl(codeText(m[2])));
+      assert.equal(/\sdata-try-it\b/.test(m[1]), eligible, `${f}: ${codeText(m[2]).slice(0, 80)}`);
+      if (eligible) marked++;
+    }
+  }
+  assert.ok(marked >= 30, `${marked} blocks marked`);
+});
+
+test('try it: only pages with a marked sample load its script or styles, and none loads the panel up front', () => {
+  let pages = 0;
+  for (const f of publishedHtml()) {
+    const html = read(f);
+    // The trigger is inlined; the panel is only named in it as a URL, never a <script src> or <link>.
+    const triggers = html.match(/pre\[data-try-it\]/g) ?? [];
+    const marked = /<pre\b[^>]*\sdata-try-it\b/.test(article(html));
+    assert.equal(triggers.length, marked ? 1 : 0, f);
+    assert.equal(/try-it-panel/.test(html), marked, f);
+    assert.doesNotMatch(html, /(?:src|href)="[^"]*try-it-panel|\.try-it[\w-]*\s*\{/, f);
+    if (marked) pages++;
+  }
+  assert.ok(pages >= 15, `${pages} pages with Try it`);
+});
+
+test('feedback: the published paths read from the built sitemap are the publish-eligible manifest entries plus /search/', () => {
+  // functions/_nimbus/feedback.ts validates `path` against this set at runtime. The sitemap also lists the
+  // /search/ page, which is published but not a manifest document (it has no feedback widget).
+  const docs = publishedPaths(manifest.documents);
+  const sitemap = publishedFromSitemap(read('sitemap.xml'));
+  assert.deepEqual([...docs].filter((p) => !sitemap.has(p)), []);
+  assert.deepEqual([...sitemap].filter((p) => !docs.has(p)), ['/search/']);
 });
