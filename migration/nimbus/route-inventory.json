@@ -2877,7 +2877,7 @@
           "location": null
         },
         "canonical": "https://docs.apertis.ai/api/vision/dalle",
-        "title": "Using GPT-Image-1 and Dall-E 3 | Apertis Documentation",
+        "title": "Using GPT Image Models | Apertis Documentation",
         "headingIds": [
           "python-example",
           "parameters"
