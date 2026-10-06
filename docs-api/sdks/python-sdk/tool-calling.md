@@ -294,4 +294,4 @@ Tool calling is supported by:
 |-----------|------|-------------|
 | `tools` | `list` | List of tool definitions |
 | `tool_choice` | `str \| dict` | Tool selection: `"auto"`, `"none"`, `"required"`, or specific function |
-| `parallel_tool_calls` | `bool` | Allow multiple simultaneous tool calls |
+| `parallel_tool_calls` | `bool` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |
