@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Explain the concept of machine learning."
     )
 
@@ -38,7 +38,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input=[
             {"type": "message", "role": "user", "content": "What is Python?"},
             {"type": "message", "role": "assistant", "content": "Python is a high-level programming language known for its simplicity and readability."},
@@ -61,7 +61,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         instructions="You are a helpful coding tutor. Explain concepts clearly with examples.",
         input="How do I handle exceptions in Python?"
     )
@@ -81,7 +81,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What are the latest news about AI regulations?",
         tools=[{"type": "web_search"}]
     )
@@ -106,7 +106,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Calculate the compound interest on $10,000 at 5% annual rate for 10 years, compounded monthly. Show the calculation.",
         tools=[{"type": "code_interpreter"}]
     )
@@ -145,7 +145,7 @@ def main():
     ]
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What's the weather in London?",
         tools=tools
     )
@@ -170,7 +170,7 @@ def main():
     client = Apertis()
 
     stream = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Write a short story about a robot learning to paint.",
         stream=True
     )
@@ -194,7 +194,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input=[
             {
                 "type": "message",
@@ -225,7 +225,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="o1",
+        model="gpt-5.5",
         input="Solve: If 3x + 7 = 22, what is x? Show your reasoning.",
         reasoning={"effort": "high"}
     )
@@ -252,7 +252,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="Hello, world!"
     )
 
@@ -277,7 +277,7 @@ async def main():
     client = AsyncApertis()
 
     response = await client.responses.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         input="What is quantum computing?"
     )
 
@@ -298,7 +298,7 @@ def main():
     client = Apertis()
 
     response = client.responses.create(
-        model="o4-mini",
+        model="o4-mini-high",
         input=[
             {"role": "user", "content": "Explain distributed systems"},
             {"role": "assistant", "content": "Distributed systems are..."},
@@ -309,7 +309,7 @@ def main():
             "compression": {
                 "enabled": True,
                 "strategy": "on",        # "on", "conservative", "aggressive"
-                "model": "gpt-4.1-mini"  # or "auto" for automatic selection
+                "model": "gpt-5.4-mini"  # or "auto" for automatic selection
             }
         }
     )
@@ -326,7 +326,7 @@ The Responses API supports:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `o1`, `o4-mini`, `o3-mini` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `o4-mini-high`, `o3-mini-high` |
 | Others | Models with Responses API compatibility |
 
 [View all models →](/api/utilities/models)

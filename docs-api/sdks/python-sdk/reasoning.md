@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="o1",  # OpenAI reasoning model
+        model="gpt-5.5",  # OpenAI reasoning model
         messages=[
             {"role": "user", "content": "Solve this step by step: A train travels from A to B at 60 km/h and returns at 40 km/h. What is the average speed for the round trip?"}
         ]
@@ -40,7 +40,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         messages=[
             {"role": "user", "content": "Analyze the pros and cons of microservices vs monolithic architecture for a startup."}
         ],
@@ -118,7 +118,7 @@ Find the optimal transportation plan to minimize total cost.
 """
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": problem}
         ]
@@ -149,7 +149,7 @@ def mystery(arr):
 '''
 
     response = client.chat.completions.create(
-        model="o4-mini",
+        model="o4-mini-high",
         messages=[
             {
                 "role": "user",
@@ -181,7 +181,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {
                 "role": "user",
@@ -222,7 +222,7 @@ Who has which pet and favorite color?
 """
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": puzzle}
         ]
@@ -266,9 +266,9 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `o1` | Full reasoning capabilities |
-| `o4-mini` | Faster, more cost-effective |
-| `o3-mini` | Latest generation reasoning |
+| `gpt-5.5` | Full reasoning capabilities |
+| `o4-mini-high` | Faster, more cost-effective |
+| `o3-mini-high` | Compact reasoning model |
 
 ### DeepSeek Reasoning Models
 
@@ -280,7 +280,7 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `claude-sonnet-4.5` | Extended thinking via `thinking` parameter |
+| `claude-sonnet-4-6` | Extended thinking via `thinking` parameter |
 | `claude-opus-4-5-20251101` | Extended thinking via `thinking` parameter |
 
 [View all models →](/api/utilities/models)

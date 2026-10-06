@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "What are the latest developments in AI?"}
         ],
@@ -41,7 +41,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "What is the current stock price of Apple?"}
         ],
@@ -78,7 +78,7 @@ def main():
 
     for question in questions:
         response = client.chat.completions.create(
-            model="gpt-4.1",
+            model="gpt-5.5",
             messages=[
                 {"role": "user", "content": question}
             ],
@@ -102,7 +102,7 @@ def main():
     topic = "quantum computing applications in drug discovery"
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {
                 "role": "system",
@@ -137,7 +137,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {
                 "role": "user",
@@ -166,7 +166,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "What are the current trends in renewable energy?"}
         ],
@@ -195,7 +195,7 @@ def main():
     company = "OpenAI"
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {
                 "role": "user",
@@ -232,7 +232,7 @@ def main():
 
     # First query
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=messages,
         web_search=True
     )
@@ -244,7 +244,7 @@ def main():
     messages.append({"role": "user", "content": "What are its most recent discoveries?"})
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=messages,
         web_search=True
     )
@@ -261,8 +261,8 @@ Web search is available on:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101` |
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 
 [View all models →](/api/utilities/models)

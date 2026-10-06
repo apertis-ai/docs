@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="gpt-5.4-mini",
         messages=[
             {"role": "user", "content": "Write a short poem about coding."}
         ],
@@ -45,7 +45,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         messages=[
             {"role": "user", "content": "Explain machine learning in 3 sentences."}
         ],
@@ -79,7 +79,7 @@ def main():
     client = Apertis()
 
     with client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "List 5 programming languages and their use cases."}
         ],
@@ -105,7 +105,7 @@ async def main():
     client = AsyncApertis()
 
     stream = await client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="gpt-5.4-mini",
         messages=[
             {"role": "user", "content": "Write a haiku about Python."}
         ],
@@ -133,7 +133,7 @@ def main():
 
     try:
         stream = client.chat.completions.create(
-            model="gpt-4.1-mini",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "user", "content": "Tell me a joke."}
             ],
@@ -164,7 +164,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "Explain quantum entanglement."}
         ],
@@ -190,11 +190,11 @@ All chat models support streaming:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `gpt-5.4-nano` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 | DeepSeek | `deepseek-chat` |
-| xAI | `grok-3`, `grok-3-fast` |
+| xAI | `grok-4.3`, `grok-4-fast` |
 
 [View all models →](/api/utilities/models)
 

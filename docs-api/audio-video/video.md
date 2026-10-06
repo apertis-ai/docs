@@ -1,6 +1,10 @@
 # Video API
 
-The Video API generates videos from text prompts using models like Veo2, Veo3, and Sora-2. Video generation is asynchronous - you create a task and poll for completion.
+The Video API generates videos from text prompts using Veo models. Video generation is asynchronous - you create a task and poll for completion.
+
+:::note Model availability
+The [model catalog](/models/) lists the video models currently offered: `veo3`, `veo3-fast`, `veo3-pro` and `veo3-pro-frames`. Check it before using any other model ID on this page.
+:::
 
 ## Create Video
 
@@ -793,12 +797,14 @@ print(f"Remix task created: {remix_task['id']}")
 | `veo3-fast` | Veo 3 fast generation | Yes (`16:9`, `9:16`) |
 | `veo3-pro` | Veo 3 professional quality | Yes (`16:9`, `9:16`) |
 | `veo3-pro-frames` | Veo 3 with frame reference (max 1 image) | Yes (`16:9`, `9:16`) |
-| `veo3.1` | Veo 3.1 latest model | Yes (`16:9`, `9:16`) |
-| `veo3.1-fast` | Veo 3.1 fast generation | Yes (`16:9`, `9:16`) |
 | `veo_3_1` | Veo 3.1 (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
 | `veo_3_1-fast` | Veo 3.1 fast (for /v1/videos API) | Yes (`16x9`, `720x1280`) |
 
 ### Sora Models
+
+:::caution
+`sora-2` and `sora-2-pro` are not listed in the current [model catalog](/models/).
+:::
 
 | Model | Description | Duration Support |
 |-------|-------------|------------------|

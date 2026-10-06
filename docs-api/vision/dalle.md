@@ -1,8 +1,8 @@
 ---
-description: "Generate images with GPT-Image-1 and DALL-E 3 through the OpenAI-compatible /v1/images/generations endpoint."
+description: "Generate images with GPT image models through the OpenAI-compatible /v1/images/generations endpoint."
 ---
 
-# Using GPT-Image-1 and Dall-E 3
+# Using GPT Image Models
 
 ## Python Example
 
@@ -31,7 +31,7 @@ print(response.text)
 
 ## Parameters
 
-- `model`: The model to use, currently supports `dall-e-3`
-- `size`: The size of the image, currently supports `1024x1024`, `1792x1024`, `1024x1792`
+- `model`: The model to use, e.g. `gpt-image-2`. See [Models](/models/) for the current image models
+- `size`: The size of the image: `1024x1024`, `1536x1024`, `1024x1536` or `auto`
 - `APERTIS_API_KEY`: Your API key
 

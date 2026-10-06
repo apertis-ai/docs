@@ -57,7 +57,7 @@ curl "https://api.apertis.ai/v1/recommend?task=coding&budget=medium" \
       "note": "3x cheaper, good for simpler coding tasks"
     },
     {
-      "model": "gpt-4o",
+      "model": "gpt-5.5",
       "input_price_per_1m": 1.88,
       "note": "reliable, mid-range cost"
     }
