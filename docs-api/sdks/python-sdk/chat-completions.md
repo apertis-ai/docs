@@ -163,8 +163,8 @@ All chat-capable models are supported, including:
 |----------|--------|
 | OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `o4-mini-high`, `o3-mini-high` |
 | Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
-| Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
-| DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
+| Google | `gemini-3.1-pro-preview`, `gemini-2.5-flash` |
+| DeepSeek | `deepseek-v3.2`, `deepseek-r1` |
 | xAI | `grok-4.3`, `grok-4-fast` |
 
 [View all models →](/api/utilities/models)

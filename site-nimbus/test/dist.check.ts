@@ -356,7 +356,11 @@ test('every recorded post-cutover content change matches its built page', () => 
     for (const h of c.links.added ?? []) assert.ok(hrefs.has(h), `${id}: added link ${h} is not on the page`);
     for (const h of c.links.removed ?? []) assert.ok(!hrefs.has(h), `${id}: removed link ${h} is still on the page`);
     const ids = new Set([...read(`${d.servedPath.slice(1)}index.html`).matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
-    for (const h of c.headings?.removed ?? []) assert.ok(!ids.has(h), `${id}: removed heading #${h} is still on the page`);
+    const legacyIds = routes.find((r) => r.documentId === id)!.live!.headingIds;
+    for (const h of c.headings?.removed ?? []) {
+      assert.ok(legacyIds.includes(h), `${id}: removed heading #${h} is not a legacy heading id`);
+      assert.ok(!ids.has(h), `${id}: removed heading #${h} is still on the page`);
+    }
   }
 });
 
