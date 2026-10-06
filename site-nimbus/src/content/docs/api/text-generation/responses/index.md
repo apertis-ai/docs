@@ -782,7 +782,7 @@ This means you can use **any model** with the Responses API - the conversion is 
 | Text config | `text` object | Not available |
 | State management | `store`, `previous_response_id` | Manual message array |
 | Token limit | `max_output_tokens` | `max_tokens` |
-| Tool call limits | `max_tool_calls`, `parallel_tool_calls` | Not available |
+| Tool call limits | `max_tool_calls` | Not available |
 | Truncation | `truncation` parameter | Not available |
 
 ## Context Compression
