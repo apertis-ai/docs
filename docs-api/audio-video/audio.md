@@ -270,8 +270,6 @@ Content-Type: application/json
 
 | Model | Best for | Notes |
 |-------|----------|-------|
-| `tts-1` | Standard quality, low latency | OpenAI baseline |
-| `tts-1-hd` | High quality, slower | OpenAI HD baseline |
 | `gpt-4o-mini-tts-2025-12-15` | Steerable voice (instruction-following) | Use the `instructions` field to set tone, accent, pacing |
 | `gemini-3.1-flash-tts-preview` | Multilingual TTS | Routed via OpenRouter |
 
@@ -286,19 +284,12 @@ Content-Type: application/json
 | `nova` | Energetic, youthful |
 | `shimmer` | Clear, pleasant |
 
-### Available Models
-
-| Model | Description | Quality |
-|-------|-------------|---------|
-| `tts-1` | Standard TTS | Good, fast |
-| `tts-1-hd` | High-definition TTS | Best, slower |
-
 ### Example: Basic TTS
 
 **Python:**
 ```python
 response = client.audio.speech.create(
-    model="tts-1",
+    model="gpt-4o-mini-tts-2025-12-15",
     voice="alloy",
     input="Hello! Welcome to Apertis API documentation."
 )
@@ -310,7 +301,7 @@ response.stream_to_file("output.mp3")
 **Node.js:**
 ```javascript
 const response = await client.audio.speech.create({
-  model: 'tts-1',
+  model: 'gpt-4o-mini-tts-2025-12-15',
   voice: 'alloy',
   input: 'Hello! Welcome to Apertis API documentation.'
 });
@@ -325,7 +316,7 @@ curl https://api.apertis.ai/v1/audio/speech \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "tts-1",
+    "model": "gpt-4o-mini-tts-2025-12-15",
     "voice": "alloy",
     "input": "Hello! Welcome to Apertis API documentation."
   }' \
@@ -340,9 +331,9 @@ Binary audio data in the requested format. Default is `mp3`.
 
 ```python
 response = client.audio.speech.create(
-    model="tts-1-hd",  # Higher quality
+    model="gpt-4o-mini-tts-2025-12-15",
     voice="nova",
-    input="This is high-definition audio.",
+    input="This is lossless audio.",
     response_format="flac"  # Lossless format
 )
 ```
@@ -352,7 +343,7 @@ response = client.audio.speech.create(
 ```python
 # Slower speech
 response = client.audio.speech.create(
-    model="tts-1",
+    model="gpt-4o-mini-tts-2025-12-15",
     voice="onyx",
     input="Speaking slowly and clearly.",
     speed=0.75
@@ -360,7 +351,7 @@ response = client.audio.speech.create(
 
 # Faster speech
 response = client.audio.speech.create(
-    model="tts-1",
+    model="gpt-4o-mini-tts-2025-12-15",
     voice="echo",
     input="Speaking quickly!",
     speed=1.5
@@ -373,7 +364,7 @@ For real-time audio streaming:
 
 ```python
 with client.audio.speech.with_streaming_response.create(
-    model="tts-1",
+    model="gpt-4o-mini-tts-2025-12-15",
     voice="alloy",
     input="Streaming audio in real-time..."
 ) as response:

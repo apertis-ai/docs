@@ -48,7 +48,7 @@ console.log(response.data[0].embedding);
 
 ## Parameters
 
-- `model`: The model to use, currently supports `text-embedding-3-large`, `text-embedding-3-small`, `text-embedding-ada-002` from **OpenAI** and `jina-embeddings-v3`, `jina-clip-v2`, `jina-colbert-v2`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`, `jina-embeddings-v2-base-en` from **Jina AI**.
+- `model`: The model to use, currently supports `jina-embeddings-v3`, `jina-embeddings-v4`, `jina-embeddings-v5-text-small`, `jina-embeddings-v5-text-nano`, `jina-clip-v1`, `jina-colbert-v2` from **Jina AI**, `mistral-embed-2312` from **Mistral AI** and `gemini-embedding-2-preview` from **Google**. See [Models](/models/) for the current list.
 - `input`: The text to convert
 - `APERTIS_API_KEY`: Your API key
 

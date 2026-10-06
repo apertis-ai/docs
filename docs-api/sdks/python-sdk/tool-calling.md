@@ -54,7 +54,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "What's the weather like in Tokyo?"}
         ],
@@ -138,7 +138,7 @@ def main():
 
     # First API call
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=messages,
         tools=tools,
         tool_choice="auto"
@@ -168,7 +168,7 @@ def main():
 
         # Second API call with function results
         final_response = client.chat.completions.create(
-            model="gpt-4.1",
+            model="gpt-5.5",
             messages=messages,
             tools=tools
         )
@@ -208,7 +208,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "John works at Google in San Francisco with Mary."}
         ],
@@ -255,7 +255,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "Get the stock prices for AAPL, GOOGL, and MSFT"}
         ],
@@ -281,8 +281,8 @@ Tool calling is supported by:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `gpt-5.4-nano` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 | DeepSeek | `deepseek-chat` |
 

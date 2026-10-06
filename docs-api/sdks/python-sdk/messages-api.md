@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Hello, Claude!"}
@@ -41,7 +41,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         system="You are a helpful coding assistant specializing in Python.",
         messages=[
@@ -68,7 +68,7 @@ def main():
     ]
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=messages
     )
@@ -80,7 +80,7 @@ def main():
     messages.append({"role": "user", "content": "Can you show me an example in Python?"})
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=messages
     )
@@ -100,7 +100,7 @@ def main():
     client = Apertis()
 
     with client.messages.stream(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Write a short poem about coding."}
@@ -126,7 +126,7 @@ def main():
 
     # From URL
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {
@@ -186,7 +186,7 @@ def main():
     ]
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         tools=tools,
         messages=[
@@ -214,7 +214,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=16000,
         thinking={
             "type": "enabled",
@@ -247,7 +247,7 @@ def main():
     client = Apertis()
 
     response = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Hello!"}
@@ -274,7 +274,7 @@ async def main():
     client = AsyncApertis()
 
     response = await client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "What is the capital of France?"}
@@ -298,7 +298,7 @@ def main():
     client = Apertis()
 
     message = client.messages.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Explain distributed systems"},
@@ -310,7 +310,7 @@ def main():
             "compression": {
                 "enabled": True,
                 "strategy": "on",
-                "model": "gpt-4.1-mini"
+                "model": "gpt-5.4-mini"
             }
         }
     )
@@ -328,7 +328,7 @@ The Messages API supports all Claude models:
 | Model | Description |
 |-------|-------------|
 | `claude-opus-4-5-20251101` | Most capable, best for complex tasks |
-| `claude-sonnet-4.5` | Balanced performance and cost |
+| `claude-sonnet-4-6` | Balanced performance and cost |
 | `claude-haiku-4-5-20250501` | Fastest, most cost-effective |
 
 [View all models →](/api/utilities/models)

@@ -183,7 +183,7 @@ client = anthropic.Anthropic(
 )
 
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is the meaning of life?"}
@@ -204,7 +204,7 @@ const client = new Anthropic({
 });
 
 const message = await client.messages.create({
-  model: 'claude-sonnet-4.5',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   messages: [
     { role: 'user', content: 'What is the meaning of life?' }
@@ -297,7 +297,7 @@ const message = await client.messages.create({
 
 ```python
 with client.messages.stream(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a poem about coding."}]
 ) as stream:
@@ -525,7 +525,7 @@ Currently, PDF (`application/pdf`) is the primary supported document format for 
       "text": "Hello! How can I help you today?"
     }
   ],
-  "model": "claude-sonnet-4.5",
+  "model": "claude-sonnet-4-6",
   "stop_reason": "end_turn",
   "usage": {
     "input_tokens": 12,
@@ -541,7 +541,7 @@ The Messages API supports Claude models via Anthropic-type channels:
 | Model | Description |
 |-------|-------------|
 | `claude-opus-4-5-20251101` | Claude Opus 4.5 - most capable |
-| `claude-sonnet-4.5` | Claude Sonnet 4.5 - balanced |
+| `claude-sonnet-4-6` | Claude Sonnet 4.5 - balanced |
 | `claude-haiku-4.5` | Claude Haiku 4.5 - fast and efficient |
 
 :::warning Anthropic Channels Only
@@ -568,7 +568,7 @@ The Messages API supports [context compression](./context-compression) to automa
 
 ```python
 message = client.messages.create(
-    model="claude-sonnet-4.5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Hello!"}
@@ -577,7 +577,7 @@ message = client.messages.create(
         "compression": {
             "enabled": True,
             "strategy": "on",
-            "model": "gpt-4.1-mini"
+            "model": "gpt-5.4-mini"
         }
     }
 )
@@ -590,10 +590,10 @@ curl https://api.apertis.ai/v1/messages \
   -H "x-api-key: <APERTIS_API_KEY>" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "claude-sonnet-4.5",
+    "model": "claude-sonnet-4-6",
     "max_tokens": 1024,
     "messages": [{"role": "user", "content": "Hello!"}],
-    "compression": {"enabled": true, "model": "gpt-4.1-mini"}
+    "compression": {"enabled": true, "model": "gpt-5.4-mini"}
   }'
 ```
 

@@ -89,7 +89,7 @@ def main():
     client = Apertis()
 
     response = client.audio.speech.create(
-        model="tts-1",
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="alloy",
         input="Hello! Welcome to Apertis AI. How can I help you today?"
     )
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## High Quality Text to Speech
+## Voice, Format and Speed
 
 ```python
 from apertis import Apertis
@@ -113,9 +113,9 @@ def main():
     client = Apertis()
 
     response = client.audio.speech.create(
-        model="tts-1-hd",        # High-definition model
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="nova",            # Different voice
-        input="This is high quality text-to-speech audio.",
+        input="This is text-to-speech audio with a different voice.",
         response_format="opus",  # Opus format for better quality
         speed=1.0                # Normal speed (0.25 to 4.0)
     )
@@ -138,7 +138,7 @@ def main():
     client = Apertis()
 
     response = client.audio.speech.create(
-        model="tts-1",
+        model="gpt-4o-mini-tts-2025-12-15",
         voice="shimmer",
         input="This audio is being streamed as it's generated.",
     )
@@ -238,8 +238,8 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `tts-1` | Standard quality, fast |
-| `tts-1-hd` | High definition quality |
+| `gpt-4o-mini-tts-2025-12-15` | Steerable voice; accepts `instructions` for tone and pacing |
+| `gemini-3.1-flash-tts-preview` | Multilingual TTS |
 
 ### Available Voices
 

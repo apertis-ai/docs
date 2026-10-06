@@ -102,10 +102,10 @@ Most OpenAI models are available with the same names:
 | gpt-5.5 | gpt-5.5 | ✓ Same |
 | gpt-5.4-mini | gpt-5.4-mini | ✓ Same |
 | gpt-5.4-nano | gpt-5.4-nano | ✓ Same |
-| text-embedding-3-small | text-embedding-3-small | ✓ Same |
+| text-embedding-3-small | jina-embeddings-v3 | Different model (1024 dimensions); re-embed stored vectors |
 | whisper-1 | whisper-1 | ✓ Same |
-| tts-1 | tts-1 | ✓ Same |
-| dall-e-3 | dall-e-3 | ✓ Same |
+| tts-1 | gpt-4o-mini-tts-2025-12-15 | Same `/v1/audio/speech` request shape |
+| dall-e-3 | gpt-image-2 | Same `/v1/images/generations` endpoint; returns base64 images |
 
 ### Additional Models
 

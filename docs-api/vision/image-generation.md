@@ -86,7 +86,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
 
 ## Parameter Description
 
-- `model`: Currently supports `gpt-4o-image`, `gemini-2.0-flash-exp-image` and `grok-3-image`.
+- `model`: For example `gemini-2.5-flash-image` or `gemini-3.1-flash-lite-image`. See [Models](/models/) for the current image models.
 - `prompt`: Description of the image to be generated.
 - `APERTIS_API_KEY`: Your API key.
 - Allowed Image Input: Convert to **base64** format. 

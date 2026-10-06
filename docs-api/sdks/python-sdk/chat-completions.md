@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="gpt-5.4-mini",
         messages=[
             {"role": "user", "content": "Explain quantum computing in simple terms."}
         ]
@@ -45,7 +45,7 @@ def main():
     ]
 
     response = client.chat.completions.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         messages=messages
     )
 
@@ -56,7 +56,7 @@ def main():
     messages.append({"role": "user", "content": "Can you show me an example?"})
 
     response = client.chat.completions.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         messages=messages
     )
 
@@ -75,7 +75,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "Write a creative story opening."}
         ],
@@ -101,7 +101,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="gpt-5.4-mini",
         messages=[
             {"role": "user", "content": "Hello!"}
         ]
@@ -133,7 +133,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": "Explain distributed systems"},
             {"role": "assistant", "content": "Distributed systems are..."},
@@ -144,7 +144,7 @@ def main():
             "compression": {
                 "enabled": True,
                 "strategy": "on",
-                "model": "gpt-4.1-mini"
+                "model": "gpt-5.4-mini"
             }
         }
     )
@@ -161,11 +161,11 @@ All chat-capable models are supported, including:
 
 | Provider | Models |
 |----------|--------|
-| OpenAI | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1`, `o1`, `o3-mini` |
-| Anthropic | `claude-sonnet-4.5`, `claude-opus-4-5-20251101`, `claude-haiku-4-5-20250501` |
+| OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `o4-mini-high`, `o3-mini-high` |
+| Anthropic | `claude-sonnet-4-6`, `claude-opus-4-5-20251101`, `claude-haiku-4.5` |
 | Google | `gemini-3-pro-preview`, `gemini-2.5-flash` |
 | DeepSeek | `deepseek-chat`, `deepseek-reasoner` |
-| xAI | `grok-3`, `grok-3-fast` |
+| xAI | `grok-4.3`, `grok-4-fast` |
 
 [View all models →](/api/utilities/models)
 
