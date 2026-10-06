@@ -20,11 +20,11 @@ You can specify fallback model configuration directly in each API request:
 
 ```json
 {
-  "model": "gpt-4",
+  "model": "gpt-5.5",
   "messages": [
     {"role": "user", "content": "Hello, how are you?"}
   ],
-  "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+  "fallback_models": ["gpt-5.4-mini", "claude-haiku-4.5"],
   "fallback_timeout": 25000,
   "fallback_enabled": true
 }
@@ -40,7 +40,7 @@ You can also pre-configure fallback models in your API Token settings, which wil
 - **Type**: Array of strings
 - **Description**: List of fallback models in priority order
 - **Limit**: Maximum 5 fallback models
-- **Example**: `["gpt-3.5-turbo", "claude-3-haiku-20240307", "gemini-pro"]`
+- **Example**: `["gpt-5.4-mini", "claude-haiku-4.5", "gemini-2.5-flash"]`
 
 ### `fallback_timeout`
 - **Type**: Integer
@@ -85,19 +85,19 @@ import openai
 
 # Configure Apertis
 client = openai.OpenAI(
-    api_key="your-stima-api-key",
+    api_key="sk-your-api-key",
     base_url="https://api.apertis.ai/v1"
 )
 
 # Chat request with fallback models
 response = client.chat.completions.create(
-    model="gpt-4",
+    model="gpt-5.5",
     messages=[
         {"role": "user", "content": "Hello, how are you?"}
     ],
     # Fallback configuration
     extra_body={
-        "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+        "fallback_models": ["gpt-5.4-mini", "claude-haiku-4.5"],
         "fallback_timeout": 25000,  # 25 second timeout
         "fallback_enabled": True
     }
@@ -121,16 +121,16 @@ import json
 
 url = "https://api.apertis.ai/v1/chat/completions"
 headers = {
-    "Authorization": "Bearer your-stima-api-key",
+    "Authorization": "Bearer sk-your-api-key",
     "Content-Type": "application/json"
 }
 
 payload = {
-    "model": "gpt-4",
+    "model": "gpt-5.5",
     "messages": [
         {"role": "user", "content": "Write a Python function for me"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+    "fallback_models": ["gpt-5.4-mini", "claude-haiku-4.5"],
     "fallback_timeout": 20000,
     "fallback_enabled": True
 }
@@ -158,15 +158,15 @@ except requests.exceptions.RequestException as e:
 ```bash
 # Basic fallback request
 curl -X POST "https://api.apertis.ai/v1/chat/completions" \
-  -H "Authorization: Bearer your-stima-api-key" \
+  -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d '{
-    "model": "gpt-4",
+    "model": "gpt-5.5",
     "messages": [
       {"role": "user", "content": "Hello, how are you?"}
     ],
-    "fallback_models": ["gpt-3.5-turbo", "claude-3-haiku-20240307"],
+    "fallback_models": ["gpt-5.4-mini", "claude-haiku-4.5"],
     "fallback_timeout": 25000,
     "fallback_enabled": true
   }' \
@@ -179,15 +179,15 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
 ```bash
 # Display full headers to check fallback usage
 curl -X POST "https://api.apertis.ai/v1/chat/completions" \
-  -H "Authorization: Bearer your-stima-api-key" \
+  -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -D headers.txt \
   -d '{
-    "model": "gpt-4",
+    "model": "gpt-5.5",
     "messages": [
       {"role": "user", "content": "Test fallback mechanism"}
     ],
-    "fallback_models": ["gpt-3.5-turbo"],
+    "fallback_models": ["gpt-5.4-mini"],
     "fallback_timeout": 15000,
     "fallback_enabled": true
   }'
@@ -204,8 +204,8 @@ When using the fallback model mechanism, the API response includes the following
 | Header Name | Description | Example Value |
 |-------------|-------------|---------------|
 | `X-Fallback-Used` | Whether fallback model was used | `true` / `false` |
-| `X-Fallback-From` | Original requested model name | `gpt-4` |
-| `X-Actual-Model` | Actually used model name | `gpt-3.5-turbo` |
+| `X-Fallback-From` | Original requested model name | `gpt-5.5` |
+| `X-Actual-Model` | Actually used model name | `gpt-5.4-mini` |
 | `X-Fallback-Reason` | Reason for triggering fallback | `primary_model_failed` |
 
 ## Timeout Architecture
@@ -226,8 +226,8 @@ There are two timeout layers that work together:
 X-Timeout: 60000 (total budget)
 ├── Channel retries: 25s used
 └── Fallback models: 35s remaining
-    ├── gpt-3.5-turbo: fallback_timeout=15s → wait up to 15s
-    └── claude-3-haiku: fallback_timeout=15s → wait up to 20s (capped by remaining)
+    ├── gpt-5.4-mini: fallback_timeout=15s → wait up to 15s
+    └── claude-haiku-4.5: fallback_timeout=15s → wait up to 20s (capped by remaining)
 ```
 
 ### Subscription Users

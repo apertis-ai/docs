@@ -75,11 +75,11 @@ for await (const model of client.models.list()) {
   "object": "list",
   "data": [
     {
-      "id": "gpt-4.1",
+      "id": "gpt-5.5",
       "object": "model",
       "created": 1626777600,
       "owned_by": "OpenAI",
-      "root": "gpt-4.1",
+      "root": "gpt-5.5",
       "parent": null
     }
   ]
@@ -95,11 +95,11 @@ When using a subscription API key, the response includes additional fields to he
   "object": "list",
   "data": [
     {
-      "id": "claude-sonnet-4.5",
+      "id": "claude-sonnet-4-6",
       "object": "model",
       "created": 1626777600,
       "owned_by": "Anthropic",
-      "root": "claude-sonnet-4.5",
+      "root": "claude-sonnet-4-6",
       "parent": null,
       "multiplier": 2.1,
       "tier": "pro",
@@ -216,7 +216,7 @@ for model in models:
     print(model.id)
 
 # Retrieve a specific model
-model = client.models.retrieve("claude-sonnet-4.5")
+model = client.models.retrieve("claude-sonnet-4-6")
 print(model.id, model.owned_by)
 ```
 

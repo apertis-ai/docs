@@ -23,7 +23,7 @@ def main():
     client = Apertis()
 
     response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model="jina-embeddings-v3",
         input="Machine learning is a subset of artificial intelligence."
     )
 
@@ -52,7 +52,7 @@ def main():
     ]
 
     response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model="jina-embeddings-v3",
         input=texts
     )
 
@@ -75,15 +75,15 @@ def main():
 
     # Full dimensions
     full_response = client.embeddings.create(
-        model="text-embedding-3-large",
+        model="jina-embeddings-v3",
         input="Hello world"
     )
 
     # Reduced dimensions for efficiency
     reduced_response = client.embeddings.create(
-        model="text-embedding-3-large",
+        model="jina-embeddings-v3",
         input="Hello world",
-        dimensions=1024  # Reduce from 3072 to 1024
+        dimensions=256  # Reduce from 1024 to 256
     )
 
     print(f"Full dimensions: {len(full_response.data[0].embedding)}")
@@ -115,7 +115,7 @@ def main():
     ]
 
     response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model="jina-embeddings-v3",
         input=texts
     )
 
@@ -155,7 +155,7 @@ def main():
 
     # Generate embeddings for documents
     doc_response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model="jina-embeddings-v3",
         input=documents
     )
     doc_embeddings = [data.embedding for data in doc_response.data]
@@ -164,7 +164,7 @@ def main():
     query = "Which language is best for web development?"
 
     query_response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model="jina-embeddings-v3",
         input=query
     )
     query_embedding = query_response.data[0].embedding
@@ -204,7 +204,7 @@ async def main():
     for i in range(0, len(texts), batch_size):
         batch = texts[i:i + batch_size]
         response = await client.embeddings.create(
-            model="text-embedding-3-small",
+            model="jina-embeddings-v3",
             input=batch
         )
         all_embeddings.extend([data.embedding for data in response.data])
@@ -220,9 +220,8 @@ if __name__ == "__main__":
 
 | Model | Dimensions | Description |
 |-------|------------|-------------|
-| `text-embedding-3-small` | 1536 | Fast, cost-effective |
-| `text-embedding-3-large` | 3072 | Higher quality, supports dimension reduction |
-| `text-embedding-ada-002` | 1536 | Legacy model |
+| `jina-embeddings-v3` | 1024 | Multilingual, supports dimension reduction |
+| `mistral-embed-2312` | 1024 | Mistral AI embeddings |
 
 [View all models →](/api/utilities/models)
 
