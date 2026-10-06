@@ -1,7 +1,7 @@
 {
   "api:index": {
-    "updated": "2026-03-17T13:45:48+08:00",
-    "readingMinutes": 1
+    "updated": "2026-10-05T18:51:45+08:00",
+    "readingMinutes": 3
   },
   "api:audio-video/audio": {
     "updated": "2026-05-04T12:04:35+08:00",
@@ -12,7 +12,7 @@
     "readingMinutes": 10
   },
   "api:embeddings/embeddings-api": {
-    "updated": "2026-01-26T14:30:18+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 1
   },
   "api:embeddings/guide": {
@@ -36,7 +36,7 @@
     "readingMinutes": 2
   },
   "api:sdks/langchain": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "api:sdks/litellm": {
@@ -48,8 +48,8 @@
     "readingMinutes": 1
   },
   "api:sdks/mcp-server": {
-    "updated": "2026-05-21T10:41:42+08:00",
-    "readingMinutes": 4
+    "updated": "2026-10-05T18:57:03+08:00",
+    "readingMinutes": 5
   },
   "api:sdks/python-sdk/index": {
     "updated": "2026-07-20T11:55:30+08:00",
@@ -112,7 +112,7 @@
     "readingMinutes": 3
   },
   "api:text-generation/chat-completions": {
-    "updated": "2026-04-11T13:13:11+08:00",
+    "updated": "2026-10-05T19:32:27+08:00",
     "readingMinutes": 2
   },
   "api:text-generation/context-compression": {
@@ -120,7 +120,7 @@
     "readingMinutes": 6
   },
   "api:text-generation/messages": {
-    "updated": "2026-03-01T01:53:08+08:00",
+    "updated": "2026-10-05T19:20:32+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -128,11 +128,11 @@
     "readingMinutes": 2
   },
   "api:text-generation/responses": {
-    "updated": "2026-03-02T00:37:53+08:00",
+    "updated": "2026-10-05T19:20:32+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/streaming": {
-    "updated": "2026-01-26T14:29:22+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "api:text-generation/structured-output": {
@@ -148,7 +148,7 @@
     "readingMinutes": 4
   },
   "api:utilities/models": {
-    "updated": "2026-02-11T15:11:39+08:00",
+    "updated": "2026-10-05T18:54:19+08:00",
     "readingMinutes": 2
   },
   "api:utilities/recommend": {
@@ -156,11 +156,11 @@
     "readingMinutes": 2
   },
   "api:vision/dalle": {
-    "updated": "2026-01-26T14:29:51+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "api:vision/image-generation": {
-    "updated": "2026-01-26T14:29:51+08:00",
+    "updated": "2026-10-05T19:35:13+08:00",
     "readingMinutes": 1
   },
   "api:vision/images-api": {
@@ -168,7 +168,7 @@
     "readingMinutes": 5
   },
   "api:vision/read-image": {
-    "updated": "2026-01-26T14:29:51+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "default:authentication/api-keys": {
@@ -236,7 +236,7 @@
     "readingMinutes": 5
   },
   "default:installation/cline": {
-    "updated": "2026-03-23T15:00:55+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "default:installation/connection": {
@@ -268,7 +268,7 @@
     "readingMinutes": 3
   },
   "default:installation/models": {
-    "updated": "2026-07-18T00:25:50+08:00",
+    "updated": "2026-10-05T19:07:41+08:00",
     "readingMinutes": 1
   },
   "default:installation/opencode": {
@@ -288,7 +288,7 @@
     "readingMinutes": 3
   },
   "default:intro": {
-    "updated": "2026-02-03T17:35:58+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 2
   },
   "default:opensource": {
@@ -296,7 +296,7 @@
     "readingMinutes": 2
   },
   "default:principles": {
-    "updated": "2026-01-26T11:26:13+08:00",
+    "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "default:security/best-practices": {

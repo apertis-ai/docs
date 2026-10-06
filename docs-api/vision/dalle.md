@@ -1,3 +1,7 @@
+---
+description: "Generate images with GPT-Image-1 and DALL-E 3 through the OpenAI-compatible /v1/images/generations endpoint."
+---
+
 # Using GPT-Image-1 and Dall-E 3
 
 ## Python Example

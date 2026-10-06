@@ -681,6 +681,25 @@ html:not(.js) .article-filter { display: none; }
 .related-articles ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
 .related-articles a { color: var(--ink); font-weight: 500; text-decoration: none; }
 .related-articles a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* "Was this page helpful?" (openspec docs-reader-shell-extras "Page feedback"), outside <article>. Server-rendered
+   [hidden]; src/layouts/DocLayout.astro's inline script reveals it. */
+.page-feedback { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+/* [hidden]'s UA rule and .page-feedback__choices/__form's `display: flex` are both specificity 0,1,0; the
+   author rule wins by source order. This beats it (0,2,0), same fix as [data-f][hidden] above. */
+.page-feedback [hidden] { display: none; }
+.page-feedback__prompt { margin: 0 0 12px; color: var(--ink); font-weight: 500; }
+.page-feedback__choices { display: flex; gap: 8px; }
+.page-feedback__choice { height: 32px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+.page-feedback__choice:hover { color: var(--ink); }
+.page-feedback__choice[aria-pressed='true'] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.page-feedback__form { display: flex; flex-direction: column; gap: 8px; max-width: 480px; margin-top: 12px; }
+.page-feedback__form label { color: var(--muted); font-size: var(--fs-sm); }
+.page-feedback__form textarea { padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--card); color: var(--ink); font: var(--fs-base)/1.5 var(--font); resize: vertical; }
+.page-feedback__send { align-self: flex-start; height: 32px; padding: 0 16px; border: 0; border-radius: 8px; background: var(--primary); color: var(--primary-fg); font: 500 var(--fs-sm)/1 var(--font); cursor: pointer; }
+.page-feedback__status { margin: 8px 0 0; color: var(--muted); font-size: var(--fs-sm); }
+.page-feedback__status:empty { display: none; }
+.page-feedback__status[data-state='ok'] { color: var(--adm-tip); }
+.page-feedback__status[data-state='error'] { color: var(--error); }
 .article-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
 .article-row {
   display: grid;
@@ -880,4 +899,34 @@ html.aa-scroll-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after, .aa::backdrop { transition: none !important; scroll-behavior: auto !important; }
   .aa-msg::before { animation: none !important; }
+}
+
+/* Print layout (openspec docs-reader-shell-extras "Print layout"): only the page header and the article.
+   The light palette is forced in tokens.css. The grid reset is the same one the <= 996px rule above uses. */
+@media print {
+  .navbar, #shell-drawer, .breadcrumbs, .doc-page__sidebar, .doc-page__toc, .toc-mobile,
+  .doc-header__actions, .doc-header__edit, .related-articles, .pagination, .footer,
+  .ask-docs-trigger, #apertis-assistant, .nb-code-copy, .heading-anchor,
+  .try-it, .try-it-open, [data-feedback], .code-tabs__list {
+    display: none !important;
+  }
+  .doc-page, .doc-page--sidebar { display: block; }
+  .doc-page__main { padding: 0; }
+  .doc-header { display: block; margin-bottom: 0; }
+  .docs-content, .docs-content pre { max-width: 100%; }
+  /* Code tab groups: every sample prints under its no-JS label instead of only the selected one. */
+  .code-tabs__panel { display: block !important; }
+  .code-tabs--ready .code-tabs__label { display: block !important; }
+  /* Code wraps instead of being clipped or scrolled. */
+  .docs-content pre { overflow-x: visible; white-space: pre-wrap; word-break: break-word; }
+  /* An external link's URL follows its text. */
+  .docs-content a[href^="http"]::after { content: ' (' attr(href) ')'; font-size: 0.85em; color: var(--muted); }
+  /* Shiki writes both token colours on every span (shell.css "Nimbus writes it on every build"); keep the
+     light one and its contrast clamp even under the dark theme switch. */
+  [data-theme='dark'] .astro-code, [data-theme='dark'] .astro-code span { color: var(--shiki-light); }
+}
+@supports (color: oklch(from red l c h)) {
+  @media print {
+    [data-theme='dark'] .astro-code span { color: oklch(from var(--shiki-light) min(l, 0.5) c h); }
+  }
 }

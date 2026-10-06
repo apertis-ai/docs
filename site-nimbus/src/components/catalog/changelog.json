@@ -1,0 +1,2186 @@
+[
+  {
+    "version": "2.2.107",
+    "date": "2026-10-01",
+    "title": "Models Added",
+    "description": "Add GPT-6.1 Sol",
+    "category": "feature",
+    "items": [
+      "GPT-6.1 Sol"
+    ],
+    "content": "## GPT-6.1 Sol\n\nGPT-6.1 Sol is an upgraded high-end model in OpenAI's GPT-6 series, positioned below the flagship GPT-6 Astra. It is optimized for agentic coding, computer use, document-heavy professional work, and multi-step business automation, delivering near-Astra-level capability at significantly lower cost. \n\nCompared with GPT-6 Sol, it offers improved factual reliability and stronger adherence to explicit constraints and user intent, making it well suited for complex, long-running agentic workflows where accurate and dependable execution is critical.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.106",
+    "date": "2026-09-29",
+    "title": "Models Added",
+    "description": "Add Claude Sonnet 5.5",
+    "category": "feature",
+    "items": [
+      "Claude Sonnet 5.5"
+    ],
+    "content": "## Claude Sonnet 5.5\n\nClaude Sonnet 5.5 is Anthropic's Sonnet-class model for well-scoped everyday work, serving as a direct upgrade to Sonnet 5. It excels at feature development, bug fixing, and creating polished documents, presentations, and spreadsheets, while offering clearer writing and communication than its predecessor.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.105",
+    "date": "2026-09-22",
+    "title": "Models Added",
+    "description": "Add GPT-6 Sol & GPT-6 Luna",
+    "category": "feature",
+    "items": [
+      "GPT-6 Sol",
+      "GPT-6 Luna"
+    ],
+    "content": "## GPT-6 Sol\n\nGPT-6 Sol is OpenAI's cost-efficient high-end model in the GPT-6 series, positioned between the flagship GPT-6 Astra and the fast GPT-6 Luna tier. It is designed for professional knowledge work, agentic coding, business workflow automation, and computer-use tasks, with particular strength in long-horizon software engineering across real-world codebases. \n\nGPT-6 Sol approaches Astra-level factual reliability at a significantly lower cost, while sharing its clear and concise communication style. This balance of capability, reliability, and efficiency makes it well suited for production agents, complex engineering workflows, and scalable professional applications\n\n## GPT-6 Luna\n\nGPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, optimized for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic tasks. It combines low-cost, responsive inference with the GPT-6 family’s improvements in factual reliability and clear, concise communication. \n\nAt higher reasoning effort, GPT-6 Luna can also handle complex software engineering and computer-use workflows that previously required a Sol-tier model, making it a versatile choice for scalable production applications that need to balance speed, cost, and capability.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.104",
+    "date": "2026-09-22",
+    "title": "Models Added",
+    "description": "Add Claude Opus 5.5",
+    "category": "feature",
+    "items": [
+      "Claude Opus 5.5"
+    ],
+    "content": "## Claude Opus 5.5\n\n\nClaude Opus 5.5 is Anthropic's flagship model for advanced reasoning, coding, and long-horizon agentic workflows, succeeding Opus 5. It excels at multi-step changes across large codebases, code review and bug detection, financial and scientific analysis, and understanding dense charts, diagrams, and screenshots, with stronger grounding when reporting figures and citing sources. Compared with Opus 5, it completes comparable tasks with fewer steps and lower token usage while providing clearer, more concise progress reporting. \n\nWith adaptive thinking and configurable effort levels, Opus 5.5 can balance reasoning depth, latency, and cost, making it well suited for both demanding autonomous workflows and latency-sensitive professional tasks.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.103",
+    "date": "2026-09-21",
+    "title": "Models Added",
+    "description": "Add Grok 4.7",
+    "category": "feature",
+    "items": [
+      "Grok 4.7"
+    ],
+    "content": "## Grok 4.7\n\nGrok 4.7 is SpaceXAI's flagship model for coding, agentic workflows, and professional knowledge work, succeeding Grok 4.6. It is particularly strong at long-running software engineering, self-verification, and long-context execution, while improving capabilities in document drafting, presentations, and other professional tasks. \n\nTrained with extended reinforcement learning focused on multi-hour problems, Grok 4.7 is optimized for sustained, complex task execution and natively supports the Grok Bot harness for conversational workflows. It also introduces an enhanced safeguard stack designed to combine strong jailbreak resistance with low refusal rates for legitimate technical work. Reported benchmark results use xhigh reasoning effort.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.102",
+    "date": "2026-09-16",
+    "title": "Price Updated",
+    "description": "Add Credits purchases now carry a volume discount of 5%, 10% or 15%.",
+    "category": "feature",
+    "items": [],
+    "content": "Buying Apertis credits in a single larger purchase now costs less.\n\n| Add Credits amount | Discount |\n|:--|--:|\n| US$15 – 99 | List price |\n| US$100 – 249 | 5% off |\n| US$250 – 999 | 10% off |\n| US$1,000 – 25,000 | 15% off |\n\nThe discount comes off what you pay at checkout. The balance added to your\naccount is always the full amount you selected. Each tier applies to a single\npurchase; separate purchases are not combined.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.101",
+    "date": "2026-09-10",
+    "title": "Models Added",
+    "description": "Add DeepSeek V4.1 Flash",
+    "category": "feature",
+    "items": [
+      "DeepSeek V4.1 Flash"
+    ],
+    "content": "## DeepSeek V4.1 Flash\n\nDeepSeek V4.1 Flash is a cost-efficient sparse Mixture-of-Experts (MoE) model in DeepSeek's V4.1 family, optimized for coding, reasoning, and agentic workflows. Despite its efficiency-focused positioning, DeepSeek reports that it surpasses the previous V4 Pro in performance, inference speed, and overall task completion time.\n\nThe model is particularly strong at long-horizon, multi-step execution, making it well suited for coding agents, complex problem solving, and autonomous workflows that must reliably carry tasks through to completion.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.100",
+    "date": "2026-09-05",
+    "title": "Models Added",
+    "description": "Add GPT-6 Astra",
+    "category": "feature",
+    "items": [
+      "GPT-6 Astra",
+      "GPT-6 Astra Pro"
+    ],
+    "content": "## GPT-6 Astra\n\nGPT-6 Astra is OpenAI's flagship model for demanding end-to-end professional work, designed for advanced analysis, software engineering, deep research, scientific tasks, and document creation. \n\nIt is particularly strong in long-horizon agentic workflows, including tasks that require sustained reasoning, tool orchestration, and computer and browser use, making it well suited for complex autonomous workflows and production-grade knowledge work.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.99",
+    "date": "2026-09-03",
+    "title": "Models Added",
+    "description": "Add Muse Spark 1.3",
+    "category": "feature",
+    "items": [
+      "Muse Spark 1.3"
+    ],
+    "content": "## Muse Spark 1.3\n\nMuse Spark 1.3 is Meta's multimodal reasoning model designed for long-running agentic, multi-agent, and coding workflows. It maintains context and information across extended tasks, enabling reliable execution in complex, multi-step environments. \n\nThe model is optimized to resolve conflicting information, seek clarification or confirmation when necessary, and execute concisely, making it well suited for autonomous agents, collaborative multi-agent systems, and long-horizon software engineering workflows.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.98",
+    "date": "2026-09-02",
+    "title": "Models Added",
+    "description": "Add Gemini 3.8 Flash",
+    "category": "feature",
+    "items": [
+      "Gemini 3.8 Flash"
+    ],
+    "content": "## Gemini 3.8 Flash\n\nGemini 3.8 Flash is Google's most intelligent Flash-class model, delivering significant improvements over Gemini 3.7 Flash across software engineering, agentic workflows, and complex multi-step reasoning. \n\nDesigned to combine strong capability with Flash-tier efficiency, it is well suited for coding assistants, autonomous agents, and high-throughput production workflows that require responsive performance without sacrificing reasoning quality.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.97",
+    "date": "2026-09-02",
+    "title": "Models Added",
+    "description": "Add Claude Fable 5.1",
+    "category": "feature",
+    "items": [
+      "Claude Fable 5.1"
+    ],
+    "content": "## Claude Fable 5.1\n\nClaude Fable 5.1 is an upgraded version of Fable 5, delivering broad improvements with particularly strong gains in agentic coding, long-running workflows, and professional knowledge work. It excels at large code refactors, front-end and visual code generation, financial analysis, and complex analytical tasks.\n\nCompared with Fable 5, it also produces more concise plans and summaries while maintaining strong performance across extended tasks, making it a natural upgrade for existing Fable workflows and a strong option alongside Opus 5 for reasoning-intensive applications.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.96",
+    "date": "2026-08-28",
+    "title": "Models Added",
+    "description": "Add Hy4 preview",
+    "category": "feature",
+    "items": [
+      "Hy4 preview"
+    ],
+    "content": "## Hy4 preview\n\nTencent Hy4 Preview is a Mixture-of-Experts (MoE) model from Tencent, featuring 770B total parameters with 49B activated per token. It is designed for coding agents, complex tool-driven workflows, and professional productivity tasks that require strong planning and reliable execution. \n\nOptimized for context continuity and sustained multi-step work, Hy4 Preview is well suited for long-horizon coding, agentic automation, tool orchestration, and complex real-world workflows.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.95",
+    "date": "2026-08-26",
+    "title": "Models Added",
+    "description": "Add GLM 5.3 Flash",
+    "category": "feature",
+    "items": [
+      "GLM 5.3 Flash"
+    ],
+    "content": "## GLM 5.3 Flash\n\nGLM-5.3-Flash is Z.ai's efficient native multimodal model, designed for coding and long-horizon agentic workflows. It combines strong multimodal capabilities with an architecture optimized for responsive, cost-efficient task execution.\n\nBuilt on a hybrid sparse and linear attention architecture, GLM-5.3-Flash maintains accurate long-context behavior while reducing computational overhead, making it well suited for coding agents, extended multi-step tasks, and scalable production workloads.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.94",
+    "date": "2026-08-19",
+    "title": "Models Added",
+    "description": "Add GLM 5.3",
+    "category": "feature",
+    "items": [
+      "GLM 5.3"
+    ],
+    "content": "## GLM 5.3\n\nGLM-5.3 is Z.ai's large-scale reasoning model designed for complex software engineering and long-horizon agentic workflows. It supports text input and output with a 1M-token context window, enabling sustained reasoning across large codebases and extended multi-step tasks. \n\nBuilding on GLM-5.2, it delivers stronger coding performance while improving the balance between capability and token efficiency, making it well suited for autonomous coding agents, large-scale engineering workflows, and complex task execution.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.93",
+    "date": "2026-08-15",
+    "title": "Models Added",
+    "description": "Add Qwen3.8 27B",
+    "category": "feature",
+    "items": [
+      "Qwen3.8 27B"
+    ],
+    "content": "## Qwen3.8 27B\n\nQwen3.8 27B is an open-weight dense vision-language model from Qwen, designed for coding, professional knowledge work, research, and multimodal interaction. It combines strong text and visual understanding with capabilities optimized for sustained, real-world agentic tasks. \n\nThe model supports flexible thinking modes that can be enabled for deeper reasoning or disabled for faster execution, making it well suited for long-running agents, multimodal workflows, coding assistants, and cost-conscious self-hosted deployments.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.92",
+    "date": "2026-08-14",
+    "title": "Models Added",
+    "description": "Add Gemini 3.7 Flash",
+    "category": "feature",
+    "items": [
+      "Gemini 3.7 Flash"
+    ],
+    "content": "## Gemini 3.7 Flash\n\nGemini 3.7 Flash is Google's fast multimodal model designed for agentic workflows, coding, and complex multi-step reasoning. It combines responsive inference with reliable problem-solving capabilities, making it well suited for interactive and production-scale applications.\n\nOptimized for speed and dependable multi-step execution, Gemini 3.7 Flash is a strong choice for coding assistants, autonomous agents, and high-throughput workflows that require both low latency and capable reasoning.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.91",
+    "date": "2026-08-12",
+    "title": "Models Added",
+    "description": "Add Grok 4.6, DeepSeek V4 Pro 0813 & Qwen3.8 2.4T A95B",
+    "category": "feature",
+    "items": [
+      "Grok 4.6",
+      "DeepSeek V4 Pro 0813",
+      "Qwen3.8 2.4T A95B"
+    ],
+    "content": "## Grok 4.6\n\nGrok 4.6 is SpaceXAI's smartest frontier model, delivering top-tier performance across coding, knowledge work, and STEM reasoning. It is designed for demanding technical and professional workloads that require strong problem solving, accurate instruction following, and reliable execution. \n\nOptimized for software engineering, scientific analysis, and complex knowledge tasks, Grok 4.6 is well suited for advanced coding, research, and agentic workflows where high capability and reasoning quality are critical.\n\n## DeepSeek V4 Pro 0813\n\nDeepSeek V4 Pro 0813 is DeepSeek's large-scale Mixture-of-Experts (MoE) model and the general availability (GA) release of DeepSeek V4 Pro. It is designed for high-capability workloads requiring advanced reasoning, coding, and agentic task execution. \n\nAs the production-ready V4 Pro release, it is well suited for complex software engineering, long-horizon agent workflows, and demanding reasoning tasks where reliability and model capability are critical.\n\n## Qwen3.8 2.4T A95B\n\nQwen3.8 2.4T A95B is Qwen's open-weight sparse Mixture-of-Experts (MoE) model and the open-weight counterpart to Qwen3.8 Max. It features 2.4T total parameters with 95B activated per token, combining frontier-scale capacity with efficient sparse inference. \n\nDesigned for coding, research, complex reasoning, and agentic workflows, the model is well suited for demanding long-horizon tasks and advanced autonomous systems while providing the flexibility and customization benefits of open weights.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.90",
+    "date": "2026-08-11",
+    "title": "Models Added",
+    "description": "Add Nemotron 3.5 Lightning",
+    "category": "feature",
+    "items": [
+      "Nemotron 3.5 Lightning (Free)",
+      "Nemotron 3.5 Lightning"
+    ],
+    "content": "## Nemotron 3.5 Lightning\n\nNVIDIA Nemotron 3.5 Lightning is an open Mixture-of-Experts (MoE) model with 30B total parameters and 3B active per token, optimized for high-throughput agentic workloads and efficient inference. \n\nIts lightweight active compute and open design make it well suited for specialized agents, domain-specific customization, and scalable production deployments where speed, cost efficiency, and adaptability are key.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.89",
+    "date": "2026-08-11",
+    "title": "Models Added",
+    "description": "Add Muse Glimmer 30B",
+    "category": "feature",
+    "items": [
+      "Muse Glimmer 30B"
+    ],
+    "content": "## Muse Glimmer 30B\n\nMuse Glimmer 30B is a dense, open-weight multimodal model from Meta Superintelligence Labs, distilled from Muse Spark and optimized for autonomous agents on consumer hardware. It combines strong multi-step reasoning, reliable tool use, failure recovery, image understanding, and multilingual support across 100+ languages. \n\nDesigned for long-horizon agentic and coding workflows, Muse Glimmer 30B offers a practical balance of capability and deployment efficiency, making it well suited for local coding assistants, multimodal agents, and production workflows that require sustained autonomous execution.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.88",
+    "date": "2026-08-06",
+    "title": "Models Added",
+    "description": "Add Muse Spark 1.2",
+    "category": "feature",
+    "items": [
+      "Muse Spark 1.2"
+    ],
+    "content": "## Muse Spark 1.2\n\nMuse Spark 1.2 is Meta's multimodal reasoning model designed for complex agentic and software engineering workflows. It supports text, image, video, audio, and PDF inputs with text output, and features a 1M-token context window for sustained reasoning across large, multi-stage tasks. \n\nBuilt for flexible multi-agent execution, Muse Spark 1.2 can serve as either a coordinating main agent or a parallel task-focused subagent. With configurable reasoning effort, structured outputs, parallel function calling, and broad coding-harness compatibility, it is well suited for multi-file refactoring, extended debugging, whole-repository generation, and long-horizon development workflows.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.87",
+    "date": "2026-08-04",
+    "title": "Models Added",
+    "description": "Add Qwen3.8 Max",
+    "category": "feature",
+    "items": [
+      "Qwen3.8 Max"
+    ],
+    "content": "## Qwen3.8 Max\n\nQwen3.8 Max is the flagship model in Alibaba’s Qwen3.8 series and the general-availability successor to Qwen3.8 Max Preview. It is a multimodal reasoning model designed for complex tasks across reasoning, visual understanding, coding, and agentic workflows.\n\nAs the production-ready top tier of the Qwen3.8 family, it is well suited for advanced problem solving, multimodal analysis, software engineering, and long-running tool-driven applications.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.86",
+    "date": "2026-07-31",
+    "title": "Models Added",
+    "description": "Price Cut for OpenAI GPT-5.6 Terra & Luna",
+    "category": "feature",
+    "items": [
+      "GPT-5.6 Terra",
+      "GPT-5.6 Luna"
+    ],
+    "content": "## Price Cut on GPT-5.6 Terra & Luna\nToday, OpenAI made GPT-5.6 more affordable and faster. GPT-5.6 Luna now costs 80% less, GPT-5.6 Terra costs 20% less.\n\nTherefore, we also lower the prices for GPT-5.6 Terra & Luna models.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.85",
+    "date": "2026-07-29",
+    "title": "Models Added",
+    "description": "Add Claude Opus 5 (Fast)",
+    "category": "feature",
+    "items": [
+      "Claude Opus 5 (Fast)"
+    ],
+    "content": "## Claude Opus 5 (Fast)\n\nThis is the fast version of Opus 5 model.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.84",
+    "date": "2026-07-28",
+    "title": "Models Added",
+    "description": "Add Qwen3.7 Flash",
+    "category": "feature",
+    "items": [
+      "Qwen3.7 Flash"
+    ],
+    "content": "## Qwen3.7 Flash\n\nQwen3.7 Flash is Alibaba's vision-language reasoning model, designed for multimodal agents, visual coding, search, and computer interaction. It combines fast inference with strong visual understanding, including object recognition, spatial reasoning, and real-world scene perception.\n\nOptimized for interactive and agentic workflows, Qwen3.7 Flash is well suited for GUI understanding, visual question answering, multimodal search, and computer-use applications that require responsive reasoning across text and images.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.83",
+    "date": "2026-07-27",
+    "title": "Models Added",
+    "description": "Add Claude Opus 5",
+    "category": "feature",
+    "items": [
+      "Claude Opus 5"
+    ],
+    "content": "## Claude Opus 5\n\nClaude Opus 5 is Anthropic's flagship model for advanced reasoning, coding, and long-horizon agentic workflows. It excels at end-to-end software engineering, code review, bug detection, visual analysis of charts and documents, complex office deliverables, and parallel subagent coordination. \n\nThe model maintains reliable instruction following and tool use across extended tasks, while remaining effective at lower reasoning-effort settings for workloads that prioritize latency and token efficiency.\n\n**Enjoy.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.82",
+    "date": "2026-07-21",
+    "title": "Models Added",
+    "description": "Add Gemini 3.6 Flash & Gemini 3.5 Flash-Lite",
+    "category": "feature",
+    "items": [
+      "Gemini 3.6 Flash",
+      "Gemini 3.5 Flash-Lite"
+    ],
+    "content": "## Gemini 3.6 Flash\n\nGemini 3.6 Flash is Google's high-efficiency model for coding, agentic workflows, and web and application development. It is optimized to produce polished, production-ready outputs with fewer unnecessary revisions, less hedging, and more direct task execution. \n\nBy reducing both token usage and the number of model calls required to complete complex tasks, Gemini 3.6 Flash is well suited for high-throughput development, scalable agent systems, and cost-sensitive production workflows.\n\n## Gemini 3.5 Flash-Lite\n\nGemini 3.5 Flash-Lite is Google's high-efficiency model with enhanced agentic capabilities, optimized for fast, cost-effective inference. It is designed to handle focused tasks with low latency while maintaining strong reasoning and execution quality. \n\nWell suited for subagents in complex multi-agent systems, Gemini 3.5 Flash-Lite excels at executing specialized tasks within larger workflows, making it ideal for scalable agent orchestration and high-throughput production environments.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.81",
+    "date": "2026-07-17",
+    "title": "Models Added",
+    "description": "Add Kimi K3",
+    "category": "feature",
+    "items": [
+      "Kimi K3"
+    ],
+    "content": "## Kimi K3\n\nKimi K3 is Moonshot AI's 2.8T-parameter open-weight multimodal reasoning model, designed for complex coding, knowledge work, and long-horizon agentic workflows. It excels at repository-scale development, tool use, debugging, and iterative problem solving across text, images, logs, tests, and runtime feedback. \n\nBuilt with KDA and Attention Residuals for improved computational efficiency, Kimi K3 delivers strong performance on advanced engineering and multimodal reasoning tasks, making it well suited for autonomous coding agents and large-scale production workflows.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.80",
+    "date": "2026-07-10",
+    "title": "Models Added",
+    "description": "Add GPT-5.6 Series",
+    "category": "feature",
+    "items": [
+      "GPT-5.6 Sol",
+      "GPT-5.6 Sol Pro",
+      "GPT-5.6 Terra",
+      "GPT-5.6 Terra Pro",
+      "GPT-5.6 Luna",
+      "GPT-5.6 Luna Pro"
+    ],
+    "content": "## GPT-5.6 Sol\n\nGPT-5.6 Sol is the flagship model in OpenAI's GPT-5.6 series, designed for complex reasoning, coding, and agentic workflows. It delivers strong performance on multi-step software engineering tasks, command-line workflows, and long-horizon problem solving, making it well suited for advanced development and autonomous execution. \n\nOptimized for high-reliability reasoning and end-to-end task completion, GPT-5.6 Sol excels in coding, tool-driven automation, and large-scale engineering workflows that require sustained context and precise execution.\n\n## GPT-5.6 Terra\n\nGPT-5.6 Terra is the balanced model in OpenAI's GPT-5.6 series, positioned between the flagship Sol tier and the cost-efficient Luna tier. It is designed for everyday coding, reasoning, and agentic workflows, delivering strong performance while balancing capability and cost. \n\nOffering near-flagship quality at approximately half the cost of Sol, GPT-5.6 Terra is well suited for production applications that require reliable reasoning, software development, and scalable agent execution.\n\n## GPT-5.6 Luna\n\nGPT-5.6 Luna is the fast, cost-efficient model in OpenAI's GPT-5.6 series, optimized for high-volume, latency-sensitive workloads. It delivers capable reasoning at an affordable price point, making it ideal for chat applications, classification, and lightweight agentic workflows. \n\nDesigned for scalable production deployments, GPT-5.6 Luna balances speed, cost, and reliability, providing efficient performance for real-time applications and large-scale automation tasks.\n\n**Have fun.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.79",
+    "date": "2026-07-09",
+    "title": "Models Added",
+    "description": "Add Grok 4.5",
+    "category": "feature",
+    "items": [
+      "Grok 4.5"
+    ],
+    "content": "## Grok 4.5\n\nGrok 4.5 is SpaceXAI’s flagship frontier model, delivering top-tier performance across coding, knowledge work, and STEM reasoning. Designed for demanding professional and technical workloads, it combines strong reasoning, accurate instruction following, and robust problem-solving capabilities.\n\nOptimized for software engineering, scientific analysis, and complex knowledge tasks, Grok 4.5 is well suited for advanced coding, research, and agent-driven workflows that require high accuracy and reliable long-horizon reasoning.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.78",
+    "date": "2026-07-05",
+    "title": "Models Added",
+    "description": "Add Hy3",
+    "category": "feature",
+    "items": [
+      "Hy3 (Free)"
+    ],
+    "content": "## Hy3 (Free)\n\nHy3 is Tencent's 295B-parameter Mixture-of-Experts (MoE) model, activating 21B parameters per token across 192 experts, and designed for reasoning, agentic workflows, and production-scale applications. It supports a 256K-token context window and configurable reasoning modes, including no-think, low, and high reasoning effort to balance speed and problem-solving depth. \n\nOptimized for long-horizon tasks, coding, and tool-driven execution, Hy3 delivers strong performance in multi-turn reasoning, constraint tracking, and stable tool calling. With an emphasis on grounded responses and reduced hallucinations, it is well suited for software development, document processing, financial analysis, game development, and enterprise agent workflows.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.77",
+    "date": "2026-07-02",
+    "title": "Models Added",
+    "description": "Claude Fable 5 is back",
+    "category": "feature",
+    "items": [
+      "Claude Fable 5"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.76",
+    "date": "2026-07-01",
+    "title": "Models Added",
+    "description": "Add Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+    "category": "feature",
+    "items": [
+      "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)"
+    ],
+    "content": "## Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)\n\nNano Banana 2 Lite (Gemini 3.1 Flash Lite Image) is Google's fastest and most cost-efficient multimodal image generation model, designed for high-throughput visual workflows and real-time applications. It supports text-to-image generation, image editing, and multi-image composition through a unified API, while also producing text outputs alongside images. \n\nDelivering image generation in approximately 4 seconds, it combines fast inference with strong character consistency, precise editing, and real-world knowledge. The model generates 1K-resolution images across 14 aspect ratios and embeds an invisible SynthID watermark in all outputs. Optimized for the best balance of quality, speed, and cost, Nano Banana 2 Lite is ideal for prototyping, developer pipelines, and large-scale visual content generation.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.75",
+    "date": "2026-07-01",
+    "title": "Models Added",
+    "description": "Add Claude Sonnet 5",
+    "category": "feature",
+    "items": [
+      "Claude Sonnet 5"
+    ],
+    "content": "## Claude Sonnet 5\n\nSonnet 5 is Anthropic's most capable Sonnet-class model, delivering frontier-level performance across coding, agentic workflows, and professional knowledge tasks. It supports text, image, and file inputs, features a 1M-token context window, and offers adaptive thinking with configurable reasoning levels (low, medium, high, max, and x-high) to balance speed, cost, and reasoning depth. \n\nOptimized for complex coding, long-horizon agent execution, and professional workflows, Sonnet 5 combines strong reasoning, robust instruction following, and enhanced safety features, including an updated tokenizer and real-time cyber safeguards for high-risk dual-use scenarios.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.74",
+    "date": "2026-06-25",
+    "title": "Models Added",
+    "description": "Add Fugu Ultra",
+    "category": "feature",
+    "items": [
+      "Fugu Ultra"
+    ],
+    "content": "## Fugu Ultra\n\nFugu Ultra is the high-performance model in Sakana AI's Fugu family, built as a learned multi-agent orchestration system rather than a single monolithic model. It intelligently routes tasks across a pool of underlying models and can recursively invoke itself to solve complex problems more effectively. \n\nOptimized for multi-step reasoning, coding, and agentic workflows, Fugu Ultra supports configurable reasoning effort, native tool calling, and built-in web search. Its orchestration-based design makes it well suited for advanced autonomous agents and complex task execution requiring adaptive model coordination.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.73",
+    "date": "2026-06-17",
+    "title": "Models Added",
+    "description": "Add GLM 5.2",
+    "category": "feature",
+    "items": [
+      "GLM 5.2"
+    ],
+    "content": "## GLM 5.2\n\nGLM-5.2 is Z.AI's flagship model for long-horizon task execution, designed to handle complex, project-scale workflows with high reliability. Featuring a 1M-token context window, it can maintain and reason over extensive engineering context, enabling consistent execution across large, multi-stage tasks.\n\nOptimized for end-to-end software development, GLM-5.2 follows engineering standards reliably and can manage the full workflow from requirements analysis and implementation to testing and multi-platform deployment, making it well suited for advanced coding agents and large-scale autonomous engineering projects.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.72",
+    "date": "2026-06-12",
+    "title": "Models Added",
+    "description": "Add Kimi K2.7 Code",
+    "category": "feature",
+    "items": [
+      "Kimi K2.7 Code"
+    ],
+    "content": "## Kimi K2.7 Code\n\nKimi K2.7 Code is a coding-focused model in Moonshot AI's Kimi K2 family, designed for long-horizon software engineering and agentic development workflows. Built on a native multimodal Mixture-of-Experts (MoE) architecture, it supports text, image, and video inputs and operates exclusively in thinking mode, preserving reasoning across multi-turn interactions. \n\nWith approximately 1T total parameters and 32B activated per token, plus a 256K-token context window, K2.7 Code excels at end-to-end programming tasks, agentic task decomposition, repository-scale reasoning, and extended coding conversations, making it well suited for advanced coding agents and long-context development workflows.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.71",
+    "date": "2026-06-09",
+    "title": "Models Added",
+    "description": "Add Claude Fable 5",
+    "category": "feature",
+    "items": [
+      "Claude Fable 5"
+    ],
+    "content": "## Claude Fable 5\n\nClaude Fable 5 is Anthropic's Mythos-class model, designed for autonomous knowledge work, coding, and long-running agentic workflows. It supports text, image, and file inputs with text output, includes reasoning capabilities, and features a 1M-token context window for handling complex, high-context tasks.\n\nOptimized for asynchronous and long-horizon execution, Claude Fable 5 excels at end-to-end tasks that would typically require hours, days, or weeks of human effort. It combines strong reasoning, autonomous verification and self-correction loops, and robust safeguards, making it well suited for complex research, software engineering, and large-scale knowledge work.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.70",
+    "date": "2026-06-04",
+    "title": "Models Added",
+    "description": "Add Nemotron 3 Ultra & Nemotron 3.5 Content Safety",
+    "category": "feature",
+    "items": [
+      "Nemotron 3 Ultra",
+      "Nemotron 3 Ultra (Free)",
+      "Nemotron 3.5 Content Safety (Free)"
+    ],
+    "content": "## Nemotron 3 Ultra\n\nNVIDIA Nemotron 3 Ultra is an open frontier reasoning and orchestration model featuring a 550B-parameter Mixture-of-Experts (MoE) architecture with 55B active parameters per token. Built on a hybrid Transformer–Mamba design, it supports text input and output with a 1M-token context window, enabling large-scale reasoning and long-horizon task execution. \n\nOptimized for agent orchestration, coding agents, deep research, and complex enterprise workflows, the model excels at multi-step reasoning, planning, and sustained execution. With high-throughput inference designed for large-scale agent pipelines, Nemotron 3 Ultra serves as a powerful foundation for advanced agentic AI systems.\n\n## Nemotron 3.5 Content Safety\n\nNVIDIA Nemotron 3.5 Content Safety is a compact 4B-parameter multimodal guardrail model from NVIDIA, designed for content moderation, safety classification, and AI policy enforcement. Supporting text and image inputs with text output, it evaluates both user prompts and model responses, providing safe/unsafe classifications, safety category labels, and optional reasoning traces. \n\nFine-tuned from Gemma-3-4B and supporting 12 languages with a 128K-token context window, the model is well suited for prompt moderation, response filtering, content classification, and enterprise safety pipelines. As part of the NVIDIA Nemotron family, it offers a configurable reasoning mode and integrates easily into agentic AI systems requiring robust guardrails and compliance controls.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.69",
+    "date": "2026-06-03",
+    "title": "Models Added",
+    "description": "Add Qwen3.7 Plus",
+    "category": "feature",
+    "items": [
+      "Qwen3.7 Plus"
+    ],
+    "content": "## Qwen3.7 Plus\n\nQwen3.7-Plus is a cost-effective multimodal model in Alibaba's Qwen3.7 series, supporting text and image inputs with text output. It combines the series' strong language capabilities with significantly enhanced vision-language understanding, while retaining full-stack agent-level intelligence for coding, tool use, and productivity workflows. \n\nIts standout capability is multimodal interactive agency—the ability to perceive real-world scenes, understand screens and graphical interfaces, generate code from visual references, and perform end-to-end navigation within applications. This makes Qwen3.7-Plus well suited for GUI automation, visual coding, productivity agents, and multimodal task execution.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.68",
+    "date": "2026-06-01",
+    "title": "Models Added",
+    "description": "Add MiniMax M3",
+    "category": "feature",
+    "items": [
+      "MiniMax M3"
+    ],
+    "content": "## MiniMax M3\nMiniMax-M3 is a multimodal foundation model from MiniMax, supporting text, image, and video inputs with text output and a 1M-token context window. It is designed for long-horizon agentic workflows, coding, and tool-driven task execution, enabling sustained reasoning across complex tasks. \n\nBuilt on MiniMax Sparse Attention (MSA), the model dramatically improves long-context efficiency by replacing full attention with KV-block selection, reducing compute costs at 1M-token contexts while maintaining strong performance. Trained as a native multimodal model and optimized for multi-turn, production-style collaboration, MiniMax-M3 excels at extended, multi-step workflows rather than single-turn interactions.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.67",
+    "date": "2026-05-28",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.8 Series",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.8",
+      "Claude Opus 4.8 (Fast)"
+    ],
+    "content": "## Claude Opus 4.8\n\nClaude Opus 4.8 is Anthropic's most capable generally available model in the Opus family, designed for highly autonomous agents, long-horizon workflows, and advanced knowledge work. It supports text, image, and file inputs with text output, includes reasoning capabilities, and features a 1M-token context window for maintaining coherence across extended tasks and sessions. \n\nThe model excels at multi-step reasoning, complex coding, and end-to-end project orchestration, including large codebases, multi-stage debugging, and long-running asynchronous agent pipelines. Beyond software engineering, it is highly effective for document drafting, presentation creation, data analysis, and memory-driven workflows, delivering consistent quality across very long outputs and complex projects.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.66",
+    "date": "2026-05-22",
+    "title": "Models Added",
+    "description": "Add Qwen3.7 Max",
+    "category": "feature",
+    "items": [
+      "Qwen3.7 Max"
+    ],
+    "content": "## Qwen3.7 Max\n\nQwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series, designed for agent-centric workloads with strong performance in coding, productivity, and long-horizon autonomous execution. It supports text input and output and delivers notable improvements in coding and agentic capabilities over previous Qwen generations. \n\nOptimized for real-world workflows, the model also supports explicit prompt caching for efficient reuse of repeated context, making it well suited for scalable development, office automation, and advanced agent systems.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.65",
+    "date": "2026-05-21",
+    "title": "Models Added",
+    "description": "Add Grok Build 0.1",
+    "category": "feature",
+    "items": [
+      "Grok Build 0.1"
+    ],
+    "content": "## Grok Build 0.1\n\nGrok Build 0.1 is xAI's fast coding model designed specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding agents, tool use, and multi-step development tasks. \n\nPowering the Grok Build CLI, the model features a 256K token context window with effectively no text output limit, making it well suited for long-horizon coding, automation, and continuous development workflows. Currently available in early access.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.64",
+    "date": "2026-05-21",
+    "title": "Feature Added",
+    "description": "Apertis Coworker — delegate grunt work to cheaper models",
+    "category": "feature",
+    "items": [],
+    "content": "The Apertis MCP server now ships a **delegate coworker tool**. Connect it to Claude Code (or any MCP client) and Claude can hand off routine, high-volume subtasks — bulk edits, boilerplate, repetitive lookups — to a cheaper model through your Apertis API key, while staying in control as the \"manager.\"\n\n  ### What's new\n\n  - **`delegate` tool** — Claude calls a single MCP tool to run a subtask on a\n    lower-cost model, then reviews the result. You keep premium models for\n    reasoning and spend cheap tokens on the busywork.\n  - **Works with any MCP client** — Claude Code, Claude Desktop, and other\n    MCP-compatible agents.\n  - **One install** — available on npm as `@apertis/mcp-server`.\n\n  ### Get started\n\n  ```bash\n  npx @apertis/mcp-server\n  ```\n  \n  Add it to your MCP client config with your Apertis API key, and Claude can\n  start delegating immediately.\n\n  \n  See the official documentation [here](https://docs.apertis.ai/api/sdks/mcp-server) and [source code](https://github.com/apertis-ai/apertis-mcp).\n  ",
+    "abridged": false
+  },
+  {
+    "version": "2.2.63",
+    "date": "2026-05-21",
+    "title": "Feature Added",
+    "description": "Switch Advisor — see the cost before you switch models",
+    "category": "feature",
+    "items": [
+      "Switch Advisor estimates what your recent usage would cost on a different model — projected from your own pay-as-you-go activity, not a generic price list."
+    ],
+    "content": "New in Settings → Usage\n\n  Switch Advisor estimates what your recent usage would cost on a different model — projected from your own pay-as-you-go activity, not a generic price list.\n\n  How it works\n\n  - Pick a From model — your recently used models, highest-spend preselected\n  - Search any platform model as the Candidate\n  - Get an instant projection: current cost, projected cost, and savings (absolute + %)\n\n  The projection replays your real input/output token volumes from the selected time range on the candidate model's pricing — so the figure reflects how you actually use the model, not a marketing average.\n\n  Example: a workload on claude-opus-4-6 costing $36.00 over 30 days projects to $2.61 on deepseek-v4-pro — a 92.75% reduction.\n\n  Available now in Settings → Usage, right below the per-model usage table. No setup required.\n\n  ▎ Cost estimate only — it does not compare output quality or response speed.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.62",
+    "date": "2026-05-20",
+    "title": "Models Added",
+    "description": "Add Gemini 3.5 Flash",
+    "category": "feature",
+    "items": [
+      "Gemini 3.5 Flash"
+    ],
+    "content": "## Gemini 3.5 Flash\n\nGemini 3.5 Flash is Google's high-efficiency multimodal model, delivering near-Pro level performance in coding and reasoning at Flash-tier speed and cost. It supports text, image, video, audio, and PDF inputs, making it well suited for diverse multimodal workflows.\n\nOptimized for coding proficiency and parallel agentic execution, the model defaults to medium thinking effort for faster, cost-efficient responses while supporting configurable thinking levels (minimal, low, medium, high) for fine-grained cost–performance control.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.61",
+    "date": "2026-05-13",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.7 (Fast)",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.7 (Fast)"
+    ],
+    "content": "## Claude Opus 4.7 (Fast)\n\nFast version of Claude Opus 4.7 is live.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.60",
+    "date": "2026-05-12",
+    "title": "System Update",
+    "description": "Model Availability Heartbeat",
+    "category": "feature",
+    "items": [
+      "Apertis model detail pages now include a recent availability heartbeat, showing the latest observed delivery signal for each model directly on the page."
+    ],
+    "content": "### What changed\n\n  - Added a Recent Availability card to model detail pages.\n  - Added heartbeat bars for the recent delivery window.\n  - Added hover and keyboard-focus tooltips with date, time, availability percentage, and status.\n  - Counted retried or fallback-routed requests as healthy when the request ultimately succeeds.\n\n  ### How to read it\n\n  The card reports observed delivery, not a synthetic uptime probe.\n\n  If Apertis has recent successful delivery for a model, the relevant heartbeat bucket is green. If an actual delivery failure is observed, the bucket can move to\ndegraded or unavailable based on the observed success rate.\n\n  When there is no recent traffic for a bucket, Apertis treats that silence as no observed anomaly and displays it as green 100%. This keeps the signal aligned\nwith the rule that a model should not look unhealthy just because no one called it during that interval.\n\n  ### Why this matters\n\n  You can now check model-level health from the same page where you review pricing, context, endpoints, and examples. Teams choosing between models can see recent\ndelivery quality without waiting for a separate status page or paying for active probes.\n\n  The implementation stays cost-aware by using delivery results Apertis already sees during normal routing.\n\n  **Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.59",
+    "date": "2026-05-09",
+    "title": "Models Added",
+    "description": "Add Mistral Medium 3.5 & Baidu Cobuddy",
+    "category": "feature",
+    "items": [
+      "Mistral Medium 3.5",
+      "CoBuddy (Free)"
+    ],
+    "content": "## Mistral Medium 3.5\n\nMistral Medium 3.5 is a 128B dense instruction-following model from Mistral AI, supporting text and image inputs with text output. It is designed for agentic workflows, coding, and complex multi-step reasoning, with strong reliability in multi-tool orchestration and long-horizon tasks. \n\nThe model features a 256K token context window, configurable reasoning effort per request, and a custom vision encoder that handles variable image sizes and aspect ratios. With support for self-hosting on as few as four GPUs and availability under open weights, it is well suited for scalable, production-grade deployments.\n\n## Cobuddy\n\nCoBuddy is a code generation model from Baidu, optimized for coding tasks and AI agent workflows. It delivers high inference throughput and low end-to-end latency, making it well suited for responsive development and automation environments. \n\nThe model includes native support for tool calling and reasoning, runs with FP8 quantization for efficient deployment, and supports a 131K token context window with up to 65K output tokens, enabling long-context coding and multi-step agentic workflows.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.58",
+    "date": "2026-05-06",
+    "title": "System Update",
+    "description": "Apertis New Look",
+    "category": "system",
+    "items": [
+      "UI/UX refreshed Looks"
+    ],
+    "content": "Apertis has received a broad UI/UX refresh across public pages, model browsing, API key selection, and admin workflows. This update focuses on a cleaner visual system, clearer product navigation, and more practical operational screens for daily use.\n\n### Highlights\n\n  - Refreshed the public experience with a redesigned 404 page, improved layout chrome, and a more polished route diagnostic view.\n  - Introduced the new Verbatim landing experience, including updated positioning, product sections, code preview, and lead capture flow.\n  - Added a signed-in Dashboard shortcut in the header for faster access to the main workspace.\n  - Redesigned the chat API key selection modal with a cleaner Apertis-style layout, clearer selection states, and improved preview coverage.\n  - Improved model detail pages with task-driven endpoint selection, better TTS examples, and cleaner handling of voice and web-search pricing states.\n  - Refined the model filter sidebar so empty task categories are hidden, making model discovery easier to scan.\n  overview card.\n  - Shared FAQ row styling across pages for a more consistent Apertis UI system.\n  - Cleaned up footer navigation and naming, including the updated Verbatim label.\n\n### User Experience\n\n  The new look reduces visual clutter, improves spacing consistency, and makes important actions easier to find.\n\nPublic pages now feel more aligned with the Apertis brand, while authenticated workflows are more direct and data-focused.\n\n### Quality\n\n  This refresh includes focused test coverage for updated components and route behavior, including header navigation, modal behavior, layout chrome, pricing helpers, filter behavior, and cost analytics logic.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.57",
+    "date": "2026-05-05",
+    "title": "System Update",
+    "description": "Audio APIs Now Live",
+    "category": "feature",
+    "items": [],
+    "content": "## Full Audio API Support\n\n  Apertis now supports the OpenAI-compatible Audio API. Use a single\n  API key to access leading TTS (text-to-speech) and STT\n  (speech-to-text) models across providers.\n\n  ### Supported Models\n\n  **Text-to-Speech (TTS)**\n  - `gemini-3.1-flash-tts-preview` — Google's latest Flash TTS preview\n  - `gpt-4o-mini-tts` — OpenAI's lightweight real-time speech synthesis\n\n  **Speech-to-Text (STT)**\n  - `gpt-4o-transcribe` — Flagship high-accuracy transcription\n  - `gpt-4o-mini-transcribe` — Cost-efficient real-time transcription\n  - `whisper-large-v3-turbo` — Accelerated Whisper v3\n  - `whisper-large-v3` — Full-precision Whisper\n  - `whisper-1` — The classic, battle-tested baseline\n\n  ### Endpoints\n\n  Drop-in compatible with the OpenAI SDK — no code changes required:\n\n  - `POST /v1/audio/speech` — text → audio\n  - `POST /v1/audio/transcriptions` — audio → text\n  - `POST /v1/audio/translations` — audio → translated text\n\n  ### Billing\n\n  - **PAYG (pay-as-you-go)**: shares the same quota balance as chat/completions\n  - **Per-dimension billing**: priced separately on input tokens / output\n    tokens / audio seconds, with admin-tunable AudioRatio\n  - **File limit**: 25 MB per multipart upload\n  - **Subscriptions**: audio models are PAYG-only for now (not included\n    in subscription plans)\n\n  ### Example\n\n  ```python\n  from openai import OpenAI\n\n  client = OpenAI(\n      api_key=\"sk-your-apertis-key\",\n      base_url=\"https://api.apertis.ai/v1\"\n  )\n\n  # TTS\n  speech = client.audio.speech.create(\n      model=\"gpt-4o-mini-tts\",\n      voice=\"alloy\",\n      input=\"Hello from Apertis.\"\n  )\n  speech.stream_to_file(\"hello.mp3\")\n\n  # STT\n  with open(\"audio.mp3\", \"rb\") as f:\n      transcript = client.audio.transcriptions.create(\n          model=\"whisper-large-v3-turbo\",\n          file=f\n      )\n  print(transcript.text)\n```\n### Model Detail Page Updates\n  - Endpoint and code samples auto-switch based on the model's task\n  - TTS models now emit ready-to-run OpenAI SDK Python snippets\n  - Web Search pricing column hidden for voice models (:web is unsupported)",
+    "abridged": false
+  },
+  {
+    "version": "2.2.56",
+    "date": "2026-05-01",
+    "title": "Models Added",
+    "description": "Add Grok 4.3",
+    "category": "feature",
+    "items": [
+      "Grok 4.3"
+    ],
+    "content": "## Grok 4.3\n\nGrok 4.3 is a reasoning-focused model from xAI designed for agentic workflows, instruction following, and high factual accuracy tasks. It supports text and image inputs with text output, with reasoning always active and not configurable by effort level. \n\nThe model features a 1M-token context window with effectively no output token limit, making it well suited for long-document analysis, deep research, and multi-step agentic workflows. It uses tiered pricing, with higher rates applied to requests exceeding 200K total tokens.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.55",
+    "date": "2026-04-29",
+    "title": "Models Added",
+    "description": "Add Nemotron 3 Nano Omni (Free)",
+    "category": "feature",
+    "items": [
+      "Nemotron 3 Nano Omni (Free)"
+    ],
+    "content": "## Nemotron 3 Nano Omni (Free)\n\nNVIDIA Nemotron 3 Nano Omni is an open 30B-A3B multimodal model designed as a perception and context sub-agent for enterprise agent systems. It supports text, image, video, and audio inputs with text output, enabling unified multimodal reasoning within a single inference loop. Built on a hybrid MoE Transformer–Mamba architecture with Conv3D video layers and Efficient Video Sampling (EVS), it delivers significantly improved efficiency for video reasoning—achieving ~2× higher throughput and 2.5× lower compute compared to separate pipelines. \n\nWith up to 300K context length and extended thinking support, it is well suited for scalable, multimodal agent workflows.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.54",
+    "date": "2026-04-28",
+    "title": "Models Added",
+    "description": "Add latest Qwen Models",
+    "category": "feature",
+    "items": [
+      "Qwen3.5 Plus 2026-04-20",
+      "Qwen3.6 Flash",
+      "Qwen3.6 Max Preview"
+    ],
+    "content": "## Qwen3.5 Plus 2026-04-20\n\nQwen3.5 Plus (April 2026) is a large-scale multimodal language model from Alibaba, supporting text, image, and video inputs with text output. It features a 1M-token context window, enabling large-scale reasoning and multimodal workflows within a single interaction. \n\nThis updated version of Qwen3.5 Plus introduces tiered pricing beyond 256K tokens, making it suitable for high-context applications while maintaining flexibility for cost optimization in long-input scenarios.\n\n## Qwen3.6 Flash\n\nQwen3.6 Flash is a fast and efficient model from Alibaba's Qwen 3.6 series, supporting text, image, and video inputs with a 1M-token context window for high-context multimodal workflows. \n\nOptimized for performance and cost efficiency, it features tiered pricing beyond 256K tokens and supports prompt caching with both cache creation and read pricing, making it well suited for large-scale, high-throughput applications.\n\n## Qwen3.6 Max Preview\n\nQwen3.6-Max-Preview is a proprietary frontier model from Alibaba Cloud built on a sparse Mixture-of-Experts (MoE) architecture with approximately 1 trillion parameters. It is optimized for agentic coding, tool use, and long-context reasoning, supporting a 262K token context window. \n\nThe model includes an integrated thinking mode that preserves reasoning across multi-turn interactions, along with support for structured outputs and function calling.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.53",
+    "date": "2026-04-24",
+    "title": "Models Added",
+    "description": "Add GPT-5.5 & GPT-5.5 Pro",
+    "category": "feature",
+    "items": [
+      "GPT-5.5",
+      "GPT-5.5 Pro"
+    ],
+    "content": "## GPT-5.5\n\nGPT-5.5 is OpenAI's frontier model for complex professional workloads, building on GPT-5.4 with stronger reasoning, higher reliability, and improved token efficiency on challenging tasks. It supports text and image inputs and features a 1M+ token context window (≈922K input, 128K output) for large-scale, high-context workflows. \n\nDesigned for advanced applications, GPT-5.5 excels in reasoning, coding, and multimodal workflows, enabling efficient execution of complex, multi-step tasks within a single system.\n\n## GPT-5.5 Pro\n\nGPT-5.5 Pro is OpenAI's high-capability model optimized for deep reasoning and accuracy on complex, high-stakes workloads. It supports text and image inputs and features a 1M+ token context window (≈922K input, 128K output) for handling large-scale, long-context tasks. \n\nDesigned for long-horizon problem solving, agentic coding, and precise multi-step execution, GPT-5.5 Pro delivers strong reliability and performance across advanced engineering, research, and complex workflow scenarios.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.52",
+    "date": "2026-04-24",
+    "title": "Models Added",
+    "description": "Add DeepSeek V4 Pro & DeepSeek V4 Flash",
+    "category": "feature",
+    "items": [
+      "DeepSeek V4 Pro",
+      "DeepSeek V4 Flash"
+    ],
+    "content": "## DeepSeek V4 Pro\n\nDeepSeek V4 Pro is a large-scale Mixture-of-Experts (MoE) model with 1.6T total parameters and 49B activated per token, supporting a 1M-token context window for advanced reasoning and long-horizon workflows.\n\nIt delivers strong performance across knowledge, mathematics, and software engineering tasks, making it suitable for complex, real-world applications.\n\n## DeepSeek V4 Flash\n\nDeepSeek V4 Flash is an efficiency-optimized Mixture-of-Experts (MoE) model with 284B total parameters and 13B activated per token, designed for fast inference and high-throughput workloads. \n\nIt supports a 1M-token context window, enabling large-scale reasoning and long-context processing.\n\n**Enjoy them.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.51",
+    "date": "2026-04-23",
+    "title": "Models Added",
+    "description": "Add Qwen3.6-35B-A3B & Qwen3.6-27B",
+    "category": "feature",
+    "items": [
+      "Qwen3.6-35B-A3B",
+      "Qwen3.6-27B"
+    ],
+    "content": "## Qwen3.6-35B-A3B\n\nQwen3.6-35B-A3B is an open-weight Mixture-of-Experts (MoE) multimodal model designed for agentic coding and long-horizon workflows. It features ~35–36B total parameters with ~3B activated per token, enabling strong performance with high inference efficiency. The model supports text and image inputs with a ~260K token context window, and is optimized for repository-level reasoning, multi-step development, and tool-driven workflows. \n\nWith strong benchmark performance and improved coherence across extended tasks, Qwen3.6-35B-A3B is well suited for developer tools, coding agents, and real-world engineering applications that require both reasoning depth and efficiency.\n\n## Qwen3.6-27B\n\nQwen3.6-27B is an open-weight 27B-parameter dense multimodal model from the Qwen3.6 series, designed to deliver flagship-level coding and agentic performance at a practical deployment scale. It supports both text and image inputs and introduces improvements in agentic coding, repository-level reasoning, and iterative development workflows. Despite its relatively compact size, it achieves state-of-the-art results on coding benchmarks, outperforming much larger models in tasks such as SWE-bench and terminal-based workflows. \n\nIt also provides strong reasoning and multimodal capabilities, along with features like thinking preservation to maintain context across interactions, making it well suited for developer tools, coding agents, and real-world engineering tasks.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.50",
+    "date": "2026-04-23",
+    "title": "Models Added",
+    "description": "Add Xiaomi MiMo-V2.5 & MiMo-V2.5-Pro",
+    "category": "feature",
+    "items": [
+      "MiMo-V2.5",
+      "MiMo-V2.5-Pro"
+    ],
+    "content": "## MiMo-V2.5\n\nMiMo-V2.5 is Xiaomi's native omnimodal model, delivering pro-level agentic performance at roughly half the inference cost. It surpasses MiMo-V2-Omni in multimodal perception, particularly in image and video understanding. With a 1M-token context window, it can handle complete documents, extended conversations, and complex task contexts in a single pass. \n\nCombining strong reasoning, rich perception, and cost efficiency, MiMo-V2.5 is well suited for integration into advanced agent frameworks and real-world multimodal applications.\n\n## MiMo-V2.5-Pro\n\nMiMo-V2.5-Pro is Xiaomi's flagship model, delivering top-tier performance in agentic capabilities, complex software engineering, and long-horizon tasks. It ranks highly on benchmarks such as ClawEval, GDPVal, and SWE-bench Pro, demonstrating strong real-world reliability. The model can autonomously complete professional tasks that would take human experts days or weeks, executing thousands of tool calls within a single workflow. \n\nWith a 1M-token context window, it is well suited for integration into advanced agent frameworks and large-scale task orchestration systems.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.49",
+    "date": "2026-04-22",
+    "title": "Models Added",
+    "description": "Add GPT Image 2",
+    "category": "feature",
+    "items": [
+      "GPT Image 2"
+    ],
+    "content": "## GPT Image 2\n\nGPT Image 2 combines OpenAI's GPT-5.4 with advanced image generation capabilities from GPT Image 2, enabling fully integrated multimodal workflows.\n\nIt allows users to seamlessly transition between reasoning, coding, and visual generation within a single interaction, making it well suited for creative, development, and agent-driven applications that require both intelligence and visual output.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.48",
+    "date": "2026-04-21",
+    "title": "Models Added",
+    "description": "Add Kimi K2.6",
+    "category": "feature",
+    "items": [
+      "Kimi K2.6"
+    ],
+    "content": "## Kimi K2.6\nKimi K2.6 is Moonshot AI's next-generation multimodal model, designed for long-horizon coding, UI/UX generation, and multi-agent orchestration. It handles complex end-to-end development tasks across languages such as Python, Rust, and Go, and can transform prompts and visual inputs into production-ready interfaces. \n\nPowered by a scalable agent swarm architecture, K2.6 can coordinate hundreds of parallel sub-agents for autonomous task decomposition, enabling the generation of documents, websites, and spreadsheets in a single run without human intervention.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.47",
+    "date": "2026-04-17",
+    "title": "Feature Added",
+    "description": "Skills & MCP Server — `@apertis/mcp-server` v0.3.0",
+    "category": "feature",
+    "items": [],
+    "content": "A Model Context Protocol server that lets any MCP-compatible AI assistant call Apertis directly. No setup, no wrapper code — just install once.\n\n**Install (Claude Code):**\n```bash\nclaude mcp add apertis -- npx -y @apertis/mcp-server\n```\n\n**Nine tools shipped:**\n\n| Tool | What it does |\n|------|--------------|\n| `list_models` | List models with optional free/paid + capability filters |\n| `get_model_info` | Detailed info for a specific model (pricing, context, provider) |\n| `compare_models` | Side-by-side comparison of 2–5 models |\n| `check_quota` | Account balance, subscription status, remaining quota |\n| `get_usage_stats` | Usage by model and period (today / week / month) |\n| `list_api_keys` | List your keys (masked) with status and quota |\n| `create_api_key` | Create a new key with an optional quota limit |\n| `suggest_model` | Freeform keyword search over the full catalog |\n| `recommend_model` | Curated Apertis pick for a task type with live pricing *(new in v0.3.0)* |\n\n→ Guide: [docs.apertis.ai/api/sdks/mcp-server](https://docs.apertis.ai/api/sdks/mcp-server)\n→ npm: [`@apertis/mcp-server`](https://www.npmjs.com/package/@apertis/mcp-server)\n\n### Agent Skills — one-command install for 45+ AI tools\n\nThree curated skills that teach your AI assistant how to use Apertis correctly. Install once, works everywhere.\n\n```bash\nnpx skills add theQuert/apertis-skills\n```\n\nCompatible with Claude Code, Cursor, GitHub Copilot, Codex, Gemini CLI, and [45+ other AI coding tools](https://agentskills.io).\n\n| Skill | What your agent learns |\n|-------|------------------------|\n| `apertis-api` | Auth, endpoints, `:web` suffix, MCP reference — the complete API surface |\n| `apertis-model-picker` | Opinionated model picks by task type with reasoning |\n| `apertis-migrate` | One-line swap from OpenAI SDK to Apertis |\n\n→ Source: [github.com/theQuert/apertis-skills](https://github.com/theQuert/apertis-skills)\n\n### `GET /v1/recommend` — dynamic model selection endpoint\n\nAsk Apertis what to use for a task and get back the curated pick with live pricing. Recommendations update as models are added, retired, or re-priced — your code stays the same.\n\n```bash\ncurl \"https://api.apertis.ai/v1/recommend?task=coding&budget=medium\" \\\n  -H \"Authorization: Bearer $APERTIS_API_KEY\"\n```\n\n**Task types:** `coding`, `long-context`, `fast-chat`, `reasoning`, `vision`\n**Budget tiers:** `low`, `medium` (default), `high`\n\n**Response shape:**\n```json\n{\n  \"model\": \"claude-sonnet-4-6\",\n  \"pricing\": { \"input_per_1m\": 2.40, \"output_per_1m\": 12.00 },\n  \"why\": \"Best coding ability per dollar. 200K context.\",\n  \"alternatives\": [\n    { \"model\": \"deepseek-v3\", \"note\": \"3x cheaper, good for simpler coding\" },\n    { \"model\": \"claude-opus-4-6\", \"note\": \"most capable, higher cost\" }\n  ]\n}\n```\n\nUse the returned `model` ID directly in your next `/v1/chat/completions` call.\n\n→ Reference: [docs.apertis.ai/api/utilities/recommend](https://docs.apertis.ai/api/utilities/recommend)\n\n---\n\n## Docs\n\n- New: `@apertis/mcp-server` SDK guide with `recommend_model` walkthrough\n- New: `GET /v1/recommend` endpoint reference with Python example\n- Updated: Cursor integration guide with new screenshots and `apertis/` prefix convention\n- Updated: Ideas page now publicly browsable at [docs.apertis.ai/help/ideas](https://docs.apertis.ai/help/ideas)\n- Updated: Timeout documentation — `X-Timeout` header, `408` status semantics\n\n---\n\n## Why this release\n\nWe kept seeing two questions in support:\n\n1. *“Which model should I use?”*\n2. *“How do I wire Apertis into my agent/IDE?”*\n\n`recommend_model` + the skills + the MCP server answer both — without asking you to paste the same instructions into every new session. Your agent now picks the right model and knows how to call us, natively.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.46",
+    "date": "2026-04-17",
+    "title": "Subscription Quota Multiplier Update",
+    "description": "Quota multiplier adjustments for Lite, Pro, and Plus plans — effective 2026-04-24 00:00 UTC",
+    "category": "system",
+    "items": [
+      "glm-5.1 multiplier raised on Lite/Pro/Plus",
+      "claude-opus-4-6 multiplier rebalanced (raised on Pro/Plus, lowered on Lite)",
+      "gpt-5.4 multiplier raised on Pro/Plus",
+      "code:claude-opus-4-6 multiplier raised on Lite/Pro",
+      "claude-opus-4-7 multiplier raised on Plus",
+      "gemini-3-flash-preview & gemini-3.1-pro-preview multipliers adjusted on Lite"
+    ],
+    "content": "## Subscription Quota Multiplier Update\n\nEffective **2026-04-24 at 00:00 UTC**, quota multipliers across Lite, Pro, and Plus plans will be adjusted in response to recent upstream AI provider pricing changes.\n\n### Why\n\n- **Anthropic Claude** (upstream routing channel) base rates have trended upward across multiple providers\n- **Z.AI GLM-5.1** base rates have trended upward across multiple providers\n- **OpenAI GPT-5.4** serving costs have increased on several routes\n- Additionally, `claude-opus-4-6` on the Lite plan is being **lowered** because our review showed the previous multiplier was set higher than current real cost justifies\n\n### Changes\n\n#### Lite Plan ($12/month, 600 quota per cycle)\n\n- `glm-5.1`: 0.51 → **1.5**\n- `code:claude-opus-4-6`: 5.00 → **10.0**\n- `claude-opus-4-6`: 5.00 → **2.0** (decrease)\n- `gemini-3-flash-preview`: 0.10 → **0.2**\n- `gemini-3.1-pro-preview`: 0.43 → **0.77**\n\n#### Pro Plan ($25/month, 900 quota per cycle)\n\n- `glm-5.1`: 0.37 → **1.5**\n- `claude-opus-4-6`: 1.00 → **1.5**\n- `gpt-5.4`: 0.62 → **1.0**\n- `code:claude-opus-4-6`: 0.75 → **1.5**\n\n#### Plus Plan ($60/month, 1,500 quota per cycle)\n\n- `claude-opus-4-6`: 0.75 → **1.5**\n- `glm-5.1`: 0.25 → **1.0**\n- `gpt-5.4`: 0.45 → **0.8**\n- `claude-opus-4-7`: 3.00 → **4.0**\n\n### What stays the same\n\n- Monthly subscription fee\n- Billing cycle and quota allowance per plan\n- Model access and plan tiers\n- Pay-As-You-Go (PAYG) fallback behavior\n\n### Your options\n\nIf you do not agree with the changes, you may cancel your subscription at any time before 2026-04-24 00:00 UTC at https://apertis.ai/setting. Affected users will also be notified by email.\n\nFor questions, contact us at hi@apertis.ai.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.45",
+    "date": "2026-04-16",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.7",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.7"
+    ],
+    "content": "## Claude Opus 4.7\n\nOpus 4.7 is the next generation of Anthropic's Opus family, designed for long-running, asynchronous agent workflows. Building on Opus 4.6, it delivers stronger performance on complex, multi-step tasks and more reliable execution across extended pipelines such as large codebases, multi-stage debugging, and end-to-end project orchestration. Beyond coding, Opus 4.7 enhances knowledge work capabilities, including document drafting, presentation creation, and data analysis. With strong coherence over long outputs and sessions, it is well suited for tasks requiring persistence, judgment, and sustained execution.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.44",
+    "date": "2026-04-11",
+    "title": "Feature Added",
+    "description": "Fallback Timeout Setting for Coding Plan Users",
+    "category": "feature",
+    "items": [
+      "Coding Plan subscribers can now configure the Fallback Timeout directly from the dashboard."
+    ],
+    "content": "### What's new\n\n  When Apertis routes your request to an upstream provider, it waits a set amount of time before switching to the next available channel. Previously this was fixed\n   at 30 seconds — fine for most models, but too short for preview and reasoning models processing large context windows.\n\n  You can now adjust this in **Settings → Subscription Keys → Fallback Timeout** (range: 5s–300s).\n\n  ### Who should change this\n\n  - Using `gemini-3-flash-preview`, `claude-opus-4-thinking`, or other preview/reasoning models with large prompts? **Increase to 120s+**\n  - Using standard models like `gpt-4o`, `claude-sonnet-4`? **Default 30s is fine**\n\n  ### How it works\n\n  1. Go to **Settings → Subscription Keys**\n  2. Find **Fallback Timeout** in the metadata section\n  3. Enter your preferred value in milliseconds (e.g., `120000` for 120s)\n  4. Click **Save**\n\n  Changes take effect immediately.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.43",
+    "date": "2026-04-09",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.6 (Fast)",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.6 (Fast)"
+    ],
+    "content": "## Claude Opus 4.6 (Fast)\n\nOpus 4.6 is Anthropic's more faster version of Opus 4.6 model for coding and long-running professional workflows, designed for agents that operate across entire workflows rather than single prompts. It demonstrates strong performance on large codebases, complex refactoring, and multi-step debugging, with improved contextual understanding, deeper problem decomposition, and higher reliability on challenging engineering tasks compared to earlier generations. Beyond software development, Opus 4.6 excels at sustained knowledge work, producing near production-ready documents, technical plans, and analyses in a single pass while maintaining coherence across long outputs and extended sessions. Its strength in persistence, judgment, and structured execution makes it well suited for technical design, migration planning, and end-to-end project execution.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.42",
+    "date": "2026-04-08",
+    "title": "Models Added",
+    "description": "Add GLM 5.1",
+    "category": "feature",
+    "items": [
+      "GLM 5.1"
+    ],
+    "content": "## GLM 5.1\n\nGLM-5.1 delivers a major advancement in coding capability, with significant improvements in handling long-horizon tasks. It is designed to operate beyond short interactions, enabling continuous, autonomous execution over extended periods. The model can work independently on a single task for 8+ hours, performing planning, execution, and iterative self-improvement to produce complete, engineering-grade results, making it well suited for complex development workflows and autonomous agent systems.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.41",
+    "date": "2026-04-06",
+    "title": "System Update",
+    "description": "Add local token estimation for Claude Code CLI",
+    "category": "feature",
+    "items": [
+      "the missing /v1/messages/count_tokens endpoint was causing Claude Code CLI to crash on startup."
+    ],
+    "content": "We've just shipped a fix that implements this endpoint. It performs local token estimation, so it returns a valid {\"input_tokens\": N} response without any additional latency. \n\nThe endpoint supports:\n- String and structured content block messages\n- System prompts\n- Tool definitions\n\nThe fix is resolved and on Live. Claud Code CLI should start normally against the Apertis API.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.40",
+    "date": "2026-04-03",
+    "title": "Models Added",
+    "description": "Add Gemma 4 31B & Gemma 4 26B A4B",
+    "category": "feature",
+    "items": [
+      "Gemma 4 31B",
+      "Gemma 4 26B A4B"
+    ],
+    "content": "## Gemma 4 31B\n\nGemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model, supporting text and image inputs with text outputs. It features a 256K token context window, configurable thinking/reasoning modes, native function calling, and broad multilingual support across 140+ languages. The model delivers strong performance in coding, reasoning, and document understanding, making it well suited for developer workflows, multilingual applications, and structured knowledge tasks.\n\n## Gemma 4 26B A4B\n\nGemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind, featuring 25.2B total parameters with only 3.8B activated per token—delivering near 31B-class quality at a fraction of the compute cost. It supports multimodal inputs including text, images, and video (up to 60s at 1fps). The model includes a 256K token context window, native function calling, configurable thinking/reasoning modes, and structured output support. Released under the Apache 2.0 license, it is well suited for efficient, production-ready multimodal and agentic applications.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.39",
+    "date": "2026-04-02",
+    "title": "Models Added",
+    "description": "Add GLM 5V Turbo",
+    "category": "feature",
+    "items": [
+      "GLM 5V Turbo"
+    ],
+    "content": "## GLM 5V Turbo\n\nGLM-5V-Turbo is Z.ai's first native multimodal agent foundation model, designed for vision-based coding and agent-driven workflows. It natively supports image, video, and text inputs, enabling integrated multimodal reasoning and execution. The model excels at long-horizon planning, complex coding, and multi-step task execution, and works seamlessly with agents to complete the full loop of “perceive → plan → execute”, making it well suited for advanced multimodal automation and real-world agent systems.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.38",
+    "date": "2026-04-01",
+    "title": "Models Added",
+    "description": "Add Grok 4.20",
+    "category": "feature",
+    "items": [
+      "Grok 4.20",
+      "Grok 4.20 Multi-Agent"
+    ],
+    "content": "## Grok 4.20\n\nGrok 4.20 is xAI's newest flagship model, designed for high-performance reasoning with industry-leading speed and strong agentic tool-calling capabilities. It emphasizes strict prompt adherence and low hallucination rates, delivering highly precise and reliable responses. Optimized for agent workflows and real-time applications, Grok 4.20 provides consistent, truthful outputs while maintaining fast inference and robust task execution.\n\n## Grok 4.20 Multi-Agent\n\nGrok 4.20 Multi-Agent is a specialized variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. It enables multiple agents to operate in parallel, coordinating tool use and synthesizing information to handle complex, multi-step tasks. Optimized for deep research and large-scale problem solving, the model supports configurable reasoning effort: 4 agents for low/medium settings and up to 16 agents for high/xhigh settings, enabling scalable parallel reasoning and execution.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.37",
+    "date": "2026-03-31",
+    "title": "Models Added",
+    "description": "Add Qwen3.6 Plus Preview",
+    "category": "feature",
+    "items": [
+      "Qwen3.6 Plus Preview (Free)"
+    ],
+    "content": "## Qwen3.6 Plus Preview (Free)\n\nQwen 3.6 Plus Preview is the next-generation evolution of the Qwen Plus series, built on an advanced hybrid architecture that enhances efficiency and scalability. It delivers improved reasoning capabilities and more reliable agentic behavior compared to the 3.5 series, with benchmark performance at or above leading state-of-the-art models.\n\nDesigned as a flagship preview model, it excels in agentic coding, front-end development, and complex problem solving, making it well suited for advanced development workflows and high-performance applications.\n\n**Enjoy it.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.36",
+    "date": "2026-03-25",
+    "title": "System Update",
+    "description": "🚀 Ideas Board is Now Public",
+    "category": "feature",
+    "items": [
+      "The Ideas & Feedback board is now accessible to everyone — no login required to browse."
+    ],
+    "content": "### What's New\n\n  - **Public Read Access** — Anyone can now browse ideas, view details, and read comments without signing in\n  - **Write Actions Require Login** — Submitting ideas, voting, and commenting still require authentication\n  - **Privacy Preserved** — Non-public ideas remain hidden from unauthenticated visitors\n\n  ### Why This Change\n\n  We believe in building in public. The Ideas board is where our community shapes the future of Apertis — sharing feature requests, voting on priorities, and\n  discussing what matters most.\n\n  By making it publicly visible, potential users can see what's being built and why, existing users can share links to ideas they care about, and everyone gets a\n  transparent view into our roadmap and decision-making process.\n\n  Great products are built together. Come see what the community is asking for — and when you're ready, sign in to add your voice.\n\n**Happy Building**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.35",
+    "date": "2026-03-23",
+    "title": "System Update",
+    "description": "✨ Kilo CLI & Kilo Code — Official Model Provider",
+    "category": "feature",
+    "items": [
+      "Apertis is now available as an official built-in model provider in Kilo CLI and Kilo Code. Users can select Apertis directly from the provider list without any manual endpoint configuration."
+    ],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.2.34",
+    "date": "2026-03-23",
+    "title": "System Update",
+    "description": "✨ Apertis Model ID Prefix Support",
+    "category": "feature",
+    "items": [
+      "We now support an `apertis/` namespace prefix for all model IDs, designed specifically for **Cursor IDE** users who experience model ID collisions with Cursor IDE built-in model routing."
+    ],
+    "content": "We now support an `apertis/` namespace prefix for all model IDs, designed specifically for **Cursor IDE** users who experience model ID collisions with Cursor's\n  built-in model routing.\n\n### How It Works\n\n  When your model ID overlaps with Cursor's built-in models, simply add the `apertis/` prefix to ensure requests route through Apertis:\n\n  | Standard ID | Cursor IDE ID |\n  |-------------|---------------|\n  | `gpt-5.4` | `apertis/gpt-5.4` |\n  | `claude-sonnet-4.5` | `apertis/claude-sonnet-4.5` |\n  | `code:claude-sonnet-4.5` | `apertis/code:claude-sonnet-4.5` |\n  | `gpt-5.4:web` | `apertis/gpt-5.4:web` |\n\n  The `apertis/` prefix is automatically stripped on our end — all downstream processing (model validation, channel routing, billing, and logging) uses the\n  original model ID. Fully compatible with existing suffixes like `:web` and `code:` prefix and **all models**.\n\n  ### Model Detail Page\n\n  Each model's detail page now includes a **Cursor IDE Model IDs** section listing all available `apertis/`-prefixed identifiers. Click to copy, and hover the infoicon for context.\n  \n  **Happy Building**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.33",
+    "date": "2026-03-21",
+    "title": "System Update",
+    "description": "✨ AWS Partner Network Member",
+    "category": "feature",
+    "items": [
+      "Apertis is now an official AWS Partner Network member."
+    ],
+    "content": "Our AI infrastructure is powered by Amazon Bedrock, providing enterprise-grade reliability and compliance for all users.\n\n- **AWS Partner Network**: Registered as Apertis AI (Stima AI LLC), Partner status Active\n- **Powered by Amazon Bedrock**: Direct access to Claude models (Sonnet, Opus, Haiku) via AWS infrastructure\n- **Footer trust badges**: Added AWS Partner Network Member and Powered by Amazon Bedrock badges alongside existing OWASP, NIST CSF, and PCI DSS compliance indicators\n\n**Happy Building.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.32",
+    "date": "2026-03-20",
+    "title": "Models Added",
+    "description": "Add Xiaomi Models: MiMo-V2-Pro & MiMo-V2-Omni",
+    "category": "feature",
+    "items": [
+      "MiMo-V2-Pro",
+      "MiMo-V2-Omni"
+    ],
+    "content": "### MiMo-V2-Pro\n\nMiMo-V2-Pro is Xiaomi's flagship foundation model with over 1T parameters and a 1M-token context window, optimized for advanced agentic workflows. It is highly adaptable to general agent frameworks such as OpenClaw, delivering strong performance in complex, real-world task execution. Ranking among the top tier on benchmarks like PinchBench and ClawBench, with performance approaching models like Opus 4.6, MiMo-V2-Pro is designed to act as the core intelligence of agent systems, orchestrating workflows, driving production engineering tasks, and delivering reliable results at scale.\n\n### MiMo-V2-Omni\n\nMiMo-V2-Omni is a frontier omni-modal model that natively processes image, video, and audio inputs within a unified architecture. It combines strong multimodal perception with advanced agentic capabilities, including visual grounding, multi-step planning, tool use, and code execution. With a 256K context window, MiMo-V2-Omni is well suited for complex real-world tasks that span multiple modalities, enabling integrated reasoning and execution across diverse input types.\n\n**Happy Building.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.31",
+    "date": "2026-03-19",
+    "title": "Models Added",
+    "description": "Add MiniMax M2.7",
+    "category": "feature",
+    "items": [
+      "MiniMax M2.7"
+    ],
+    "content": "### MiniMax M2.7\nMiniMax-M2.7 is a next-generation large language model designed for autonomous, real-world productivity and continuous improvement. It incorporates advanced multi-agent collaboration, enabling the model to plan, execute, and iteratively refine complex tasks across dynamic environments.\n\nBuilt for production-grade workflows, M2.7 supports tasks such as live debugging, root cause analysis, financial modeling, and full document generation across Word, Excel, and PowerPoint. With strong benchmark performance—including 56.2% on SWE-Pro, 57.0% on Terminal Bench 2, and 1495 ELO on GDPval-AA—it sets a new standard for multi-agent systems in real-world digital workflows.\n\n**Happy Building**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.30",
+    "date": "2026-03-18",
+    "title": "Feature Added",
+    "description": "🚀 Apertis SDK v2.1 — Better compatible with OpenCode, Kilo Code & all AI coding tools",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.2.29",
+    "date": "2026-03-18",
+    "title": "Models Added",
+    "description": "Add GPT-5.4 Mini & GPT-5.4 Nano",
+    "category": "feature",
+    "items": [
+      "GPT-5.4 Mini",
+      "GPT-5.4 Nano"
+    ],
+    "content": "### GPT-5.4 Mini\n\nGPT-5.4 mini brings the core capabilities of GPT-5.4 into a faster, more efficient model optimized for high-throughput workloads. It supports text and image inputs and delivers strong performance across reasoning, coding, and tool use, while reducing latency and cost for large-scale deployments. \n\nDesigned for production environments, GPT-5.4 mini balances capability and efficiency, making it well suited for chat applications, coding assistants, and scalable agent workflows. It provides reliable instruction following, solid multi-step reasoning, and consistent performance across diverse tasks with improved cost efficiency.\n\n### GPT-5.4 Nano\n\nGPT-5.4 nano is the most lightweight and cost-efficient variant of the GPT-5.4 family, optimized for speed-critical and high-volume workloads. It supports text and image inputs and is designed for low-latency tasks such as classification, data extraction, ranking, and sub-agent execution. Prioritizing responsiveness and efficiency over deep reasoning, GPT-5.4 nano is ideal for real-time systems, background processing, and distributed agent pipelines where minimizing cost and latency is essential.\n\nHappy Building.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.28",
+    "date": "2026-03-18",
+    "title": "System Update",
+    "description": "New Brand Identity",
+    "category": "feature",
+    "items": [
+      "We've rolled out a completely refreshed visual identity for Apertis."
+    ],
+    "content": "### New Logo\n  Our new \"Stacked A\" mark features a dual-layer geometric design with metallic teal gradients, replacing the previous rainbow-arc logo. The layered depth effect\n  represents the multiple AI providers unified behind a single API.\n\n### What Changed\n- **Logo**: Geometric Stacked A with Apertis Teal (#2dd4bf → #0d9488)\n- **Favicon**: Full icon set across 25 sizes (16px–512px) for crisp rendering on every device                                                                      - **OG Images**: All social preview images updated with new branding\n- **Loading Animation**: Inline SVG with breathing pulse effect replaces static image spinner\n- **Header & Footer**: Transparent logo mark with brand name for both light and dark modes\n\n### What Didn't Change\nYour API keys, endpoints, SDK integrations, and billing — everything works exactly as before. This update is purely visual.\n\n**Happy Building.**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.27",
+    "date": "2026-03-17",
+    "title": "Feature Added",
+    "description": "✨ Billing Credits API — Check Your Balance Programmatically",
+    "category": "feature",
+    "items": [],
+    "content": "We've launched a new API endpoint that lets you query your remaining credits and subscription quota using your API key — no dashboard login required.\n\n  **Endpoint**: `GET /v1/dashboard/billing/credits`\n\n  ---\n\n  #### The Problem\n\n  Until now, checking your Apertis balance meant opening the dashboard in a browser. This creates friction in several real-world scenarios:\n\n  - **Coding agents running overnight** — Claude Code, Cursor, or Kilo Code sessions can burn through credits while you sleep. By the time you notice, the session\n  has already failed mid-task with an insufficient balance error.\n  - **Team automation pipelines** — CI/CD workflows that call AI APIs have no way to pre-check if there's enough budget before kicking off an expensive batch job.\n  - **Multi-key management** — If you distribute API keys across projects or team members, there's no programmatic way to monitor which keys are running low.\n  - **Subscription cycle awareness** — Subscription users couldn't check how much cycle quota remains without visiting the dashboard. Easy to accidentally exhaust\n  your monthly allocation without realizing it.\n\n  We looked at what other providers offer: **OpenAI has no balance endpoint** (this is one of the most requested features on their community forum). **Anthropic's\n  Admin API** can query cost reports but not remaining credits, and requires a separate admin key. Neither provides a simple \"how much do I have left?\" API call.\n\n  We decided to solve this properly.\n\n  ---\n\n  #### What It Returns\n\n  A single request gives you the complete picture:\n\n  **PAYG users** get their credit balance in USD:\n\n  ```json\n  {\n    \"object\": \"billing_credits\",\n    \"is_subscriber\": false,\n    \"payg\": {\n      \"remaining_usd\": 12.50,\n      \"used_usd\": 7.50,\n      \"total_usd\": 20.00,\n      \"is_unlimited\": false,\n      \"monthly_limit_usd\": 50.00,\n      \"monthly_used_usd\": 7.50,\n      \"monthly_reset_day\": 1\n    }\n  }\n\n  Subscription users see both their cycle quota and PAYG balance:\n\n  {\n    \"object\": \"billing_credits\",\n    \"is_subscriber\": true,\n    \"payg\": {\n      \"remaining_usd\": 0.95,\n      \"used_usd\": 0.05,\n      \"total_usd\": 1.00,\n      \"is_unlimited\": false\n    },\n    \"subscription\": {\n      \"plan_type\": \"pro\",\n      \"status\": \"active\",\n      \"cycle_quota_limit\": 1000,\n      \"cycle_quota_used\": 350,\n      \"cycle_quota_remaining\": 650,\n      \"cycle_start\": \"2026-03-16T10:02:35Z\",\n      \"cycle_end\": \"2026-04-16T10:02:35Z\",\n      \"payg_fallback_enabled\": true,\n      \"payg_spent_usd\": 2.50,\n      \"payg_limit_usd\": 10.00\n    }\n  }\n\n```\n---\n\n### Use Cases\n\n  1. Pre-flight budget check before expensive operations\n\n  Before kicking off a large batch job or a long coding agent session, check if you have enough credits:\n\n```python\nimport requests\n\ncredits = requests.get(\n     \"https://api.apertis.ai/v1/dashboard/billing/credits\",\n      headers={\"Authorization\": \"Bearer sk-your-key\"}\n  ).json()\n\nif credits[\"is_subscriber\"]:\n    remaining = credits[\"subscription\"][\"cycle_quota_remaining\"]\n    if remaining < 100:\n        print(f\"Warning: only {remaining} quota remaining in this cycle\")\n    else:\n        remaining = credits[\"payg\"][\"remaining_usd\"]\n        if remaining < 1.0:\n            print(f\"Warning: only ${remaining:.2f} credits left\")\n```\n\n  2. Automated low-balance alerts\n\n  Set up a cron job or monitoring script that pings you when credits drop below a threshold:\n\n```bash\n  #!/bin/bash\n  BALANCE=$(curl -s https://api.apertis.ai/v1/dashboard/billing/credits \\\n    -H \"Authorization: Bearer $APERTIS_KEY\" | jq '.payg.remaining_usd')\n\n  if (( $(echo \"$BALANCE < 5.0\" | bc -l) )); then\n    echo \"Low balance alert: $BALANCE USD remaining\" | \\\n      mail -s \"Apertis Low Balance\" you@example.com\n  fi\n```\n\n### What Makes This Different\n\n  This is an Apertis exclusive. We surveyed every major AI API provider:\n\n  - OpenAI: No balance endpoint. The most upvoted feature request on their developer forum for over two years. Their Usage API shows historical spending but not remaining credits.\n  - Anthropic: Admin API provides cost reports, but requires a separate admin key and doesn't return remaining balance.\n  - Together AI, OpenRouter: No programmatic balance check.\n\n  We believe knowing your balance should be as simple as making one API call. No special keys, no dashboard login, no scraping.\n\n  [Full API documentation](https://docs.apertis.ai/api/utilities/billing-credits)\n  \n  Enjoy it.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.26",
+    "date": "2026-03-15",
+    "title": "Models Added",
+    "description": "Add GLM 5 Turbo",
+    "category": "feature",
+    "items": [
+      "GLM 5 Turbo"
+    ],
+    "content": "### GLM 5 Turbo\n\nGLM-5 Turbo is a high-performance model from Z.ai optimized for fast inference and agent-driven workflows. Designed for real-world environments such as OpenClaw scenarios, it delivers strong performance across long execution chains and complex task pipelines. The model features improved instruction decomposition, tool integration, scheduled and persistent execution, and enhanced stability for extended multi-step tasks, making it well suited for autonomous agents and production automation workflows.\n\n**Enjoy it!**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.25",
+    "date": "2026-03-12",
+    "title": "Models Added",
+    "description": "Add OpenRouter and NVIDIA models",
+    "category": "feature",
+    "items": [
+      "Nemotron 3 Super (Free)",
+      "Healer Alpha",
+      "Hunter Alpha"
+    ],
+    "content": "### Nemotron 3 Super (Free)\n\nNVIDIA Nemotron 3 Super is a 120B-parameter open hybrid Mixture-of-Experts model designed for complex multi-agent and long-horizon reasoning workflows. It activates only 12B parameters per token, enabling high compute efficiency while maintaining strong accuracy on advanced tasks. Built on a hybrid Mamba–Transformer MoE architecture with multi-token prediction (MTP), the model delivers significantly higher token generation throughput than leading open models. \n\n### Healer Alpha\n\nHealer Alpha is a frontier omni-modal model that integrates vision, audio understanding, reasoning, and action capabilities within a single system. It can natively perceive visual and auditory inputs, reason across multiple modalities, and execute complex multi-step tasks with precision, enabling advanced real-world agentic applications. Note: Prompts and completions processed by this model are logged by the provider and may be used for model improvement.\n\n#### Hunter Alpha\n\nHunter Alpha is a frontier intelligence model with over 1 trillion parameters and a 1M-token context window, designed specifically for agentic applications. It excels at long-horizon planning, complex reasoning, and sustained multi-step task execution, delivering strong reliability and precise instruction following for advanced agent frameworks such as OpenClaw. Note: Prompts and completions processed by this model are logged by the provider and may be used for model improvement.\n\nThese models are in free tier. \n\n**Enjoy it!**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.24",
+    "date": "2026-03-11",
+    "title": "Models Added",
+    "description": "Add Qwen3.5-9B & Seed-2.0-Lite",
+    "category": "feature",
+    "items": [
+      "Qwen3.5-9B",
+      "Seed-2.0-Lite"
+    ],
+    "content": "### Qwen3.5-9B\n\nQwen3.5-9B is a multimodal foundation model from the Qwen3.5 family, built to deliver strong reasoning, coding, and visual understanding within an efficient 9B-parameter architecture. It adopts a unified vision-language design with early fusion of multimodal tokens, enabling the model to process and reason across text and images within the same context. \n\nWith balanced multimodal capability and efficient deployment requirements, Qwen3.5-9B is well suited for applications that combine visual analysis, coding assistance, and general reasoning.\n\n### Seed-2.0-Lite\n\nSeed-2.0-Lite is a balanced model designed for high-frequency enterprise workloads, optimizing for both capability and cost efficiency. It surpasses the previous-generation Seed-1.8 in overall performance while maintaining stable, production-ready quality. The model supports long-context processing, multi-source information fusion, multi-step instruction execution, and high-fidelity structured outputs. \n\nIt is well suited for enterprise scenarios such as unstructured data processing, content generation, search and recommendation, and data analysis, delivering reliable results while significantly reducing operational cost.\n\n**Enjoy it!**",
+    "abridged": false
+  },
+  {
+    "version": "2.2.23",
+    "date": "2026-03-06",
+    "title": "Price Updated",
+    "description": "Update prices with 20% off for GPT-5.4 Models",
+    "category": "models",
+    "items": [
+      "GPT-5.4",
+      "GPT-5.4 Pro"
+    ],
+    "content": "The prices for GPT-5.4 and GPT-5.4 Pro are updated to 20% off.\n\nEnjoy it.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.22",
+    "date": "2026-03-06",
+    "title": "Models Added",
+    "description": "Add GPT-5.4 and GPT-5.4 Pro",
+    "category": "feature",
+    "items": [],
+    "content": "### GPT-5.4\nGPT-5.4 is OpenAI's latest frontier model, unifying the GPT and Codex lines into a single system designed for both general intelligence and advanced software engineering workflows. It supports text and image inputs and features a 1M+ token context window (≈922K input, 128K output), enabling high-context reasoning, coding, and multimodal analysis within a single workflow. \n\nThe model delivers improved performance in coding, document understanding, tool use, and instruction following, and is designed as a strong default for complex tasks. It can generate production-quality code, synthesize information across large datasets, and execute multi-step workflows with fewer iterations and greater token efficiency.\n\n### GPT-5.4 Pro\nGPT-5.4 Pro is OpenAI's most advanced model, built on the unified GPT-5.4 architecture with enhanced reasoning capabilities for complex and high-stakes tasks. It supports text and image inputs and features a 1M+ token context window (≈922K input, 128K output) for handling large-scale workflows and long-context analysis.\n\nOptimized for step-by-step reasoning, instruction following, and accuracy, GPT-5.4 Pro excels in agentic coding, long-context problem solving, and complex multi-step workflows, making it well suited for advanced engineering, research, and high-reliability applications.\n\n**The discount prices will be updated in few days, stay tuned!**\n\nEnjoy it.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.21",
+    "date": "2026-03-05",
+    "title": "Models Added",
+    "description": "✨ New Models Added to All Subscription Plans — Free & Unlimited",
+    "category": "feature",
+    "items": [],
+    "content": "Hi there,\n\n  Great news! We've just added three new models to every Apertis subscription plan at **no extra cost** — with **unlimited usage**.\n\n  | Model | Highlights |\n  |-------|-----------|\n  | **GLM 4.7 Flash** | Zhipu's latest high-speed reasoning model — low latency, high throughput |\n  | **GPT-5.1 Codex (Mini)** | OpenAI's lightweight code generation model — ideal for everyday dev tasks |\n  | **MiniMax M2.1** | MiniMax's next-gen general-purpose model — strong multilingual capabilities |\n\n  ### How to Get Started\n\n  These models are available immediately for all subscribers — no configuration changes needed. Simply use the model ID in your API calls:\n\n  model: \"glm-4.7-flash\"\n  model: \"gpt-5.1-codex-mini\"\n  model: \"minimax-m2.1\"\n\n  ### Why Free & Unlimited?\n\n  We continuously partner with leading AI providers to bring high-value models into your subscription. More models, same price — that's our commitment to maximizing the value of your\n  plan.\n\n  Not a subscriber yet? [**Explore our plans →**](https://apertis.ai/subscribe)\n\n  Questions? Feel free to reach out anytime.\n \n  Happy Building.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.20",
+    "date": "2026-03-05",
+    "title": "Feature Added",
+    "description": "✨ Apertis Python SDK v0.2.1 — Context Compression Now Available",
+    "category": "feature",
+    "items": [],
+    "content": "Hi there,\n\n  We're excited to announce Apertis Python SDK v0.2.1, now with Context Compression support.\n\n  ### What's New\n\n  Context Compression automatically compresses prompt tokens in long conversations and large context scenarios — reducing API costs while maintaining response quality.\n\n  ### Quick Start\n```python\n  pip install apertis==0.2.1\n```\n\n  ### Resources\n\n  - PyPI: https://pypi.org/project/apertis/0.2.1/\n  - GitHub Release: https://github.com/apertis-ai/python-sdk/releases/tag/v0.2.1\n\n  *See the Release Notes for detailed usage and configuration options.*\n\n  Questions? Feel free to reach out anytime.\n \n  Happy Building.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.19",
+    "date": "2026-03-04",
+    "title": "Models Added",
+    "description": "Add Gemini 3.1 Flash Lite Preview & GPT-5.3 Chat",
+    "category": "feature",
+    "items": [
+      "GPT-5.3 Chat",
+      "Gemini 3.1 Flash Lite Preview"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.18",
+    "date": "2026-03-01",
+    "title": "Feature Added",
+    "description": "✨ New Feature: Context Compression",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.2.17",
+    "date": "2026-02-28",
+    "title": "Models Added",
+    "description": "Add Grok 4.2",
+    "category": "feature",
+    "items": [
+      "Grok 4.2"
+    ],
+    "content": "Grok 4.2 is the next major iteration of xAI's Grok series, advancing the model's reasoning, coding, and multimodal capabilities with architectural improvements over Grok 4 and 4.1. It is positioned as a more powerful and general-purpose frontier AI model in the Grok family with stronger deep reasoning and real-world task performance.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.16",
+    "date": "2026-02-27",
+    "title": "Models Added",
+    "description": "Add Qwen 3.5 Full Series & Seed-2.0-Mini",
+    "category": "feature",
+    "items": [
+      "Seed-2.0-Mini",
+      "Qwen3.5 Plus 2026-02-15",
+      "Qwen3.5 397B A17B",
+      "Qwen3.5-Flash",
+      "Qwen3.5-122B-A10B",
+      "Qwen3.5-27B",
+      "Qwen3.5-35B-A3B"
+    ],
+    "content": "The full Qwen 3.5 series is provided at [**Apertis Coding Plan**](https://apertis.ai/subscribe) as well,\nEnjoy it.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.15",
+    "date": "2026-02-26",
+    "title": "Models Added",
+    "description": "Add Nano Banana 2 (Gemini 3.1 Flash Image Preview)",
+    "category": "feature",
+    "items": [
+      "Nano Banana 2 (Gemini 3.1 Flash Image Preview)"
+    ],
+    "content": "Gemini 3.1 Flash Image Preview (also known as \"Nano Banana 2\") is Google's latest state-of-the-art image generation and editing model, delivering Pro-level visual quality at Flash-level speed. It combines strong contextual understanding with fast, cost-efficient inference, enabling high-quality image generation and seamless iterative editing. Optimized for both performance and accessibility, it makes advanced visual creation workflows faster and more scalable.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.14",
+    "date": "2026-02-26",
+    "title": "System Update",
+    "description": "Cached responses now support streaming (SSE) delivery, covering ~80% of API traffic that uses stream: true.",
+    "category": "feature",
+    "items": [],
+    "content": "New feature: Cached responses now support streaming (SSE) delivery, covering ~80% of API traffic that uses stream: true.\n\n  - On cache hit, the system emits synthetic SSE chunks from the stored response — no upstream API call needed\n  - Content is split on rune boundaries (50 runes/chunk, 10ms intervals) to preserve multi-byte characters\n  - Proper X-Cache-Hit, X-Cached-Tokens, and X-Actual-Model headers on streaming cache hits\n  - Non-streaming cache hits continue to work as before (direct JSON response)\n\n  Cache Correctness Hardening\n\n  - Temperature guard: Only caches requests where temperature: 0 is explicitly present in the raw JSON body. Omitted temperature (Go zero value 0.0) is no longer falsely treated as\n  cacheable — providers default to ~1.0 for omitted values\n  - SSE error safety: If synthetic SSE emission fails mid-stream, the handler returns immediately instead of falling through to normal processing, preventing HTTP double-write\n  corruption\n  - Tool call exclusion: Responses containing tool_calls are excluded from cache storage since the SSE emitter only supports text content replay\n\n  Cache TTL & Infrastructure\n\n  - Default prompt cache TTL extended from 10 → 30 minutes\n\nEnjoy it.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.13",
+    "date": "2026-02-25",
+    "title": "Feature Added",
+    "description": "✨ New Feature: Monthly Budget Controls",
+    "category": "feature",
+    "items": [
+      "You can now set a monthly spending cap on your API usage. Once enabled, usage is tracked against your limit and automatically resets on your chosen billing cycle date."
+    ],
+    "content": "You can now set a monthly spending cap on your API usage. Once enabled, usage is tracked against your limit and automatically resets on your chosen billing cycle date.\n\n- Monthly spending limit — Set a dollar amount that caps total API usage across all your keys each month.\n- Custom reset day — Choose any day from the 1st to the 28th as your monthly cycle start date.\n- Per-key budgets — Optionally allocate portions of your monthly limit to individual API keys for finer-grained control.\n- Usage alerts — Get an email notification when your usage crosses a customizable threshold (default 80%).",
+    "abridged": false
+  },
+  {
+    "version": "2.2.12",
+    "date": "2026-02-25",
+    "title": "Models Added",
+    "description": "Add MiniMax M2.5 (Lightning)",
+    "category": "feature",
+    "items": [
+      "MiniMax M2.5 (Lightning)"
+    ],
+    "content": "MiniMax-M2.5-Lightning is the high-speed variant of the M2.5 series, optimized for low latency, real-time responsiveness, and high-frequency workloads. It retains the core planning and execution strengths of M2.5 while further improving inference efficiency and response speed, making it ideal for interactive applications, rapid coding assistance, and workflow automation. With enhanced cost efficiency and reduced latency, M2.5-Lightning is particularly well suited for high-throughput, always-on deployments and production environments where speed and scalability are critical.\n\n[https://apertis.ai/models/minimax-m2.5-lightning](https://apertis.ai/models/minimax-m2.5-lightning)",
+    "abridged": false
+  },
+  {
+    "version": "2.2.11",
+    "date": "2026-02-20",
+    "title": "Models Added",
+    "description": "Add Gemini 3.1 Pro Preview",
+    "category": "feature",
+    "items": [
+      "Gemini 3.1 Pro Preview"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.10",
+    "date": "2026-02-18",
+    "title": "Models Added",
+    "description": "Add Claude Sonnet 4.6",
+    "category": "feature",
+    "items": [
+      "Claude Sonnet 4.6"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.9",
+    "date": "2026-02-17",
+    "title": "Models Added",
+    "description": "Add Qwen3.5 397B A17B & Qwen3.5 Plus 2026-02-15",
+    "category": "feature",
+    "items": [
+      "Qwen3.5 397B A17B",
+      "Qwen3.5 Plus 2026-02-15"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.8",
+    "date": "2026-02-15",
+    "title": "Feature Added",
+    "description": "🚀  Apertis is now an Official Model Provider for Kilo Code",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.2.7",
+    "date": "2026-02-13",
+    "title": "Models Added",
+    "description": "Add MiniMax M2.5",
+    "category": "feature",
+    "items": [
+      "MiniMax M2.5"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.6",
+    "date": "2026-02-12",
+    "title": "Models Added",
+    "description": "Add GLM 5",
+    "category": "feature",
+    "items": [
+      "GLM 5"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.5",
+    "date": "2026-02-10",
+    "title": "Models Added",
+    "description": "Add Aurora Alpha, Qwen3 Max Thinking and Gemini Embedding 001",
+    "category": "feature",
+    "items": [
+      "Aurora Alpha by OpenRouter",
+      "Qwen3 Max Thinking by Alibaba",
+      "Gemini Embedding 001 by Google"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.4",
+    "date": "2026-02-08",
+    "title": "Models Added",
+    "description": "Add Pony Alpha",
+    "category": "feature",
+    "items": [
+      "Pony Alpha"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.2",
+    "date": "2026-02-06",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.6",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.6",
+      " Claude Opus 4.6 (Thinking)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.3",
+    "date": "2026-02-06",
+    "title": "Models Added",
+    "description": "Add GPT-5.3-Codex",
+    "category": "feature",
+    "items": [
+      "GPT-5.3-Codex",
+      "GPT-5.3-Codex (xhigh)",
+      "GPT-5.3-Codex (High)",
+      "GPT-5.3-Codex (Medium)",
+      "GPT-5.3-Codex (Low)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.2.1",
+    "date": "2026-02-05",
+    "title": "Feature Added",
+    "description": "✨ Model Comparison is released",
+    "category": "feature",
+    "items": [],
+    "content": "From now on, at `/models` page and each model detail page, users are allowed to compare the costs and model functionality details at once within 3 models at most.\n\nEnjoy.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.0",
+    "date": "2026-02-04",
+    "title": "Feature Added",
+    "description": "🎉 Apertis Coding Plan Launched",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.1.12",
+    "date": "2026-02-04",
+    "title": "Models Added",
+    "description": "Add Qwen3 Coder Next",
+    "category": "feature",
+    "items": [
+      "Qwen3 Coder Next"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.1.11",
+    "date": "2026-02-03",
+    "title": "Models Deprecated",
+    "description": "8 Models Deprecated",
+    "category": "models",
+    "items": [
+      "grok-4-fast:free",
+      "grok-4.1-fast:free",
+      "gpt-oss-120b:free",
+      "gpt-oss-20b:free",
+      "kimi-k2:free",
+      "gemini-2.5-pro-exp-03-25:free",
+      "minimax-m2:free",
+      "qwen3-235b-a22b-07-25:free"
+    ],
+    "content": "- grok-4-fast:free\n- grok-4.1-fast:free\n- gpt-oss-120b:free\n- gpt-oss-20b:free\n- kimi-k2:free\n- gemini-2.5-pro-exp-03-25:free\n- minimax-m2:free\n- qwen3-235b-a22b-07-25:free",
+    "abridged": false
+  },
+  {
+    "version": "2.1.10",
+    "date": "2026-01-28",
+    "title": "Models Added",
+    "description": "Add Kimi K2.5 and Qwen 3 Max (0123)",
+    "category": "feature",
+    "items": [
+      "Kimi K2.5",
+      "Qwen 3 Max (0123)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.1.9",
+    "date": "2026-01-27",
+    "title": "Feature Added",
+    "description": "✨  Ask AI for Documentation",
+    "category": "feature",
+    "items": [
+      "🎉 We've added a brand-new Ask AI experience to Apertis Documentation ",
+      "You can now query our docs conversationally and embed the same capability directly into your own applications."
+    ],
+    "content": "<p align=\"center\">\n  <img src=\"https://apertis.ai/ask-ai.png\" alt=\"ask-ai-image\" width=\"250\" />\n</p>\n\n### What's new\n- AI-powered documentation search\n- Ask questions in natural language and get precise, context-aware answers from Apertis docs.\n- No more manual searching or jumping between pages.\n- Built for integration\n- The Ask AI experience is powered by the same APIs you can use in your own product.\n- Easily embed an “Ask AI” assistant into your docs site, dashboard, or developer tools.\n- Developer-friendly by design\n- Optimized for technical questions, code usage, and API workflows.\n- Responses are grounded in official documentation to reduce hallucinations.\n- Faster onboarding & troubleshooting\n- Help users discover features, understand APIs, and resolve issues instantly.\n- Ideal for reducing support load and improving developer experience.\n\n### Why it matters\n\nAsk AI turns documentation from a static reference into an interactive developer assistant.\nWhether you're building an internal tool, a public SDK site, or a customer-facing app, you can now offer the same AI-powered doc experience with minimal integration effort.\n\n### Get started\n- Try Ask AI directly in [Apertis Documentation](https://docs.apertis.ai)\n- Follow the integration guide to add Ask AI to your own application",
+    "abridged": false
+  },
+  {
+    "version": "2.1.8",
+    "date": "2026-01-26",
+    "title": "System Update",
+    "description": "Optimization on API requests: 40-80% latency reduction",
+    "category": "fix",
+    "items": [
+      "Before: 30-55ms ",
+      "After: 5-10ms (cache hits) / 15-25ms (cache misses)",
+      "Estimated improvement: 40-80% latency reduction"
+    ],
+    "content": "- Before: 30-55ms \n- After: 5-10ms (cache hits) / 15-25ms (cache misses)\n- Estimated improvement: 40-80% latency reduction",
+    "abridged": false
+  },
+  {
+    "version": "2.1.7",
+    "date": "2026-01-25",
+    "title": "Feature Added",
+    "description": "Python SDK: Add comprehensive SDK features (v0.2.0)",
+    "category": "fix",
+    "items": [
+      "- Vision/Image support with create_with_image() convenience method",
+      "- Audio input/output support",
+      "- Video content support",
+      "- Web Search with create_with_web_search() convenience method",
+      "- Reasoning Mode support (glm-4.7)",
+      "- Extended Thinking (Gemini) support",
+      "- Models API (list, retrieve)",
+      "- Responses API (OpenAI format)",
+      "- Messages API (Anthropic format)",
+      "- Rerank API (BAAI/bge-reranker-v2-m3, Qwen models)",
+      "- Helper utilities for base64 encoding"
+    ],
+    "content": "Add comprehensive SDK features (v0.2.0)\nNew Features:\n- Vision/Image support with create_with_image() convenience method\n- Audio input/output support\n- Video content support\n- Web Search with create_with_web_search() convenience method\n- Reasoning Mode support (glm-4.7)\n- Extended Thinking (Gemini) support\n- Models API (list, retrieve)\n- Responses API (OpenAI format)\n- Messages API (Anthropic format)\n- Rerank API (BAAI/bge-reranker-v2-m3, Qwen models)\n- Helper utilities for base64 encoding\n\nIncludes 81 unit tests covering all new functionality.\n\nPyPI Package:\n[https://pypi.org/project/apertis/](https://pypi.org/project/apertis/)",
+    "abridged": false
+  },
+  {
+    "version": "2.1.6",
+    "date": "2026-01-24",
+    "title": "Performance Improvement",
+    "description": "Python SDK - Fix API response compatibility issues (v0.1.1)",
+    "category": "fix",
+    "items": [],
+    "content": "### Fix API response compatibility issues (v0.1.1)\n-  Make id, object, created fields optional in ChatCompletion\n- Make id, object, created, model fields optional in ChatCompletionChunk\n- Make Usage fields optional to handle empty usage objects in streaming\n- Fix streaming by using httpx send() with stream=True instead of stream context manager\n\nTested with real API calls:\n- Chat completions: working\n- Streaming: working\n- Embeddings: working\n- Tool calling: working\n",
+    "abridged": false
+  },
+  {
+    "version": "2.1.5",
+    "date": "2026-01-23",
+    "title": "Feature Added",
+    "description": "🎉 Apertis Python SDK Released",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.1.4",
+    "date": "2026-01-22",
+    "title": "Feature Added",
+    "description": "🎉 Apertis Is Now an Official Community Provider in Vercel AI SDK",
+    "category": "feature",
+    "items": [
+      "Great news — Apertis is now officially listed as a Community Provider in the Vercel AI SDK."
+    ],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.1.3",
+    "date": "2026-01-21",
+    "title": "Models Added",
+    "description": "Add GLM 4.7 Flash",
+    "category": "feature",
+    "items": [
+      "GLM 4.7 Flash"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.1.2",
+    "date": "2026-01-20",
+    "title": "Feature Added",
+    "description": "🎉 LiteLLM: Apertis is Now an Official LiteLLM Model Provider",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.1.1",
+    "date": "2026-01-19",
+    "title": "Feature Added",
+    "description": "🔥 LlamaIndex: Apertis is Now an Official LlamaIndex Model Provider",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.1.0",
+    "date": "2026-01-19",
+    "title": "Feature Added",
+    "description": "🎉 Release @apertis/ai-sdk-provider v1.1.1",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": true
+  },
+  {
+    "version": "2.0.55",
+    "date": "2026-01-19",
+    "title": "System Update",
+    "description": "Add Apple OAuth SSO",
+    "category": "feature",
+    "items": [
+      "We're excited to announce that Apple OAuth (Sign in with Apple) is now supported on the Apertis login page for all users."
+    ],
+    "content": "<p align=\"center\">\n  <img src=\"/applesso.png\" alt=\"Apple SSO\" width=\"180\" />\n</p>\n\nWe're excited to announce that Apple OAuth (Sign in with Apple) is now supported on the Apertis login page for all users.\n\nYou can now sign in to Apertis using your Apple ID for a faster, more secure, and privacy-focused authentication experience.\n\nWhy this matters:\n- ✅ One-click login with your Apple ID\n- 🔒 Enhanced security with Apple's OAuth flow\n- 🕵️ Privacy-first: hide your email if you choose\n- 🚀 Faster onboarding for new users\n\nThis update is available to all users starting today.\n\n👉 Try it now on the login page and let us know what you think.",
+    "abridged": false
+  },
+  {
+    "version": "2.0.54",
+    "date": "2026-01-13",
+    "title": "Feature Added",
+    "description": "New Feature: FREE Real-Time Web Search for Any Model",
+    "category": "feature",
+    "items": [],
+    "content": "We're excited to announce Web Search - a powerful new feature that brings real-time internet data to any AI model on Apertis.\n\n  ### What's New\n\n  Simply add `:web` to any model name to enable real-time web search:\n\n  - gpt-4o-mini:web\n  - claude-3-5-sonnet-20241022:web\n  - gemini-1.5-pro:web,...\n\n 🎉 Simply  add `:web` suffix directly for ALL Model Ids!!!\n\n  ### Key Features\n\n  - Real-Time Data: Get up-to-date information on stock prices, news, weather, and more\n  - Source Citations: Every response includes web_sources with referenced URLs\n  - Streaming Support: See the 🔍 Web searching... indicator followed by live content streaming\n  - Zero Extra Cost: Web search costs are absorbed by the platform - you only pay for model tokens\n  - Graceful Fallback: If search fails, the request automatically continues without interruption\n\n### 🔥 Key benefits\n  - Real-time information (stock prices, news, weather, live events)\n  -  Source citations included in every response\n  -  Streaming support with visible search indicators\n  -  🤩 No extra cost — web search is included\n  -  Automatic fallback if search is unavailable to ensure stability\n\n  Example Response\n```json\n  {\n    \"content\": \"As of January 6, 2026, Apple (AAPL) is trading at $262.36...\",\n    \"web_sources\": [\n      {\"title\": \"Apple Investor Relations\", \"url\": \"https://investor.apple.com/...\"},\n      {\"title\": \"MarketWatch\", \"url\": \"https://www.marketwatch.com/...\"}\n    ]\n  }\n```\n  ### Documentation\n\n  For complete usage details, request parameters, and best practices, check out our documentation:\n\n  👉 [https://docs.apertis.ai/web-search](https://docs.apertis.ai/web-search)",
+    "abridged": false
+  },
+  {
+    "version": "2.0.53",
+    "date": "2026-01-11",
+    "title": "Models Added",
+    "description": "Add Allen AI Models",
+    "category": "feature",
+    "items": [
+      "Olmo 3.1 32B Instruct",
+      "Molmo2 8B (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.52",
+    "date": "2025-12-24",
+    "title": "Models Added",
+    "description": "Add ByteDance Seed Models",
+    "category": "feature",
+    "items": [
+      "Seed 1.6",
+      "Seed 1.6 Flash"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.51",
+    "date": "2025-12-23",
+    "title": "Models Added",
+    "description": "Add GLM 4.7 & MiniMax M2.1",
+    "category": "feature",
+    "items": [
+      "GLM 4.7",
+      "MiniMax M2.1"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.50",
+    "date": "2025-12-18",
+    "title": "Models Added",
+    "description": "Add Gemini 3 Flash & GPT Image 1.5",
+    "category": "feature",
+    "items": [
+      "Gemini 3 Flash Preview",
+      "GPT Image 1.5"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.49",
+    "date": "2025-12-17",
+    "title": "Models Added",
+    "description": "Add Ai2 & Mistral AI models",
+    "category": "feature",
+    "items": [
+      "Olmo 3.1 32B Think (Free)",
+      "Mistral Small Creative"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.48",
+    "date": "2025-12-16",
+    "title": "Models Added",
+    "description": "Add Nemotron 3 Nano 30B A3B (Free)",
+    "category": "feature",
+    "items": [
+      "Nemotron 3 Nano 30B A3B (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.47",
+    "date": "2025-12-12",
+    "title": "Models Added",
+    "description": "Add GPT-5.2 Models",
+    "category": "feature",
+    "items": [
+      "GPT-5.2",
+      "GPT-5.2 Pro",
+      "GPT-5.2 Chat"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.46",
+    "date": "2025-12-11",
+    "title": "Models Added",
+    "description": "Add Devstral 2 2512",
+    "category": "feature",
+    "items": [
+      "Devstral 2 2512"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.45",
+    "date": "2025-12-10",
+    "title": "Models Added",
+    "description": "Add GLM 4.6V & Devstral 2 2512 (Free)",
+    "category": "feature",
+    "items": [
+      "GLM 4.6V",
+      "Devstral 2 2512 (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.44",
+    "date": "2025-12-08",
+    "title": "Models Added",
+    "description": "Add GPT-5.1-Codex-Max",
+    "category": "feature",
+    "items": [
+      "GPT-5.1-Codex-Max"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.43",
+    "date": "2025-12-05",
+    "title": "Models Added",
+    "description": "Add Ministral 3 Models",
+    "category": "feature",
+    "items": [
+      "Ministral 3 14B 2512",
+      "Ministral 3 8B 2512",
+      "Ministral 3 3B 2512"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.42",
+    "date": "2025-12-03",
+    "title": "Feature Added",
+    "description": "Release: New API Endpoints",
+    "category": "system",
+    "items": [
+      "/v1/responses – OpenAI Responses API compatible",
+      "/v1/messages – Anthropic Claude Messages API compatible"
+    ],
+    "content": "## ✨ Overview\nWe now supports the API schemas from both **OpenAI** and **Anthropic**, introducing two new unified endpoints:\n\n- **`/v1/responses`** – OpenAI Responses API compatible  \n- **`/v1/messages`** – Anthropic Claude Messages API compatible  \n\nThis upgrade enables seamless multimodal input, structured outputs, and tool-use across **all 410+ Apertis models**, strengthening our position as a unified and future-ready AI gateway.\n\n---\n\n## 🆕 Added\n\n### **1. `/v1/responses` – OpenAI Responses API Compatibility**\n- Fully supports the official OpenAI **Responses API** specification  \n- Backward-compatible with existing **Chat Completions** requests  \n- Supports the flexible **`input[]` content structure** (text, image, multimodal blocks)  \n- Supports `response_format` including **strict JSON Schema**, tool calling, and structured outputs  \n- Streaming responses use the new OpenAI-aligned SSE protocol  \n- Enabled for all 410+ Apertis models, including reasoning and open-source models  \n\n---\n\n### **2. `/v1/messages` – Anthropic Claude Messages API Compatibility**\n- Full compatibility with Anthropic’s **Claude Messages API**  \n- Supports multi-part content blocks (text / image / tool)  \n- Supports strict JSON Schema (`response_format: json_schema`)  \n- Enables Claude-series features such as **tool use, vision, and system prompts**  \n- Functions as a **drop-in replacement** for the official Claude SDK  \n- Automatically normalizes and harmonizes content block structures for cross-provider compatibility  ",
+    "abridged": false
+  },
+  {
+    "version": "2.0.41",
+    "date": "2025-12-03",
+    "title": "Models Added",
+    "description": "Add Mistral and Amazon Models",
+    "category": "feature",
+    "items": [
+      "Mistral Large 3 2512",
+      "Nova 2 Lite",
+      "Nova 2 Lite (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.40",
+    "date": "2025-12-02",
+    "title": "Models Added",
+    "description": "Add DeepSeek v3.2 models",
+    "category": "feature",
+    "items": [
+      "DeepSeek V3.2",
+      "DeepSeek V3.2 Speciale"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.39",
+    "date": "2025-12-01",
+    "title": "Models Added",
+    "description": "Add Grok 4.1 Series Models",
+    "category": "feature",
+    "items": [
+      "Grok 4.1 Fast",
+      "Grok 4.1 Fast (Free)",
+      "Grok 4.1 (Thinking)",
+      "Grok 4 Image"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.38",
+    "date": "2025-11-27",
+    "title": "Models Added",
+    "description": "Add TNG Tech Models",
+    "category": "feature",
+    "items": [
+      "R1T Chimera (Free)",
+      "R1T Chimera",
+      "DeepSeek R1T2 Chimera",
+      "DeepSeek R1T Chimera"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.37",
+    "date": "2025-11-26",
+    "title": "Models Added",
+    "description": "Add Olmo 3 Models",
+    "category": "feature",
+    "items": [
+      "Olmo 3 7B Think",
+      "Olmo 3 7B Instruct",
+      "Olmo 3 32B Think"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.36",
+    "date": "2025-11-25",
+    "title": "Models Added",
+    "description": "Add Claude Opus 4.5",
+    "category": "feature",
+    "items": [
+      "Claude Opus 4.5"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.35",
+    "date": "2025-11-20",
+    "title": "Models Added",
+    "description": "Add Gemini 3 Pro Image Preview",
+    "category": "feature",
+    "items": [
+      "Gemini 3 Pro Image Preview"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.34",
+    "date": "2025-11-20",
+    "title": "Models Added",
+    "description": "Add Grok 4.1 Fast (Free)",
+    "category": "feature",
+    "items": [
+      "Grok 4.1 Fast (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.33",
+    "date": "2025-11-19",
+    "title": "Models Added",
+    "description": "Add Gemini 3 Pro Series",
+    "category": "feature",
+    "items": [
+      "Gemini 3 Pro Preview",
+      "Gemini 3 Pro Preview (Thinking)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.32",
+    "date": "2025-11-14",
+    "title": "Models Added",
+    "description": "Add GTP-5.1 Codex Series",
+    "category": "feature",
+    "items": [
+      "GPT-5.1 Codex",
+      "GPT-5.1 Codex (High)",
+      "GPT-5.1 Codex (Medium)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.31",
+    "date": "2025-11-13",
+    "title": "Models Added",
+    "description": "Add GPT-5.1 Series Models",
+    "category": "feature",
+    "items": [
+      "GPT-5.1",
+      "GPT-5.1 (Thinking)",
+      "GPT-5.1 (High)",
+      "GPT-5.1 (Medium)",
+      "GPT-5.1 (Low)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.30",
+    "date": "2025-11-12",
+    "title": "Price Updated",
+    "description": "Sora 2 Pro",
+    "category": "models",
+    "items": [
+      "Updated Price: $2.5/per use"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.29",
+    "date": "2025-11-10",
+    "title": "Models Added",
+    "description": "Add Gemini Pro 3",
+    "category": "feature",
+    "items": [
+      "Gemini 3 Pro",
+      "Gemini 3 Pro (Thinking)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.28",
+    "date": "2025-11-08",
+    "title": "Models Added",
+    "description": "Add 3 Models",
+    "category": "feature",
+    "items": [
+      "Kimi K2 Thinking",
+      "Polaris Alpha",
+      "Kimi Linear 48B A3B Instruct"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.27",
+    "date": "2025-11-01",
+    "title": "Models Added",
+    "description": "Add 4 Models",
+    "category": "feature",
+    "items": [
+      "Sonar Pro Search",
+      "Codestral Embed 2505",
+      "Mistral Embed 2312",
+      "Nova Premier 1.0"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.26",
+    "date": "2025-10-29",
+    "title": "Models Added",
+    "description": "Add 5 Models",
+    "category": "feature",
+    "items": [
+      "DeepSeek-OCR",
+      "MiniMax M2",
+      "Nemotron Nano 12B 2 VL",
+      "Nemotron Nano 12B 2 VL (Free)",
+      "GPT OSS Safeguard 20B"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.24",
+    "date": "2025-10-27",
+    "title": "Models Added",
+    "description": "Add Qwen3 VL 32B Instruct",
+    "category": "feature",
+    "items": [
+      "Qwen3 VL 32B Instruct"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.23",
+    "date": "2025-10-25",
+    "title": "Models Added",
+    "description": "Add MiniMax M2 (Free)",
+    "category": "feature",
+    "items": [
+      "MiniMax M2 (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.22",
+    "date": "2025-10-23",
+    "title": "Models Added",
+    "description": "Add Andromeda Alpha",
+    "category": "feature",
+    "items": [
+      "Andromeda Alpha"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.21",
+    "date": "2025-10-20",
+    "title": "Price Updated",
+    "description": "Price Update on Claude Haiku 4.5 with Less Cost",
+    "category": "feature",
+    "items": [
+      "Claude Haiku 4.5 Input: 0.0008/per k tokens, Output: 0.004/per k tokens"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.20",
+    "date": "2025-10-16",
+    "title": "Models Added",
+    "description": "Add Sora 2 Models: Sora 2 Pro, Sora 2 HD, Sora 2, Sora 2 Landscape, Sora 2 Portrait",
+    "category": "feature",
+    "items": [
+      "Sora 2 Pro",
+      "Sora 2 HD",
+      "Sora 2",
+      "Sora 2 Landscape",
+      "Sora 2 Portrait"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.19",
+    "date": "2025-10-16",
+    "title": "Models Added",
+    "description": "Add Claude Haiku 4.5 & Claude Haiku 4.5 (Thinking)",
+    "category": "feature",
+    "items": [
+      "Claude Haiku 4.5",
+      "Claude Haiku 4.5 (Thinking)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.18",
+    "date": "2025-10-15",
+    "title": "Models Added",
+    "description": "Add o3 Deep Research & o4 Mini Deep Research",
+    "category": "feature",
+    "items": [
+      "o3 Deep Research",
+      "o4 Mini Deep Research"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.17",
+    "date": "2025-10-15",
+    "title": "Models Added",
+    "description": "Add Qwen3 VL 8B Instruct & Qwen3 VL 8B Thinking",
+    "category": "feature",
+    "items": [
+      "Qwen3 VL 8B Instruct",
+      "Qwen3 VL 8B Thinking"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.16",
+    "date": "2025-10-13",
+    "title": "Models Added",
+    "description": "Add GPT-5 Pro",
+    "category": "feature",
+    "items": [
+      "GPT-5 Pro"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.15",
+    "date": "2025-10-12",
+    "title": "Models Deprecated",
+    "description": "Deprecate OpenRouter Models",
+    "category": "feature",
+    "items": [
+      "Sonoma Sky Alpha",
+      "Sonoma Dusk Alpha"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.14",
+    "date": "2025-10-12",
+    "title": "Models Added",
+    "description": "Add Llama 3.3 Nemotron Super 49B V1.5 & ERNIE 4.5 21B A3B Thinking",
+    "category": "feature",
+    "items": [
+      "Llama 3.3 Nemotron Super 49B V1.5",
+      "ERNIE 4.5 21B A3B Thinking"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.13",
+    "date": "2025-10-09",
+    "title": "Models Added",
+    "description": "Add Gemini 2.5 Flash Image",
+    "category": "feature",
+    "items": [
+      "Gemini 2.5 Flash Image"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.12",
+    "date": "2025-10-08",
+    "title": "Performance Improvement",
+    "description": "Update API Docs for LangChain",
+    "category": "fix",
+    "items": [],
+    "content": "[Docs for LangChain](https://docs.stima.tech/en/installation/langchain)",
+    "abridged": false
+  },
+  {
+    "version": "2.0.11",
+    "date": "2025-10-08",
+    "title": "Feature Added",
+    "description": "Latest Docs on Context7 MCP Server",
+    "category": "feature",
+    "items": [],
+    "content": "Now, you can access Stima API Docs with [Context7](https://context7.com/stima-tech/docs) MCP Server during development journey, enjoy it!!!",
+    "abridged": false
+  },
+  {
+    "version": "2.0.10",
+    "date": "2025-10-02",
+    "title": "Models Added",
+    "description": "Add 2 Models",
+    "category": "feature",
+    "items": [
+      "GLM 4.6 (Thinking)",
+      "Qwen3 Coder Flash"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.9",
+    "date": "2025-10-02",
+    "title": "Price Updated",
+    "description": "Update Model Price: GLM 4.6",
+    "category": "models",
+    "items": [],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.8",
+    "date": "2025-10-01",
+    "title": "Price Updated",
+    "description": "Update Model Price: DeepSeek V3.2 Exp",
+    "category": "models",
+    "items": [],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.7",
+    "date": "2025-10-01",
+    "title": "Models Added",
+    "description": "Add 1 Model",
+    "category": "feature",
+    "items": [
+      "GLM 4.6"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.6",
+    "date": "2025-09-30",
+    "title": "Models Added",
+    "description": "Add 2 Models",
+    "category": "feature",
+    "items": [
+      "Claude Sonnet 4.5",
+      "DeepSeek V3.2 Exp"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.5",
+    "date": "2025-09-29",
+    "title": "System Update",
+    "description": "Add Stripe Payment History (hosted by Stripe) to Topup Page ",
+    "category": "feature",
+    "items": [],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.4",
+    "date": "2025-09-26",
+    "title": "Models Added",
+    "description": "Add  3 Models",
+    "category": "feature",
+    "items": [
+      "Gemini 2.5 Flash Lite Preview 09-2025",
+      "Gemini 2.5 Flash Preview 09-2025",
+      "Grok 4 Fast"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.3",
+    "date": "2025-09-25",
+    "title": "Models Added",
+    "description": "Add 1 Model",
+    "category": "feature",
+    "items": [
+      "Grok 4 Fast (Free)"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.2",
+    "date": "2025-09-25",
+    "title": "Models Added",
+    "description": "Add  4 Models",
+    "category": "feature",
+    "items": [
+      "Qwen3 Coder Plus",
+      "Qwen3 Max",
+      "Qwen3 VL 235B A22B Instruct",
+      "Qwen3 VL 235B A22B Thinking"
+    ],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.1",
+    "date": "2025-09-25",
+    "title": "System Update",
+    "description": "Update Changelog Articles Management",
+    "category": "system",
+    "items": [],
+    "content": "",
+    "abridged": false
+  },
+  {
+    "version": "2.0.0",
+    "date": "2025-09-24",
+    "title": "System Update",
+    "description": "Major System Upgrade: Database Migration to Supabase",
+    "category": "system",
+    "items": [],
+    "content": "![image](https://testing.stima.tech/stima-supabase.png)\n\nWe are pleased to announce that Stima API has successfully completed a major infrastructure upgrade\n  by migrating our entire database system to **Supabase**. This migration represents a significant\n  milestone in our commitment to data security, compliance, and system reliability.\n\n  ## 🔒 Why Supabase?\n\n  ### 1. Enterprise-Grade Security Compliance\n  - ✅ **SOC 2 Type II Certified** - Ensuring highest level of security controls\n  - ✅ **ISO 27001 Certified** - Meeting international information security standards\n  - ✅ **HIPAA Compliant** - Ready for sensitive data processing requirements\n\n  ### 2. Enhanced Data Protection\n  - End-to-end encryption in transit\n  - Automatic backup and disaster recovery\n  - Encrypted data storage (AES-256)\n  - Granular access control\n\n  ### 3. Improved System Performance\n  - 99.9% uptime SLA guarantee\n  - Global distributed architecture for reduced latency\n  - Auto-scaling capabilities for traffic spikes\n  - Real-time data synchronization\n\n  ## 📈 Impact on Your Experience\n\n  - **Zero-downtime migration** - Continuous service availability\n  - **Data integrity** - All historical data preserved\n  - **Faster response times** - Optimized database architecture\n  - **Enhanced security** - Enterprise-grade protection for your data\n\n  ## 🚀 Looking Forward\n\n  This migration enables us to:\n  - Deliver more reliable AI model services\n  - Implement stricter data privacy measures\n  - Comply with global data protection regulations (GDPR, CCPA, etc.)\n  - Build a solid foundation for future feature expansion\n\n  ---\n\n  Thank you for your continued trust and support. Should you have any questions, please don't hesitate\n   to contact our technical support team.",
+    "abridged": false
+  }
+]

@@ -6,7 +6,7 @@
 // header (z-index 100) and the non-modal Ask Docs panel (z-index 1000).
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import { ArrowUpRight, Moon, Sun, X } from 'lucide-react';
+import { Moon, Sun, X } from 'lucide-react';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -95,7 +95,7 @@ export default function NavSheet({ sidebar, current }: Props) {
             <a className={cn(item, current === 'tutorialSidebar' && 'font-medium')} href="/intro" aria-current={current === 'tutorialSidebar' ? 'true' : undefined}>Docs</a>
             <a className={cn(item, current === 'apiSidebar' && 'font-medium')} href="/api" aria-current={current === 'apiSidebar' ? 'true' : undefined}>API Reference</a>
             <a className={item} href="/blog/">Blog</a>
-            <a className={cn(item, 'flex items-center justify-between')} href="https://apertis.ai/changelog" {...external}>Release Notes<ArrowUpRight className="size-4 text-muted-foreground" aria-hidden="true" /></a>
+            <a className={item} href="/changelog/">Release Notes</a>
           </nav>
           <div className="mt-3 grid grid-cols-2 gap-2">
             <a data-slot="button" className={buttonVariants({ variant: 'outline' })} href="https://apertis.ai/login" {...external}>Log in</a>

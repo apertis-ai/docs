@@ -6,6 +6,7 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
@@ -206,7 +207,8 @@ test('page actions read the same-origin .md from the page meta and report failur
   ]);
   await page.click('.page-actions__toggle');
   const [popup] = await Promise.all([context.waitForEvent('page'), page.click('.page-actions__menu [data-action="view"]')]);
-  await popup.waitForLoadState('domcontentloaded');
+  // A noopener popup can report about:blank at domcontentloaded; wait for the navigation itself.
+  await popup.waitForURL(md);
   assert.equal(popup.url(), md);
   await page.keyboard.press('Escape');
 
@@ -234,7 +236,7 @@ test('without JavaScript the navigation and landing links still work and no dead
   ].sort(byHref));
   const nav = await page.$$eval('.navbar a', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')));
   // Two header rows (canary step 5a): logo and account actions, then the section tabs with Blog.
-  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', 'https://apertis.ai/changelog']);
+  assert.deepEqual(nav, ['/', 'https://apertis.ai/login', 'https://apertis.ai/register', '/intro', '/api', '/blog/', '/changelog/']);
   await context.close();
 });
 
@@ -360,7 +362,9 @@ test('the desktop TOC follows the legacy rule: h3s show only under the active h2
   await page.waitForFunction(() => document.querySelector('.doc-page__toc a.active')?.textContent?.trim() === 'Request Timeout');
   assert.deepEqual(await visible(), ['HTTP Request', 'Optional Headers', 'Optional Parameters', 'Context Compression', 'Request Timeout']);
   await page.goto(base + '/api/', { waitUntil: 'load' });
-  assert.deepEqual(await visible(), ['Quick Links', 'Text Generation', 'Multimodal', 'Utilities', 'SDKs & Libraries', 'Base URL', 'Authentication']);
+  // "Choosing an API format" (docs-reader-features) is now the first h2, so it is active at the top and the
+  // Quick Links h3s stay hidden.
+  assert.deepEqual(await visible(), ['Choosing an API format', 'Quick Links', 'Base URL', 'Authentication']);
   await context.close();
 });
 
@@ -444,10 +448,11 @@ test('every document page opens with the header block: tag, title, description, 
     assert.ok((await text('article .doc-header__desc')).length > 10, p);
     assert.ok(await page.isVisible('article .doc-meta'), p);
   }
-  // No qualifying description (the body opens with code; later paragraphs are never borrowed): no element
-  // and no gap, the meta row follows the title at its usual distance.
-  await page.goto(base + CHAT, { waitUntil: 'load' });
-  assert.equal(await page.$('article .doc-header__desc'), null);
+  // No qualifying description (no front-matter description, and later paragraphs are never borrowed): no
+  // element and no gap, the meta row follows the title at its usual distance. Chat Completions gained a
+  // front-matter description in docs-reader-features (llms.txt), so the example is now Responses.
+  await page.goto(base + '/api/text-generation/responses/', { waitUntil: 'load' });
+  assert.equal(await page.$('article .doc-header__desc') === null, true);
   const gap = await page.evaluate(() => {
     const h1 = document.querySelector('article .doc-header h1')!.getBoundingClientRect();
     const meta = document.querySelector<HTMLElement>('article .doc-header__meta')!;
@@ -561,6 +566,8 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.ok(Math.abs(mid.width - top.width) < 0.5 && mid.aside === top.aside && mid.title === top.title, 'no layout shift in the rail');
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
   await page.waitForFunction(() => document.querySelector('.toc-progress__value')!.textContent === '100%');
+  // The active link's colour transitions (0.16s); compare colours once it has settled, not mid-transition.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))).then(() => undefined));
   // A plain list, as on the Claude docs (operator review 2026-10-04): no tree glyph, h3s indented under their h2,
   // and only the current section in the ink colour.
   const toc = await page.evaluate(() => {
@@ -581,6 +588,42 @@ test('the TOC reading progress moves with the page, shifts nothing, never scroll
   assert.notEqual(await page.$eval('.toc-progress__fill', (e: Element) => getComputedStyle(e).transitionDuration), '0s');
   await reduced.context.close();
   await context.close();
+});
+
+// ---- Print layout (openspec docs-reader-shell-extras "Print layout") ----
+test('print shows only the page header and the article, in the light palette, wrapped and labelled', { skip }, async () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'apertis-print-'));
+  const proof: string[] = [];
+  for (const pathname of [CHAT, QS]) {
+    const { context, page } = await open(pathname);
+    // Dark, so forcing the light palette under print (not just the default) is what gets proven.
+    await page.click('.navbar__right [data-theme-toggle]');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), 'dark', pathname);
+    await page.emulateMedia({ media: 'print' });
+    const display = (sel: string) => page.evaluate((s: string) => { const e = document.querySelector(s); return e && getComputedStyle(e).display; }, sel);
+    for (const sel of ['.navbar', '.breadcrumbs', '.doc-page__sidebar', '.doc-page__toc', '.toc-mobile',
+      'article .doc-header__actions', 'article .doc-header__edit', '.pagination', '.footer', '.ask-docs-trigger', '#apertis-assistant']) {
+      const got = await display(sel);
+      assert.ok(got === 'none' || got === null, `${pathname}: ${sel} still shows under print (${got})`);
+    }
+    for (const sel of ['article .doc-header h1', 'article .doc-meta', 'article']) assert.notEqual(await display(sel), 'none', `${pathname}: ${sel} is hidden under print`);
+    assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 250, 250)', `${pathname}: print palette is not light`);
+    assert.equal(await page.$eval('article .doc-header h1', (e: Element) => getComputedStyle(e).color), 'rgb(10, 10, 10)', `${pathname}: ink is not forced light`);
+    const pre = await page.evaluate(() => { const p = document.querySelector<HTMLElement>('.docs-content pre'); return p && getComputedStyle(p).whiteSpace; });
+    if (pre) assert.equal(pre, 'pre-wrap', `${pathname}: code does not wrap`);
+    const ext = await page.evaluate(() => {
+      const a = document.querySelector<HTMLAnchorElement>('.docs-content a[href^="http"]');
+      return a && { after: getComputedStyle(a, '::after').content, href: a.href };
+    });
+    if (ext) assert.ok(ext.after.includes(ext.href), `${pathname}: external link URL is not appended (${JSON.stringify(ext)})`);
+    const file = path.join(outDir, `${pathname.replace(/\//g, '_')}.pdf`);
+    await page.pdf({ path: file, printBackground: true });
+    const shot = file.replace(/\.pdf$/, '.png');
+    await page.screenshot({ path: shot, fullPage: true });
+    proof.push(file, shot);
+    await context.close();
+  }
+  console.log('print proof:', proof.join(', '));
 });
 
 test('no GitHub raw or other-release requests and no uncaught page errors', { skip }, () => {

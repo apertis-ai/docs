@@ -1,3 +1,7 @@
+---
+description: "Generate a model response for a conversation with the OpenAI-compatible POST /v1/chat/completions endpoint."
+---
+
 # Chat Completion
 ```json
 /v1/chat/completions
@@ -5,7 +9,7 @@
 
 ## HTTP Request
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
@@ -18,6 +22,48 @@ curl https://api.apertis.ai/v1/chat/completions \
             }
         ]
     }'
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.chat.completions.create(
+    model="<MODEL_ALIAS>",
+    messages=[
+        {
+            "role": "system",
+            "content": "<MESSAGES>"
+        }
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create({
+  model: '<MODEL_ALIAS>',
+  messages: [
+    {
+      role: 'system',
+      content: '<MESSAGES>'
+    }
+  ]
+});
+
+console.log(response.choices[0].message.content);
 ```
 
 - `<APERTIS_API_KEY>`: Your API key
@@ -44,15 +90,45 @@ curl https://api.apertis.ai/v1/chat/completions \
 
 Add a `compression` object to automatically summarize older conversation history and reduce token usage for long conversations:
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
     -d '{
-        "model": "gpt-4.1-mini",
+        "model": "gemini-3-flash-preview",
         "messages": [{"role": "user", "content": "Hello!"}],
-        "compression": {"enabled": true, "model": "gpt-4.1-mini"}
+        "compression": {"enabled": true, "model": "gemini-3-flash-preview"}
     }'
+```
+
+```python tab="Python"
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="<APERTIS_API_KEY>",
+    base_url="https://api.apertis.ai/v1"
+)
+
+response = client.chat.completions.create(
+    model="gemini-3-flash-preview",
+    messages=[{"role": "user", "content": "Hello!"}],
+    extra_body={"compression": {"enabled": True, "model": "gemini-3-flash-preview"}}
+)
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<APERTIS_API_KEY>',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create({
+  model: 'gemini-3-flash-preview',
+  messages: [{ role: 'user', content: 'Hello!' }],
+  compression: { enabled: true, model: 'gemini-3-flash-preview' }
+});
 ```
 
 See [Context Compression](./context-compression) for full documentation.
@@ -61,7 +137,7 @@ See [Context Compression](./context-compression) for full documentation.
 
 Use the `X-Timeout` header to limit the total time a request can take, including all internal channel retries. This prevents long waits when multiple upstream providers are slow or unavailable.
 
-```bash
+```bash tab="cURL"
 curl https://api.apertis.ai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer <APERTIS_API_KEY>" \
@@ -72,7 +148,7 @@ curl https://api.apertis.ai/v1/chat/completions \
     }'
 ```
 
-```python
+```python tab="Python"
 from openai import OpenAI
 
 client = OpenAI(
@@ -85,6 +161,23 @@ response = client.chat.completions.create(
     messages=[{"role": "user", "content": "Hello!"}],
     extra_headers={"X-Timeout": "20000"}  # 20 seconds
 )
+```
+
+```javascript tab="JavaScript"
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: 'your-apertis-key',
+  baseURL: 'https://api.apertis.ai/v1'
+});
+
+const response = await client.chat.completions.create(
+  {
+    model: 'gemini-3-flash-preview',
+    messages: [{ role: 'user', content: 'Hello!' }]
+  },
+  { headers: { 'X-Timeout': '20000' } } // 20 seconds
+);
 ```
 
 | Setting | Value |
