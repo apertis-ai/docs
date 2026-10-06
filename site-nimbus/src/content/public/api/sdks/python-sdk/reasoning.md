@@ -19,7 +19,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="o1",  # OpenAI reasoning model
+        model="gpt-5.5",  # OpenAI reasoning model
         messages=[
             {"role": "user", "content": "Solve this step by step: A train travels from A to B at 60 km/h and returns at 40 km/h. What is the average speed for the round trip?"}
         ]
@@ -40,7 +40,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="claude-sonnet-4.5",
+        model="claude-sonnet-4-6",
         messages=[
             {"role": "user", "content": "Analyze the pros and cons of microservices vs monolithic architecture for a startup."}
         ],
@@ -75,7 +75,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="deepseek-reasoner",
+        model="deepseek-r1",
         messages=[
             {"role": "user", "content": "Prove that the square root of 2 is irrational."}
         ]
@@ -118,7 +118,7 @@ Find the optimal transportation plan to minimize total cost.
 """
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": problem}
         ]
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
 ## Code Analysis with Reasoning
 
-```python
+````python
 from apertis import Apertis
 
 def main():
@@ -149,7 +149,7 @@ def mystery(arr):
 '''
 
     response = client.chat.completions.create(
-        model="o4-mini",
+        model="o4-mini-high",
         messages=[
             {
                 "role": "user",
@@ -170,7 +170,7 @@ def mystery(arr):
 
 if __name__ == "__main__":
     main()
-```
+````
 
 ## Mathematical Proofs
 
@@ -181,7 +181,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {
                 "role": "user",
@@ -222,7 +222,7 @@ Who has which pet and favorite color?
 """
 
     response = client.chat.completions.create(
-        model="o1",
+        model="gpt-5.5",
         messages=[
             {"role": "user", "content": puzzle}
         ]
@@ -243,7 +243,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="deepseek-reasoner",
+        model="deepseek-r1",
         messages=[
             {"role": "user", "content": "What is 25% of 80? Walk through your thinking."}
         ],
@@ -266,21 +266,21 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `o1` | Full reasoning capabilities |
-| `o4-mini` | Faster, more cost-effective |
-| `o3-mini` | Latest generation reasoning |
+| `gpt-5.5` | Full reasoning capabilities |
+| `o4-mini-high` | Faster, more cost-effective |
+| `o3-mini-high` | Compact reasoning model |
 
 ### DeepSeek Reasoning Models
 
 | Model | Description |
 |-------|-------------|
-| `deepseek-reasoner` | Chain-of-thought reasoning |
+| `deepseek-r1` | Chain-of-thought reasoning |
 
 ### Claude Extended Thinking
 
 | Model | Description |
 |-------|-------------|
-| `claude-sonnet-4.5` | Extended thinking via `thinking` parameter |
+| `claude-sonnet-4-6` | Extended thinking via `thinking` parameter |
 | `claude-opus-4-5-20251101` | Extended thinking via `thinking` parameter |
 
 [View all models →](/api/utilities/models)

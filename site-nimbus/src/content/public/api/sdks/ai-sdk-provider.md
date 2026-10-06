@@ -62,7 +62,7 @@ import { apertis } from '@apertis/ai-sdk-provider';
 import { streamText } from 'ai';
 
 const { textStream } = await streamText({
-  model: apertis('claude-sonnet-4.5'),
+  model: apertis('claude-sonnet-4-6'),
   prompt: 'Write a poem about programming.',
 });
 
@@ -99,14 +99,14 @@ import { embed, embedMany } from 'ai';
 
 // Single embedding
 const { embedding } = await embed({
-  model: apertis.textEmbeddingModel('text-embedding-3-small'),
+  model: apertis.textEmbeddingModel('jina-embeddings-v3'),
   value: 'Hello world',
 });
 
 // Batch embeddings
 const { embeddings } = await embedMany({
-  model: apertis.textEmbeddingModel('text-embedding-3-large', {
-    dimensions: 1024, // Optional: reduce dimensions
+  model: apertis.textEmbeddingModel('jina-embeddings-v3', {
+    dimensions: 256, // Optional: reduce dimensions
   }),
   values: ['Hello', 'World'],
 });
@@ -117,16 +117,16 @@ const { embeddings } = await embedMany({
 Access models from multiple providers through Apertis. Model availability changes over time and can vary by key type, so use [`GET /v1/models`](/api/utilities/models) as the source of truth.
 
 ### Chat Models
-- **OpenAI**: `gpt-5.2`, `gpt-4.1-mini`
-- **Anthropic**: `claude-sonnet-4.5`, `claude-haiku-4.5`
+- **OpenAI**: `gpt-5.2`, `gpt-5.4-mini`
+- **Anthropic**: `claude-sonnet-4-6`, `claude-haiku-4.5`
 - **Google**: `gemini-2.5-flash`
 
 The examples above are illustrative. Query the model catalog before pinning an ID in production.
 
 ### Embedding Models
-- `text-embedding-3-small`
-- `text-embedding-3-large`
-- `text-embedding-ada-002`
+- `jina-embeddings-v3`
+- `mistral-embed-2312`
+- `gemini-embedding-2-preview`
 
 ## Context Compression
 
@@ -140,12 +140,12 @@ const apertis = createApertis({
   apiKey: process.env.APERTIS_API_KEY,
   headers: {
     'X-Context-Compression': 'on',
-    'X-Compression-Model': 'gpt-4.1-mini',
+    'X-Compression-Model': 'gpt-5.4-mini',
   },
 });
 
 const { text } = await generateText({
-  model: apertis('gpt-4.1'),
+  model: apertis('gpt-5.5'),
   messages: [
     { role: 'user', content: 'Explain distributed systems' },
     { role: 'assistant', content: 'Distributed systems are...' },

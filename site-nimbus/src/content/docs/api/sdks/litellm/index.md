@@ -75,7 +75,7 @@ Use compatible models returned by the Apertis model catalog through the `apertis
 response = completion(model="apertis/gpt-5.2", messages=messages)
 
 # Anthropic Claude
-response = completion(model="apertis/claude-sonnet-4.5", messages=messages)
+response = completion(model="apertis/claude-sonnet-4-6", messages=messages)
 
 # Google Gemini
 response = completion(model="apertis/gemini-3-flash-preview", messages=messages)
@@ -100,7 +100,7 @@ model_list:
 
   - model_name: claude-sonnet
     litellm_params:
-      model: apertis/claude-sonnet-4.5
+      model: apertis/claude-sonnet-4-6
       api_key: os.environ/APERTIS_API_KEY
 
   - model_name: gemini-flash
@@ -123,7 +123,7 @@ Enable [context compression](/api/text-generation/context-compression) via extra
 from litellm import completion
 
 response = completion(
-    model="apertis/gpt-4.1",
+    model="apertis/gpt-5.5",
     messages=[
         {"role": "user", "content": "Explain distributed systems"},
         {"role": "assistant", "content": "Distributed systems are..."},
@@ -132,7 +132,7 @@ response = completion(
     ],
     extra_headers={
         "X-Context-Compression": "on",
-        "X-Compression-Model": "gpt-4.1-mini",
+        "X-Compression-Model": "gpt-5.4-mini",
     },
 )
 ```
@@ -159,8 +159,8 @@ All standard OpenAI-compatible parameters are supported:
 
 | Provider | Model ID |
 |----------|----------|
-| OpenAI | `apertis/gpt-5.2`, `apertis/gpt-4.1-mini` |
-| Anthropic | `apertis/claude-sonnet-4.5`, `apertis/claude-haiku-4.5` |
+| OpenAI | `apertis/gpt-5.2`, `apertis/gpt-5.4-mini` |
+| Anthropic | `apertis/claude-sonnet-4-6`, `apertis/claude-haiku-4.5` |
 | Google | `apertis/gemini-3-pro-preview`, `apertis/gemini-3-flash-preview` |
 
 For the full list of models, visit [Apertis Models](https://apertis.ai/models).

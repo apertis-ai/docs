@@ -259,7 +259,7 @@ response = client.chat.completions.create(
 
 ```python
 response = client.embeddings.create(
-    model="text-embedding-3-small",
+    model="jina-embeddings-v3",
     input="Hello, world!"
 )
 
