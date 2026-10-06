@@ -1,3 +1,7 @@
+---
+description: "client.rerank.create() calls /v1/rerank, which is not currently available on the Apertis API."
+---
+
 # Rerank
 
 :::caution Not currently available
