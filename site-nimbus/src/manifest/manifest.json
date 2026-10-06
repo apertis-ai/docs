@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "95f449ebb54c5d2ac436cbf85e0808a1db844103",
-  "buildId": "95f449ebb54c5d2ac436cbf85e0808a1db844103.d194d081725b",
+  "sourceSha": "01cf017703e73b8b285960ec4aae4ee3ced8871f",
+  "buildId": "01cf017703e73b8b285960ec4aae4ee3ced8871f.c57c8d2669cc",
   "documents": [
     {
       "id": "page:index",
@@ -726,7 +726,7 @@
       "sourcePath": "docs-api/vision/dalle.md",
       "servedPath": "/api/vision/dalle/",
       "canonicalUrl": "https://docs.apertis.ai/api/vision/dalle",
-      "title": "Using GPT-Image-1 and Dall-E 3",
+      "title": "Using GPT Image Models",
       "eligibility": {
         "publish": true,
         "search": true,
@@ -735,9 +735,9 @@
       },
       "markdown": {
         "path": "/api/vision/dalle.md",
-        "sha256": "eb827c43f87d32230989ca0b741b3bb57922ddc89dd4ab6259887a7f2a17e389"
+        "sha256": "550fd4ea8a34d29f59f1f8413d6acaf5210f7a6549b7f6df3fcdd5999d8d37c4"
       },
-      "contentSha256": "eb827c43f87d32230989ca0b741b3bb57922ddc89dd4ab6259887a7f2a17e389"
+      "contentSha256": "550fd4ea8a34d29f59f1f8413d6acaf5210f7a6549b7f6df3fcdd5999d8d37c4"
     },
     {
       "id": "api:vision/image-generation",
