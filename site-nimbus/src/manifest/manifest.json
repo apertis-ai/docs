@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "f0ee8e7efe69c58bf4f66732dc09330e95873890",
-  "buildId": "f0ee8e7efe69c58bf4f66732dc09330e95873890.c57c8d2669cc",
+  "sourceSha": "e39af0d1db2335580cbf3ddc0094aea14afe2a18",
+  "buildId": "e39af0d1db2335580cbf3ddc0094aea14afe2a18.c57c8d2669cc",
   "documents": [
     {
       "id": "page:index",
@@ -159,9 +159,9 @@
       },
       "markdown": {
         "path": "/api/sdks/ai-sdk-provider.md",
-        "sha256": "ff09faa713a5831e485b56a077e4b016bde930789d778899f9c467f2087fdbe9"
+        "sha256": "4dbe1bc3a30deaed366c7f71cf48e1d7c3adeab824fe7834e73e2f990c7847e0"
       },
-      "contentSha256": "ff09faa713a5831e485b56a077e4b016bde930789d778899f9c467f2087fdbe9"
+      "contentSha256": "4dbe1bc3a30deaed366c7f71cf48e1d7c3adeab824fe7834e73e2f990c7847e0"
     },
     {
       "id": "api:sdks/cli",
