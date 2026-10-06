@@ -396,7 +396,7 @@ async with AsyncApertis() as client:
 | Embeddings | `await client.embeddings.create()` |
 | Messages | `await client.messages.create()` |
 | Responses | `await client.responses.create()` |
-| Rerank | `await client.rerank.create()` |
+| Rerank | `await client.rerank.create()` (endpoint not currently available) |
 | Audio Transcription | `await client.audio.transcriptions.create()` |
 | Audio Translation | `await client.audio.translations.create()` |
 | Audio Speech | `await client.audio.speech.create()` |

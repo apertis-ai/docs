@@ -75,7 +75,7 @@ def main():
     client = Apertis()
 
     response = client.chat.completions.create(
-        model="deepseek-reasoner",
+        model="deepseek-r1",
         messages=[
             {"role": "user", "content": "Prove that the square root of 2 is irrational."}
         ]
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
 ## Code Analysis with Reasoning
 
-```python
+````python
 from apertis import Apertis
 
 def main():
@@ -170,7 +170,7 @@ def mystery(arr):
 
 if __name__ == "__main__":
     main()
-```
+````
 
 ## Mathematical Proofs
 
@@ -243,7 +243,7 @@ def main():
     client = Apertis()
 
     stream = client.chat.completions.create(
-        model="deepseek-reasoner",
+        model="deepseek-r1",
         messages=[
             {"role": "user", "content": "What is 25% of 80? Walk through your thinking."}
         ],
@@ -274,7 +274,7 @@ if __name__ == "__main__":
 
 | Model | Description |
 |-------|-------------|
-| `deepseek-reasoner` | Chain-of-thought reasoning |
+| `deepseek-r1` | Chain-of-thought reasoning |
 
 ### Claude Extended Thinking
 

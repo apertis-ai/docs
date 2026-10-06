@@ -12,7 +12,7 @@ url = "https://api.apertis.ai/v1/chat/completions"
 
 payload = json.dumps({
    "max_tokens": 4096,
-   "model": "<MODEL_ALIAS>",
+   "model": "gemini-2.5-flash-image",
    "messages": [
       {
          "role": "user",
@@ -50,7 +50,7 @@ url = "https://api.apertis.ai/v1/chat/completions"
 
 payload = json.dumps({
    "max_tokens": 4096,
-   "model": "<MODEL_ALIAS>",
+   "model": "gemini-2.5-flash-image",
    "messages": [
       {
          "role": "user",
@@ -81,7 +81,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
   -H "Accept: application/json" \
   -H "Authorization: Bearer <APERTIS_API_KEY>" \
   -H "Content-Type: application/json" \
-  -d '{"model": "<MODEL_ALIAS>", "messages": [{"role": "user", "content": [{"type": "text", "text": "Transform the image into Ghibli style"}, {"type": "image_url", "image_url": {"url": "data:image/png;base64,"}}]}]}'
+  -d '{"model": "gemini-2.5-flash-image", "messages": [{"role": "user", "content": [{"type": "text", "text": "Transform the image into Ghibli style"}, {"type": "image_url", "image_url": {"url": "data:image/png;base64,"}}]}]}'
 ```
 
 ## Parameter Description

@@ -85,7 +85,7 @@ import openai
 
 # Configure Apertis
 client = openai.OpenAI(
-    api_key="your-api-key",
+    api_key="sk-your-api-key",
     base_url="https://api.apertis.ai/v1"
 )
 
@@ -121,7 +121,7 @@ import json
 
 url = "https://api.apertis.ai/v1/chat/completions"
 headers = {
-    "Authorization": "Bearer your-api-key",
+    "Authorization": "Bearer sk-your-api-key",
     "Content-Type": "application/json"
 }
 
@@ -158,7 +158,7 @@ except requests.exceptions.RequestException as e:
 ```bash
 # Basic fallback request
 curl -X POST "https://api.apertis.ai/v1/chat/completions" \
-  -H "Authorization: Bearer your-api-key" \
+  -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d '{
@@ -179,7 +179,7 @@ curl -X POST "https://api.apertis.ai/v1/chat/completions" \
 ```bash
 # Display full headers to check fallback usage
 curl -X POST "https://api.apertis.ai/v1/chat/completions" \
-  -H "Authorization: Bearer your-api-key" \
+  -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -D headers.txt \
   -d '{

@@ -202,7 +202,7 @@ curl https://api.apertis.ai/v1/images/edits \
 | `image` | file | Yes | The image to edit. PNG, WebP, or JPG under 50MB for GPT image models |
 | `prompt` | string | Yes | A text description of the desired edit. Max 32,000 characters for GPT image models |
 | `mask` | file | No | Mask image indicating transparent areas to edit. PNG under 4MB |
-| `model` | string | No | Model to use, e.g. `gpt-image-2` |
+| `model` | string | Yes | Model to use, e.g. `gpt-image-2`. Always set it: when omitted, the gateway falls back to `gpt-image-1`, which is no longer offered |
 | `n` | integer | No | Number of images to generate (1-10). Default: 1 |
 | `size` | string | No | Size: `1024x1024`, `1536x1024`, `1024x1536`, `auto`. Default: `auto` |
 | `quality` | string | No | Quality: `high`, `medium`, `low`, `auto`. Default: `auto` |

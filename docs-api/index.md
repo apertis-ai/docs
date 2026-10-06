@@ -38,7 +38,7 @@ The gateway accepts text generation requests in three formats: Chat Completions,
 - [Vision](/api/vision/read-image) - Image understanding
 - [Image Generation](/api/vision/image-generation) - Create images with AI
 - [Audio](/api/audio-video/audio) - Speech-to-text and text-to-speech
-- [Video](/api/audio-video/video) - Video understanding
+- [Video](/api/audio-video/video) - Video generation (not currently available)
 
 ### Utilities
 - [Billing Credits](/api/utilities/billing-credits) - Check remaining credits and subscription quota
