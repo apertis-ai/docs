@@ -395,9 +395,9 @@ async with AsyncApertis() as client:
 | Chat Completions | `await client.chat.completions.create()` |
 | Embeddings | `await client.embeddings.create()` |
 | Messages | `await client.messages.create()` |
-| Responses | `await client.responses.create()` (fails to parse API output in 0.3.0; see [Responses API](/api/sdks/python-sdk/responses-api)) |
+| Responses | `await client.responses.create()` (fails to parse API output in 0.3.0; see the Responses API page) |
 | Rerank | `await client.rerank.create()` (endpoint not currently available) |
-| Audio | not in 0.3.0; see [Audio](/api/sdks/python-sdk/audio), which uses the OpenAI SDK |
+| Audio | not in 0.3.0; see the Audio page, which uses the OpenAI SDK |
 
 ## Best Practices
 
