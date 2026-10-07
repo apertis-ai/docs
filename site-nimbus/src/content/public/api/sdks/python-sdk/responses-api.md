@@ -5,23 +5,20 @@ Use OpenAI's Responses API format for enhanced capabilities including built-in t
 ## Prerequisites
 
 ```bash
-pip install openai
+pip install "apertis>=0.4.0" openai
 ```
 
-> **Note**
->
-> `apertis` 0.3.0 cannot parse Responses API output: its `Response` type expects content blocks of type `text`, while the API returns `output_text`. Until that is fixed, use the OpenAI Python SDK pointed at Apertis, as the examples on this page do.
+`apertis` 0.4.0 or later parses Responses API output, as the first example shows. It does not stream the Responses API and takes no `extra_body`, so the other examples on this page use the OpenAI Python SDK pointed at Apertis.
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Basic Usage
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     response = client.responses.create(
         model="gpt-5.5",
@@ -29,6 +26,10 @@ def main():
     )
 
     print(response.output_text)
+
+    # output also holds reasoning and function_call items
+    for item in response.output:
+        print(item.type)
 
 if __name__ == "__main__":
     main()

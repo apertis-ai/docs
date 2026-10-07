@@ -140,12 +140,10 @@ def main():
             # ... many turns of conversation history ...
             {"role": "user", "content": "Summarize the key points"}
         ],
-        extra_body={
-            "compression": {
-                "enabled": True,
-                "strategy": "on",
-                "model": "gpt-5.4-mini"
-            }
+        compression={
+            "enabled": True,
+            "strategy": "on",
+            "model": "gpt-5.4-mini"
         }
     )
 
@@ -182,3 +180,7 @@ All chat-capable models are supported, including:
 | `presence_penalty` | `float` | Topic diversity penalty (-2.0 - 2.0) |
 | `stop` | `list[str]` | Stop sequences |
 | `n` | `int` | Number of completions to generate |
+| `max_completion_tokens` | `int` | Token limit including reasoning tokens (`apertis` 0.4.0 or later) |
+| `compression` | `dict` | [Context compression](/api/text-generation/context-compression) settings |
+| `thinking` | `dict` | Extended thinking, for example `{"type": "enabled", "budget_tokens": 10000}` |
+| `extra_body` | `dict` | Sent as a nested `extra_body` object, as Gemini's OpenAI-compatible endpoint expects (for example `{"google": {...}}`). It is not merged into the request, so use the named arguments above for top-level fields |
