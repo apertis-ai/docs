@@ -173,3 +173,15 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
   check-build-id、`CI=1` build（未改 tracked file）、typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、
   developer-activation、`build:legacy` 都通過；refund-policy-check 24 個載體只剩 24 個日期 TODO 失敗。
   拿掉日期標記的副本回 `ok`；在副本放進帶日期的連結或「14-day right」、改動地區句 → 都被抓到；改動 fixture 一個字 → hash 不符，且被改的那句報「不是 fixture 原文」。
+
+## 12. Revision 3（digest `sha256:9839d7cc498fbfb29233b2ead3405c2de12b9860ca16445baae32056d630b456`）
+
+- OpenSpec：`openspec/changes/refund-policy-v2-docs/`（capability `public-refund-docs`），`openspec validate refund-policy-v2-docs --strict` 通過；spec 先於本輪內容變更 commit（`2c57260`）。
+- 法律頁連結改成真正的超連結 `https://apertis.ai/refund`（`fa69371`），四頁都在 `migration/nimbus/content-changes.json` 登記（`3ee809a`）。
+  FAQ 原有的條目（55608c9 的 Playground 變更）因為 schema 一份文件只有一個 commit 欄位，改記最新的 `fa69371`，舊 commit 寫在 decision 裡保留。
+- `scripts/nimbus/pages-build.sh` 在 `test:dist` 之後、產生 `build/` 之前跑 `refund-policy-check.mjs`。
+- 生成檔全部提交（`327c297`，`sourceSha` `fa69371…`）：已提交的 head 上 `m2:regenerate` 不改任何 tracked file，`check-build-id` 通過。
+- 驗證（head `327c297`，工作樹乾淨）：`CI=1` build 通過且未改 tracked file、typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、
+  developer-activation、`build:legacy` 通過；refund-policy-check（加 `--legal-fixture`）24 個載體只剩 24 個日期 TODO 失敗。
+- fail-closed 證明：本 head 跑 `bash scripts/nimbus/pages-build.sh` → exit 1，24 個失敗全是日期 TODO，沒有產生 `build/`；
+  在本 repo 的本機 clone 拿掉四個日期標記、commit、regenerate 後跑同一支 → exit 0，check `ok`，產生 `build/`。
