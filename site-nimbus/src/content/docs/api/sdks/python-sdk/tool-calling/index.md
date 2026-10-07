@@ -9,7 +9,7 @@ Enable AI models to call functions and interact with external systems, enabling 
 ## Prerequisites
 
 ```bash
-pip install apertis
+pip install "apertis>=0.4.0"
 ```
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
@@ -264,7 +264,7 @@ def main():
             {"role": "user", "content": "Get the stock prices for AAPL, GOOGL, and MSFT"}
         ],
         tools=tools,
-        extra_body={"parallel_tool_calls": True}  # Not a named SDK argument; sent in the request body
+        parallel_tool_calls=True
     )
 
     message = response.choices[0].message
@@ -298,4 +298,4 @@ Tool calling is supported by:
 |-----------|------|-------------|
 | `tools` | `list` | List of tool definitions |
 | `tool_choice` | `str \| dict` | Tool selection: `"auto"`, `"none"`, `"required"`, or specific function |
-| `extra_body={"parallel_tool_calls": bool}` | `dict` | Allow multiple simultaneous tool calls. Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |
+| `parallel_tool_calls` | `bool` | Allow multiple simultaneous tool calls (`apertis` 0.4.0 or later). Forwarded to OpenAI-compatible models; Anthropic and Google models ignore it |

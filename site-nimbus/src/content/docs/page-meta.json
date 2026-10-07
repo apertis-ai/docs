@@ -52,39 +52,39 @@
     "readingMinutes": 5
   },
   "api:sdks/python-sdk/index": {
-    "updated": "2026-10-06T16:40:47+08:00",
+    "updated": "2026-10-07T09:41:41+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/async": {
-    "updated": "2026-10-06T22:27:30+08:00",
-    "readingMinutes": 2
+    "updated": "2026-10-07T09:41:41+08:00",
+    "readingMinutes": 1
   },
   "api:sdks/python-sdk/audio": {
-    "updated": "2026-10-06T16:09:16+08:00",
-    "readingMinutes": 2
+    "updated": "2026-10-07T09:41:41+08:00",
+    "readingMinutes": 3
   },
   "api:sdks/python-sdk/chat-completions": {
-    "updated": "2026-10-06T16:40:47+08:00",
-    "readingMinutes": 1
+    "updated": "2026-10-07T09:41:41+08:00",
+    "readingMinutes": 2
   },
   "api:sdks/python-sdk/embeddings": {
     "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/messages-api": {
-    "updated": "2026-10-06T16:09:16+08:00",
-    "readingMinutes": 2
+    "updated": "2026-10-07T09:41:41+08:00",
+    "readingMinutes": 3
   },
   "api:sdks/python-sdk/reasoning": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-10-07T09:41:41+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/rerank": {
-    "updated": "2026-10-06T16:19:21+08:00",
+    "updated": "2026-10-07T09:41:41+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/responses-api": {
-    "updated": "2026-10-06T16:40:47+08:00",
+    "updated": "2026-10-07T09:41:41+08:00",
     "readingMinutes": 2
   },
   "api:sdks/python-sdk/streaming": {
@@ -92,7 +92,7 @@
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/tool-calling": {
-    "updated": "2026-10-06T16:40:47+08:00",
+    "updated": "2026-10-07T09:41:41+08:00",
     "readingMinutes": 1
   },
   "api:sdks/python-sdk/video": {

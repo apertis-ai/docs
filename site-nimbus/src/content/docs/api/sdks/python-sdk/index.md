@@ -13,12 +13,12 @@ Official Python SDK for the Apertis AI API, providing a comprehensive interface 
 - **Tool Calling** - Function/tool calling support for building AI agents
 - **Embeddings** - Text embedding generation with batch processing
 - **Vision** - Image analysis with multimodal models
-- **Audio** - Audio input and output support for voice applications
+- **Audio** - Text to speech, transcription and translation (`client.audio`), plus audio input and output in chat
 - **Video** - Video content analysis capabilities
 - **Web Search** - Real-time web search with citation support
 - **Reasoning** - Chain-of-thought reasoning and extended thinking
-- **Messages API** - Anthropic-native message format compatibility
-- **Responses API** - OpenAI Responses API format support
+- **Messages API** - Anthropic-native message format, with streaming and extended thinking
+- **Responses API** - OpenAI Responses API format, with `response.output_text`
 - **Rerank** - `client.rerank.create()` exists, but the endpoint is not currently available
 - **Full Type Hints** - Complete type annotations for IDE support
 - **Automatic Retries** - Built-in retry logic for transient errors
@@ -28,6 +28,8 @@ Official Python SDK for the Apertis AI API, providing a comprehensive interface 
 ```bash
 pip install apertis
 ```
+
+The pages below describe `apertis` 0.4.0. Run `pip install -U apertis` to upgrade an older install.
 
 ## Setup
 
