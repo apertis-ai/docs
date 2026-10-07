@@ -125,7 +125,7 @@ No, subscription quotas reset at each billing cycle and don't roll over.
 
 Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window. Changing your mind or forgetting to cancel does not by itself qualify for a refund. We review a request when the law or a written contract provides for a refund, when an earlier version of the Refund Policy still applies to the purchase, for a verified duplicate, incorrect or unauthorized charge, for a verified significant failure of the Apertis service or your access to it, or when Apertis ended your service for a reason other than your breach and prepaid service was left undelivered. The details, including regional consumer rights, are under Pay-As-You-Go, Refunds.
 
-To request a refund, email hi@apertis.ai with the transaction date and amount. Do not send your full card number or CVC. We aim to send a first response within 3 business days.
+To request a refund, email hi@apertis.ai with the transaction date and amount. Do not send your full card number or CVC. We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you.
 
 ---
 

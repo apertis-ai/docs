@@ -335,7 +335,7 @@ Sending a request does not mean it is approved. Approved refunds are paid to the
 
 **Service incidents.** The remedy for a service incident depends on what we verify, applicable law and any written SLA or contract. There is no fixed service-extension rate. Commitments already made for earlier purchases or incidents still apply.
 
-**Which version applies.** This policy applies to purchases made after it is published. For Auto Top-Up charges and automatic subscription renewals, it applies only after at least 30 days' notice. Earlier purchases keep the refund terms that applied when you made them.
+**Which version applies.** This policy applies to a purchase only when it was shown to you and you accepted it before you paid. For Auto Top-Up charges and automatic subscription renewals set up under earlier terms, it applies only after at least 30 days' notice. Otherwise the refund terms that applied when you made the purchase still apply, and unclear cases are reviewed.
 
 ### Requesting a Refund
 
