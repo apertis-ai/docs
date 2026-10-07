@@ -587,7 +587,7 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await page.click('.page-actions__toggle');
   const items = await page.$$eval('[role=menu] [role=menuitem]', (els: HTMLElement[]) => els.map((e): [string | null | undefined, string | null | undefined] => [e.querySelector('[data-item-title]')?.textContent, e.querySelector('[data-item-desc]')?.textContent]));
   assert.ok(items.length >= 6 && items.every(([t, s]: (string | null | undefined)[]) => t && s), `every menu item has a title and a description: ${JSON.stringify(items)}`);
-  // The AI tools carry their brand marks from lobe icons (static SVG, as apertis.ai's public pages).
+  // The AI tools carry their brand marks from lobe icons (static SVG, as on apertis.ai's public pages).
   const marks = await page.$$eval('[role=menu] a[data-action]', (as: HTMLAnchorElement[]) => Object.fromEntries(as.map((a) => [a.dataset.action, a.querySelector('.page-actions__icon svg title')?.textContent ?? null])));
   assert.deepEqual([marks.claude, marks.chatgpt, marks.cursor], ['Claude', 'OpenAI', 'Cursor']);
   // A status message floats over the description as an opaque card (canary: it overlapped the text).
