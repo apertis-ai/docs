@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "955a8640dfe3b015e66b39ed0be66d9134adf624",
-  "buildId": "955a8640dfe3b015e66b39ed0be66d9134adf624.1bc5f368f35e",
+  "sourceSha": "9de395d2954aa9d4fcecb6f57a0760983d8acc49",
+  "buildId": "9de395d2954aa9d4fcecb6f57a0760983d8acc49.1bc5f368f35e",
   "documents": [
     {
       "id": "page:index",
@@ -267,9 +267,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/index.md",
-        "sha256": "9d90da103ec3fac39a27760c560ef889c15bf58d762a4fb465e14f420f05cbe6"
+        "sha256": "dda7268b7fadca7f6e71e77904c2c60d1411aa16c1b63c38479d0696072b1382"
       },
-      "contentSha256": "9d90da103ec3fac39a27760c560ef889c15bf58d762a4fb465e14f420f05cbe6"
+      "contentSha256": "dda7268b7fadca7f6e71e77904c2c60d1411aa16c1b63c38479d0696072b1382"
     },
     {
       "id": "api:sdks/python-sdk/async",
@@ -411,9 +411,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/responses-api.md",
-        "sha256": "d7c6fecd28bda67d76559cf143fcfd441bbcc275af58b9b8472173cd06d8ffe8"
+        "sha256": "c3281daff465d7dbf10f524051e7ed51bf91cf2be647ce0523f7f0af1af2bcb5"
       },
-      "contentSha256": "d7c6fecd28bda67d76559cf143fcfd441bbcc275af58b9b8472173cd06d8ffe8"
+      "contentSha256": "c3281daff465d7dbf10f524051e7ed51bf91cf2be647ce0523f7f0af1af2bcb5"
     },
     {
       "id": "api:sdks/python-sdk/streaming",

@@ -9,10 +9,10 @@ Use OpenAI's Responses API format for enhanced capabilities including built-in t
 ## Prerequisites
 
 ```bash
-pip install "apertis>=0.4.0" openai
+pip install "apertis>=0.4.1" openai
 ```
 
-`apertis` 0.4.0 or later parses Responses API output, as the first example shows. It does not stream the Responses API and takes no `extra_body`, so the other examples on this page use the OpenAI Python SDK pointed at Apertis.
+`apertis` 0.4.0 or later parses Responses API output, as the first example shows. 0.4.1 adds streaming and typed input parts (`input_text`, `input_image`, `input_file`), shown under Streaming and Image Input. The SDK takes no `extra_body`, so the other examples on this page use the OpenAI Python SDK pointed at Apertis.
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
@@ -178,12 +178,13 @@ if __name__ == "__main__":
 
 ## Streaming
 
+`stream=True` returns an iterator of `ResponseStreamEvent` objects (`apertis` 0.4.1 or later). Each event keeps its Responses API `type` and fields. An `error` or `response.failed` event raises the matching `APIError`.
+
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     stream = client.responses.create(
         model="gpt-5.5",
@@ -203,12 +204,13 @@ if __name__ == "__main__":
 
 ## Image Input
 
+`input_image` takes an `image_url` or a `file_id`; `input_file` takes a `file_id`, `file_url` or `file_data` (`apertis` 0.4.1 or later).
+
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     response = client.responses.create(
         model="gpt-5.5",
@@ -364,7 +366,7 @@ The Responses API supports:
 | `tools` | `list` | Tool definitions |
 | `temperature` | `float` | Sampling temperature |
 | `max_output_tokens` | `int` | Maximum tokens to generate |
-| `stream` | `bool` | Enable streaming |
+| `stream` | `bool` | Return an iterator of stream events (`apertis` 0.4.1 or later) |
 | `reasoning` | `dict` | Reasoning configuration |
 
 ### Built-in Tools
