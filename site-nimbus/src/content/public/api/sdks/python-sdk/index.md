@@ -25,7 +25,7 @@ Official Python SDK for the Apertis AI API, providing a comprehensive interface 
 pip install apertis
 ```
 
-The pages below describe `apertis` 0.4.0. Run `pip install -U apertis` to upgrade an older install.
+The pages below describe `apertis` 0.4.1. Run `pip install -U apertis` to upgrade an older install.
 
 ## Setup
 
