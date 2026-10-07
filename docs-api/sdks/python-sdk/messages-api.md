@@ -5,7 +5,7 @@ Use Anthropic's native message format for interacting with Claude models, provid
 ## Prerequisites
 
 ```bash
-pip install apertis
+pip install "apertis>=0.4.0"
 ```
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
@@ -93,27 +93,26 @@ if __name__ == "__main__":
 
 ## Streaming
 
-The `apertis` SDK's `messages.create()` returns complete responses only. To stream the Messages API, point the Anthropic SDK at Apertis:
+`stream=True` returns an iterator of Anthropic stream events (`apertis` 0.4.0 or later):
 
 ```python
-import os
-from anthropic import Anthropic
+from apertis import Apertis
 
 def main():
-    client = Anthropic(
-        api_key=os.environ["APERTIS_API_KEY"],
-        base_url="https://api.apertis.ai",
-    )
+    client = Apertis()
 
-    with client.messages.stream(
+    stream = client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {"role": "user", "content": "Write a short poem about coding."}
-        ]
-    ) as stream:
-        for text in stream.text_stream:
-            print(text, end="", flush=True)
+        ],
+        stream=True,
+    )
+
+    for event in stream:
+        if event.type == "content_block_delta" and event.delta.type == "text_delta":
+            print(event.delta.text, end="", flush=True)
 
     print()
 
@@ -213,17 +212,13 @@ if __name__ == "__main__":
 
 ## Extended Thinking
 
-`thinking` is not an argument of the `apertis` SDK's `messages.create()`. Send it with the Anthropic SDK pointed at Apertis:
+Pass `thinking` to get the model's reasoning as `thinking` blocks before the answer (`apertis` 0.4.0 or later):
 
 ```python
-import os
-from anthropic import Anthropic
+from apertis import Apertis
 
 def main():
-    client = Anthropic(
-        api_key=os.environ["APERTIS_API_KEY"],
-        base_url="https://api.apertis.ai",
-    )
+    client = Apertis()
 
     response = client.messages.create(
         model="claude-sonnet-4-6",
@@ -249,6 +244,8 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+With `stream=True`, thinking arrives as `thinking_delta` events before the `text_delta` events.
 
 ## Response Metadata
 
@@ -361,8 +358,9 @@ The Messages API supports all Claude models:
 | `tool_choice` | `dict` | Tool selection |
 | `metadata` | `dict` | Request metadata |
 | `compression` | `dict` | [Context compression](/api/text-generation/context-compression) settings |
-
-`messages.create()` in `apertis` 0.3.0 does not accept `stream` or `thinking`; use the Anthropic SDK for those, as shown above.
+| `stream` | `bool` | Return an iterator of stream events (0.4.0 or later) |
+| `thinking` | `dict` | Extended thinking, for example `{"type": "enabled", "budget_tokens": 10000}` (0.4.0 or later) |
+| `extra_body` | `dict` | Extra fields merged into the top level of the request (0.4.0 or later) |
 
 ### Response Object
 

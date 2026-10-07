@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e39af0d1db2335580cbf3ddc0094aea14afe2a18",
-  "buildId": "e39af0d1db2335580cbf3ddc0094aea14afe2a18.c57c8d2669cc",
+  "sourceSha": "7419b01976d7fd5824103adc4c3f92d6fc719278",
+  "buildId": "7419b01976d7fd5824103adc4c3f92d6fc719278.c57c8d2669cc",
   "documents": [
     {
       "id": "page:index",
@@ -267,9 +267,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/index.md",
-        "sha256": "a7b6511c7cc493c1ce87afc6aaf533d4ac2170117535bfd0d904414b2daddf8b"
+        "sha256": "9d90da103ec3fac39a27760c560ef889c15bf58d762a4fb465e14f420f05cbe6"
       },
-      "contentSha256": "a7b6511c7cc493c1ce87afc6aaf533d4ac2170117535bfd0d904414b2daddf8b"
+      "contentSha256": "9d90da103ec3fac39a27760c560ef889c15bf58d762a4fb465e14f420f05cbe6"
     },
     {
       "id": "api:sdks/python-sdk/async",
@@ -285,9 +285,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/async.md",
-        "sha256": "2e460c99dbe81a773caa75892594e0640735f34f901b37c98b8c44cecf71943d"
+        "sha256": "3e825a40237d0b9f17691e792c2fddbfb90c59ef3c08cdbc7af94770733ac028"
       },
-      "contentSha256": "2e460c99dbe81a773caa75892594e0640735f34f901b37c98b8c44cecf71943d"
+      "contentSha256": "3e825a40237d0b9f17691e792c2fddbfb90c59ef3c08cdbc7af94770733ac028"
     },
     {
       "id": "api:sdks/python-sdk/audio",
@@ -303,9 +303,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/audio.md",
-        "sha256": "67cc6cfa119a650e7fcf74081c2b350384bb91c72954aace452f4946c5e87763"
+        "sha256": "5994da7b8bfaa1c460be9e7b1b5894682d64e40c23c219d4784d7bda446bcae2"
       },
-      "contentSha256": "67cc6cfa119a650e7fcf74081c2b350384bb91c72954aace452f4946c5e87763"
+      "contentSha256": "5994da7b8bfaa1c460be9e7b1b5894682d64e40c23c219d4784d7bda446bcae2"
     },
     {
       "id": "api:sdks/python-sdk/chat-completions",
@@ -321,9 +321,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/chat-completions.md",
-        "sha256": "cf6866dff95a974b10227df6d408e090fc16b5939bc123c2cc3e9218b406cb01"
+        "sha256": "7a654aa83b285cda8fc886d900031912b1749d58cfe68e8fefd3e48591d53465"
       },
-      "contentSha256": "cf6866dff95a974b10227df6d408e090fc16b5939bc123c2cc3e9218b406cb01"
+      "contentSha256": "7a654aa83b285cda8fc886d900031912b1749d58cfe68e8fefd3e48591d53465"
     },
     {
       "id": "api:sdks/python-sdk/embeddings",
@@ -357,9 +357,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/messages-api.md",
-        "sha256": "5d50c622c652125a94c50989d16c49422e1637535c4c0e298125e21170177c3b"
+        "sha256": "e51fa5fa1e270cc5280daf6bde89348bffba6c6ec82252339548f56ca4f6074d"
       },
-      "contentSha256": "5d50c622c652125a94c50989d16c49422e1637535c4c0e298125e21170177c3b"
+      "contentSha256": "e51fa5fa1e270cc5280daf6bde89348bffba6c6ec82252339548f56ca4f6074d"
     },
     {
       "id": "api:sdks/python-sdk/reasoning",
@@ -375,9 +375,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/reasoning.md",
-        "sha256": "fbabc90231b8ffdc3370e4386d196c455e0f5915d509f00a7588128efcc3fccc"
+        "sha256": "d223b650c825634d99747247b100e1d9f2683ef6ad5172e882831e58f24bf84a"
       },
-      "contentSha256": "fbabc90231b8ffdc3370e4386d196c455e0f5915d509f00a7588128efcc3fccc"
+      "contentSha256": "d223b650c825634d99747247b100e1d9f2683ef6ad5172e882831e58f24bf84a"
     },
     {
       "id": "api:sdks/python-sdk/rerank",
@@ -393,9 +393,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/rerank.md",
-        "sha256": "ac7f298138a427b5f715bec9230dfef899160c08e5ee37bd30886bd1fc97934f"
+        "sha256": "dde906a22103bf4de86e614cb0654aa282a68730c19800d474a13126f1d1452c"
       },
-      "contentSha256": "ac7f298138a427b5f715bec9230dfef899160c08e5ee37bd30886bd1fc97934f"
+      "contentSha256": "dde906a22103bf4de86e614cb0654aa282a68730c19800d474a13126f1d1452c"
     },
     {
       "id": "api:sdks/python-sdk/responses-api",
@@ -411,9 +411,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/responses-api.md",
-        "sha256": "ff57c8adf22fe4ac3ac34a35adccde0d8452d7c09acc29267e7d1dc667f8aad8"
+        "sha256": "d7c6fecd28bda67d76559cf143fcfd441bbcc275af58b9b8472173cd06d8ffe8"
       },
-      "contentSha256": "ff57c8adf22fe4ac3ac34a35adccde0d8452d7c09acc29267e7d1dc667f8aad8"
+      "contentSha256": "d7c6fecd28bda67d76559cf143fcfd441bbcc275af58b9b8472173cd06d8ffe8"
     },
     {
       "id": "api:sdks/python-sdk/streaming",
@@ -447,9 +447,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/tool-calling.md",
-        "sha256": "8cd695fffb806f97f65e54887c3ea17e9ce045aa286649b428020b2cc5d656ab"
+        "sha256": "2f1120e98560438399121d4204ed967a89d747ae806b5db8fa3e9795f2adf9c8"
       },
-      "contentSha256": "8cd695fffb806f97f65e54887c3ea17e9ce045aa286649b428020b2cc5d656ab"
+      "contentSha256": "2f1120e98560438399121d4204ed967a89d747ae806b5db8fa3e9795f2adf9c8"
     },
     {
       "id": "api:sdks/python-sdk/video",
