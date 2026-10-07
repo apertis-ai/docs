@@ -143,11 +143,18 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
 
 ## 10. Phase C 驗證紀錄（本機，未 push，非 serving 證據）
 
-- 候選文案：commit `f9e1c68`（四個 canonical source + `scripts/nimbus/refund-policy-check.mjs`；`scripts/` 被根 `.gitignore` 忽略，既有腳本同樣以 `git add -f` 追蹤）。
-- 生成：`npm run m2:regenerate`（site-nimbus），只改四頁的 render source／clean Markdown 與 `manifest.json`、`page-meta.json`；
-  連跑兩次 `git diff` 完全相同（sha256 `0df77e00…ba43`），冪等。四頁 mirrors 在 `dc0363f`；`manifest.json`、`page-meta.json` 依 §7 未提交。
-- 在含上述兩檔的工作樹上，照 `nimbus-pr-gates.yml` candidate job：`check-build-id.mjs` 通過（buildId `f9e1c684….1bc5f368f35e`）、
-  `CI=1 npm run build` 通過且未改任何 tracked file、`typecheck` 0 errors、`npm test` 223 項 157 pass／0 fail／66 skip（需 `PREVIEW_URL` 的瀏覽器測試，CI 該 job 同樣 skip）、
-  `test:dist` 30／30（含 heading id 與連結比對）、`check-developer-activation.mjs` 通過。
+- 候選文案：canonical source 在 `f9e1c68`、`ace8984`（D12 適用條件修正）；`scripts/nimbus/refund-policy-check.mjs` 同兩個 commit
+  （`scripts/` 被根 `.gitignore` 忽略，既有腳本同樣以 `git add -f` 追蹤）。四頁 mirrors 在 `dc0363f`、`03ed4e0`。
+- 生成：`npm run m2:regenerate` 只改四頁的 render source／clean Markdown 與 `manifest.json`、`page-meta.json`。
+  在 `03ed4e0` 上連跑兩次，未提交的兩檔 diff 完全相同（`git diff -- site-nimbus/src/manifest/manifest.json site-nimbus/src/content/docs/page-meta.json | shasum -a 256`
+  = `b9998c95…8b8d`，`sourceSha` = `ace8984e…`），冪等。兩檔依 §7 未提交；**已提交的 head 本身過不了 `check-build-id`／m2-convert**，
+  以下 PASS 都是「head + 這兩個生成檔」的工作樹狀態。rebase 到有新 legacy-root commit 的 main 會讓 `sourceSha`、`updated` 失效，需重跑 regenerate。
+- 照 `nimbus-pr-gates.yml`：candidate job 的 `check-build-id.mjs`（buildId `ace8984e….1bc5f368f35e`）、`CI=1 npm run build`（未改任何 tracked file）、
+  `typecheck` 0 errors、`npm test` 223 項 157 pass／0 fail／66 skip（需 `PREVIEW_URL` 的瀏覽器測試，CI 的 candidate job 同樣 skip）、
+  `test:dist` 30／30（含 heading id 與連結比對）、`check-developer-activation.mjs` 全過；root job 的 `npm ci` + `npm run build:legacy` 通過（本機 Node 25，CI 用 22）。
+  **NOT RUN**：preview job（`test:routes`、`route-fixtures.mjs`、`test:m3-browser`、`m4-e2e`）與 Ask Docs／indexer job；沒有任何 serving／preview 讀回。
 - `refund-policy-check.mjs`：24 個 current 載體（4 頁 × source、render、clean、HTML、served `.md`、`llms-full.txt`），唯一失敗是 24 個 `TODO(refund-policy-v2)` 標記，符合預期。
   去掉標記的副本 → `ok`；在副本放回「case-by-case」「3 days」、改掉「Balance never expires」、改動 archive 公告 → 各自被抓到；基準 `8684773` 內容 → 抓到 5-7／5-10 工作天、case-by-case、Immediate 取消。
+  必要語句是 phase C 候選文字，C4 後要換成 reviewed legal source 的文字；它們不是政策權威。檢查**沒有接進任何 build 或 CI**。
+- 依據的 app 事實（讀自本機 stima-api primary checkout 工作樹，revision 未驗證）：使用者取消只排 `cancel_at_period_end`、不動 Auto Top-Up
+  （`controller/subscription.go` `CancelSubscription`）；設定頁顯示結束日（`web/default/src/components/settings/PlanCard.jsx:258` 「Will end on」）。
