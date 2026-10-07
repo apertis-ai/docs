@@ -123,7 +123,7 @@ No, subscription quotas reset at each billing cycle and don't roll over.
 
 **TODO(refund-policy-v2-date):** the announcement, notice and effective dates of this Refund Policy version are not decided yet. Do not publish while this line is present.
 
-The full Refund Policy is at `https://apertis.ai/refund`. The section numbers below refer to it.
+The full Refund Policy is at [https://apertis.ai/refund](https://apertis.ai/refund). The section numbers below refer to it.
 
 Payments for the following are non-refundable, including when the credits or quota they provide have not been used:
 

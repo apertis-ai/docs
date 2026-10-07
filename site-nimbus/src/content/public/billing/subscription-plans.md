@@ -280,7 +280,7 @@ Contact support for trial options and promotional offers.
 
 **TODO(refund-policy-v2-date):** the announcement, notice and effective dates of this Refund Policy version are not decided yet. Do not publish while this line is present.
 
-The full Refund Policy is at `https://apertis.ai/refund`. The section numbers below refer to it.
+The full Refund Policy is at [https://apertis.ai/refund](https://apertis.ai/refund). The section numbers below refer to it.
 
 **Which transactions this version covers** (Refund Policy, Section 1):
 
