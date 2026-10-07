@@ -183,4 +183,4 @@ All chat-capable models are supported, including:
 | `max_completion_tokens` | `int` | Token limit including reasoning tokens (`apertis` 0.4.0 or later) |
 | `compression` | `dict` | [Context compression](/api/text-generation/context-compression) settings |
 | `thinking` | `dict` | Extended thinking, for example `{"type": "enabled", "budget_tokens": 10000}` |
-| `extra_body` | `dict` | Sent as a nested `extra_body` object, as Gemini's OpenAI-compatible endpoint expects (for example `{"google": {...}}`). It is not merged into the request, so use the named arguments above for top-level fields |
+| `extra_body` | `dict` | Sent as a nested `extra_body` object, not merged into the request. The Apertis API currently ignores it, so provider options such as Gemini's `{"google": {...}}` have no effect. Use the named arguments above for top-level fields |
