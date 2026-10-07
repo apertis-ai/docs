@@ -37,7 +37,7 @@ function outDir(files: Record<string, string> = { 'api/index.md': md }) {
 }
 
 function validManifest(): ManifestV1 {
-  const sourceSha = '7b6ef85abaaef50de5c8d277629b07a39c9c3065';
+  const sourceSha = 'bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3';
   return {
     manifestVersion: 1,
     site: 'https://docs.apertis.ai',

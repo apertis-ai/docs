@@ -1,6 +1,6 @@
 {
   "frozenAt": "2026-09-29",
-  "baseSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
+  "baseSha": "bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3",
   "protocol": {
     "harness": "Build output served on the measuring machine with `wrangler pages dev <outputDir>`; system Google Chrome driven by Playwright (scripts/nimbus/measure.mjs). Legacy and candidate are compared only when measured with the same harness, machine and profile.",
     "runs": 5,
@@ -2383,7 +2383,7 @@
         }
       },
       "notes": [
-        "Recorded by the lead from the legacy 7b6ef85 build served with wrangler pages dev (the #5 PoC harness), one measure.mjs perf --set full process per page; gatedBytes are per-page medians of 5 runs.",
+        "Recorded by the lead from the legacy bb057a7 build served with wrangler pages dev (the #5 PoC harness), one measure.mjs perf --set full process per page; gatedBytes are per-page medians of 5 runs.",
         "unreadableResponses was 0 in every sample. Byte metrics were identical across runs except: mobile /help/error-codes/ dataGzip: 560/640/560/560/560 (median 560).",
         "The 12 PoC pages reproduce budgets.baseline.gatedBytes exactly, which ties this record to the #5 baseline build.",
         "Timing is informational only (1-minute load average 21.4-92.2 on a shared host); the timing gate is the paired comparison in budgetRules.timing.",

@@ -143,7 +143,7 @@ jobs:
         working-directory: site-nimbus
       - name: route, redirect, canonical and anchor fixtures (PoC scope)
         run: node scripts/nimbus/route-fixtures.mjs check "$PREVIEW_URL" --scope poc
-      # The full corpus too: a fixture that only the acceptance matrix checked went stale once (#4, f2e1322).
+      # The full corpus too: a fixture that only the acceptance matrix checked went stale once (#4, 6e57cfa).
       - name: route, redirect, canonical and anchor fixtures (every inventory route)
         run: node scripts/nimbus/route-fixtures.mjs check "$PREVIEW_URL"
       - run: npm run test:m3-browser
@@ -161,7 +161,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with: { fetch-depth: 0, persist-credentials: false } # the legacy handler is read from 7b6ef85
+        with: { fetch-depth: 0, persist-credentials: false } # the legacy handler is read from bb057a7
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: '25', cache: npm, cache-dependency-path: '**/package-lock.json' }
       - run: npm ci

@@ -1,6 +1,6 @@
 -- Isolated rehearsal only (#14): the legacy retrieval objects that production's `ask-docs` project serves,
 -- reconstructed from migration/nimbus/legacy-rollback.json (production has no tracked migration for
--- them). The 7b6ef85 indexer then fills them with the isolated Jina key, so the legacy handler (rollback
+-- them). The bb057a7 indexer then fills them with the isolated Jina key, so the legacy handler (rollback
 -- target) and the candidate handler with ASK_RETRIEVAL_SOURCE=legacy answer in the isolated project.
 -- Never run against production: production already has these objects, and they must stay unmodified.
 -- It refuses any database that already has public.documents and changes nothing there (one transaction,

@@ -4,7 +4,7 @@ The Docusaurus → Cloudflare Nimbus migration (#4) runs as parallel packets (#6
 
 ## What Changes
 
-- Record the verified production identity (Pages deployment `2efbe4c4` = source `7b6ef85`), build/deployment settings, legacy retrieval identity, and baseline defects (`migration/nimbus/legacy-rollback.json`).
+- Record the verified production identity (Pages deployment `2efbe4c4` = source `bb057a7`), build/deployment settings, legacy retrieval identity, and baseline defects (`migration/nimbus/legacy-rollback.json`).
 - Freeze a route inventory that classifies every discovered source, build and live route with a disposition and explicit publication/search/agent/RAG eligibility (`migration/nimbus/route-inventory.json`), plus executable route/redirect/canonical/anchor fixtures (`migration/nimbus/route-fixtures.json`, `scripts/nimbus/route-fixtures.mjs`).
 - Freeze the publication manifest v1 contract, the `/api/ask` wire and compatibility contract (`migration/nimbus/fixtures/ask-wire.json`), the server-side retrieval boundary, and the shell/search/Ask Docs/page-context interfaces.
 - Freeze the PoC page set, search relevance queries and hit rule (`migration/nimbus/search-queries.json`), and the performance protocol, legacy baseline and budgets (`migration/nimbus/budgets.json`, `scripts/nimbus/measure.mjs`) before any candidate measurement.

@@ -1,7 +1,7 @@
 {
-  "contract": "POST /api/ask, legacy wire contract v1 (functions/api/ask.ts @ 7b6ef85)",
+  "contract": "POST /api/ask, legacy wire contract v1 (functions/api/ask.ts @ bb057a7)",
   "evidence": {
-    "observed-live": "Probed against https://docs.apertis.ai/api/ask (Pages deployment 2efbe4c4, source 7b6ef85) on 2026-09-29 with requests that stop before Jina/Supabase/Apertis. No paid call, database write or customer credential was used.",
+    "observed-live": "Probed against https://docs.apertis.ai/api/ask (Pages deployment 2efbe4c4, source bb057a7) on 2026-09-29 with requests that stop before Jina/Supabase/Apertis. No paid call, database write or customer credential was used.",
     "source-derived": "Read from functions/api/ask.ts and src/components/UnifiedSearchModal/AskAITab.tsx; not exercised against real services under #5."
   },
   "request": {

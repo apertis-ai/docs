@@ -2,8 +2,8 @@
   "_fixture": "Shape example for packets that start before #7 produces the real manifest. Hashes are all-zero placeholders and buildId is synthetic; never use this file as evidence.",
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "7b6ef85abaaef50de5c8d277629b07a39c9c3065",
-  "buildId": "7b6ef85abaaef50de5c8d277629b07a39c9c3065.000000000000",
+  "sourceSha": "bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3",
+  "buildId": "bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3.000000000000",
   "documents": [
     {
       "id": "page:index",

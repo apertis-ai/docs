@@ -1,6 +1,6 @@
 ## 1. Baseline evidence
 
-- [x] 1.1 Revalidate the base (`7b6ef85`), open PRs, issues #4–#14 and repository specs; record discrepancies with the planning snapshot.
+- [x] 1.1 Revalidate the base (`bb057a7`), open PRs, issues #4–#14 and repository specs; record discrepancies with the planning snapshot.
 - [x] 1.2 Build the legacy site in an isolated worktree and run the activation guard.
 - [x] 1.3 Snapshot live routes, redirects, canonicals and anchors; compare with the local build.
 - [x] 1.4 Record Pages deployment identity, build settings and secret names, and the legacy retrieval identity, read-only.

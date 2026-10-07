@@ -35,7 +35,7 @@
       { "suite": "m4", "match": ["Cmd/Ctrl\\+K opens search with focus in the input", "Ask Docs keyboard", "mobile 390 px", "ArrowDown/ArrowUp move the selection"] } ] },
     { "id": "ask-docs-panel-browser", "title": "Search and Ask Docs panel in the browser (stubbed /api/ask and Turnstile; one real local handler case)", "class": "contract", "steps": [{ "suite": "m4" }] },
     { "id": "assistant-compat-old-client-new-server", "title": "Legacy client and legacy wire fixtures against the new server", "class": "contract", "steps": [{ "suite": "assistantCompat" }, { "suite": "assistantContract" }] },
-    { "id": "assistant-compat-new-client-old-server", "title": "New wire client against the deployed legacy handler (7b6ef85) and the wire fixture", "class": "contract", "steps": [{ "suite": "newClientOldServer" }, { "suite": "wire" }] },
+    { "id": "assistant-compat-new-client-old-server", "title": "New wire client against the deployed legacy handler (bb057a7) and the wire fixture", "class": "contract", "steps": [{ "suite": "newClientOldServer" }, { "suite": "wire" }] },
     { "id": "failure-search-index-unavailable", "title": "Search index unavailable or failing", "class": "local-build", "steps": [
       { "suite": "m4", "match": ["a failing result load \\(fragment request aborted\\) shows a visible error", "an index chunk failure ends in a terminal state"] } ] },
     { "id": "failure-turnstile-rejected-or-expired", "title": "Turnstile rejected, expired, not loading or never answering", "class": "contract", "steps": [

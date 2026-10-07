@@ -173,7 +173,7 @@ fixtures.push(
 );
 
 const digest = (x) => crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
-const inventory = { baseSha: '7b6ef85abaaef50de5c8d277629b07a39c9c3065', site: SITE, liveSnapshotSha256: digest([...live.values()]), routes: rows };
+const inventory = { baseSha: 'bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3', site: SITE, liveSnapshotSha256: digest([...live.values()]), routes: rows };
 fs.writeFileSync(new URL('route-inventory.json', OUT), JSON.stringify(inventory, null, 2) + '\n');
 // PoC coverage limits: internal link targets on PoC pages that are outside the PoC set.
 const pocCoverageLimits = [...new Set(rows.filter((r) => r.poc).flatMap((r) => r.live.links)

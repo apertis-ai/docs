@@ -2,7 +2,7 @@
 // one-sentence description. Build-time only; works on the Markdown renderer's HTML string.
 //
 // Description rule (openspec docs-shell-interfaces "Reading layout and page header", lead review of
-// 65cc9b1):
+// 80982f2):
 // - front-matter `description` when present (the body is untouched);
 // - else the first sentence of the body's OPENING block, only when that block is a prose paragraph.
 //   The sentence MOVES into the header, so the body does not repeat it; the rest of the paragraph stays
