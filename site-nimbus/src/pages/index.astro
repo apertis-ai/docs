@@ -31,7 +31,7 @@ const doc = documentAt('/');
 const hasArticles = manifest.documents.some(isNativeArticle);
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
 // Monochrome provider marks (currentColor), their <title> dropped: the name beside each mark labels it.
-// SpaceXAI's mark is stima-api's (web/next/public/images/providers/v1/spacexai.svg).
+// SpaceXAI's mark is the one apertis.ai uses.
 const mark = (svg: string) => svg.replace(/<title>[\s\S]*?<\/title>/, '');
 const providers = [
   ['OpenAI', openai], ['Anthropic', anthropic], ['Google', google], ['SpaceXAI', spacexai],

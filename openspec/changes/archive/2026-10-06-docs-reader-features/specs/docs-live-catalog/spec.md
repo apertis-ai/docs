@@ -8,7 +8,7 @@
 - the context length;
 - the prices, with the units and charge type that apertis.ai's catalog list shows for that model.
 
-apertis.ai excludes deprecated models from its catalog, so `/models/` excludes them too and shows no deprecation label (packet E finding, stima-api `web/next/lib/models/catalog.ts:490`).
+apertis.ai excludes deprecated models from its catalog, so `/models/` excludes them too and shows no deprecation label (packet E finding, from the apertis.ai catalog source).
 
 Readers can filter by text, provider and category. Without JavaScript, the full table is shown.
 

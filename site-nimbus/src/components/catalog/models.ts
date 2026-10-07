@@ -1,6 +1,6 @@
 // The /models/ page's data (openspec docs-live-catalog "Model catalog page"): every page of the public model
 // catalog, filtered exactly as apertis.ai filters it before rendering, and priced as apertis.ai prices it.
-// The rules are stima-api's, mirrored here (web/next/lib/models on origin/main):
+// The rules are apertis.ai's catalog rules, mirrored here:
 //   - catalog.ts validateCatalogPage (511-584): a page is used only if it is complete and consistent;
 //   - catalog.ts normalizeApiModel (293-306) and normalizeApiModelsResponse (479-497): a row without an id,
 //     disabled, deprecated, badged "unavailable" or listed in hidden_model_ids is never shown;

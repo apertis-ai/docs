@@ -20,7 +20,7 @@ const VIEWS = {
   390: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
 } as const;
 
-// The footer of apertis.ai (operator review 2026-10-03; stima-api web/shared/marketing-chrome/contract.json),
+// The footer of apertis.ai (operator review 2026-10-03; the apertis.ai marketing-chrome contract),
 // column by column as [label, href], with this site's Blog in place of "API Documentation" and the Developers
 // links pointing into this site. apertis.ai and other sites open in a new tab.
 const EXT = ['_blank', 'noopener noreferrer'];
@@ -587,7 +587,7 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await page.click('.page-actions__toggle');
   const items = await page.$$eval('[role=menu] [role=menuitem]', (els: HTMLElement[]) => els.map((e): [string | null | undefined, string | null | undefined] => [e.querySelector('[data-item-title]')?.textContent, e.querySelector('[data-item-desc]')?.textContent]));
   assert.ok(items.length >= 6 && items.every(([t, s]: (string | null | undefined)[]) => t && s), `every menu item has a title and a description: ${JSON.stringify(items)}`);
-  // The AI tools carry their brand marks from lobe icons (static SVG, as stima-api's public pages).
+  // The AI tools carry their brand marks from lobe icons (static SVG, as on apertis.ai's public pages).
   const marks = await page.$$eval('[role=menu] a[data-action]', (as: HTMLAnchorElement[]) => Object.fromEntries(as.map((a) => [a.dataset.action, a.querySelector('.page-actions__icon svg title')?.textContent ?? null])));
   assert.deepEqual([marks.claude, marks.chatgpt, marks.cursor], ['Claude', 'OpenAI', 'Cursor']);
   // A status message floats over the description as an opaque card (canary: it overlapped the text).

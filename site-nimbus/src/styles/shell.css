@@ -5,7 +5,7 @@
 @import './tokens.css';
 
 /* LINE Seed (the Apertis brand face; SIL OFL 1.1, see src/fonts/LINESeed-OFL.txt) for display text only.
-   Only a Regular Latin subset ships (19,968 bytes), the same file stima-api serves: cut with fontTools from
+   Only a Regular Latin subset ships (19,968 bytes), the same file apertis.ai serves: cut with fontTools from
    LINESeedTW_TTF_Rg.ttf to the 136 code points of its Latin subset, keeping every name record: OFL requires each copy to
    carry the copyright notice and the licence, and the font's own name records carry both. Display text
    is set at 400, never faux-bolded. */
