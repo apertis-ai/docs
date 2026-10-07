@@ -2,9 +2,24 @@
   "note": "Content edits made after the cutover. dist.check compares each page with the frozen legacy link sets and heading ids in route-inventory.json; an edit that changes a page's links or removes a heading id is recorded here, against the commit that made it and the decision that allowed it. Every entry must still match the built page.",
   "documents": {
     "default:help/faq": {
-      "commit": "55608c9",
-      "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer)",
-      "links": { "added": ["/getting-started/quick-start"], "removed": ["https://playground.apertis.ai"] }
+      "commit": "fa69371",
+      "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer) at 55608c9; https://github.com/apertis-ai/docs/issues/39 (refund-policy-v2 Refund Policy link, planning revision 3)",
+      "links": { "added": ["/getting-started/quick-start", "https://apertis.ai/refund"], "removed": ["https://playground.apertis.ai"] }
+    },
+    "default:billing/payg": {
+      "commit": "fa69371",
+      "decision": "https://github.com/apertis-ai/docs/issues/39 (refund-policy-v2 Refund Policy link, planning revision 3)",
+      "links": { "added": ["https://apertis.ai/refund"] }
+    },
+    "default:billing/payment-methods": {
+      "commit": "fa69371",
+      "decision": "https://github.com/apertis-ai/docs/issues/39 (refund-policy-v2 Refund Policy link, planning revision 3)",
+      "links": { "added": ["https://apertis.ai/refund"] }
+    },
+    "default:billing/subscription-plans": {
+      "commit": "fa69371",
+      "decision": "https://github.com/apertis-ai/docs/issues/39 (refund-policy-v2 Refund Policy link, planning revision 3)",
+      "links": { "added": ["https://apertis.ai/refund"] }
     },
     "api:index": {
       "commit": "699e595",
