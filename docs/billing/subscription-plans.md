@@ -169,7 +169,7 @@ To cancel your subscription:
 1. Go to **Settings** → **Subscription** tab (or click **My Plan** in the navbar)
 2. Click **Cancel Subscription**
 
-Cancelling stops the next renewal. Your plan, including its quota, stays active until the end of the period you have already paid for, and the Subscription tab shows that date. No further subscription charges are made after it.
+Cancelling stops the next renewal. Your plan, including its quota, stays active until the end of the period you have already paid for, and your subscription settings show that date. No further subscription charges are made after it.
 
 Cancelling is not a refund: payments already made are not refunded because you cancel (see "Can I get a refund?" below). Auto Top-Up is a separate setting. Cancelling your subscription does not turn it off, and turning it off does not cancel your subscription.
 
@@ -295,7 +295,7 @@ Sending a request does not mean it is approved. Approved refunds are paid to the
 
 **Service incidents.** The remedy for a service incident depends on what we verify, applicable law and any written SLA or contract. There is no fixed service-extension rate. Commitments already made for earlier purchases or incidents still apply.
 
-**Which version applies.** This policy applies to purchases made after it is published. For Auto Top-Up charges and automatic subscription renewals, it applies only after at least 30 days' notice. Earlier purchases keep the refund terms that applied when you made them.
+**Which version applies.** This policy applies to a purchase only when it was shown to you and you accepted it before you paid. For Auto Top-Up charges and automatic subscription renewals set up under earlier terms, it applies only after at least 30 days' notice. Otherwise the refund terms that applied when you made the purchase still apply, and unclear cases are reviewed.
 
 To request a refund, email hi@apertis.ai from your account email address with the transaction date and amount (or the invoice number) and which exception you believe applies. Do not send your full card number or card security code (CVC). We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you.
 

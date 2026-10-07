@@ -201,7 +201,7 @@ For refund requests:
 
 **TODO(refund-policy-v2):** pending the reviewed legal source (Refund Policy link, version, hash and effective date). Do not publish while this line is present.
 
-Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window. The exceptions are listed under Pay-As-You-Go, Refunds, and under Subscription Plans, "Can I get a refund?". We aim to send a first response within 3 business days, counted from when we receive your request. If a refund is approved, how long it takes to reach you depends on your payment method and bank.
+Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window. The exceptions are listed under Pay-As-You-Go, Refunds, and under Subscription Plans, "Can I get a refund?". We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you. If a refund is approved, how long it takes to reach you depends on your payment method and bank.
 
 ## Regional Payment Options
 

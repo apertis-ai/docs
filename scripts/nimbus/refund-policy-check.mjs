@@ -14,6 +14,7 @@ import path from 'node:path';
 
 const root = path.resolve(process.argv[2] ?? path.join(import.meta.dirname, '../..'));
 
+// The required statements are the phase C candidate wording; replace them with the reviewed legal source's text (C4).
 const EXCEPTIONS = [
   'The law that applies to your purchase gives you a right to cancel or to a refund.',
   'A written contract between you and Apertis provides for a refund.',
@@ -34,7 +35,8 @@ const POLICY = [
   'not only on your IP address or card country',
   'There is no fixed service-extension rate.',
   "it applies only after at least 30 days' notice",
-  'Earlier purchases keep the refund terms that applied when you made them.',
+  'This policy applies to a purchase only when it was shown to you and you accepted it before you paid.',
+  'Otherwise the refund terms that applied when you made the purchase still apply, and unclear cases are reviewed.',
   'Do not send your full card number or card security code (CVC)',
   'We aim to send a first response within 3 business days.',
 ];
@@ -54,6 +56,7 @@ const PAGES = [
     ...POLICY,
     'Cancelling stops the next renewal.',
     'stays active until the end of the period you have already paid for',
+    'your subscription settings show that date',
     'Cancelling is not a refund',
     'Cancelling your subscription does not turn it off, and turning it off does not cancel your subscription.',
     '3-7 days to resolve payment issue',
@@ -63,6 +66,7 @@ const PAGES = [
     'Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window.',
     'Do not send your full card number or card security code (CVC)',
     'We aim to send a first response within 3 business days',
+    'this target does not shorten or extend any deadline the law gives you',
   ] },
   { id: 'help/faq', required: [
     'Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window.',
@@ -70,6 +74,7 @@ const PAGES = [
     'regional consumer rights',
     'Do not send your full card number or CVC.',
     'We aim to send a first response within 3 business days.',
+    'this target does not shorten or extend any deadline the law gives you',
   ] },
 ];
 
