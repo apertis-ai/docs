@@ -44,11 +44,9 @@ def main():
         messages=[
             {"role": "user", "content": "Analyze the pros and cons of microservices vs monolithic architecture for a startup."}
         ],
-        extra_body={
-            "thinking": {
-                "type": "enabled",
-                "budget_tokens": 10000  # Token budget for thinking
-            }
+        thinking={
+            "type": "enabled",
+            "budget_tokens": 10000  # Token budget for thinking
         }
     )
 
@@ -296,11 +294,9 @@ if __name__ == "__main__":
 ### Claude Extended Thinking
 
 ```python
-extra_body={
-    "thinking": {
-        "type": "enabled",
-        "budget_tokens": 10000
-    }
+thinking={
+    "type": "enabled",
+    "budget_tokens": 10000
 }
 ```
 

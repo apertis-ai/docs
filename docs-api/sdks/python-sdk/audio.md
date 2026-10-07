@@ -5,23 +5,20 @@ Process audio input and generate audio output, enabling voice-based applications
 ## Prerequisites
 
 ```bash
-pip install openai
+pip install "apertis>=0.4.0"
 ```
 
-:::note
-`apertis` 0.3.0 has no audio methods. The examples on this page use the OpenAI Python SDK pointed at Apertis, which calls the same `/v1/audio/*` endpoints.
-:::
+`client.audio` needs `apertis` 0.4.0 or later.
 
 Get your API Key from [**Apertis**](https://apertis.ai/setting?tab=keys)
 
 ## Speech to Text (Transcription)
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     with open("audio.mp3", "rb") as audio_file:
         response = client.audio.transcriptions.create(
@@ -38,11 +35,10 @@ if __name__ == "__main__":
 ## Transcription with Options
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     with open("audio.mp3", "rb") as audio_file:
         response = client.audio.transcriptions.create(
@@ -56,10 +52,9 @@ def main():
 
     print(f"Text: {response.text}")
 
-    if hasattr(response, 'segments'):
-        print("\nSegments:")
-        for segment in response.segments:
-            print(f"  [{segment.start:.2f}s - {segment.end:.2f}s] {segment.text}")
+    # verbose_json fields such as segments are kept as plain dicts
+    for segment in response.model_dump().get("segments", []):
+        print(f"  [{segment['start']:.2f}s - {segment['end']:.2f}s] {segment['text']}")
 
 if __name__ == "__main__":
     main()
@@ -68,11 +63,10 @@ if __name__ == "__main__":
 ## Translation (Audio to English)
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     # Translate non-English audio to English text
     with open("spanish_audio.mp3", "rb") as audio_file:
@@ -90,11 +84,10 @@ if __name__ == "__main__":
 ## Text to Speech
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     response = client.audio.speech.create(
         model="gpt-4o-mini-tts-2025-12-15",
@@ -102,9 +95,7 @@ def main():
         input="Hello! Welcome to Apertis AI. How can I help you today?"
     )
 
-    # Save to file
-    with open("output.mp3", "wb") as f:
-        f.write(response.content)
+    response.write_to_file("output.mp3")
 
     print("Audio saved to output.mp3")
 
@@ -115,11 +106,10 @@ if __name__ == "__main__":
 ## Voice, Format and Speed
 
 ```python
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     response = client.audio.speech.create(
         model="gpt-4o-mini-tts-2025-12-15",
@@ -129,50 +119,24 @@ def main():
         speed=1.0                # Normal speed (0.25 to 4.0)
     )
 
-    with open("output.opus", "wb") as f:
-        f.write(response.content)
+    response.write_to_file("output.opus")
 
-    print("HD audio saved to output.opus")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Streaming Text to Speech
-
-```python
-import os
-from openai import OpenAI
-
-def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
-
-    response = client.audio.speech.create(
-        model="gpt-4o-mini-tts-2025-12-15",
-        voice="shimmer",
-        input="This audio is being streamed as it's generated.",
-    )
-
-    # Stream to file
-    with open("streamed_output.mp3", "wb") as f:
-        for chunk in response.iter_bytes():
-            f.write(chunk)
-
-    print("Streamed audio saved to streamed_output.mp3")
+    print("Audio saved to output.opus")
 
 if __name__ == "__main__":
     main()
 ```
+
+`speech.create()` returns the whole audio file at once; `response.content` holds the bytes.
 
 ## Audio in Chat (Multimodal)
 
 ```python
 import base64
-import os
-from openai import OpenAI
+from apertis import Apertis
 
 def main():
-    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = Apertis()
 
     # Read and encode audio file
     with open("question.mp3", "rb") as f:
@@ -208,10 +172,9 @@ if __name__ == "__main__":
 ```python
 import asyncio
 from pathlib import Path
-import os
-from openai import AsyncOpenAI
+from apertis import AsyncApertis
 
-async def transcribe_file(client: AsyncOpenAI, file_path: str) -> dict:
+async def transcribe_file(client: AsyncApertis, file_path: str) -> dict:
     """Transcribe a single audio file."""
     with open(file_path, "rb") as f:
         response = await client.audio.transcriptions.create(
@@ -221,7 +184,7 @@ async def transcribe_file(client: AsyncOpenAI, file_path: str) -> dict:
     return {"file": file_path, "text": response.text}
 
 async def main():
-    client = AsyncOpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+    client = AsyncApertis()
 
     # List of audio files to process
     audio_files = list(Path("audio_folder").glob("*.mp3"))
@@ -276,8 +239,11 @@ These voices apply to `gpt-4o-mini-tts-2025-12-15`. `gemini-3.1-flash-tts-previe
 | `model` | `str` | Model identifier (required) |
 | `language` | `str` | ISO language code |
 | `prompt` | `str` | Context hint for transcription |
-| `response_format` | `str` | `"json"`, `"text"`, `"verbose_json"`, `"srt"`, `"vtt"` |
+| `response_format` | `str` | `"json"`, `"text"`, `"verbose_json"`, `"srt"`, `"vtt"`. The text formats return a `str` |
 | `temperature` | `float` | Sampling temperature |
+| `timestamp_granularities` | `list` | `["word"]` and/or `["segment"]`, with `verbose_json` |
+
+`file` accepts a path, an open binary file, `bytes`, or a `(filename, bytes)` tuple. The file name's extension tells the API the audio format.
 
 ### Speech Parameters
 
@@ -288,6 +254,9 @@ These voices apply to `gpt-4o-mini-tts-2025-12-15`. `gemini-3.1-flash-tts-previe
 | `input` | `str` | Text to convert (required) |
 | `response_format` | `str` | `"mp3"`, `"opus"`, `"aac"`, `"flac"` |
 | `speed` | `float` | Speed multiplier (0.25 to 4.0) |
+| `instructions` | `str` | Tone and pacing instructions, for models that accept them |
+
+`speech.create()` returns an object with `.content` (the audio bytes) and `.write_to_file(path)`.
 
 ### Supported Audio Formats
 
