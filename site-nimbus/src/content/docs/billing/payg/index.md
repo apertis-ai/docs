@@ -314,17 +314,36 @@ response = client.chat.completions.create(
 
 ## Refunds
 
+**TODO(refund-policy-v2):** pending the reviewed legal source (Refund Policy link, version, hash and effective date); the regional summary below must match it. Do not publish while this line is present.
+
 ### Refund Policy
 
-- Unused balance is generally non-refundable
-- Contact support for exceptional circumstances
-- Refunds processed to original payment method
+Top-ups are non-refundable once paid, including any balance you have not used. This covers manual top-ups and Auto Top-Up charges, including balance used for PAYG fallback on a subscription. There is no general refund window: a mistaken or unwanted purchase, an unused balance or a change of mind does not by itself qualify for a refund.
+
+We review a refund request when one of these applies:
+
+- The law that applies to your purchase gives you a right to cancel or to a refund.
+- A written contract between you and Apertis provides for a refund.
+- The purchase was made under an earlier version of the Refund Policy that still applies to it.
+- We verify a duplicate charge, a charge for the wrong amount, or a charge you did not authorize.
+- We verify a significant failure of the Apertis service, or of your access to it, that prevented you from using what you paid for.
+- Apertis ended your service for a reason other than your breach of the terms, and prepaid service was left undelivered.
+
+Sending a request does not mean it is approved. Approved refunds are paid to the original payment method, up to the amount you actually paid that has not already been refunded. Promotional, bonus and account credits are not paid out in cash. Adjustments the API makes to your balance for individual requests are not refunds, and this policy does not change them.
+
+**Regional rights.** Consumer law where you live may give you rights that this policy cannot remove, for example the 14-day right of withdrawal for consumers in the EEA and the UK, the corresponding rules in Turkey, Korea's rules (a full refund of an unused purchase within 7 days, and otherwise a refund in proportion to the remaining period), and the rules of Taiwan or another jurisdiction where they give you more. Whether a right applies depends on what you bought, whether you bought it as a consumer or for a business, and the law that governs the purchase, not only on your IP address or card country. These examples are not a complete list. If you are not sure, send your request and we will review it.
+
+**Service incidents.** The remedy for a service incident depends on what we verify, applicable law and any written SLA or contract. There is no fixed service-extension rate. Commitments already made for earlier purchases or incidents still apply.
+
+**Which version applies.** This policy applies to purchases made after it is published. For Auto Top-Up charges and automatic subscription renewals, it applies only after at least 30 days' notice. Earlier purchases keep the refund terms that applied when you made them.
 
 ### Requesting a Refund
 
-1. Contact support at hi@apertis.ai
-2. Provide account email and reason
-3. Allow 5-7 business days for review
+1. Email hi@apertis.ai from your account email address
+2. Include the transaction date and amount (or the invoice number), and which exception you believe applies
+3. Do not send your full card number or card security code (CVC)
+
+We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you. If a refund is approved, how long it takes to reach you depends on your payment method and bank.
 
 ## FAQ
 

@@ -184,14 +184,15 @@ To cancel your subscription:
 
 1. Go to **Settings** → **Subscription** tab (or click **My Plan** in the navbar)
 2. Click **Cancel Subscription**
-3. Choose cancellation timing:
-   - **Immediate**: Ends now (no refund for remaining period)
-   - **End of Period**: Continues until current cycle ends
+
+Cancelling stops the next renewal. Your plan, including its quota, stays active until the end of the period you have already paid for, and the Subscription tab shows that date. No further subscription charges are made after it.
+
+Cancelling is not a refund: payments already made are not refunded because you cancel (see "Can I get a refund?" below). Auto Top-Up is a separate setting. Cancelling your subscription does not turn it off, and turning it off does not cancel your subscription.
 
 <aside class="admonition admonition-note">
 <p class="admonition-title">Note</p>
 
-After cancellation, your subscription API key will stop working at the end of the billing period.
+After cancellation, your subscription API key will stop working at the end of the paid period.
 
 </aside>
 
@@ -294,7 +295,28 @@ Contact support for trial options and promotional offers.
 
 ### Can I get a refund?
 
-Refunds are handled on a case-by-case basis. Contact support for assistance.
+**TODO(refund-policy-v2):** pending the reviewed legal source (Refund Policy link, version, hash and effective date); the regional summary below must match it. Do not publish while this line is present.
+
+Subscription payments are non-refundable once paid, including the first payment, renewals and upgrades, and including quota or time you have not used. There is no general refund window: changing your mind, forgetting to cancel or not using the plan does not by itself qualify for a refund. Usage beyond your quota is paid from your PAYG balance, which follows the Pay-As-You-Go refund policy.
+
+We review a refund request when one of these applies:
+
+- The law that applies to your purchase gives you a right to cancel or to a refund.
+- A written contract between you and Apertis provides for a refund.
+- The purchase was made under an earlier version of the Refund Policy that still applies to it.
+- We verify a duplicate charge, a charge for the wrong amount, or a charge you did not authorize.
+- We verify a significant failure of the Apertis service, or of your access to it, that prevented you from using what you paid for.
+- Apertis ended your service for a reason other than your breach of the terms, and prepaid service was left undelivered.
+
+Sending a request does not mean it is approved. Approved refunds are paid to the original payment method, up to the amount you actually paid that has not already been refunded. Promotional, bonus and account credits are not paid out in cash. Adjustments the API makes to your balance for individual requests are not refunds, and this policy does not change them.
+
+**Regional rights.** Consumer law where you live may give you rights that this policy cannot remove, for example the 14-day right of withdrawal for consumers in the EEA and the UK, the corresponding rules in Turkey, Korea's rules (a full refund of an unused purchase within 7 days, and otherwise a refund in proportion to the remaining period), and the rules of Taiwan or another jurisdiction where they give you more. Whether a right applies depends on what you bought, whether you bought it as a consumer or for a business, and the law that governs the purchase, not only on your IP address or card country. These examples are not a complete list. If you are not sure, send your request and we will review it.
+
+**Service incidents.** The remedy for a service incident depends on what we verify, applicable law and any written SLA or contract. There is no fixed service-extension rate. Commitments already made for earlier purchases or incidents still apply.
+
+**Which version applies.** This policy applies to purchases made after it is published. For Auto Top-Up charges and automatic subscription renewals, it applies only after at least 30 days' notice. Earlier purchases keep the refund terms that applied when you made them.
+
+To request a refund, email hi@apertis.ai from your account email address with the transaction date and amount (or the invoice number) and which exception you believe applies. Do not send your full card number or card security code (CVC). We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you.
 
 ## Related Topics
 

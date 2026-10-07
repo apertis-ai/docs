@@ -105,8 +105,9 @@ for (const page of PAGES) {
   ];
   const texts = carriers.map(([rel, view]) => [rel, norm(view(fs.readFileSync(path.join(root, rel), 'utf8')))]);
   if (llmsFull) {
-    const start = llmsFull.indexOf(`Source: https://docs.apertis.ai/${page.id}`);
-    const end = llmsFull.indexOf('\n---\n', start);
+    // Pages may contain their own `---` rules, so an entry ends at the next Source line, not at a separator.
+    const start = llmsFull.indexOf(`Source: https://docs.apertis.ai/${page.id}\n`);
+    const end = llmsFull.indexOf('\nSource: https://', start + 1);
     texts.push([`site-nimbus/dist/llms-full.txt (${page.id})`, start < 0 ? '' : norm(llmsFull.slice(start, end < 0 ? undefined : end))]);
   }
   for (const [rel, text] of texts) {
