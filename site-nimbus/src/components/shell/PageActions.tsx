@@ -6,7 +6,7 @@
 // Server-rendered hidden: without JavaScript, or before hydration, no dead action is shown.
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ChevronDown, Copy, FileText, Link } from 'lucide-react';
-// Brand marks from lobe icons, as in apertis.ai's public pages: the dependency-free static SVG package,
+// Brand marks from lobe icons, as on apertis.ai's public pages: the dependency-free static SVG package,
 // inlined at build time. Claude in colour, OpenAI and Cursor in mono (currentColor).
 import claudeSvg from '@lobehub/icons-static-svg/icons/claude-color.svg?raw';
 import openaiSvg from '@lobehub/icons-static-svg/icons/openai.svg?raw';
