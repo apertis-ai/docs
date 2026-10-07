@@ -140,3 +140,14 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
 - `site-nimbus/README.md:462`「No `llms*` file is produced at all」已過時：phase 2 現在寫 `llms.txt`／`llms-full.txt`（`converter/integration.ts:139`）。
 - 一致性檢查沒有接進 `pages-build.sh` 或 `nimbus-pr-gates.yml`（兩者都不在 write_set）：TODO 標記本身不會讓正式 build 失敗，
   防止誤發布目前只靠「不 push、不 merge」與人工跑檢查。
+
+## 10. Phase C 驗證紀錄（本機，未 push，非 serving 證據）
+
+- 候選文案：commit `f9e1c68`（四個 canonical source + `scripts/nimbus/refund-policy-check.mjs`；`scripts/` 被根 `.gitignore` 忽略，既有腳本同樣以 `git add -f` 追蹤）。
+- 生成：`npm run m2:regenerate`（site-nimbus），只改四頁的 render source／clean Markdown 與 `manifest.json`、`page-meta.json`；
+  連跑兩次 `git diff` 完全相同（sha256 `0df77e00…ba43`），冪等。四頁 mirrors 在 `dc0363f`；`manifest.json`、`page-meta.json` 依 §7 未提交。
+- 在含上述兩檔的工作樹上，照 `nimbus-pr-gates.yml` candidate job：`check-build-id.mjs` 通過（buildId `f9e1c684….1bc5f368f35e`）、
+  `CI=1 npm run build` 通過且未改任何 tracked file、`typecheck` 0 errors、`npm test` 223 項 157 pass／0 fail／66 skip（需 `PREVIEW_URL` 的瀏覽器測試，CI 該 job 同樣 skip）、
+  `test:dist` 30／30（含 heading id 與連結比對）、`check-developer-activation.mjs` 通過。
+- `refund-policy-check.mjs`：24 個 current 載體（4 頁 × source、render、clean、HTML、served `.md`、`llms-full.txt`），唯一失敗是 24 個 `TODO(refund-policy-v2)` 標記，符合預期。
+  去掉標記的副本 → `ok`；在副本放回「case-by-case」「3 days」、改掉「Balance never expires」、改動 archive 公告 → 各自被抓到；基準 `8684773` 內容 → 抓到 5-7／5-10 工作天、case-by-case、Immediate 取消。
