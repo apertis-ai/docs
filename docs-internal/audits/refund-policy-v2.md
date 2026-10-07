@@ -158,3 +158,18 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
   必要語句是 phase C 候選文字，C4 後要換成 reviewed legal source 的文字；它們不是政策權威。檢查**沒有接進任何 build 或 CI**。
 - 依據的 app 事實（讀自本機 stima-api primary checkout 工作樹，revision 未驗證）：使用者取消只排 `cancel_at_period_end`、不動 Auto Top-Up
   （`controller/subscription.go` `CancelSubscription`）；設定頁顯示結束日（`web/default/src/components/settings/PlanCard.jsx:258` 「Will end on」）。
+
+## 11. C4 對齊（legal source：theQuert/stima-api#3632 @ `ae6a66c3ac6c9ad57a513eb50060581f6fc8e224`，draft PR #3650）
+
+- 來源取得：本 session 對 stima-api 的 `git show` 被權限擋下，改讀 `stima-api-worktrees/claude-3632-refund-legal-surfaces` 工作樹檔案。
+  綁定方式：worktree 的 `HEAD` ref 檔指向 `ae6a66c3a…`；EN source 檔 sha256 `0dcc668c…6350` 與 fixture sha256 `76c746f6…c30d`
+  都等於交接檔記載的值，所以讀到的位元組就是 review 過的內容（EN markdown `6c436066…3bfd` 是交接檔記載值，本 repo 沒有重算 `buildLegalMarkdown`）。
+- 四頁的退款、取消、自動 top-up、中斷、付款、申請用語改為逐字引用候選版 §1–§5、§7、§9、§10（交接檔「適用範圍用語」）。
+  docs 只加了節標題、「(Section n)」對照，以及連到 `https://apertis.ai/refund`（不帶日期）。連結暫以 code 文字呈現，
+  因為變成真正的超連結需要在 `migration/nimbus/content-changes.json` 登記（revision 3 escalation）。
+- 舊 `TODO(refund-policy-v2)` 全部移除，每頁改留一個 `TODO(refund-policy-v2-date)`：公告、通知、生效日未定，頁面不寫日期，也不寫已生效。
+- `refund-policy-check.mjs` 釘住來源 head 與三個 hash；`--legal-fixture <fixture>` 會驗 fixture hash，並確認 docs 引用的每一句都是 fixture 的原文。
+- 驗證（docs commit `091e759`、mirrors `b558ed6`；未提交的 manifest／page-meta diff sha256 `85d7ebe0…ff3d`，`sourceSha` `091e7598…`，連跑兩次相同）：
+  check-build-id、`CI=1` build（未改 tracked file）、typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、
+  developer-activation、`build:legacy` 都通過；refund-policy-check 24 個載體只剩 24 個日期 TODO 失敗。
+  拿掉日期標記的副本回 `ok`；在副本放進帶日期的連結或「14-day right」、改動地區句 → 都被抓到；改動 fixture 一個字 → hash 不符，且被改的那句報「不是 fixture 原文」。
