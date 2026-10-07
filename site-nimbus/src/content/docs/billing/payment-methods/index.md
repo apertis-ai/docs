@@ -131,7 +131,7 @@ Continue using API without interruption
 2. Toggle **Off**
 3. Save changes
 
-Turning off Auto Top-Up stops future automatic charges only. It does not refund earlier top-ups, and it does not cancel a subscription.
+Turning off automatic top-up stops future automatic top-ups only. It is separate from your subscription, and changing one does not change the other.
 
 ## Invoices & Receipts
 
@@ -196,19 +196,30 @@ If you see duplicate charges:
 
 ### Refund Requests
 
-For refund requests:
+**TODO(refund-policy-v2-date):** the announcement, notice and effective dates of this Refund Policy version are not decided yet. Do not publish while this line is present.
 
-1. Email hi@apertis.ai
-2. Include:
-   - Account email
-   - Transaction date
-   - Amount
-   - Which exception you believe applies (for example, a duplicate or unauthorized charge)
-3. Do not send your full card number or card security code (CVC)
+The full Refund Policy is at `https://apertis.ai/refund`. The section numbers below refer to it.
 
-**TODO(refund-policy-v2):** pending the reviewed legal source (Refund Policy link, version, hash and effective date). Do not publish while this line is present.
+Payments for the following are non-refundable, including when the credits or quota they provide have not been used:
 
-Top-ups and subscription payments are non-refundable once paid, including unused balance or quota, and there is no general refund window. The exceptions are listed under Pay-As-You-Go, Refunds, and under Subscription Plans, "Can I get a refund?". We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you. If a refund is approved, how long it takes to reach you depends on your payment method and bank.
+- API credit top-ups, whether purchased manually or by automatic top-up.
+- Subscription payments: initial purchases, renewals and upgrades.
+- On-demand or additional usage charges.
+
+Changing your mind, an accidental or impulse purchase, forgetting to cancel, or general dissatisfaction is not, by itself, a ground for a refund. This policy does not offer a general refund window, such as a number of days after payment within which any purchase may be refunded.
+
+You may still request a refund, and we will review the request, in the cases listed in Section 3 of the Refund Policy and under Pay-As-You-Go, Refunds.
+
+Email hi@apertis.ai with:
+
+1. The email address of your Apertis account.
+2. The transaction: an invoice or receipt number, or the date and amount of the charge.
+3. The reason for the request and any information that supports it.
+
+Never send a full card number or card security code (CVC). We will not ask for them.
+
+- We record the time we receive your request. That time, not the time we finish reviewing it, is the one that counts for any deadline.
+- We aim to send an initial response within 3 business days. This is a response target; it does not shorten or extend any right or deadline you have.
 
 ## Regional Payment Options
 

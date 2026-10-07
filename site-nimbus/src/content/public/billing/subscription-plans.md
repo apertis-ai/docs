@@ -169,9 +169,11 @@ To cancel your subscription:
 1. Go to **Settings** → **Subscription** tab (or click **My Plan** in the navbar)
 2. Click **Cancel Subscription**
 
-Cancelling stops the next renewal. Your plan, including its quota, stays active until the end of the period you have already paid for, and your subscription settings show that date. No further subscription charges are made after it.
-
-Cancelling is not a refund: payments already made are not refunded because you cancel (see "Can I get a refund?" below). Auto Top-Up is a separate setting. Cancelling your subscription does not turn it off, and turning it off does not cancel your subscription.
+- You may cancel a subscription at any time from your account Settings. Cancellation stops the next renewal.
+- Your subscription remains active until the end of the period you have already paid for, as shown in your account. Cancellation does not, by itself, refund any part of that period.
+- Turning off automatic top-up stops future automatic top-ups only. It is separate from your subscription, and changing one does not change the other.
+- If a payment was already in progress when you cancel, we check the status of that original payment; we do not charge it again.
+- We do not require you to contact us or take extra steps to cancel.
 
 > **Note**
 >
@@ -276,28 +278,69 @@ Contact support for trial options and promotional offers.
 
 ### Can I get a refund?
 
-**TODO(refund-policy-v2):** pending the reviewed legal source (Refund Policy link, version, hash and effective date); the regional summary below must match it. Do not publish while this line is present.
+**TODO(refund-policy-v2-date):** the announcement, notice and effective dates of this Refund Policy version are not decided yet. Do not publish while this line is present.
 
-Subscription payments are non-refundable once paid, including the first payment, renewals and upgrades, and including quota or time you have not used. There is no general refund window: changing your mind, forgetting to cancel or not using the plan does not by itself qualify for a refund. Usage beyond your quota is paid from your PAYG balance, which follows the Pay-As-You-Go refund policy.
+The full Refund Policy is at `https://apertis.ai/refund`. The section numbers below refer to it.
 
-We review a refund request when one of these applies:
+**Which transactions this version covers** (Refund Policy, Section 1):
 
-- The law that applies to your purchase gives you a right to cancel or to a refund.
-- A written contract between you and Apertis provides for a refund.
-- The purchase was made under an earlier version of the Refund Policy that still applies to it.
-- We verify a duplicate charge, a charge for the wrong amount, or a charge you did not authorize.
-- We verify a significant failure of the Apertis service, or of your access to it, that prevented you from using what you paid for.
-- Apertis ended your service for a reason other than your breach of the terms, and prepaid service was left undelivered.
+- New purchases made after this version is published and shown to you before you pay.
+- Automatic subscription renewals and automatic credit top-ups charged after you have been notified of this version at least 30 days in advance, or any longer period required by law or by your agreement with us.
+- Purchases made earlier, quotes you accepted, payments already in progress and rights you already obtained continue to be governed by the version that applied to them.
+- Where it is unclear which version applies to a transaction, we review the request instead of applying this version by default.
 
-Sending a request does not mean it is approved. Approved refunds are paid to the original payment method, up to the amount you actually paid that has not already been refunded. Promotional, bonus and account credits are not paid out in cash. Adjustments the API makes to your balance for individual requests are not refunds, and this policy does not change them.
+**General rule** (Section 2). Payments for the following are non-refundable, including when the credits or quota they provide have not been used:
 
-**Regional rights.** Consumer law where you live may give you rights that this policy cannot remove, for example the 14-day right of withdrawal for consumers in the EEA and the UK, the corresponding rules in Turkey, Korea's rules (a full refund of an unused purchase within 7 days, and otherwise a refund in proportion to the remaining period), and the rules of Taiwan or another jurisdiction where they give you more. Whether a right applies depends on what you bought, whether you bought it as a consumer or for a business, and the law that governs the purchase, not only on your IP address or card country. These examples are not a complete list. If you are not sure, send your request and we will review it.
+- API credit top-ups, whether purchased manually or by automatic top-up.
+- Subscription payments: initial purchases, renewals and upgrades.
+- On-demand or additional usage charges.
 
-**Service incidents.** The remedy for a service incident depends on what we verify, applicable law and any written SLA or contract. There is no fixed service-extension rate. Commitments already made for earlier purchases or incidents still apply.
+Changing your mind, an accidental or impulse purchase, forgetting to cancel, or general dissatisfaction is not, by itself, a ground for a refund. This policy does not offer a general refund window, such as a number of days after payment within which any purchase may be refunded.
 
-**Which version applies.** This policy applies to a purchase only when it was shown to you and you accepted it before you paid. For Auto Top-Up charges and automatic subscription renewals set up under earlier terms, it applies only after at least 30 days' notice. Otherwise the refund terms that applied when you made the purchase still apply, and unclear cases are reviewed.
+**When you may still request a refund** (Section 3). You may request a refund, and we will review the request, where:
 
-To request a refund, email hi@apertis.ai from your account email address with the transaction date and amount (or the invoice number) and which exception you believe applies. Do not send your full card number or card security code (CVC). We aim to send a first response within 3 business days. Your request counts from the time we receive it, and this target does not shorten or extend any deadline the law gives you.
+- Applicable law gives you a right to a refund or to withdraw from the purchase (see Section 4).
+- A written agreement with us provides for a refund.
+- An earlier version of this policy applies to the transaction and provides for a refund.
+- You were charged twice for the same purchase, or charged an amount different from the one shown to you, and we verify the error.
+- A payment was made without the account holder's authorization. Usage made with an API key that was leaked or compromised remains the account holder's responsibility under the Terms of Service, but a payment you did not authorize is reviewed under this section.
+- A material failure of Apertis systems prevented you from accessing or using the service you paid for, and we verify it (see Section 7).
+- We end your access to prepaid service that has not yet been delivered, for a reason other than your breach of the Terms of Service.
+
+A request is not an approval. Dissatisfaction with outputs the service produced as described is not a service failure. A service that was not provided, or that was materially different from its description, is not treated as a change of mind.
+
+**Consumer rights under local law** (Section 4):
+
+- Mandatory consumer protection law that cannot be waived by contract prevails over this policy.
+- Depending on the product, whether you buy as a consumer or as a business, the law that applies, and any consent or information the law requires, such rights may include withdrawal or cooling-off periods and refund rules, for example in the European Economic Area, the United Kingdom, Turkey, South Korea and Taiwan.
+- These examples do not state which law applies to a particular transaction. We do not decide this from your IP address or card country alone; where applicability is unclear, we review the request.
+- Where the law requires a full refund, we do not deduct usage or elapsed time. Where the law allows a deduction, we deduct only what the law allows.
+- A request is not refused only because a period mentioned in an example has passed; it is reviewed against the law that applies.
+- Rights that the law gives only to consumers may not apply to purchases made for a business. A written agreement with a business customer takes precedence over this policy, subject to mandatory law.
+
+**Service interruptions** (Section 7):
+
+- This version does not provide a fixed service extension or multiple of an interruption period.
+- For a verified incident, remedies follow applicable law and any written service level or other agreement with you. A material failure may also be a ground for a refund under Section 3.
+- Obligations that arose under an earlier version of this policy, for the transactions or incidents it covers, are kept.
+- Where the law gives you a cash remedy, we do not require you to accept credit instead.
+
+**How approved refunds are paid** (Section 9):
+
+- Approved refunds are returned to the original payment method.
+- A refund is limited to the cash actually paid for the transaction, less any amount already refunded for it. Credits, bonuses and account credit are not converted to cash.
+- When the money reaches you depends on your payment provider. As a guide: credit cards 7–14 business days after the refund is issued; electronic payments such as Apple Pay or Google Pay 7–14 business days; other payment methods up to 30 business days. A refund we have issued has not necessarily reached your account yet.
+
+**How to request a refund** (Section 10). Email hi@apertis.ai with:
+
+1. The email address of your Apertis account.
+2. The transaction: an invoice or receipt number, or the date and amount of the charge.
+3. The reason for the request and any information that supports it.
+
+Never send a full card number or card security code (CVC). We will not ask for them.
+
+- We record the time we receive your request. That time, not the time we finish reviewing it, is the one that counts for any deadline.
+- We aim to send an initial response within 3 business days. This is a response target; it does not shorten or extend any right or deadline you have.
 
 ## Related Topics
 
