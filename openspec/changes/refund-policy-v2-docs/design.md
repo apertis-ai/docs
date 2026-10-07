@@ -22,7 +22,7 @@ The reviewed legal source is theQuert/stima-api `web/next/lib/legal/candidates/r
 
 1. **Quote, do not summarize.** Each policy statement is a verbatim sentence of the legal source; the docs only add headings, section references, the request address line and the link. A summary would be a second interpretation of a money-related promise.
 2. **Link the undated current path.** `https://apertis.ai/refund` serves whatever version is in force; dated paths are archives. The check refuses a dated `/refund/` link.
-3. **Fail closed in the Pages build.** `pages-build.sh` runs the check before installing dependencies, so a branch carrying the date marker cannot produce a deployment. `main` is unaffected because it does not carry the marker.
+3. **Fail closed in the Pages build.** `pages-build.sh` runs the check after the build and its publication checks, over the sources and the freshly built site, and before it copies `site-nimbus/dist` to `build/`, so a branch carrying the date marker cannot produce a deployment. `main` is unaffected because it does not carry the marker.
 4. **Pin the legal source.** The check embeds the quoted sentences and the source hashes. With `--legal-fixture` it verifies the stima-api normalized-text fixture hash and that every quoted sentence is text of that fixture.
 5. **Archive is not current.** The 2026-04-24 changelog notice and the cutover snapshot are historical and are never scanned; the check only asserts the archived notice is unchanged.
 

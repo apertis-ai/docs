@@ -126,9 +126,9 @@ const ARCHIVE = [['site-nimbus/src/components/catalog/changelog.json', 'you may 
 const decode = (s) => s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
   .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 const fromHtml = (html) => decode((html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? html).replace(/<[^>]+>/g, ' '));
-// Markdown emphasis and code spans are not part of a statement; whitespace is normalized everywhere, and
+// Markdown link syntax, emphasis and code spans are not part of a statement; whitespace is normalized everywhere, and
 // a space the HTML view leaves before punctuation (a closed tag) is dropped.
-const norm = (s) => s.replace(/\*\*|`/g, '').replace(/\s+/g, ' ').replace(/ ([.,;:)])/g, '$1');
+const norm = (s) => s.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\*\*|`/g, '').replace(/\s+/g, ' ').replace(/ ([.,;:)])/g, '$1');
 
 const failures = [];
 const checked = [];
@@ -154,17 +154,21 @@ for (const page of PAGES) {
     [`site-nimbus/src/content/public/${page.id}.md`, (s) => s],
     ...(hasDist ? [[`site-nimbus/dist/${page.id}/index.html`, fromHtml], [`site-nimbus/dist/${page.id}.md`, (s) => s]] : []),
   ];
-  const texts = carriers.map(([rel, view]) => [rel, norm(view(fs.readFileSync(path.join(root, rel), 'utf8')))]);
+  const raw = new Map(carriers.map(([rel]) => [rel, fs.readFileSync(path.join(root, rel), 'utf8')]));
+  const texts = carriers.map(([rel, view]) => [rel, norm(view(raw.get(rel)))]);
   if (llmsFull) {
     // Pages may contain their own `---` rules, so an entry ends at the next Source line, not at a separator.
     const start = llmsFull.indexOf(`Source: https://docs.apertis.ai/${page.id}\n`);
     const end = llmsFull.indexOf('\nSource: https://', start + 1);
-    texts.push([`site-nimbus/dist/llms-full.txt (${page.id})`, start < 0 ? '' : norm(llmsFull.slice(start, end < 0 ? undefined : end))]);
+    const entry = start < 0 ? '' : llmsFull.slice(start, end < 0 ? undefined : end);
+    raw.set(`site-nimbus/dist/llms-full.txt (${page.id})`, entry);
+    texts.push([`site-nimbus/dist/llms-full.txt (${page.id})`, norm(entry)]);
   }
   for (const [rel, text] of texts) {
     checked.push(rel);
     if (!text) failures.push(`${rel}: page not found`);
     for (const phrase of page.required) if (!text.includes(norm(phrase))) failures.push(`${rel}: missing "${phrase}"`);
+    if (!raw.get(rel).includes(rel.endsWith('.html') ? 'href="https://apertis.ai/refund"' : '](https://apertis.ai/refund)')) failures.push(`${rel}: Refund Policy is not linked to https://apertis.ai/refund`);
     for (const [re, why] of FORBIDDEN) if (re.test(text)) failures.push(`${rel}: ${why}: "${text.match(re)[0]}"`);
   }
 }

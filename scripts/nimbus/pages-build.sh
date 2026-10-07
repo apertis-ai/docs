@@ -14,5 +14,8 @@ node scripts/nimbus/check-build-id.mjs
 CI=1 npm run build --prefix site-nimbus
 # The publication checks on the built site, including the real Turnstile sitekey (never a test key).
 npm run test:dist --prefix site-nimbus
+# Refund copy (apertis-ai/docs#39): no publication while a refund-policy date marker, a superseded refund promise
+# or a dated Refund Policy link is in a source or the built site.
+node scripts/nimbus/refund-policy-check.mjs
 rm -rf build
 cp -R site-nimbus/dist build
