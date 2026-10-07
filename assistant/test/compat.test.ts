@@ -1,4 +1,4 @@
-// Compatibility between the legacy handler/client (7b6ef85, deployed as 2efbe4c4) and the new service.
+// Compatibility between the legacy handler/client (bb057a7, deployed as 2efbe4c4) and the new service.
 import assert from 'node:assert/strict'
 import { after, afterEach, describe, test } from 'node:test'
 import { handleAsk } from '../service.ts'

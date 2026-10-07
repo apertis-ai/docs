@@ -347,5 +347,5 @@
       "pass": true
     }
   ],
-  "note": "Legacy baseline served by wrangler pages dev from the 7b6ef85 build on the Mac mini; verdicts identical across three independent runs."
+  "note": "Legacy baseline served by wrangler pages dev from the bb057a7 build on the Mac mini; verdicts identical across three independent runs."
 }

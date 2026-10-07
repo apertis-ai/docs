@@ -1,5 +1,5 @@
 {
-  "base": "wrangler pages dev ./build (legacy build of 7b6ef85, measuring machine)",
+  "base": "wrangler pages dev ./build (legacy build of bb057a7, measuring machine)",
   "runs": 5,
   "measuredAt": "2026-09-28T18:07:31.267Z",
   "results": {

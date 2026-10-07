@@ -16,7 +16,7 @@ The wire contract is `migration/nimbus/fixtures/ask-wire.json`. The binding spec
 ## Test
 
 Run this from the repository root, after `npm ci`. It needs Node 25 or later, which runs `.ts` by type
-stripping. It also needs `git`, because the legacy sources are read from commit `7b6ef85`.
+stripping. It also needs `git`, because the legacy sources are read from commit `bb057a7`.
 
 ```sh
 node --test --test-timeout=10000 'assistant/test/*.test.ts'
@@ -29,7 +29,7 @@ The tests use no network. `harness.ts` replaces Turnstile, Jina, Supabase and Ap
 
 `harness.ts` provides everything needed to exercise the deployed server without it:
 
-- `loadLegacyHandler()` loads the deployed server (`functions/api/ask.ts` at `7b6ef85`, deployment `2efbe4c4`).
+- `loadLegacyHandler()` loads the deployed server (`functions/api/ask.ts` at `bb057a7`, deployment `2efbe4c4`).
 - `loadLegacyClient()` loads the deployed client's real `handleSubmit` from `AskAITab.tsx`.
 - `providers(script)` returns the doubles.
 
@@ -69,7 +69,7 @@ The source is chosen only from server environment configuration. `createRetrieva
 receives the request, so no body field, header, cookie or query parameter can choose the source.
 `test/retrieval.test.ts` checks this.
 
-- **`legacy`** calls the existing three-argument `search_docs(query_embedding, match_count 5, similarity_threshold 0.3)` through `@supabase/supabase-js`, exactly as `7b6ef85` does.
+- **`legacy`** calls the existing three-argument `search_docs(query_embedding, match_count 5, similarity_threshold 0.3)` through `@supabase/supabase-js`, exactly as `bb057a7` does.
   - `SUPABASE_URL` decides which project is read.
   - An isolated preview or staging environment must point `SUPABASE_URL` at isolated data.
 - **#11 seam:** `retrieval.ts` has a marked `switch` case where a generation-aware adapter plugs in.

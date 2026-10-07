@@ -63,7 +63,7 @@ export function checkWorkflows(ROOT, { gitRoot = ROOT, yamlFrom = ROOT } = {}) {
       }
     }
   }
-  const legacyIndexing = spawnSync('git', ['diff', '--quiet', '7b6ef85', '--', '.github/workflows/index-docs.yml'], { cwd: gitRoot }).status;
-  if (legacyIndexing !== 0) failures.push('.github/workflows/index-docs.yml differs from 7b6ef85');
+  const legacyIndexing = spawnSync('git', ['diff', '--quiet', 'bb057a7', '--', '.github/workflows/index-docs.yml'], { cwd: gitRoot }).status;
+  if (legacyIndexing !== 0) failures.push('.github/workflows/index-docs.yml differs from bb057a7');
   return { failures, files };
 }

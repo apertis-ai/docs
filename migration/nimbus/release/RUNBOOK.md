@@ -10,9 +10,22 @@ approval.
 | | Value | Source |
 |---|---|---|
 | Production Pages project | `docs` (`docs.apertis.ai`, `docs.stima.tech`, `docs-2r1.pages.dev`), production branch `main`, build `npm run build` → `build/` | `legacy-rollback.json` |
-| Rollback point | deployment `35a51747-4774-462f-bbaf-4b7882660113` (`d5df26a`, the `993279f` tree, `main.0b5ee150.js`) | `legacy-rollback.json` `currentProductionDeployment` |
+| Rollback point | deployment `35a51747-4774-462f-bbaf-4b7882660113` (`0c2cc74`, the `41ff8b6` tree, `main.0b5ee150.js`) | `legacy-rollback.json` `currentProductionDeployment` |
 | Candidate | the head of `claude/nimbus-release`, merged as one PR; its buildId is `site-nimbus/src/manifest/manifest.json` | PR to `main` |
 | Retrieval | legacy tables `documents` and `document_chunks` through `search_docs`. The release does not change them. | `legacy-rollback.json` `retrieval` |
+
+**Commit IDs after the history rewrite (2026-10-07).** Every commit was rewritten on 2026-10-07 to remove internal references from commit messages and old files. The trees on `main` did not change. This repository now uses the new IDs everywhere. Cloudflare Pages deployment records and older GitHub threads still show the old ones:
+
+| Old | New | Used as |
+|---|---|---|
+| `7b6ef85` | `bb057a7` | legacy base, `nimbus-legacy-baseline` |
+| `d5df26a` | `0c2cc74` | rollback deployment source |
+| `993279f` | `41ff8b6` | rollback deployment tree |
+| `a5c79f4` | `b19bec1` |  |
+| `d9aefa3` | `e9d78eb` |  |
+| `7419b01` | `6470939` | manifest `sourceSha` |
+| `702d134` | `220380b` | #19 merge |
+| `3aca276` | `fb1ba31` | #21 merge |
 
 **What changes in production.**
 - The release changes only:
@@ -111,7 +124,7 @@ Nothing is deleted during a rollback: deployments, artifacts, tables and variabl
 
 ## Release attempt 1 (2026-10-04)
 
-- #19 was merged as `702d134` at 09:27 UTC. The site smoke checks passed in full.
+- #19 was merged as `220380b` at 09:27 UTC. The site smoke checks passed in full.
 - Ask Docs failed: Apertis returned 401 because the production key was its encrypted stored form, and two transient Jina timeouts also occurred.
 - The release was rolled back on Pages to `ae522f1d` at 09:39; all domains switched within 16 s.
 - #20 then reverted the merge.
@@ -121,8 +134,8 @@ Nothing is deleted during a rollback: deployments, artifacts, tables and variabl
 
 ## Release attempt 2 (2026-10-05)
 
-- #21 was merged as `3aca276` at 00:11 UTC, after legacy Ask Docs answered 4/4 with a real Turnstile token and the preflight passed.
-- At 00:12:22 `docs.apertis.ai` and `docs.stima.tech` served buildId `d9aefa377ff99dbea3c094504ffbed9f99305a9f.84b55a0d387f` (deployment `f49f2c4e`). The after-release preflight passed.
+- #21 was merged as `fb1ba31` at 00:11 UTC, after legacy Ask Docs answered 4/4 with a real Turnstile token and the preflight passed.
+- At 00:12:22 `docs.apertis.ai` and `docs.stima.tech` served buildId `e9d78ebf3fcbbb179190b78f7e1c67a9d3df4673.84b55a0d387f` (deployment `f49f2c4e`). The after-release preflight passed.
 - Smoke results:
   - route fixtures passed 228/228;
   - search scored 24/24 with keyboard focus;
@@ -146,7 +159,7 @@ Nothing is deleted during a rollback: deployments, artifacts, tables and variabl
 
 | Step | Served | Ask Docs |
 |---|---|---|
-| R1 legacy: the pinned legacy build with the 7b6ef85 Functions; legacy tables rebuilt by `isolated-legacy-retrieval.sql` and filled by the 7b6ef85 indexer | legacy bundle | 200, cites `/authentication/api-keys` and `/getting-started/quick-start` |
+| R1 legacy: the pinned legacy build with the bb057a7 Functions; legacy tables rebuilt by `isolated-legacy-retrieval.sql` and filled by the bb057a7 indexer | legacy bundle | 200, cites `/authentication/api-keys` and `/getting-started/quick-start` |
 | R2 candidate: the release build, `ASK_RETRIEVAL_SOURCE=legacy` | candidate buildId | 200, same citations plus `/help/faq` |
 | R3 Pages rollback to R1 (API) | legacy bundle after 6 s | 200 |
 | R4 Pages rollback to R2 (roll forward) | candidate buildId after 10 s | 200 |
@@ -155,7 +168,7 @@ Nothing is deleted during a rollback: deployments, artifacts, tables and variabl
 
 **Gaps in the rehearsal.**
 - The isolated legacy tables are a reconstruction, not a copy of production.
-- In the isolated run of the 7b6ef85 indexer, one of the 70 files failed on a transient Jina 503.
+- In the isolated run of the bb057a7 indexer, one of the 70 files failed on a transient Jina 503.
 - The production build path was proven separately. The `docs` project built the release branch as a preview, and that preview served the candidate buildId:
   - route fixtures passed 227 of 228. The one miss is the managed `robots.txt` that every `*.pages.dev` host serves, legacy included; `docs.apertis.ai/robots.txt` answers 404.
   - search scored 24/24.

@@ -31,7 +31,7 @@ needs an approved GitHub Environment.
 | `migration/nimbus/acceptance/new-client-old-server.test.ts` | The candidate wire client against the deployed legacy handler. |
 
 `index-docs.yml`, the legacy indexing workflow, is unchanged. The `workflow-policy` entry fails if it
-differs from `7b6ef85`.
+differs from `bb057a7`.
 
 ## PR gates (`nimbus-pr-gates.yml`)
 

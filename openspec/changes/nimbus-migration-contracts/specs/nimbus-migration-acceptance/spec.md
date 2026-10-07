@@ -42,7 +42,7 @@ Acceptance reports SHALL label each result as `contract` (fixtures, stubs, mocke
 - **THEN** #12 records the assistant gate as BLOCKED and cannot record GO
 
 ### Requirement: Rollback identities stay available
-The legacy Pages deployment `2efbe4c4-db00-4b7f-b4cd-34df32047ff2` (source `7b6ef85`) and the legacy retrieval identity in `migration/nimbus/legacy-rollback.json` (tables `documents`/`document_chunks`, both `search_docs` overloads, row counts and ordered digests) SHALL remain restorable until a release explicitly retires them. Retrieval changes SHALL be additive in the shared `ask-docs` Supabase project and SHALL NOT touch unrelated tables.
+The legacy Pages deployment `2efbe4c4-db00-4b7f-b4cd-34df32047ff2` (source `bb057a7`) and the legacy retrieval identity in `migration/nimbus/legacy-rollback.json` (tables `documents`/`document_chunks`, both `search_docs` overloads, row counts and ordered digests) SHALL remain restorable until a release explicitly retires them. Retrieval changes SHALL be additive in the shared `ask-docs` Supabase project and SHALL NOT touch unrelated tables.
 
 #### Scenario: Rehearsed rollback
 - **WHEN** #14 rehearses a rollback
@@ -62,7 +62,7 @@ Rollback is the Pages rollback to the recorded production deployment (`legacy-ro
 - **THEN** the preflight exits non-zero and names each failure, and nothing is changed
 
 #### Scenario: Rehearsed release and rollback
-- **WHEN** the isolated rehearsal deploys the legacy artifact with its 7b6ef85 Functions, then the candidate with `ASK_RETRIEVAL_SOURCE=legacy`, then rolls back and forward through the Pages API
+- **WHEN** the isolated rehearsal deploys the legacy artifact with its bb057a7 Functions, then the candidate with `ASK_RETRIEVAL_SOURCE=legacy`, then rolls back and forward through the Pages API
 - **THEN** each state serves its own identity and answers Ask Docs with citations, and a new-client request to the legacy handler is answered
 
 ### Requirement: Authority boundaries

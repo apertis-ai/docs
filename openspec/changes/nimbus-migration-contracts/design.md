@@ -6,10 +6,10 @@ Issue #5 (parent #4) freezes the migration boundary before implementation. Every
 
 | Fact | Value | Certainty |
 |---|---|---|
-| Source base | `origin/main` = `7b6ef85abaaef50de5c8d277629b07a39c9c3065`, unchanged since the #4 snapshot; no open PRs | verified (`git fetch`, `gh pr list`) |
+| Source base | `origin/main` = `bb057a70f4ac50b18f7b5b8ae926a6e9f98430e3`, unchanged since the #4 snapshot; no open PRs | verified (`git fetch`, `gh pr list`) |
 | Legacy build | `npm ci && npm run build` on Node 25.6.1 succeeded; 98 HTML files (97 unique routes, `/404` emitted twice) | verified locally |
 | Activation guard | `npm run test:developer-activation` passed across 97 source files | verified locally |
-| Serving deployment | Pages project `docs`, canonical and latest deployment `2efbe4c4-db00-4b7f-b4cd-34df32047ff2`, source `7b6ef85`, Production | verified (Pages API + bundle hash `main.9321920d.js` on all three domains) |
+| Serving deployment | Pages project `docs`, canonical and latest deployment `2efbe4c4-db00-4b7f-b4cd-34df32047ff2`, source `bb057a7`, Production | verified (Pages API + bundle hash `main.9321920d.js` on all three domains) |
 | Live content | 97 live HTML routes equal the local build by status, redirect, canonical and heading ids; article text equal except Cloudflare Email Obfuscation on 8 pages | verified (`route-fixtures.mjs snapshot` on both) |
 | Build settings | command `npm run build`, output `build`, root `/`, compatibility date `2026-01-05`, no bindings; preview deployments for every branch | verified (read-only API) |
 | Secrets | Production: seven secrets named in `legacy-rollback.json`; Preview: none | verified (names only) |

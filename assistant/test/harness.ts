@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-export const LEGACY_REF = '7b6ef85'
+export const LEGACY_REF = 'bb057a7'
 export const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url))
 
 // Lower-case so it also fits in hostnames. Every fake secret and every upstream error body carries it,

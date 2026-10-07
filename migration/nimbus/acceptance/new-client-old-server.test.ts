@@ -1,9 +1,9 @@
 // ask-docs-api "Independent client and server deployment", scenario "New client, old server" (issue #12):
 // the candidate wire client (site-nimbus/src/components/assistant/wire.ts) reads the answers of the
-// deployed legacy handler (functions/api/ask.ts at 7b6ef85, loaded by assistant/test/harness.ts) with
+// deployed legacy handler (functions/api/ask.ts at bb057a7, loaded by assistant/test/harness.ts) with
 // the provider doubles. Contract evidence only; no network.
 //
-// Excluded: an upstream error in the middle of the stream. The legacy relay (7b6ef85
+// Excluded: an upstream error in the middle of the stream. The legacy relay (bb057a7
 // functions/api/ask.ts, about lines 261-295) reads the upstream in an async IIFE with try/finally and
 // no catch, so a mid-stream upstream error becomes an unhandled rejection in the legacy handler. That
 // is a legacy baseline defect, not a client behaviour this test can assert; the candidate server

@@ -493,9 +493,9 @@ docs-routing-publication "Native articles"). None is committed yet, so nothing b
 
 ### Identity at the end of #13
 
-- **Source freeze SHA** (`sourceSha`): `d9aefa377ff99dbea3c094504ffbed9f99305a9f`. This is the last
+- **Source freeze SHA** (`sourceSha`): `e9d78ebf3fcbbb179190b78f7e1c67a9d3df4673`. This is the last
   commit touching the legacy roots.
-- **buildId:** `d9aefa377ff99dbea3c094504ffbed9f99305a9f.b9b8e352554e`.
+- **buildId:** `e9d78ebf3fcbbb179190b78f7e1c67a9d3df4673.b9b8e352554e`.
 - **Documents:** 79 manifest documents: 78 docs with Markdown artifacts, and `page:index`.
 
 ### Full-corpus gates
@@ -573,7 +573,7 @@ docs-routing-publication "Native articles"). None is committed yet, so nothing b
 - **Chrome in the index:** Pagefind already skips `<nav>`. `test:dist` checks that no other link
   label outside `<article>` reaches the index. The check is skipped until #8's shell exists.
 - **Measured result** (`measure.mjs search --scope poc` on the PoC corpus, candidate served locally,
-  merged with the integration branch at 337f6ae):
+  merged with the integration branch at a991f26):
   - Before the tokenization change: 13/14. `chat/completions` returned only
     `/getting-started/quick-start`.
   - After it: 14/14, with `keyboardFocus: true`. `chat/completions` ranks the target second, after
@@ -583,7 +583,7 @@ docs-routing-publication "Native articles"). None is committed yet, so nothing b
   - #12 owns the gate.
 - **Measured result on the full corpus** (78 documents, `measure.mjs search`, all 24 queries,
   candidate served locally):
-  - Before the ranking rules (2c3088e): 20/24, PoC subset 11/14. Failing: `chat/completions`,
+  - Before the ranking rules (519d3b9): 20/24, PoC subset 11/14. Failing: `chat/completions`,
     `/v1/messages`, `base url`, `pip install apertis`.
   - After them: 24/24, and `--scope poc` 14/14, with `keyboardFocus: true`.
   - `/v1/messages` and `pip install apertis` now rank the target first. `chat/completions`,

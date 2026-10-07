@@ -52,7 +52,7 @@ export function createRetrieval(env: RetrievalEnv, fetchImpl?: typeof fetch): Re
 }
 
 // Legacy tables through the existing three-argument search_docs RPC, called exactly as the legacy
-// handler (7b6ef85) does. SUPABASE_URL decides which project is read, so an isolated environment must
+// handler (bb057a7) does. SUPABASE_URL decides which project is read, so an isolated environment must
 // point it at isolated data.
 function legacySearchDocs(env: RetrievalEnv, fetchImpl?: typeof fetch): Retrieval {
   if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) {
