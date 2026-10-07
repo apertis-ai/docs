@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e348d806151aceaf45a0da381a5faadc3f2f48ab",
-  "buildId": "e348d806151aceaf45a0da381a5faadc3f2f48ab.c57c8d2669cc",
+  "sourceSha": "7419b01976d7fd5824103adc4c3f92d6fc719278",
+  "buildId": "7419b01976d7fd5824103adc4c3f92d6fc719278.c57c8d2669cc",
   "documents": [
     {
       "id": "page:index",
@@ -303,9 +303,9 @@
       },
       "markdown": {
         "path": "/api/sdks/python-sdk/audio.md",
-        "sha256": "a06a588286ac1640fe2c8d4534a455d67eed2a245ee558ad7fba43ede8e4a466"
+        "sha256": "5994da7b8bfaa1c460be9e7b1b5894682d64e40c23c219d4784d7bda446bcae2"
       },
-      "contentSha256": "a06a588286ac1640fe2c8d4534a455d67eed2a245ee558ad7fba43ede8e4a466"
+      "contentSha256": "5994da7b8bfaa1c460be9e7b1b5894682d64e40c23c219d4784d7bda446bcae2"
     },
     {
       "id": "api:sdks/python-sdk/chat-completions",

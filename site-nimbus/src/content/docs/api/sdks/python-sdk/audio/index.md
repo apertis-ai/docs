@@ -131,7 +131,29 @@ if __name__ == "__main__":
     main()
 ```
 
-`speech.create()` returns the whole audio file at once; `response.content` holds the bytes.
+## Streaming Text to Speech
+
+`client.audio.speech.create()` returns the whole audio file at once. To write the audio while it is still being generated, use the OpenAI SDK's streaming response pointed at Apertis:
+
+```python
+import os
+from openai import OpenAI
+
+def main():
+    client = OpenAI(api_key=os.environ["APERTIS_API_KEY"], base_url="https://api.apertis.ai/v1")
+
+    with client.audio.speech.with_streaming_response.create(
+        model="gpt-4o-mini-tts-2025-12-15",
+        voice="shimmer",
+        input="This audio is being streamed as it's generated.",
+    ) as response:
+        response.stream_to_file("streamed_output.mp3")
+
+    print("Streamed audio saved to streamed_output.mp3")
+
+if __name__ == "__main__":
+    main()
+```
 
 ## Audio in Chat (Multimodal)
 
