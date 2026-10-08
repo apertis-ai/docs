@@ -11,7 +11,8 @@
 //
 // Usage: node scripts/nimbus/refund-policy-check.mjs [repo root] [--legal-fixture <refund-policy-v2.lines.json>]
 // With --legal-fixture (theQuert/stima-api web/next/__tests__/fixtures/refund-policy-v2.lines.json) it also proves the
-// fixture is the pinned one and that every LEGAL statement is text of it. Exit 1 on any failure.
+// fixture is the pinned one, that the publication fixture beside it names the same version, path and EN hash, and
+// that every LEGAL statement is text of the lines fixture. Exit 1 on any failure.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,14 +22,18 @@ const fixtureAt = args.indexOf('--legal-fixture');
 const fixturePath = fixtureAt >= 0 ? args.splice(fixtureAt, 2)[1] : null;
 const root = path.resolve(args[0] ?? path.join(import.meta.dirname, '../..'));
 
-// The reviewed legal source (gate C4): theQuert/stima-api branch claude/3632-refund-legal-surfaces at
-// ae6a66c3ac6c9ad57a513eb50060581f6fc8e224, openspec/changes/refund-policy-v2-surfaces/legal-source-handoff.md.
+// The promoted legal source (gate C5): theQuert/stima-api branch claude/3632-refund-legal-surfaces at
+// 95ae6e470aa813cfc740f1a46d6600696527b1b9, web/next/lib/legal/content/refund/2026-10-12.en.ts, recorded in
+// openspec/changes/refund-policy-v2-surfaces/legal-source-handoff.md. The text quoted below is unchanged from the
+// reviewed candidate (ae6a66c3a); promotion added the version date.
 const LEGAL_SOURCE = {
   id: 'refund-policy-v2',
-  head: 'ae6a66c3ac6c9ad57a513eb50060581f6fc8e224',
-  enMarkdownSha256: '6c436066924c35e4deea784058fb2f2bf3290f9032187dc62f552ab599113bfd',
-  enSourceSha256: '0dcc668cac2d50cb76efab3da95c8f716322f119c381e283388beb80d1416350',
-  fixtureSha256: '76c746f6e9b2acc3fae96757aa872d3ea226d3241bbc4183b38b7e835ae8c30d',
+  head: '95ae6e470aa813cfc740f1a46d6600696527b1b9',
+  effective: '2026-10-12',
+  documentPath: '/refund',
+  enMarkdownSha256: '2991027e538e989fba00db3de53032103aea70b5dfd2294fc5002aa4b7f725a8',
+  enSourceSha256: 'b52ea4b1e72b67998528b9befdd12681a7513265ad1994a929ce168fa5633a30',
+  fixtureSha256: '0e0e9d3e473a5684fb4b9a984cb328c867709bb7b9139187c68b09be17d44673',
 };
 
 // Verbatim text of the legal source, by section. Each is a substring of one fixture line.
@@ -98,6 +103,7 @@ const LINK = 'The full Refund Policy is at https://apertis.ai/refund.';
 // until a separate notice, so no date is given for them. Founder confirmation happens in review.
 const APPLIES = 'This version of the Refund Policy applies to new manual purchases made from October 12, 2026, when it is shown to you before you pay. Automatic subscription renewals and automatic credit top-ups remain under the earlier version; they are covered by this version only after a separate email notice at least 30 days in advance.';
 const EMAIL = 'Email hi@apertis.ai with:';
+if (!APPLIES.includes(new Date(`${LEGAL_SOURCE.effective}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }))) throw new Error('APPLIES does not state the legal source version date');
 const FULL = [APPLIES, LINK, ...COVERS, ...GENERAL, ...EXCEPTIONS, ...REGIONAL, ...INTERRUPTIONS, ...PAID, EMAIL, ...REQUEST];
 const SHORT = [APPLIES, LINK, ...COVERS, ...GENERAL, 'in the cases listed in Section 3 of the Refund Policy', EMAIL, ...REQUEST];
 
@@ -144,7 +150,14 @@ if (fixturePath) {
   const sha = crypto.createHash('sha256').update(bytes).digest('hex');
   if (sha !== LEGAL_SOURCE.fixtureSha256) failures.push(`${fixturePath}: sha256 ${sha} is not the pinned ${LEGAL_SOURCE.fixtureSha256}`);
   const fixture = JSON.parse(bytes.toString('utf8'));
-  if (fixture.candidate !== LEGAL_SOURCE.id) failures.push(`${fixturePath}: candidate ${fixture.candidate}`);
+  if (fixture.effective !== LEGAL_SOURCE.effective) failures.push(`${fixturePath}: effective ${fixture.effective} is not ${LEGAL_SOURCE.effective}`);
+  // The publication fixture sits next to the lines fixture; the backend reads its content hash.
+  const pubPath = path.join(path.dirname(fixturePath), 'refund-policy-v2.publication.json');
+  const pub = fs.existsSync(pubPath) ? JSON.parse(fs.readFileSync(pubPath, 'utf8')) : null;
+  if (!pub) failures.push(`${pubPath}: missing`);
+  else if (pub.document_version !== LEGAL_SOURCE.effective || pub.document_path !== LEGAL_SOURCE.documentPath || pub.content_hash !== `sha256:${LEGAL_SOURCE.enMarkdownSha256}`) {
+    failures.push(`${pubPath}: ${pub.document_version} ${pub.document_path} ${pub.content_hash} is not the pinned publication`);
+  }
   const lines = fixture.en.map((l) => l.replace(/^\w+: /, '').replace(/ <[^>]+>/g, ''));
   for (const s of [...LEGAL, EMAIL]) if (!lines.some((l) => l.includes(s))) failures.push(`legal source: "${s}" is not text of the fixture`);
 }
