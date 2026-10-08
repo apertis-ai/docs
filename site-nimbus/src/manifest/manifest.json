@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "9de395d2954aa9d4fcecb6f57a0760983d8acc49",
-  "buildId": "9de395d2954aa9d4fcecb6f57a0760983d8acc49.1bc5f368f35e",
+  "sourceSha": "ee0037e947c02bf979dd5616799203dc068509fa",
+  "buildId": "ee0037e947c02bf979dd5616799203dc068509fa.1bc5f368f35e",
   "documents": [
     {
       "id": "page:index",
@@ -843,9 +843,9 @@
       },
       "markdown": {
         "path": "/billing/payg.md",
-        "sha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+        "sha256": "0e943044b1031684c5abeaf18a9032b87a2ab4f48dab04621cce5b73d94202d3"
       },
-      "contentSha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+      "contentSha256": "0e943044b1031684c5abeaf18a9032b87a2ab4f48dab04621cce5b73d94202d3"
     },
     {
       "id": "default:billing/payment-methods",
@@ -861,9 +861,9 @@
       },
       "markdown": {
         "path": "/billing/payment-methods.md",
-        "sha256": "3d8de97c71d6b06268d16230437efe53f64206facec0b6374652fca9fb975a4a"
+        "sha256": "c686747880c8bae810a298f116792b5f23729c54aeb69217e9a8407c71ede965"
       },
-      "contentSha256": "3d8de97c71d6b06268d16230437efe53f64206facec0b6374652fca9fb975a4a"
+      "contentSha256": "c686747880c8bae810a298f116792b5f23729c54aeb69217e9a8407c71ede965"
     },
     {
       "id": "default:billing/quota-management",
@@ -915,9 +915,9 @@
       },
       "markdown": {
         "path": "/billing/subscription-plans.md",
-        "sha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+        "sha256": "0305ca5c9e509b46412a65c0f82220d3558950766701f281045d0630e36563cd"
       },
-      "contentSha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+      "contentSha256": "0305ca5c9e509b46412a65c0f82220d3558950766701f281045d0630e36563cd"
     },
     {
       "id": "default:getting-started/quick-start",
@@ -969,9 +969,9 @@
       },
       "markdown": {
         "path": "/help/faq.md",
-        "sha256": "7f9192c9aeb86fc56c1fac2590bac1d31e451b95013194644ad3735399db4667"
+        "sha256": "d6117be5045aeba79959436027093150762a60354a69eddfe4f31e0d17e30d0d"
       },
-      "contentSha256": "7f9192c9aeb86fc56c1fac2590bac1d31e451b95013194644ad3735399db4667"
+      "contentSha256": "d6117be5045aeba79959436027093150762a60354a69eddfe4f31e0d17e30d0d"
     },
     {
       "id": "default:help/ideas",
