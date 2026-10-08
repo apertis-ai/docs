@@ -94,9 +94,12 @@ const LEGAL = [...COVERS, ...GENERAL, ...EXCEPTIONS, ...REGIONAL, ...CANCEL, ...
 
 // Docs-only statements: the current-policy link (never a dated path) and the request address.
 const LINK = 'The full Refund Policy is at https://apertis.ai/refund.';
+// Gate C5 (lead, 2026-10-08): the date for new manual purchases; automatic charges stay on the earlier version
+// until a separate notice, so no date is given for them. Founder confirmation happens in review.
+const APPLIES = 'This version of the Refund Policy applies to new manual purchases made from October 12, 2026, when it is shown to you before you pay. Automatic subscription renewals and automatic credit top-ups remain under the earlier version; they are covered by this version only after a separate email notice at least 30 days in advance.';
 const EMAIL = 'Email hi@apertis.ai with:';
-const FULL = [LINK, ...COVERS, ...GENERAL, ...EXCEPTIONS, ...REGIONAL, ...INTERRUPTIONS, ...PAID, EMAIL, ...REQUEST];
-const SHORT = [LINK, ...GENERAL, 'in the cases listed in Section 3 of the Refund Policy', EMAIL, ...REQUEST];
+const FULL = [APPLIES, LINK, ...COVERS, ...GENERAL, ...EXCEPTIONS, ...REGIONAL, ...INTERRUPTIONS, ...PAID, EMAIL, ...REQUEST];
+const SHORT = [APPLIES, LINK, ...COVERS, ...GENERAL, 'in the cases listed in Section 3 of the Refund Policy', EMAIL, ...REQUEST];
 
 const PAGES = [
   { id: 'billing/payg', required: [...FULL,
@@ -118,14 +121,17 @@ const FORBIDDEN = [
   [/\b(3|three)[- ](calendar[- ])?days?\b[^.\n]*refund|refund[^.\n]*\b(3|three)[- ](calendar[- ])?days?\b/i, 'three-day refund window'],
   [/twice the interruption|three times the interruption|\b[23]x\b[^.\n]*(extension|outage)/i, 'fixed outage extension multiplier'],
   [/14-day right of withdrawal|unused purchase within 7 days|We aim to send a first response/, 'phase C candidate wording, superseded by the legal source'],
-  [/apertis\.ai\/(ja\/)?refund\/\d{4}-\d{2}-\d{2}/, 'dated Refund Policy link (link /refund only)'],
 ];
 
 const ARCHIVE = [['site-nimbus/src/components/catalog/changelog.json', 'you may cancel your subscription at any time before 2026-04-24 00:00 UTC']];
 
 const decode = (s) => s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
   .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
-const fromHtml = (html) => decode((html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? html).replace(/<[^>]+>/g, ' '));
+// The page body only: the site Footer links ${site}/refund on every page, so it must not satisfy a link check.
+const articleOf = (html) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
+const fromHtml = (html) => decode(articleOf(html).replace(/<[^>]+>/g, ' '));
+// Checked on the raw carrier (Markdown link targets, HTML hrefs), which the text view drops.
+const DATED_LINK = /(?:apertis\.ai)?\/(?:ja\/)?refund\/\d{4}-\d{2}-\d{2}/;
 // Markdown link syntax, emphasis and code spans are not part of a statement; whitespace is normalized everywhere, and
 // a space the HTML view leaves before punctuation (a closed tag) is dropped.
 const norm = (s) => s.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\*\*|`/g, '').replace(/\s+/g, ' ').replace(/ ([.,;:)])/g, '$1');
@@ -168,7 +174,9 @@ for (const page of PAGES) {
     checked.push(rel);
     if (!text) failures.push(`${rel}: page not found`);
     for (const phrase of page.required) if (!text.includes(norm(phrase))) failures.push(`${rel}: missing "${phrase}"`);
-    if (!raw.get(rel).includes(rel.endsWith('.html') ? 'href="https://apertis.ai/refund"' : '](https://apertis.ai/refund)')) failures.push(`${rel}: Refund Policy is not linked to https://apertis.ai/refund`);
+    const body = rel.endsWith('.html') ? articleOf(raw.get(rel)) : raw.get(rel);
+    if (!body.includes(rel.endsWith('.html') ? 'href="https://apertis.ai/refund"' : '](https://apertis.ai/refund)')) failures.push(`${rel}: Refund Policy is not linked to https://apertis.ai/refund`);
+    if (DATED_LINK.test(body)) failures.push(`${rel}: dated Refund Policy link (link /refund only): "${body.match(DATED_LINK)[0]}"`);
     for (const [re, why] of FORBIDDEN) if (re.test(text)) failures.push(`${rel}: ${why}: "${text.match(re)[0]}"`);
   }
 }

@@ -13,4 +13,5 @@
 - [x] 3.1 Add the refund-policy consistency check, first proving it detects the baseline drift.
 - [x] 3.2 Run the check from the Pages build and prove the build fails with the marker and succeeds without it.
 - [x] 3.3 Regenerate with the existing generator, commit the generated output, and run strict OpenSpec validation, the candidate build, tests and publication checks.
-- [ ] 3.4 Replace the date markers with the C5 dates, then obtain independent review and authorized publication evidence.
+- [x] 3.4 Replace the date markers with the C5 applicability date.
+- [ ] 3.5 Obtain founder review of the dated copy, independent review and authorized publication evidence.

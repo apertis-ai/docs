@@ -49,3 +49,12 @@ The Pages build SHALL fail while any page carries a refund-policy date marker, a
 #### Scenario: Archived notice
 - **WHEN** the check runs
 - **THEN** it does not scan the archived 2026-04-24 changelog notice and fails only if that notice was changed or removed
+
+### Requirement: Stated applicability date
+Each refund carrier SHALL state the decided applicability of this version: new manual purchases from the C5 date, and automatic renewals and automatic top-ups only after a separate email notice at least 30 days in advance, without an announcement date or an effective date for automatic charges.
+
+#### Scenario: Reader checks which version applies
+- **WHEN** a reader opens the refund text on any of the four pages
+- **THEN** the page states that this version applies to new manual purchases made from October 12, 2026, when it is shown before payment
+- **AND** it states that automatic renewals and automatic top-ups remain under the earlier version and are covered only after a separate email notice at least 30 days in advance
+- **AND** it lists the Section 1 applicability statements of the legal source
