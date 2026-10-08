@@ -196,9 +196,16 @@ If you see duplicate charges:
 
 ### Refund Requests
 
-**TODO(refund-policy-v2-date):** the announcement, notice and effective dates of this Refund Policy version are not decided yet. Do not publish while this line is present.
+**When this version applies.** This version of the Refund Policy applies to new manual purchases made from October 12, 2026, when it is shown to you before you pay. Automatic subscription renewals and automatic credit top-ups remain under the earlier version; they are covered by this version only after a separate email notice at least 30 days in advance.
 
 The full Refund Policy is at [https://apertis.ai/refund](https://apertis.ai/refund). The section numbers below refer to it.
+
+**Which transactions this version covers** (Section 1):
+
+- New purchases made after this version is published and shown to you before you pay.
+- Automatic subscription renewals and automatic credit top-ups charged after you have been notified of this version at least 30 days in advance, or any longer period required by law or by your agreement with us.
+- Purchases made earlier, quotes you accepted, payments already in progress and rights you already obtained continue to be governed by the version that applied to them.
+- Where it is unclear which version applies to a transaction, we review the request instead of applying this version by default.
 
 Payments for the following are non-refundable, including when the credits or quota they provide have not been used:
 

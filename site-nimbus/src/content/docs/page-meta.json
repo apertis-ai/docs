@@ -180,12 +180,12 @@
     "readingMinutes": 6
   },
   "default:billing/payg": {
-    "updated": "2026-10-07T19:03:01+08:00",
+    "updated": "2026-10-08T10:13:31+08:00",
     "readingMinutes": 11
   },
   "default:billing/payment-methods": {
-    "updated": "2026-10-07T19:03:01+08:00",
-    "readingMinutes": 6
+    "updated": "2026-10-08T10:13:31+08:00",
+    "readingMinutes": 7
   },
   "default:billing/quota-management": {
     "updated": "2026-06-10T11:32:17+08:00",
@@ -196,7 +196,7 @@
     "readingMinutes": 5
   },
   "default:billing/subscription-plans": {
-    "updated": "2026-10-07T19:03:01+08:00",
+    "updated": "2026-10-08T10:13:31+08:00",
     "readingMinutes": 12
   },
   "default:getting-started/quick-start": {
@@ -208,7 +208,7 @@
     "readingMinutes": 4
   },
   "default:help/faq": {
-    "updated": "2026-10-07T19:03:01+08:00",
+    "updated": "2026-10-08T10:13:31+08:00",
     "readingMinutes": 8
   },
   "default:help/ideas": {
