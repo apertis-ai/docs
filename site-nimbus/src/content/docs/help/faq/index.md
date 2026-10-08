@@ -121,7 +121,37 @@ No, subscription quotas reset at each billing cycle and don't roll over.
 
 ### Can I get a refund?
 
-Contact support at hi@apertis.ai for refund requests. Refunds are handled case-by-case.
+**When this version applies.** This version of the Refund Policy applies to new manual purchases made from October 12, 2026, when it is shown to you before you pay. Automatic subscription renewals and automatic credit top-ups remain under the earlier version; they are covered by this version only after a separate email notice at least 30 days in advance.
+
+The full Refund Policy is at [https://apertis.ai/refund](https://apertis.ai/refund). The section numbers below refer to it.
+
+**Which transactions this version covers** (Section 1):
+
+- New purchases made after this version is published and shown to you before you pay.
+- Automatic subscription renewals and automatic credit top-ups charged after you have been notified of this version at least 30 days in advance, or any longer period required by law or by your agreement with us.
+- Purchases made earlier, quotes you accepted, payments already in progress and rights you already obtained continue to be governed by the version that applied to them.
+- Where it is unclear which version applies to a transaction, we review the request instead of applying this version by default.
+
+Payments for the following are non-refundable, including when the credits or quota they provide have not been used:
+
+- API credit top-ups, whether purchased manually or by automatic top-up.
+- Subscription payments: initial purchases, renewals and upgrades.
+- On-demand or additional usage charges.
+
+Changing your mind, an accidental or impulse purchase, forgetting to cancel, or general dissatisfaction is not, by itself, a ground for a refund. This policy does not offer a general refund window, such as a number of days after payment within which any purchase may be refunded.
+
+You may still request a refund, and we will review the request, in the cases listed in Section 3 of the Refund Policy and under Pay-As-You-Go, Refunds.
+
+Email hi@apertis.ai with:
+
+1. The email address of your Apertis account.
+2. The transaction: an invoice or receipt number, or the date and amount of the charge.
+3. The reason for the request and any information that supports it.
+
+Never send a full card number or card security code (CVC). We will not ask for them.
+
+- We record the time we receive your request. That time, not the time we finish reviewing it, is the one that counts for any deadline.
+- We aim to send an initial response within 3 business days. This is a response target; it does not shorten or extend any right or deadline you have.
 
 ---
 
