@@ -185,3 +185,15 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
   developer-activation、`build:legacy` 通過；refund-policy-check（加 `--legal-fixture`）24 個載體只剩 24 個日期 TODO 失敗。
 - fail-closed 證明：本 head 跑 `bash scripts/nimbus/pages-build.sh` → exit 1，24 個失敗全是日期 TODO，沒有產生 `build/`；
   在本 repo 的本機 clone 拿掉四個日期標記、commit、regenerate 後跑同一支 → exit 0，check `ok`，產生 `build/`。
+
+## 13. C5 日期（lead 2026-10-08；日期為 lead 提案，由 founder 在 review 時確認）
+
+- 四頁的 `TODO(refund-policy-v2-date)` 換成一句適用說明：新的手動購買自 2026-10-12 起適用（付款前有顯示本版）；自動續訂與自動 top-up 仍適用舊版，
+  必須另寄 email、至少提前 30 天通知後才適用本版。不寫公告日，也不寫自動扣款的生效日。連結仍為不帶日期的 `/refund`（`537f5a1`，生成檔在 `8aa8205`）。
+- Review P2-2：FAQ 與 payment-methods 補上 §1 的四條原文。
+- Review P2-1：帶日期的 `/refund` 連結改在原始載體上檢查（Markdown 連結目標、HTML href）；HTML 的連結檢查只看 `<article>`，因為 Footer 每頁都有 `/refund`。
+  證明：在副本把 payg 的連結目標改成 `/refund/2026-03-10`，或只拿掉 FAQ 正文裡的連結（Footer 保留）→ 都被抓到；未改的副本 → `ok`。
+- 驗證（head `409c7e4`）：`pages-build.sh` exit 0，check `ok`（24 個載體），有產生 `build/`；head 上 regenerate 不改任何 tracked file；
+  typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、developer-activation、`build:legacy`、OpenSpec strict 都通過。
+- legal fixture：#3632 worktree 目前有未提交的 promotion 變更（`content/refund/2026-10-12.*`、fixture 加了 `effective`），所以 hash 已不是釘住的
+  `76c746f6…`。docs 引用的每一句仍是新 fixture 的原文，§1 文字沒變。等 #3632 commit 之後再重釘。
