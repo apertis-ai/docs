@@ -197,3 +197,13 @@ planning boundary rev 2 的 write_set 少了以下現有閘門必經的路徑：
   typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、developer-activation、`build:legacy`、OpenSpec strict 都通過。
 - legal fixture：#3632 worktree 目前有未提交的 promotion 變更（`content/refund/2026-10-12.*`、fixture 加了 `effective`），所以 hash 已不是釘住的
   `76c746f6…`。docs 引用的每一句仍是新 fixture 的原文，§1 文字沒變。等 #3632 commit 之後再重釘。
+
+## 14. 釘到 promotion 後的來源（theQuert/stima-api `95ae6e470aa813cfc740f1a46d6600696527b1b9`）
+
+- founder 已核准全部文案。#3632 的 C5 promotion：EN source `web/next/lib/legal/content/refund/2026-10-12.en.ts`（sha256 `b52ea4b1…3a30`）、
+  lines fixture `0e0e9d3e…4673`、EN Markdown `2991027e…25a8`。worktree 的 HEAD ref 與檔案 hash 都和交接檔一致（讀檔，沒有用 git）。
+- `refund-policy-check.mjs` 已改釘新 head 與新格式：fixture 有 `effective`，不再有 `candidate`；旁邊的 publication fixture 的
+  `document_version`、`document_path`、`content_hash` 要相符；適用說明寫的日期要等於來源版本日期。docs 引用的文字沒變，`--legal-fixture` 結果為 verified、`ok`。
+  在副本改 fixture 一個字、改 publication hash → 三項都被抓到（`9ae2142`）。
+- 驗證：`pages-build.sh` exit 0，check `ok`，有產生 `build/`（之後刪除）；未改 tracked file；`check-build-id` 通過；
+  typecheck 0 errors、`npm test` 157 pass／0 fail／66 skip、`test:dist` 30／30、developer-activation、`build:legacy`、OpenSpec strict 都通過。
