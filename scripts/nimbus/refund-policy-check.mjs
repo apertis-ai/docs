@@ -148,6 +148,7 @@ if (fixturePath) {
   const lines = fixture.en.map((l) => l.replace(/^\w+: /, '').replace(/ <[^>]+>/g, ''));
   for (const s of [...LEGAL, EMAIL]) if (!lines.some((l) => l.includes(s))) failures.push(`legal source: "${s}" is not text of the fixture`);
 }
+const fixtureFailures = failures.length;
 
 const distDir = path.join(root, 'site-nimbus/dist');
 const hasDist = fs.existsSync(distDir);
@@ -184,7 +185,7 @@ for (const [rel, phrase] of ARCHIVE) {
   if (!fs.readFileSync(path.join(root, rel), 'utf8').includes(phrase)) failures.push(`${rel}: archived notice changed or removed`);
 }
 
-console.log(`refund-policy-check: legal source ${LEGAL_SOURCE.id} @ ${LEGAL_SOURCE.head.slice(0, 9)} (EN markdown ${LEGAL_SOURCE.enMarkdownSha256.slice(0, 8)}…)${fixturePath ? ', fixture verified' : ', fixture not given'}`);
+console.log(`refund-policy-check: legal source ${LEGAL_SOURCE.id} @ ${LEGAL_SOURCE.head.slice(0, 9)} (EN markdown ${LEGAL_SOURCE.enMarkdownSha256.slice(0, 8)}…)${fixturePath ? `, fixture ${fixtureFailures ? 'NOT verified' : 'verified'}` : ', fixture not given'}`);
 console.log(`refund-policy-check: ${checked.length} current carriers${hasDist ? '' : ' (site-nimbus/dist not built: HTML, served .md and llms-full.txt skipped)'}, ${ARCHIVE.length} archived kept`);
 for (const f of failures) console.log(`FAIL ${f}`);
 console.log(failures.length ? `refund-policy-check: ${failures.length} failure(s)` : 'refund-policy-check: ok');
