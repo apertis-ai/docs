@@ -1,6 +1,12 @@
 {
   "note": "Content edits made after the cutover. dist.check compares each page with the frozen legacy link sets and heading ids in route-inventory.json; an edit that changes a page's links or removes a heading id is recorded here, against the commit that made it and the decision that allowed it. Every entry must still match the built page.",
   "documents": {
+    "default:authentication/api-keys": {
+      "commit": "0e7d15f",
+      "decision": "https://github.com/theQuert/stima-api/issues/5221 (sk-apx_ API key format; the three key-type headings now name the new prefixes)",
+      "links": {},
+      "headings": { "removed": ["standard-api-keys-sk-", "subscription-api-keys-sk-sub-", "organization-api-keys-sk-org_"] }
+    },
     "default:help/faq": {
       "commit": "55608c9",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer)",
