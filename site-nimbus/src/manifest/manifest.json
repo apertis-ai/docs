@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "9de395d2954aa9d4fcecb6f57a0760983d8acc49",
-  "buildId": "9de395d2954aa9d4fcecb6f57a0760983d8acc49.1bc5f368f35e",
+  "sourceSha": "b376cba1b98546a6a0c55408a2cc39dd5ff8c236",
+  "buildId": "b376cba1b98546a6a0c55408a2cc39dd5ff8c236.861989c0268e",
   "documents": [
     {
       "id": "page:index",
