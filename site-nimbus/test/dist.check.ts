@@ -91,7 +91,7 @@ test('every output file derives from a publishable manifest entry or is referenc
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
   // #13: root files derived from the manifest and inventory; their content is checked below.
   // docs-agent-access adds /llms.txt and /llms-full.txt (from the publish+agent entries), checked below too.
-  const derived = ['sitemap.xml', '_redirects', 'llms.txt', 'llms-full.txt'];
+  const derived = ['sitemap.xml', 'robots.txt', '_redirects', 'llms.txt', 'llms-full.txt'];
   const allowed = new Set([...html, ...referenced, ...markdown, ...derived, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);

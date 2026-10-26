@@ -25,7 +25,8 @@ test('llms.txt: H1, summary blockquote, one H2 per section in first-appearance o
   const lines = INDEX.split('\n');
   assert.equal(lines[0], '# Apertis Documentation');
   assert.match(lines[2], /^> \S/);
-  assert.deepEqual(lines.filter((l) => l.startsWith('## ')), ['## Getting Started', '## API Reference', '## Text Generation', '## Other']);
+  assert.deepEqual(lines.filter((l) => l.startsWith('## ')), ['## Getting Started', '## API Reference', '## Text Generation', '## Other', '## Reference']);
+  assert.ok(INDEX.endsWith('\n[OpenAPI specification](https://apertis.ai/docs/openapi.yaml)\n'));
   assert.ok(INDEX.includes('- [Streaming \\[SSE\\] Output](https://docs.apertis.ai/api/text-generation/streaming.md): About Streaming [SSE] Output in a sentence.\n'));
   assert.ok(INDEX.includes('- [API Reference](https://docs.apertis.ai/api/index.md): '));
   assert.deepEqual(parseIndex(INDEX), PAGES.map(({ title, markdownUrl, description, section }) => ({ title, markdownUrl, description, section })));
