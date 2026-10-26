@@ -91,7 +91,7 @@
       "path": "/api/audio-video/audio/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/audio-video/audio",
+      "canonical": "https://docs.apertis.ai/api/audio-video/audio/",
       "anchors": [
         "overview",
         "speech-to-text-transcription",
@@ -149,7 +149,7 @@
       "path": "/api/audio-video/video/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/audio-video/video",
+      "canonical": "https://docs.apertis.ai/api/audio-video/video/",
       "anchors": [
         "create-video",
         "http-request",
@@ -236,7 +236,7 @@
       "path": "/api/embeddings/embeddings-api/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/embeddings/embeddings-api",
+      "canonical": "https://docs.apertis.ai/api/embeddings/embeddings-api/",
       "anchors": [
         "usage-example-in-python",
         "parameters"
@@ -252,7 +252,7 @@
       "path": "/api/embeddings/guide/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/embeddings/guide",
+      "canonical": "https://docs.apertis.ai/api/embeddings/guide/",
       "anchors": [
         "usage-example-in-python",
         "parameters",
@@ -270,7 +270,7 @@
       "path": "/api/embeddings/rerank/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/embeddings/rerank",
+      "canonical": "https://docs.apertis.ai/api/embeddings/rerank/",
       "anchors": [
         "http-request",
         "authentication",
@@ -300,7 +300,7 @@
       "path": "/api/sdks/agent-sdk/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/agent-sdk",
+      "canonical": "https://docs.apertis.ai/api/sdks/agent-sdk/",
       "anchors": [
         "installation",
         "quickstart",
@@ -323,7 +323,7 @@
       "path": "/api/sdks/ai-sdk-provider/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/ai-sdk-provider",
+      "canonical": "https://docs.apertis.ai/api/sdks/ai-sdk-provider/",
       "anchors": [
         "installation",
         "setup",
@@ -353,7 +353,7 @@
       "path": "/api/sdks/cli/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/cli",
+      "canonical": "https://docs.apertis.ai/api/sdks/cli/",
       "anchors": [
         "installation",
         "authentication",
@@ -376,7 +376,7 @@
       "path": "/api/sdks/langchain/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/langchain",
+      "canonical": "https://docs.apertis.ai/api/sdks/langchain/",
       "anchors": [
         "installing-langchain",
         "apertis-usage-example",
@@ -393,7 +393,7 @@
       "path": "/api/sdks/litellm/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/litellm",
+      "canonical": "https://docs.apertis.ai/api/sdks/litellm/",
       "anchors": [
         "installation",
         "environment-setup",
@@ -420,7 +420,7 @@
       "path": "/api/sdks/llamaindex/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/llamaindex",
+      "canonical": "https://docs.apertis.ai/api/sdks/llamaindex/",
       "anchors": [
         "installation",
         "basic-setup",
@@ -443,7 +443,7 @@
       "path": "/api/sdks/mcp-server/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/mcp-server",
+      "canonical": "https://docs.apertis.ai/api/sdks/mcp-server/",
       "anchors": [
         "installation",
         "claude-code",
@@ -489,7 +489,7 @@
       "path": "/api/sdks/python-sdk/async/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/async",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/async/",
       "anchors": [
         "prerequisites",
         "basic-async-client",
@@ -517,7 +517,7 @@
       "path": "/api/sdks/python-sdk/audio/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/audio",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/audio/",
       "anchors": [
         "prerequisites",
         "speech-to-text-transcription",
@@ -548,7 +548,7 @@
       "path": "/api/sdks/python-sdk/chat-completions/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/chat-completions",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/chat-completions/",
       "anchors": [
         "prerequisites",
         "basic-usage",
@@ -570,7 +570,7 @@
       "path": "/api/sdks/python-sdk/embeddings/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/embeddings",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/embeddings/",
       "anchors": [
         "prerequisites",
         "basic-embedding",
@@ -593,7 +593,7 @@
       "path": "/api/sdks/python-sdk/messages-api/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/messages-api",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/messages-api/",
       "anchors": [
         "prerequisites",
         "basic-usage",
@@ -622,7 +622,7 @@
       "path": "/api/sdks/python-sdk/reasoning/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/reasoning",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/reasoning/",
       "anchors": [
         "prerequisites",
         "basic-reasoning",
@@ -653,7 +653,7 @@
       "path": "/api/sdks/python-sdk/rerank/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/rerank",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/rerank/",
       "anchors": [
         "prerequisites",
         "basic-reranking",
@@ -679,7 +679,7 @@
       "path": "/api/sdks/python-sdk/responses-api/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/responses-api",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/responses-api/",
       "anchors": [
         "prerequisites",
         "basic-usage",
@@ -711,7 +711,7 @@
       "path": "/api/sdks/python-sdk/streaming/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/streaming",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/streaming/",
       "anchors": [
         "prerequisites",
         "basic-streaming",
@@ -734,7 +734,7 @@
       "path": "/api/sdks/python-sdk/tool-calling/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/tool-calling",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/tool-calling/",
       "anchors": [
         "prerequisites",
         "basic-tool-calling",
@@ -755,7 +755,7 @@
       "path": "/api/sdks/python-sdk/video/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/video",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/video/",
       "anchors": [
         "prerequisites",
         "basic-video-analysis",
@@ -783,7 +783,7 @@
       "path": "/api/sdks/python-sdk/vision/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/vision",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/vision/",
       "anchors": [
         "prerequisites",
         "basic-image-analysis",
@@ -809,7 +809,7 @@
       "path": "/api/sdks/python-sdk/web-search/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/web-search",
+      "canonical": "https://docs.apertis.ai/api/sdks/python-sdk/web-search/",
       "anchors": [
         "prerequisites",
         "basic-web-search",
@@ -836,7 +836,7 @@
       "path": "/api/search/web-search/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/search/web-search",
+      "canonical": "https://docs.apertis.ai/api/search/web-search/",
       "anchors": [
         "quick-start",
         "supported-models",
@@ -866,7 +866,7 @@
       "path": "/api/text-generation/chat-completions/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/chat-completions",
+      "canonical": "https://docs.apertis.ai/api/text-generation/chat-completions/",
       "anchors": [
         "http-request",
         "optional-headers",
@@ -886,7 +886,7 @@
       "path": "/api/text-generation/context-compression/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/context-compression",
+      "canonical": "https://docs.apertis.ai/api/text-generation/context-compression/",
       "anchors": [
         "how-it-works",
         "enabling-compression",
@@ -923,7 +923,7 @@
       "path": "/api/text-generation/messages/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/messages",
+      "canonical": "https://docs.apertis.ai/api/text-generation/messages/",
       "anchors": [
         "http-request",
         "authentication",
@@ -962,7 +962,7 @@
       "path": "/api/text-generation/prompt-cache/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/prompt-cache",
+      "canonical": "https://docs.apertis.ai/api/text-generation/prompt-cache/",
       "anchors": [
         "overview",
         "key-features",
@@ -984,7 +984,7 @@
       "path": "/api/text-generation/responses/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/responses",
+      "canonical": "https://docs.apertis.ai/api/text-generation/responses/",
       "anchors": [
         "http-request",
         "authentication",
@@ -1025,7 +1025,7 @@
       "path": "/api/text-generation/streaming/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/streaming",
+      "canonical": "https://docs.apertis.ai/api/text-generation/streaming/",
       "anchors": [
         "python-example",
         "parameters"
@@ -1042,7 +1042,7 @@
       "path": "/api/text-generation/structured-output/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/text-generation/structured-output",
+      "canonical": "https://docs.apertis.ai/api/text-generation/structured-output/",
       "anchors": [
         "use-example",
         "parameter"
@@ -1058,7 +1058,7 @@
       "path": "/api/utilities/billing-credits/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/utilities/billing-credits",
+      "canonical": "https://docs.apertis.ai/api/utilities/billing-credits/",
       "anchors": [
         "check-remaining-credits",
         "http-request",
@@ -1086,7 +1086,7 @@
       "path": "/api/utilities/fallback-models/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/utilities/fallback-models",
+      "canonical": "https://docs.apertis.ai/api/utilities/fallback-models/",
       "anchors": [
         "overview",
         "configuration-methods",
@@ -1130,7 +1130,7 @@
       "path": "/api/utilities/models/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/utilities/models",
+      "canonical": "https://docs.apertis.ai/api/utilities/models/",
       "anchors": [
         "list-all-models",
         "http-request",
@@ -1154,7 +1154,7 @@
       "path": "/api/utilities/recommend/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/utilities/recommend",
+      "canonical": "https://docs.apertis.ai/api/utilities/recommend/",
       "anchors": [
         "dynamic-model-recommendation",
         "http-request",
@@ -1174,7 +1174,7 @@
       "path": "/api/vision/dalle/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/vision/dalle",
+      "canonical": "https://docs.apertis.ai/api/vision/dalle/",
       "anchors": [
         "python-example",
         "parameters"
@@ -1190,7 +1190,7 @@
       "path": "/api/vision/image-generation/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/vision/image-generation",
+      "canonical": "https://docs.apertis.ai/api/vision/image-generation/",
       "anchors": [
         "usage-python-example",
         "usage-bash-example",
@@ -1207,7 +1207,7 @@
       "path": "/api/vision/images-api/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/vision/images-api",
+      "canonical": "https://docs.apertis.ai/api/vision/images-api/",
       "anchors": [
         "http-request",
         "authentication",
@@ -1249,7 +1249,7 @@
       "path": "/api/vision/read-image/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/api/vision/read-image",
+      "canonical": "https://docs.apertis.ai/api/vision/read-image/",
       "anchors": [
         "python-example",
         "parameters"
@@ -1265,7 +1265,7 @@
       "path": "/authentication/api-keys/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/authentication/api-keys",
+      "canonical": "https://docs.apertis.ai/authentication/api-keys/",
       "anchors": [
         "obtaining-your-api-key",
         "standard-api-key-payg",
@@ -1313,7 +1313,7 @@
       "path": "/authentication/organizations/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/authentication/organizations",
+      "canonical": "https://docs.apertis.ai/authentication/organizations/",
       "anchors": [
         "personal-and-team-organizations",
         "members",
@@ -1336,7 +1336,7 @@
       "path": "/billing/payg/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/billing/payg",
+      "canonical": "https://docs.apertis.ai/billing/payg/",
       "anchors": [
         "overview",
         "payg-vs-subscription",
@@ -1397,7 +1397,7 @@
       "path": "/billing/payment-methods/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/billing/payment-methods",
+      "canonical": "https://docs.apertis.ai/billing/payment-methods/",
       "anchors": [
         "supported-payment-methods",
         "credit--debit-cards",
@@ -1448,7 +1448,7 @@
       "path": "/billing/quota-management/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/billing/quota-management",
+      "canonical": "https://docs.apertis.ai/billing/quota-management/",
       "anchors": [
         "quota-overview",
         "types-of-quota",
@@ -1499,7 +1499,7 @@
       "path": "/billing/rate-limits/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/billing/rate-limits",
+      "canonical": "https://docs.apertis.ai/billing/rate-limits/",
       "anchors": [
         "rate-limit-overview",
         "api-rate-limits",
@@ -1546,7 +1546,7 @@
       "path": "/billing/subscription-plans/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/billing/subscription-plans",
+      "canonical": "https://docs.apertis.ai/billing/subscription-plans/",
       "anchors": [
         "available-plans",
         "plan-comparison",
@@ -1759,7 +1759,7 @@
       "path": "/getting-started/quick-start/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/getting-started/quick-start",
+      "canonical": "https://docs.apertis.ai/getting-started/quick-start/",
       "anchors": [
         "prerequisites",
         "step-1-create-your-account-and-choose-access",
@@ -1799,7 +1799,7 @@
       "path": "/help/error-codes/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/help/error-codes",
+      "canonical": "https://docs.apertis.ai/help/error-codes/",
       "anchors": [
         "error-response-format",
         "http-status-codes",
@@ -1854,7 +1854,7 @@
       "path": "/help/faq/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/help/faq",
+      "canonical": "https://docs.apertis.ai/help/faq/",
       "anchors": [
         "general-questions",
         "what-is-apertis",
@@ -1921,7 +1921,7 @@
       "path": "/help/ideas/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/help/ideas",
+      "canonical": "https://docs.apertis.ai/help/ideas/",
       "anchors": [
         "features",
         "categories",
@@ -1939,7 +1939,7 @@
       "path": "/help/migration-guides/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/help/migration-guides",
+      "canonical": "https://docs.apertis.ai/help/migration-guides/",
       "anchors": [
         "migrating-from-openai",
         "step-1-update-base-url",
@@ -1985,7 +1985,7 @@
       "path": "/help/troubleshooting/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/help/troubleshooting",
+      "canonical": "https://docs.apertis.ai/help/troubleshooting/",
       "anchors": [
         "quick-diagnostics",
         "test-your-api-key",
@@ -2038,7 +2038,7 @@
       "path": "/installation/bolt_diy/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/bolt_diy",
+      "canonical": "https://docs.apertis.ai/installation/bolt_diy/",
       "anchors": [
         "features",
         "basic-configuration",
@@ -2057,7 +2057,7 @@
       "path": "/installation/chatbox/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/chatbox",
+      "canonical": "https://docs.apertis.ai/installation/chatbox/",
       "anchors": [
         "download-and-installation",
         "setting-up-api-key"
@@ -2073,7 +2073,7 @@
       "path": "/installation/claude-code/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/claude-code",
+      "canonical": "https://docs.apertis.ai/installation/claude-code/",
       "anchors": [
         "prerequisites",
         "installation",
@@ -2111,7 +2111,7 @@
       "path": "/installation/cline/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/cline",
+      "canonical": "https://docs.apertis.ai/installation/cline/",
       "anchors": [
         "installing-cline",
         "using-apertis"
@@ -2127,7 +2127,7 @@
       "path": "/installation/connection/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/connection",
+      "canonical": "https://docs.apertis.ai/installation/connection/",
       "anchors": [
         "base_url",
         "api-key"
@@ -2143,7 +2143,7 @@
       "path": "/installation/continue/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/continue",
+      "canonical": "https://docs.apertis.ai/installation/continue/",
       "anchors": [
         "introduction",
         "installation",
@@ -2161,7 +2161,7 @@
       "path": "/installation/crush/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/crush",
+      "canonical": "https://docs.apertis.ai/installation/crush/",
       "anchors": [
         "features",
         "installation",
@@ -2193,7 +2193,7 @@
       "path": "/installation/cursor/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/cursor",
+      "canonical": "https://docs.apertis.ai/installation/cursor/",
       "anchors": [
         "using-apertis-models",
         "setting-up-api-key",
@@ -2211,7 +2211,7 @@
       "path": "/installation/goose/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/goose",
+      "canonical": "https://docs.apertis.ai/installation/goose/",
       "anchors": [
         "features",
         "installation",
@@ -2242,7 +2242,7 @@
       "path": "/installation/kilo-cli/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/kilo-cli",
+      "canonical": "https://docs.apertis.ai/installation/kilo-cli/",
       "anchors": [
         "prerequisites",
         "installation",
@@ -2269,7 +2269,7 @@
       "path": "/installation/kilo-code/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/kilo-code",
+      "canonical": "https://docs.apertis.ai/installation/kilo-code/",
       "anchors": [
         "features",
         "installation",
@@ -2297,7 +2297,7 @@
       "path": "/installation/models/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/models"
+      "canonical": "https://docs.apertis.ai/installation/models/"
     },
     {
       "path": "/installation/opencode",
@@ -2309,7 +2309,7 @@
       "path": "/installation/opencode/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/opencode",
+      "canonical": "https://docs.apertis.ai/installation/opencode/",
       "anchors": [
         "features",
         "installation",
@@ -2344,7 +2344,7 @@
       "path": "/installation/roocode/",
       "scope": "poc",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/roocode",
+      "canonical": "https://docs.apertis.ai/installation/roocode/",
       "anchors": [
         "features",
         "basic-configuration",
@@ -2364,7 +2364,7 @@
       "path": "/installation/scripts/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/scripts",
+      "canonical": "https://docs.apertis.ai/installation/scripts/",
       "anchors": [
         "python",
         "javascript",
@@ -2382,7 +2382,7 @@
       "path": "/installation/translate/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/installation/translate",
+      "canonical": "https://docs.apertis.ai/installation/translate/",
       "anchors": [
         "getting-the-immersive-translation-extension",
         "setting-up-the-service-provider---apertis",
@@ -2402,7 +2402,7 @@
       "path": "/intro/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/intro",
+      "canonical": "https://docs.apertis.ai/intro/",
       "anchors": [
         "1-homepage---apertis",
         "2-login",
@@ -2455,7 +2455,7 @@
       "path": "/opensource/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/opensource",
+      "canonical": "https://docs.apertis.ai/opensource/",
       "anchors": [
         "open-source-model-services",
         "llama-models",
@@ -2475,7 +2475,7 @@
       "path": "/principles/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/principles",
+      "canonical": "https://docs.apertis.ai/principles/",
       "anchors": [
         "-perfect-balance-of-performance-and-cost",
         "-seamless-integration-experience",
@@ -2488,7 +2488,7 @@
     {
       "path": "/robots.txt",
       "scope": "full",
-      "status": 404
+      "status": 200
     },
     {
       "path": "/search",
@@ -2500,7 +2500,7 @@
       "path": "/search/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/search"
+      "canonical": "https://docs.apertis.ai/search/"
     },
     {
       "path": "/search-index.json",
@@ -2518,7 +2518,7 @@
       "path": "/security/best-practices/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/security/best-practices",
+      "canonical": "https://docs.apertis.ai/security/best-practices/",
       "anchors": [
         "api-key-security",
         "never-expose-keys-in-client-side-code",
@@ -2574,7 +2574,7 @@
       "path": "/stimachat/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/stimachat",
+      "canonical": "https://docs.apertis.ai/stimachat/",
       "anchors": [
         "features",
         "how-to-use",
@@ -2602,7 +2602,7 @@
       "path": "/usage/",
       "scope": "full",
       "status": 200,
-      "canonical": "https://docs.apertis.ai/usage",
+      "canonical": "https://docs.apertis.ai/usage/",
       "anchors": [
         "recommended-models",
         "model-naming-rules",
