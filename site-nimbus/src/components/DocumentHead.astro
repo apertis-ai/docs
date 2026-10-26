@@ -1,18 +1,52 @@
 ---
-// Document identity for one manifest entry: <title>, canonical and the apertis-docs:* metas.
-// Charset/viewport belong to the page or layout head. Do not combine with Nimbus's NimbusHead,
-// which emits its own canonical (from Astro.url.pathname) and a sitemap-index link.
+// Document identity for one manifest entry: <title>, canonical, search/social metadata and the
+// apertis-docs:* metas. Charset/viewport belong to the page or layout head. Do not combine with Nimbus's
+// NimbusHead, which emits its own canonical (from Astro.url.pathname) and a sitemap-index link.
+// The description comes from the page's front matter only (never generated); without one the description,
+// og:description and twitter:description tags are omitted.
 import type { ManifestDocument } from '../contracts/manifest.ts';
-import { PAGE_META, TITLE_SUFFIX } from '../contracts/page.ts';
+import { PAGE_META, TITLE_SUFFIX, safeJsonLd, servedUrl, type SeoProps } from '../contracts/page.ts';
 
-interface Props {
+interface Props extends SeoProps {
   doc: ManifestDocument;
   buildId: string;
 }
-const { doc, buildId } = Astro.props;
+const { doc, buildId, description = null, updated, article = false, trail = [] } = Astro.props;
+const url = doc.canonicalUrl ? servedUrl(doc.canonicalUrl) : null;
+const fullTitle = doc.title + TITLE_SUFFIX;
+const desc = description?.replace(/\s+/g, ' ').trim() || null;
+const jsonLd = url && article ? [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: doc.title,
+    url,
+    mainEntityOfPage: url,
+    ...(desc ? { description: desc } : {}),
+    ...(updated ? { dateModified: updated } : {}),
+    publisher: { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' },
+  },
+  ...(trail.length ? [{
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: servedUrl('https://docs.apertis.ai/') }, ...trail.map((name, i, all) => ({
+      '@type': 'ListItem', position: i + 2, name, ...(i === all.length - 1 ? { item: url } : {}),
+    }))],
+  }] : []),
+] : [];
 ---
-<title>{doc.title + TITLE_SUFFIX}</title>
-{doc.canonicalUrl && <link rel="canonical" href={doc.canonicalUrl} />}
+<title>{fullTitle}</title>
+{url && <link rel="canonical" href={url} />}
+{desc && <meta name="description" content={desc} />}
+{url && <meta property="og:url" content={url} />}
+{url && <meta property="og:title" content={fullTitle} />}
+{url && desc && <meta property="og:description" content={desc} />}
+{url && <meta property="og:type" content={article ? 'article' : 'website'} />}
+{url && <meta property="og:site_name" content="Apertis Documentation" />}
+{url && <meta name="twitter:card" content="summary" />}
+{url && <meta name="twitter:title" content={fullTitle} />}
+{url && desc && <meta name="twitter:description" content={desc} />}
+{jsonLd.map((block) => <script type="application/ld+json" set:html={safeJsonLd(block)} />)}
 <meta name={PAGE_META.id} content={doc.id} />
 <meta name={PAGE_META.build} content={buildId} />
 {doc.markdown && <meta name={PAGE_META.markdown} content={doc.markdown.path} />}

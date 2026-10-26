@@ -14,6 +14,7 @@ import { searchDocuments } from '../src/search/index-build.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
 import { mainTextSha256 } from '../converter/convert.ts';
+import { servedUrl } from '../src/contracts/page.ts';
 import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
@@ -308,9 +309,10 @@ const retired = routes.filter((r) => (r.disposition as string) === 'retired');
 
 test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML routes', () => {
   const locs = [...read('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  // Served (trailing-slash) form: the URL that answers 200, and the one each page's <link rel=canonical> carries.
   const expected = [
-    ...manifest.documents.filter((d) => d.eligibility.publish).map((d) => d.canonicalUrl),
-    ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => r.live!.canonical!),
+    ...manifest.documents.filter((d) => d.eligibility.publish).map((d) => servedUrl(d.canonicalUrl)),
+    ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => servedUrl(r.live!.canonical!)),
   ].sort();
   assert.deepEqual(locs, expected);
   assert.equal(locs.length, 80);
@@ -490,4 +492,34 @@ test('feedback: the published paths read from the built sitemap are the publish-
   const sitemap = publishedFromSitemap(read('sitemap.xml'));
   assert.deepEqual([...docs].filter((p) => !sitemap.has(p)), []);
   assert.deepEqual([...sitemap].filter((p) => !docs.has(p)), ['/search/']);
+});
+
+test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url), with metadata and parseable JSON-LD', () => {
+  const entries = [...read('sitemap.xml').matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
+  assert.equal(entries.length, 80);
+  let described = 0;
+  let articles = 0;
+  for (const [, loc, lastmod] of entries) {
+    const file = path.join(dist, new URL(loc).pathname, 'index.html');
+    assert.ok(fs.existsSync(file), `${loc} is served as a directory page`);
+    const html = fs.readFileSync(file, 'utf8');
+    assert.equal(html.match(/<link rel="canonical" href="([^"]+)"/)?.[1], loc, `${loc} canonical`);
+    assert.equal(html.match(/<meta property="og:url" content="([^"]+)"/)?.[1], loc, `${loc} og:url`);
+    assert.ok(html.includes('name="twitter:card"') && html.includes('property="og:title"') && html.includes('property="og:type"'), loc);
+    if (lastmod) assert.match(lastmod, /^\d{4}-\d{2}-\d{2}T/, loc);
+    const desc = html.match(/<meta name="description" content="([^"]*)"/)?.[1];
+    if (desc) { described++; assert.ok(html.includes('property="og:description"'), loc); } else assert.ok(!html.includes('og:description'), loc);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    for (const b of blocks) assert.equal(b['@context'], 'https://schema.org');
+    const tech = blocks.find((b) => b['@type'] === 'TechArticle');
+    if (tech) {
+      articles++;
+      assert.equal(tech.url, loc);
+      assert.deepEqual(tech.publisher, { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' });
+      assert.equal(tech.dateModified === undefined, false, `${loc} dateModified`);
+    }
+  }
+  assert.ok(described > 0 && articles > 0);
+  assert.match(read('robots.txt'), /^Sitemap: https:\/\/docs\.apertis\.ai\/sitemap\.xml$/m);
+  assert.match(read('robots.txt'), /^Allow: \/$/m);
 });

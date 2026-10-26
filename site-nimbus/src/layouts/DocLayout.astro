@@ -49,6 +49,13 @@ const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: 
 if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
 const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1));
 if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
+// Search/social metadata: the front-matter description only (never generated), the converter's real last-modified date.
+const seo = {
+  description: article ? article.description : entry!.data.description,
+  updated: meta.updated,
+  article: true,
+  trail: nav ? [...nav.trail, nav.entry.label] : [],
+};
 const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
 // Try it marks its cURL samples here, at build time; pages without one render no TryIt (and load none of it).
 const body = markTryIt(header.body);
@@ -62,7 +69,7 @@ const related = native.length
     .flatMap((e) => native.filter((d) => d.servedPath === `/blog/${e.id}/`))
   : [];
 ---
-<BaseLayout doc={doc} buildId={buildId} nav={nav}>
+<BaseLayout doc={doc} buildId={buildId} nav={nav} seo={seo}>
   <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
   <link slot="head" rel="stylesheet" href="/_nimbus/shiki.css" />
   <div class:list={['doc-page', { 'doc-page--sidebar': nav }]}>
