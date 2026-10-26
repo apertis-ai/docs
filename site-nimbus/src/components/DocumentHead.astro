@@ -29,9 +29,12 @@ const jsonLd = url && article ? [
   ...(trail.length ? [{
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: servedUrl('https://docs.apertis.ai/') }, ...trail.map((name, i, all) => ({
-      '@type': 'ListItem', position: i + 2, name, ...(i === all.length - 1 ? { item: url } : {}),
-    }))],
+    // Google requires `item` on every crumb but the last, and sidebar categories have no page, so only
+    // Home and the page itself are listed.
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: servedUrl('https://docs.apertis.ai/') },
+      { '@type': 'ListItem', position: 2, name: trail[trail.length - 1], item: url },
+    ],
   }] : []),
 ] : [];
 ---

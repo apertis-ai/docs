@@ -518,6 +518,9 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
       assert.deepEqual(tech.publisher, { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' });
       assert.equal(tech.dateModified === undefined, false, `${loc} dateModified`);
     }
+    const crumbs = blocks.find((b) => b['@type'] === 'BreadcrumbList');
+    // Google rejects a crumb without `item` anywhere but last; every crumb here has one.
+    if (crumbs) for (const c of crumbs.itemListElement) assert.ok(c.item, `${loc} crumb ${c.name} has no item`);
   }
   assert.ok(described > 0 && articles > 0);
   assert.match(read('robots.txt'), /^Sitemap: https:\/\/docs\.apertis\.ai\/sitemap\.xml$/m);
