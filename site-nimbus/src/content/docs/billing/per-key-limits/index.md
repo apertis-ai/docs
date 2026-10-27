@@ -48,7 +48,7 @@ A key's monthly limit is checked against an up-front estimate of each request's 
 
 `<time>` is an RFC 3339 timestamp in UTC, for example `2026-11-01T00:00:00Z`.
 
-A request's estimated cost is always reserved up front when the key or the account has a monthly limit. Without a monthly limit, an account whose balance is far larger than the estimate skips the reservation, so a key with a small amount of quota left is not refused until its quota reaches zero.
+A request's estimated cost is always reserved up front when the key or the account has a monthly limit. Without a monthly limit, an account whose balance is far larger than the estimate skips the reservation, so a key with a small amount of quota left is not refused until its quota reaches zero. In that case Apertis does not guarantee that requests sent at the same time stop at the key's quota: together they may spend past it. The lifetime quota is not a hard cap; use a monthly limit when a key must not go past a fixed amount.
 
 ## Rate limits
 
