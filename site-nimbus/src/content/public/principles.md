@@ -18,7 +18,7 @@
 - **Clear Cost Control**: Easily track and manage your AI expenditure
 
 ## 🛡️ Enterprise-Grade Reliability
-- **Smart Failover**: Automatic switching ensures service continuity during provider outages
+- **Channel retries**: A failed request retries on another channel, and you can set your own [fallback models](/api/utilities/fallback-models)
 - **Advanced Routing**: Intelligent request distribution for consistent processing
 
 ## ⚡ Enhanced Usage Limits
