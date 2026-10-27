@@ -3663,6 +3663,7 @@
         ],
         "links": [
           "/",
+          "/api/text-generation/messages",
           "/authentication/api-keys",
           "/billing/quota-management",
           "/billing/rate-limits",
