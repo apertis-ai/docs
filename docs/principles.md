@@ -1,5 +1,5 @@
 ---
-description: "Why teams choose Apertis: price and performance routing, an OpenAI-compatible API, unified billing and automatic failover across providers."
+description: "Why teams choose Apertis: price and performance routing, an OpenAI-compatible API, unified billing and retries on another channel when a request fails."
 ---
 
 # Why Choose Apertis?
@@ -22,7 +22,7 @@ description: "Why teams choose Apertis: price and performance routing, an OpenAI
 - **Clear Cost Control**: Easily track and manage your AI expenditure
 
 ## 🛡️ Enterprise-Grade Reliability
-- **Smart Failover**: Automatic switching ensures service continuity during provider outages
+- **Channel retries**: A failed request retries on another channel, and you can set your own [fallback models](/api/utilities/fallback-models)
 - **Advanced Routing**: Intelligent request distribution for consistent processing
 
 ## ⚡ Enhanced Usage Limits

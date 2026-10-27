@@ -248,7 +248,7 @@ export default function Home() {
           <h1 className={styles.heroTitle}>Build with Apertis</h1>
           <p className={styles.heroSub}>
             One API key for models across leading providers.
-            Smart routing, auto-failover, and free prompt caching built in.
+            Smart routing, channel retries, and free prompt caching built in.
           </p>
           <button className={styles.heroSearch} onClick={openSearch}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
