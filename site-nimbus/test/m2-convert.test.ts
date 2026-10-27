@@ -143,7 +143,7 @@ test('converting twice is byte-identical, and a rerun leaves no stale output', (
   convert({ outRoot: b });
   assert.deepEqual(tree(b, OUT), tree(a, OUT));
   assert.equal(Object.keys(tree(a, ['src/content/public'])).filter((f) => f.endsWith('.md')).length, artifacts);
-  assert.equal(artifacts, 78);
+  assert.equal(artifacts, 79);
 });
 
 test('the committed generated output equals a fresh conversion (never hand-edited)', () => {
@@ -159,10 +159,10 @@ test('the committed generated output equals a fresh conversion (never hand-edite
   assert.deepEqual(strip(read(site)), strip(read(out)));
 });
 
-test('the manifest covers every preserved document (78 docs + the homepage) with the spec buildId form', () => {
+test('the manifest covers every preserved document (79 docs + the homepage) with the spec buildId form', () => {
   const m = convert({ outRoot: tmp() });
   assert.deepEqual(m.documents.map((d) => d.id).sort(), preserved.map((r) => r.documentId).sort());
-  assert.equal(m.documents.length, 79);
+  assert.equal(m.documents.length, 80);
   // The PoC documents are a subset.
   for (const r of inventory.filter((x) => x.poc && x.documentId)) assert.ok(m.documents.some((d) => d.id === r.documentId), r.documentId!);
   assert.match(m.sourceSha, /^[0-9a-f]{40}$/);
