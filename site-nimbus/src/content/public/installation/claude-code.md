@@ -47,7 +47,7 @@ Create a file named `ccswitch.sh` in your home directory (or any location you pr
 
 APERTIS_BASE_URL="https://api.apertis.ai"
 APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/setting?tab=keys
-DEFAULT_MODEL="code:claude-opus-4-8"            # ← Default model when using --apertis
+DEFAULT_MODEL="claude-opus-5.5"                #  ← Default model when using --apertis
 
 # ─── Script Logic (no changes needed below) ────────────────────
 
@@ -140,26 +140,27 @@ Edit the top of `ccswitch.sh` to match your credentials:
 |----------|-------------|---------|
 | `APERTIS_BASE_URL` | Apertis API endpoint. Typically no change needed. | `https://api.apertis.ai` |
 | `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys). | `sk-xxxx...` |
-| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-8` |
+| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use a model ID exactly as listed in the [Model List](https://apertis.ai/models). | `claude-opus-5.5` |
 
 ### Available Model IDs
 
-When using `ccs --model`, pass the model ID directly. **Only Claude models require the `code:` prefix**; all other models use their standard ID as-is.
+When using `ccs --model`, pass the model ID exactly as it appears in the [Model List](https://apertis.ai/models). The IDs below were checked against the public model catalog (`https://api.apertis.ai/api/models`).
 
-**Claude Models** (require `code:` prefix, except Haiku):
+**Claude Models:**
 
 | Model ID | Description |
 |----------|-------------|
-| `code:claude-fable-5` | Claude Fable 5 — newest generation |
-| `code:claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
-| `code:claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
-| `code:claude-opus-4-8` | Claude Opus 4.8 — most capable |
-| `claude-haiku-4-5-thinking` | Claude Haiku 4.5 with extended thinking |
-| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
+| `claude-opus-5.5` | Claude Opus 5.5 — most capable |
+| `claude-sonnet-5.5` | Claude Sonnet 5.5 — balanced speed and capability |
+| `claude-fable-5.1` | Claude Fable 5.1 |
+| `claude-fable-5` | Claude Fable 5 |
+| `claude-opus-4-8` | Claude Opus 4.8 |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 |
+| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
 
 For more Claude models, see the [Claude Models page](https://apertis.ai/models).
 
-**Other Models** (no prefix needed):
+**Other Models:**
 
 ```bash
 ccs --model gpt-5.4
@@ -175,12 +176,12 @@ For the full list of available model IDs, check the [Model List](https://apertis
 # Switch to Apertis with the default model
 ccs --apertis
 # ✅ Apertis enabled
-#    MODEL=code:claude-opus-4-8
+#    MODEL=claude-opus-5.5
 
 # Switch to a specific model
-ccs --model code:claude-sonnet-4-6
+ccs --model claude-sonnet-5.5
 # ✅ Apertis enabled
-#    MODEL=code:claude-sonnet-4-6
+#    MODEL=claude-sonnet-5.5
 
 # Revert to default Anthropic endpoint
 ccs --cc
@@ -217,16 +218,18 @@ Anthropic base URL: https://api.apertis.ai
 
 ### Coding Model IDs
 
-When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix for Claude model IDs. This routes requests through optimized coding channels:
+Use the standard Claude model IDs from the [Model List](https://apertis.ai/models), for example:
 
-| Standard Model ID | Coding Model ID |
-|-------------------|-----------------|
-| `claude-opus-4-8` | `code:claude-opus-4-8` |
-| `claude-sonnet-4-6` | `code:claude-sonnet-4-6` |
+| Model ID | Description |
+|----------|-------------|
+| `claude-opus-5.5` | Default in the switch script above |
+| `claude-sonnet-5.5` | Balanced speed and capability |
+| `claude-opus-4-8` | Previous Opus generation |
+| `claude-sonnet-4-6` | Previous Sonnet generation |
 
-> **Tip: Why `code:` prefix?**
+> **Note: No `code:` prefix**
 >
-> The `code:` prefix routes requests through dedicated coding channels optimized for tool use, extended thinking, and streaming — features essential for coding assistants. Always use `code:` prefixed model IDs with Claude Code and other coding tools.
+> Earlier versions of this page used a `code:` prefix (for example `code:claude-opus-4-8`). That form does not appear in the public model catalog, so use the plain IDs above.
 
 ### Selecting Models in Claude Code
 

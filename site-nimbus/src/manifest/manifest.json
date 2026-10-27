@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "de48ec4b409b569a09d4de77386a41cb421e65a2",
+  "buildId": "de48ec4b409b569a09d4de77386a41cb421e65a2.9b6c8af5dfd9",
   "documents": [
     {
       "id": "page:index",
@@ -1095,9 +1095,9 @@
       },
       "markdown": {
         "path": "/installation/claude-code.md",
-        "sha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+        "sha256": "e89373f8fc1d15358d92b9ae4e2c9a5178e4e99bc28a4bc33ee276af2def992a"
       },
-      "contentSha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+      "contentSha256": "e89373f8fc1d15358d92b9ae4e2c9a5178e4e99bc28a4bc33ee276af2def992a"
     },
     {
       "id": "default:installation/cline",
@@ -1131,9 +1131,9 @@
       },
       "markdown": {
         "path": "/installation/connection.md",
-        "sha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+        "sha256": "30a8575d5da263474a5a1d1bfabfc9c7c1222673ee657f8858024ad0a63f033c"
       },
-      "contentSha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+      "contentSha256": "30a8575d5da263474a5a1d1bfabfc9c7c1222673ee657f8858024ad0a63f033c"
     },
     {
       "id": "default:installation/continue",
