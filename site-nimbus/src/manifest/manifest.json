@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "1caef07041e38cc410743de3d9e3257ef9fc675d",
+  "buildId": "1caef07041e38cc410743de3d9e3257ef9fc675d.89c1aac76a83",
   "documents": [
     {
       "id": "page:index",
@@ -1383,9 +1383,9 @@
       },
       "markdown": {
         "path": "/principles.md",
-        "sha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
+        "sha256": "e8b139d5cb190b5ef8bcd6b26985e59fb1362ea96418262eac7f41040b7f477e"
       },
-      "contentSha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
+      "contentSha256": "e8b139d5cb190b5ef8bcd6b26985e59fb1362ea96418262eac7f41040b7f477e"
     },
     {
       "id": "default:security/best-practices",
