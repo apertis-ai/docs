@@ -65,7 +65,7 @@ These are not budget or rate problems. Retrying the same request does not help u
 | Model is not in the key's allowed models | `403` | `Token not authorized to use model: <model>` |
 | Request comes from an address outside the key's IP allowlist | `403` | `Token restricted to subnet: <subnet>, current IP: <ip>` |
 
-On the Anthropic-compatible `POST /v1/messages` endpoint, a model outside the key's allowed models returns `404` in Anthropic's error shape:
+On the [Anthropic-compatible endpoint](/api/text-generation/messages), a model outside the key's allowed models returns `404` in Anthropic's error shape:
 
 ```json
 {
@@ -107,10 +107,7 @@ from openai import OpenAI, APIStatusError
 client = OpenAI(api_key="sk-your-api-key", base_url="https://api.apertis.ai/v1")
 
 try:
-    client.chat.completions.create(
-        model="gpt-5.5",
-        messages=[{"role": "user", "content": "Hello"}],
-    )
+    client.chat.completions.create(**request)  # your model and input
 except APIStatusError as e:
     if e.status_code == 429:
         retry_after = int(e.response.headers.get("Retry-After", "1"))
