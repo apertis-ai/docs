@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "9de395d2954aa9d4fcecb6f57a0760983d8acc49",
-  "buildId": "9de395d2954aa9d4fcecb6f57a0760983d8acc49.1bc5f368f35e",
+  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
+  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
   "documents": [
     {
       "id": "page:index",
@@ -900,6 +900,24 @@
         "sha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
       },
       "contentSha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
+    },
+    {
+      "id": "default:billing/per-key-limits",
+      "sourcePath": "docs/billing/per-key-limits.md",
+      "servedPath": "/billing/per-key-limits/",
+      "canonicalUrl": "https://docs.apertis.ai/billing/per-key-limits",
+      "title": "Per-Key Limits and Budget Blocks",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/billing/per-key-limits.md",
+        "sha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+      },
+      "contentSha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
     },
     {
       "id": "default:billing/subscription-plans",
