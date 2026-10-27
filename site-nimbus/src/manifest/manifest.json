@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "23d40e38cbfb9ce9bea2744f742a6b848e4559c6",
+  "buildId": "23d40e38cbfb9ce9bea2744f742a6b848e4559c6.89c1aac76a83",
   "documents": [
     {
       "id": "page:index",
@@ -915,9 +915,9 @@
       },
       "markdown": {
         "path": "/billing/per-key-limits.md",
-        "sha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+        "sha256": "1c8943b78e5ccd7b1a57f813c96ee26788b94dca8e6766e76bb20d59ff53dbff"
       },
-      "contentSha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+      "contentSha256": "1c8943b78e5ccd7b1a57f813c96ee26788b94dca8e6766e76bb20d59ff53dbff"
     },
     {
       "id": "default:billing/subscription-plans",
@@ -1383,9 +1383,9 @@
       },
       "markdown": {
         "path": "/principles.md",
-        "sha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
+        "sha256": "e8b139d5cb190b5ef8bcd6b26985e59fb1362ea96418262eac7f41040b7f477e"
       },
-      "contentSha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
+      "contentSha256": "e8b139d5cb190b5ef8bcd6b26985e59fb1362ea96418262eac7f41040b7f477e"
     },
     {
       "id": "default:security/best-practices",
