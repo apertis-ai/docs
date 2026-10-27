@@ -31,7 +31,7 @@ Your account can also have its own **monthly spending limit**, and an organizati
 | Situation | HTTP status | `error.code` | `error.message` |
 |-----------|-------------|--------------|-----------------|
 | Key's quota is used up | `401` | — | `This API Key's quota has been exhausted` |
-| Key's remaining quota does not cover the request's estimated cost | `403` | `pre_consume_token_quota_failed` | `the API key's remaining quota does not cover this request` |
+| Key's remaining quota is below the request's estimated cost, when that cost is reserved up front (see below) | `403` | `pre_consume_token_quota_failed` | `the API key's remaining quota does not cover this request` |
 | Key's monthly limit reached | `403` | `pre_consume_token_quota_failed` | `This API key's monthly limit is reached; it resets at <time>` |
 | Account's monthly spending limit reached | `403` | `pre_consume_token_quota_failed` | `This account's monthly spending limit is reached; it resets at <time>` |
 | Workspace's monthly spending cap reached | `403` | `pre_consume_token_quota_failed` | `This workspace's monthly spending cap is reached; it resets at <time>` |
@@ -39,6 +39,8 @@ Your account can also have its own **monthly spending limit**, and an organizati
 | Organization's PAYG balance used up | `403` | `insufficient_org_quota` | `Organization PAYG balance must be positive. Please top up the organization balance and try again.` |
 
 `<time>` is an RFC 3339 timestamp in UTC, for example `2026-11-01T00:00:00Z`.
+
+A request's estimated cost is always reserved up front when the key or the account has a monthly limit. Without a monthly limit, an account whose balance is far larger than the estimate skips the reservation, so a key with a small amount of quota left is not refused until its quota reaches zero.
 
 ## Rate limits
 
@@ -58,15 +60,25 @@ These are not budget or rate problems. Retrying the same request does not help u
 | Situation | HTTP status | `error.message` |
 |-----------|-------------|-----------------|
 | Key has expired | `401` | `This API Key has expired` |
-| Key is disabled | `401` | `This API Key is disabled` |
+| Key is disabled or revoked, or does not exist | `401` | `Invalid API Key` |
 | Model is not in the key's allowed models | `403` | `Token not authorized to use model: <model>` |
 | Request comes from an address outside the key's IP allowlist | `403` | `Token restricted to subnet: <subnet>, current IP: <ip>` |
 
-On the Anthropic-compatible `POST /v1/messages` endpoint, a model outside the key's allowed models returns `404` with `error.type` `invalid_request_error` and `error.code` `model_not_found`.
+On the Anthropic-compatible `POST /v1/messages` endpoint, a model outside the key's allowed models returns `404` in Anthropic's error shape:
+
+```json
+{
+  "type": "error",
+  "error": {
+    "type": "not_found_error",
+    "message": "The model 'gpt-4o' does not exist or you do not have access to it."
+  }
+}
+```
 
 ## Response format
 
-Refusals use the OpenAI error shape:
+On `POST /v1/chat/completions`, refusals use the OpenAI error shape:
 
 ```json
 {
