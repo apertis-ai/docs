@@ -3611,6 +3611,69 @@
       }
     },
     {
+      "path": "/billing/per-key-limits",
+      "kind": "doc",
+      "documentId": "default:billing/per-key-limits",
+      "sourcePath": "docs/billing/per-key-limits.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Account & Access"
+        ],
+        "order": 12
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/billing/per-key-limits",
+        "status": 308,
+        "location": "/billing/per-key-limits/",
+        "final": {
+          "path": "/billing/per-key-limits/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/billing/per-key-limits/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/billing/per-key-limits",
+        "title": "Per-Key Limits and Budget Blocks | Apertis Documentation",
+        "headingIds": [
+          "limits-you-can-set-on-a-key",
+          "budget-blocks",
+          "rate-limits",
+          "access-refusals",
+          "response-format",
+          "requests-already-running",
+          "handling-a-refusal",
+          "related-topics"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/billing/quota-management",
+          "/billing/rate-limits",
+          "https://github.com/apertis-ai/docs/tree/main/docs/billing/per-key-limits.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/billing/subscription-plans",
       "kind": "doc",
       "documentId": "default:billing/subscription-plans",
@@ -4863,7 +4926,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 30
+        "order": 31
       },
       "listed": true,
       "disposition": "preserve",
@@ -4959,7 +5022,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 28
+        "order": 29
       },
       "listed": true,
       "disposition": "preserve",
@@ -5131,7 +5194,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 32
       },
       "listed": true,
       "disposition": "preserve",
@@ -5222,7 +5285,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 29
+        "order": 30
       },
       "listed": true,
       "disposition": "preserve",
@@ -5670,7 +5733,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 24
+        "order": 25
       },
       "listed": true,
       "disposition": "preserve",
@@ -5733,7 +5796,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 22
+        "order": 23
       },
       "listed": true,
       "disposition": "preserve",
@@ -5794,7 +5857,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 12
+        "order": 13
       },
       "listed": true,
       "disposition": "preserve",
@@ -5875,7 +5938,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 16
+        "order": 17
       },
       "listed": true,
       "disposition": "preserve",
@@ -5932,7 +5995,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 25
+        "order": 26
       },
       "listed": true,
       "disposition": "preserve",
@@ -5990,7 +6053,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 18
+        "order": 19
       },
       "listed": true,
       "disposition": "preserve",
@@ -6053,7 +6116,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 14
+        "order": 15
       },
       "listed": true,
       "disposition": "preserve",
@@ -6127,7 +6190,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 17
+        "order": 18
       },
       "listed": true,
       "disposition": "preserve",
@@ -6190,7 +6253,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 15
+        "order": 16
       },
       "listed": true,
       "disposition": "preserve",
@@ -6265,7 +6328,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 21
+        "order": 22
       },
       "listed": true,
       "disposition": "preserve",
@@ -6337,7 +6400,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 20
+        "order": 21
       },
       "listed": true,
       "disposition": "preserve",
@@ -6461,7 +6524,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 13
+        "order": 14
       },
       "listed": true,
       "disposition": "preserve",
@@ -6540,7 +6603,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 19
+        "order": 20
       },
       "listed": true,
       "disposition": "preserve",
@@ -6603,7 +6666,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 26
+        "order": 27
       },
       "listed": true,
       "disposition": "preserve",
@@ -6659,7 +6722,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 23
+        "order": 24
       },
       "listed": true,
       "disposition": "preserve",
@@ -6955,7 +7018,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 32
+        "order": 33
       },
       "listed": true,
       "disposition": "preserve",
@@ -7188,7 +7251,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 27
+        "order": 28
       },
       "listed": true,
       "disposition": "preserve",
@@ -7318,7 +7381,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 33
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",

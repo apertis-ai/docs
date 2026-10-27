@@ -43,6 +43,7 @@ const sidebars = {
         'billing/payg',
         'billing/payment-methods',
         'billing/rate-limits',
+        'billing/per-key-limits',
       ],
     },
 

@@ -28,8 +28,8 @@ test('published articles become blog:<slug> entries eligible everywhere, with a 
     ['blog:choosing-a-plan', '/blog/choosing-a-plan/', 'https://docs.apertis.ai/blog/choosing-a-plan/', 'site-nimbus/src/articles/choosing-a-plan.md'],
   ]);
   for (const d of native) assert.deepEqual(d.eligibility, { publish: true, search: true, agent: true, rag: true });
-  // The legacy corpus is untouched: 79 documents before the articles.
-  assert.equal(m.documents.length - native.length, 79);
+  // The legacy corpus is untouched: 80 documents before the articles.
+  assert.equal(m.documents.length - native.length, 80);
   const md = fs.readFileSync(path.join(out, 'src/content/public/blog/choosing-a-plan/index.md'), 'utf8');
   assert.equal(md, '# Choosing a plan\n\nA fixture article: subscription or pay-as-you-go, compared on one page.\n\nThis fixture stands in for a real article in tests only.\n\n## Subscription\n\nFixed quota per request.\n');
   const meta = JSON.parse(fs.readFileSync(path.join(out, 'src/content/docs/page-meta.json'), 'utf8'));
@@ -85,11 +85,11 @@ test('related docs must be published documentation pages: an unknown path or ano
   assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
-test('with no articles (the committed tree) nothing changes: 79 documents, no blog output', () => {
+test('with no articles (the committed tree) nothing changes: 80 documents, no blog output', () => {
   assert.equal(fs.existsSync(path.join(site, 'src/articles')), false, 'no article is committed yet');
   const out = tmp();
   const m = convert({ outRoot: out });
-  assert.equal(m.documents.length, 79);
+  assert.equal(m.documents.length, 80);
   assert.equal(m.documents.filter(isNativeArticle).length, 0);
   assert.equal(fs.existsSync(path.join(out, 'src/content/public/blog')), false);
 });
