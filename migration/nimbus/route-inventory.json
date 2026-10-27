@@ -3636,41 +3636,7 @@
       },
       "poc": false,
       "built": false,
-      "live": {
-        "requested": "/billing/per-key-limits",
-        "status": 308,
-        "location": "/billing/per-key-limits/",
-        "final": {
-          "path": "/billing/per-key-limits/",
-          "status": 200
-        },
-        "slashVariant": {
-          "path": "/billing/per-key-limits/",
-          "status": 200,
-          "location": null
-        },
-        "canonical": "https://docs.apertis.ai/billing/per-key-limits",
-        "title": "Per-Key Limits and Budget Blocks | Apertis Documentation",
-        "headingIds": [
-          "limits-you-can-set-on-a-key",
-          "budget-blocks",
-          "rate-limits",
-          "access-refusals",
-          "response-format",
-          "requests-already-running",
-          "handling-a-refusal",
-          "related-topics"
-        ],
-        "links": [
-          "/",
-          "/authentication/api-keys",
-          "/billing/quota-management",
-          "/billing/rate-limits",
-          "https://github.com/apertis-ai/docs/tree/main/docs/billing/per-key-limits.md"
-        ],
-        "images": [],
-        "articleSha256": null
-      }
+      "live": null
     },
     {
       "path": "/billing/subscription-plans",
