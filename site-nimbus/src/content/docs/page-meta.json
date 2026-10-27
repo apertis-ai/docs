@@ -196,8 +196,8 @@
     "readingMinutes": 5
   },
   "default:billing/per-key-limits": {
-    "updated": "2026-10-27T14:48:33+08:00",
-    "readingMinutes": 5
+    "updated": "2026-10-27T14:54:15+08:00",
+    "readingMinutes": 6
   },
   "default:billing/subscription-plans": {
     "updated": "2026-07-20T11:55:30+08:00",

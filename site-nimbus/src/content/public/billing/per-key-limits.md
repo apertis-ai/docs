@@ -36,6 +36,7 @@ Your account can also have its own **monthly spending limit**, and an organizati
 | Account's monthly spending limit reached | `403` | `pre_consume_token_quota_failed` | `This account's monthly spending limit is reached; it resets at <time>` |
 | Workspace's monthly spending cap reached | `403` | `pre_consume_token_quota_failed` | `This workspace's monthly spending cap is reached; it resets at <time>` |
 | Account's PAYG credits used up | `403` | `insufficient_user_quota` | `PAYG credits must be positive. Please top up credits and try again.` |
+| Account's PAYG credits do not cover the request's estimated cost | `403` | `insufficient_user_quota` | starts with `user quota is not enough` |
 | Organization's PAYG balance used up | `403` | `insufficient_org_quota` | `Organization PAYG balance must be positive. Please top up the organization balance and try again.` |
 
 `<time>` is an RFC 3339 timestamp in UTC, for example `2026-11-01T00:00:00Z`.
