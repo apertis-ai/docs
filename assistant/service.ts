@@ -16,6 +16,8 @@ export interface Timeouts {
   retrieval: number
   // Whole Apertis call: connection, headers and the entire relayed stream.
   apertis: number
+  // Wait before retrying a transient Apertis refusal, multiplied by the attempt number (docs#47).
+  apertisRetry: number
 }
 
 export interface AskDeps {
@@ -23,7 +25,7 @@ export interface AskDeps {
   timeouts?: Partial<Timeouts>
 }
 
-const DEFAULT_TIMEOUTS: Timeouts = { turnstile: 10_000, jina: 15_000, retrieval: 15_000, apertis: 120_000 }
+const DEFAULT_TIMEOUTS: Timeouts = { turnstile: 10_000, jina: 15_000, retrieval: 15_000, apertis: 120_000, apertisRetry: 1_000 }
 
 export const MAX_QUERIES_PER_SESSION = 20
 export const MAX_BODY_BYTES = 64 * 1024
@@ -37,6 +39,19 @@ const JSON_HEADERS = { 'Content-Type': 'application/json' }
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: JSON_HEADERS })
 
 class UpstreamError extends Error {}
+
+// A model with one live channel answers 429 or 5xx whenever that channel is briefly refused (docs#47), so
+// these statuses are retried. Nothing has been relayed yet, so a retry is invisible to the reader.
+const RETRY_STATUSES = new Set([429, 502, 503, 504])
+const MAX_APERTIS_RETRIES = 2
+
+function sleep(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) return reject(signal.reason)
+    const timer = setTimeout(resolve, ms)
+    signal.addEventListener('abort', () => { clearTimeout(timer); reject(signal.reason) }, { once: true })
+  })
+}
 
 function log(traceId: string, stage: string, detail: Record<string, unknown> = {}) {
   // Stage, status and codes only: provider bodies, messages and secrets are never logged.
@@ -217,19 +232,32 @@ export async function handleAsk(request: Request, env: AskEnv, deps: AskDeps = {
     stage = 'apertis'
     const upstream = new AbortController()
     const chatSignal = AbortSignal.any([upstream.signal, request.signal, AbortSignal.timeout(timeouts.apertis)])
-    const chatRes = await doFetch(`${env.APERTIS_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${env.APERTIS_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: env.APERTIS_MODEL,
-        stream: true,
-        messages: [
-          { role: 'system', content: buildSystemPrompt(docs, pageContext) },
-          { role: 'user', content: question },
-        ],
-      }),
-      signal: chatSignal,
+    const deadline = Date.now() + timeouts.apertis
+    const chatBody = JSON.stringify({
+      model: env.APERTIS_MODEL,
+      stream: true,
+      messages: [
+        { role: 'system', content: buildSystemPrompt(docs, pageContext) },
+        { role: 'user', content: question },
+      ],
     })
+    let chatRes: Response
+    for (let attempt = 0; ; attempt++) {
+      chatRes = await doFetch(`${env.APERTIS_BASE_URL}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${env.APERTIS_API_KEY}`, 'Content-Type': 'application/json' },
+        body: chatBody,
+        signal: chatSignal,
+      })
+      if (chatRes.ok || !RETRY_STATUSES.has(chatRes.status) || attempt >= MAX_APERTIS_RETRIES) break
+      const retryAfter = Number(chatRes.headers.get('Retry-After'))
+      const wait = Number.isFinite(retryAfter) && chatRes.headers.has('Retry-After') ? retryAfter * 1000 : timeouts.apertisRetry * (attempt + 1)
+      // A wait that would use up the deadline leaves no time to answer, so the refusal stands.
+      if (Date.now() + wait >= deadline) break
+      await chatRes.body?.cancel().catch(() => {})
+      log(traceId, stage, { status: chatRes.status, retry: attempt + 1 })
+      await sleep(wait, chatSignal)
+    }
     if (!chatRes.ok || !chatRes.body) {
       await chatRes.body?.cancel().catch(() => {})
       log(traceId, stage, { status: chatRes.status })

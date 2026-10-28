@@ -95,6 +95,11 @@ receives the request, so no body field, header, cookie or query parameter can ch
   | Apertis, including the whole relayed stream | 120 s |
 
   Client cancellation aborts the in-flight provider call and cancels the upstream stream.
+- **Apertis retry (#47):** a 429, 502, 503 or 504 from the chat call is retried at most twice, before
+  anything is relayed. The wait is `Retry-After` when the response sends it, otherwise 1 s and then 2 s.
+  A wait that would reach the 120 s deadline is skipped and the refusal stands. When every attempt is
+  refused, the browser gets the same `500 {"error":"Apertis API error: <status>","traceId":…}` as before.
+  Each retry is logged with the traceId and the status.
 - **Stream termination:** `data: [DONE]` is sent exactly once, and only when the upstream sent `[DONE]`.
   - Content after `[DONE]` is dropped, and the upstream is cancelled.
   - These all end the stream the same way: an upstream error, an in-band `error` frame, a timeout, or

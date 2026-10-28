@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { after, afterEach, beforeEach, describe, test } from 'node:test'
 import { MAX_BODY_BYTES, handleAsk, normalizePageContext, type AskDeps } from '../service.ts'
 import {
-  ENV, SENTINEL, VALID, askRequest, captureLogs, delta, frames, providers, readAll, sse, trackRejections, type Script,
+  ENV, SENTINEL, UPSTREAM_OK, VALID, askRequest, captureLogs, delta, frames, providers, readAll, sse, trackRejections, type Script,
 } from './harness.ts'
 
 const rejections = trackRejections()
@@ -18,7 +18,7 @@ after(() => rejections.stop())
 
 let n = 0
 const session = () => `f-${++n}`
-const FAST: AskDeps['timeouts'] = { turnstile: 50, jina: 50, retrieval: 50, apertis: 150 }
+const FAST: AskDeps['timeouts'] = { turnstile: 50, jina: 50, retrieval: 50, apertis: 150, apertisRetry: 10 }
 
 async function ask(body: unknown, script: Script = {}, init: Parameters<typeof askRequest>[1] = {}) {
   const p = providers(script)
@@ -114,6 +114,49 @@ describe('Turnstile runs before any paid call', () => {
       assert.deepEqual(r.p.calls.map((c) => c.provider), ['turnstile'])
     })
   }
+})
+
+describe('a transient Apertis refusal is retried before anything is relayed (docs#47)', () => {
+  const busy = { status: 429, text: SENTINEL }
+  for (const status of [429, 502, 503, 504]) {
+    test(`${status} then OK answers the question`, async () => {
+      const r = await ask({ ...VALID, sessionId: session() }, { apertis: [{ status, text: SENTINEL }, { chunks: [UPSTREAM_OK] }] })
+      assert.equal(r.res.status, 200)
+      assert.match(r.text, /data: \[DONE\]/)
+      assert.deepEqual(r.p.calls.map((c) => c.provider), ['turnstile', 'jina', 'supabase', 'apertis', 'apertis'])
+      assert.deepEqual(r.p.called('apertis')[1].body, r.p.called('apertis')[0].body, 'the retry sends the same request')
+    })
+  }
+
+  test('three refusals give the same 500 as before, after two retries', async () => {
+    const r = await ask({ ...VALID, sessionId: session() }, { apertis: busy })
+    assert.equal(r.res.status, 500)
+    assert.equal(r.body.error, 'Apertis API error: 429')
+    assert.deepEqual(Object.keys(r.body).sort(), ['error', 'traceId'])
+    assert.equal(r.p.called('apertis').length, 3)
+  })
+
+  test('a non-transient status is not retried', async () => {
+    const r = await ask({ ...VALID, sessionId: session() }, { apertis: [{ status: 400, text: SENTINEL }, { chunks: [UPSTREAM_OK] }] })
+    assert.equal(r.body.error, 'Apertis API error: 400')
+    assert.equal(r.p.called('apertis').length, 1)
+  })
+
+  test('a Retry-After past the deadline is not waited for', async () => {
+    const started = Date.now()
+    const r = await ask({ ...VALID, sessionId: session() }, { apertis: [{ status: 429, text: SENTINEL, headers: { 'Retry-After': '30' } }, { chunks: [UPSTREAM_OK] }] })
+    assert.equal(r.body.error, 'Apertis API error: 429')
+    assert.equal(r.p.called('apertis').length, 1)
+    assert.ok(Date.now() - started < 1000)
+  })
+
+  test('a Retry-After inside the deadline is honoured', async () => {
+    const p = providers({ apertis: [{ status: 503, text: SENTINEL, headers: { 'Retry-After': '0' } }, { chunks: [UPSTREAM_OK] }] })
+    const res = await handleAsk(askRequest({ ...VALID, sessionId: session() }), ENV, { fetch: p.fetch, timeouts: { ...FAST, apertisRetry: 60_000 } })
+    assert.equal(res.status, 200)
+    await readAll(res)
+    assert.equal(p.called('apertis').length, 2)
+  })
 })
 
 describe('upstream failures are visible but sanitized', () => {
