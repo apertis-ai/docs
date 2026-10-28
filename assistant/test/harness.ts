@@ -50,8 +50,11 @@ export interface Script {
   turnstile?: { success: boolean; codes?: string[] } | Reply
   jina?: { embedding: number[] } | Reply
   supabase?: { rows: unknown[] } | Reply
-  apertis?: Reply | { chunks: Array<string | Uint8Array>; end?: 'close' | 'error' | 'hang' }
+  // An array scripts successive Apertis calls; the last entry answers every call after it.
+  apertis?: ApertisReply | ApertisReply[]
 }
+
+type ApertisReply = Reply | { status: number; text: string; headers: Record<string, string> } | { chunks: Array<string | Uint8Array>; end?: 'close' | 'error' | 'hang' }
 
 export interface Call {
   provider: 'turnstile' | 'jina' | 'supabase' | 'apertis'
@@ -109,7 +112,10 @@ export function providers(script: Script = {}) {
       if (s === 'throw' || s === 'hang') return reply(s, signal)
       return new Response(s.text, { status: s.status, headers: { 'Content-Type': 'application/json' } })
     }
-    const a = script.apertis ?? { chunks: [UPSTREAM_OK] }
+    const scripted = script.apertis ?? { chunks: [UPSTREAM_OK] }
+    const list = Array.isArray(scripted) ? scripted : [scripted]
+    const a = list[Math.min(calls.filter((c) => c.provider === 'apertis').length - 1, list.length - 1)]
+    if (typeof a === 'object' && 'headers' in a) return new Response(a.text, { status: a.status, headers: a.headers })
     if (!(typeof a === 'object' && 'chunks' in a)) return reply(a as Reply, signal)
     let i = 0
     const body = new ReadableStream<Uint8Array>({
