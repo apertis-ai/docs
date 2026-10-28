@@ -150,6 +150,28 @@ describe('a transient Apertis refusal is retried before anything is relayed (doc
     assert.ok(Date.now() - started < 1000)
   })
 
+  test('a Retry-After longer than the cap is not waited for, even inside the deadline', async () => {
+    const started = Date.now()
+    const p = providers({ apertis: [{ status: 429, text: SENTINEL, headers: { 'Retry-After': '6' } }, { chunks: [UPSTREAM_OK] }] })
+    const res = await handleAsk(askRequest({ ...VALID, sessionId: session() }), ENV, { fetch: p.fetch, timeouts: { ...FAST, apertis: 120_000 } })
+    assert.equal(res.status, 500)
+    assert.equal((await res.json()).error, 'Apertis API error: 429')
+    assert.equal(p.called('apertis').length, 1)
+    assert.ok(Date.now() - started < 1000)
+  })
+
+  for (const value of ['', ' ', '-5', 'Wed, 21 Oct 2026 07:28:00 GMT']) {
+    test(`a Retry-After of ${JSON.stringify(value)} falls back to backoff`, async () => {
+      const started = Date.now()
+      const p = providers({ apertis: [{ status: 429, text: SENTINEL, headers: { 'Retry-After': value } }, { chunks: [UPSTREAM_OK] }] })
+      const res = await handleAsk(askRequest({ ...VALID, sessionId: session() }), ENV, { fetch: p.fetch, timeouts: { ...FAST, apertisRetry: 40 } })
+      assert.equal(res.status, 200)
+      await readAll(res)
+      assert.equal(p.called('apertis').length, 2)
+      assert.ok(Date.now() - started >= 35)
+    })
+  }
+
   test('a Retry-After inside the deadline is honoured', async () => {
     const p = providers({ apertis: [{ status: 503, text: SENTINEL, headers: { 'Retry-After': '0' } }, { chunks: [UPSTREAM_OK] }] })
     const res = await handleAsk(askRequest({ ...VALID, sessionId: session() }), ENV, { fetch: p.fetch, timeouts: { ...FAST, apertisRetry: 60_000 } })

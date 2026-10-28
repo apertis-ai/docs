@@ -44,6 +44,8 @@ class UpstreamError extends Error {}
 // these statuses are retried. Nothing has been relayed yet, so a retry is invisible to the reader.
 const RETRY_STATUSES = new Set([429, 502, 503, 504])
 const MAX_APERTIS_RETRIES = 2
+// A reader waits in silence while we back off, so a longer Retry-After means the refusal stands.
+const MAX_RETRY_WAIT_MS = 5_000
 
 function sleep(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -250,10 +252,12 @@ export async function handleAsk(request: Request, env: AskEnv, deps: AskDeps = {
         signal: chatSignal,
       })
       if (chatRes.ok || !RETRY_STATUSES.has(chatRes.status) || attempt >= MAX_APERTIS_RETRIES) break
-      const retryAfter = Number(chatRes.headers.get('Retry-After'))
-      const wait = Number.isFinite(retryAfter) && chatRes.headers.has('Retry-After') ? retryAfter * 1000 : timeouts.apertisRetry * (attempt + 1)
-      // A wait that would use up the deadline leaves no time to answer, so the refusal stands.
-      if (Date.now() + wait >= deadline) break
+      // Only a non-negative number of seconds is honoured; an empty, negative or HTTP-date value falls back to backoff.
+      const header = chatRes.headers.get('Retry-After')?.trim()
+      const retryAfter = header ? Number(header) : NaN
+      const wait = Number.isFinite(retryAfter) && retryAfter >= 0 ? retryAfter * 1000 : timeouts.apertisRetry * (attempt + 1)
+      // A long wait, or one that would use up the deadline, leaves the reader waiting for nothing, so the refusal stands.
+      if (wait > MAX_RETRY_WAIT_MS || Date.now() + wait >= deadline) break
       await chatRes.body?.cancel().catch(() => {})
       log(traceId, stage, { status: chatRes.status, retry: attempt + 1 })
       await sleep(wait, chatSignal)
