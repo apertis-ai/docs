@@ -46,7 +46,7 @@ test('every sidebar row appears exactly once, in inventory order, and the two si
     assert.deepEqual(flat(nav.trees[id]), rows.map((r) => r.documentId));
   }
   assert.deepEqual(labels(nav.trees.tutorialSidebar).map((n) => typeof n === 'string' ? n : Object.keys(n as object)[0]),
-    ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security', 'Resources']);
+    ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security', 'Resources', 'Release Notes']);
 });
 
 test('labels come from sidebar.label, then the manifest title; hrefs are manifest servedPaths', () => {

@@ -243,6 +243,14 @@
     "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
+  "default:installation/coding-agent-baseurl": {
+    "updated": "2026-10-30T21:08:42+08:00",
+    "readingMinutes": 1
+  },
+  "default:installation/coding-agent-baseurl-zh": {
+    "updated": "2026-10-30T21:08:42+08:00",
+    "readingMinutes": 1
+  },
   "default:installation/connection": {
     "updated": "2026-07-20T11:55:30+08:00",
     "readingMinutes": 1
@@ -301,6 +309,14 @@
   },
   "default:principles": {
     "updated": "2026-10-05T18:57:03+08:00",
+    "readingMinutes": 1
+  },
+  "default:release-notes/portability": {
+    "updated": "2026-10-30T21:08:42+08:00",
+    "readingMinutes": 1
+  },
+  "default:release-notes/portability-zh": {
+    "updated": "2026-10-30T21:08:42+08:00",
     "readingMinutes": 1
   },
   "default:security/best-practices": {

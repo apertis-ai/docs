@@ -169,7 +169,7 @@ const expectedLinks = (id: string, legacy: string[]) => {
 
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
-  assert.equal(manifest.documents.length, 80);
+  assert.equal(manifest.documents.length, 84);
   // Content, not file names: Astro may name a CSS chunk after src/manifest/manifest.ts.
   const keys = ['manifestVersion', 'sourceSha', 'sourcePath', 'servedPath', 'canonicalUrl', 'contentSha256'].map((k) => `"${k}"`);
   const values = manifest.documents.flatMap((d) => [d.contentSha256, JSON.stringify(d.sourcePath)]);
@@ -313,7 +313,7 @@ test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML rou
     ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => r.live!.canonical!),
   ].sort();
   assert.deepEqual(locs, expected);
-  assert.equal(locs.length, 81);
+  assert.equal(locs.length, 85);
   assert.equal(read('sitemap.xml'), publicationFiles(manifest, routes, dist)['sitemap.xml']);
 });
 
@@ -398,7 +398,7 @@ test('m8: every converted page keeps the legacy external links and images (conte
     links += external.length;
     images += row.live!.images.length;
   }
-  assert.equal(converted.length, 79);
+  assert.equal(converted.length, 83);
   assert.ok(links > 100 && images > 40, `${links} links, ${images} images compared`);
 });
 
@@ -423,14 +423,14 @@ test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar se
   const entries = parseIndex(body);
   assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
   assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
-  assert.equal(entries.length, 79);
+  assert.equal(entries.length, 83);
   assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
   for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
   // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
   assert.equal(entries.some((e) => pageKey(e.markdownUrl) === '/'), false);
   for (const a of readArticles(root).filter((x) => x.draft)) assert.equal(entries.some((e) => e.markdownUrl.includes(`/blog/${a.slug}`)), false, a.slug);
   assert.deepEqual([...new Set(entries.map((e) => e.section))], ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security',
-    'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
+    'Resources', 'Release Notes', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
   assert.equal(body, llmsFiles(manifest, routes, dist)['llms.txt']);
 });
 

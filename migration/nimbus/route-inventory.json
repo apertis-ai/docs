@@ -4926,7 +4926,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 33
       },
       "listed": true,
       "disposition": "preserve",
@@ -5022,7 +5022,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 29
+        "order": 31
       },
       "listed": true,
       "disposition": "preserve",
@@ -5194,7 +5194,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 32
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",
@@ -5285,7 +5285,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 30
+        "order": 32
       },
       "listed": true,
       "disposition": "preserve",
@@ -5733,7 +5733,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 25
+        "order": 27
       },
       "listed": true,
       "disposition": "preserve",
@@ -5796,7 +5796,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 23
+        "order": 25
       },
       "listed": true,
       "disposition": "preserve",
@@ -5938,7 +5938,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 17
+        "order": 19
       },
       "listed": true,
       "disposition": "preserve",
@@ -5986,6 +5986,126 @@
       }
     },
     {
+      "path": "/installation/coding-agent-baseurl",
+      "kind": "doc",
+      "documentId": "default:installation/coding-agent-baseurl",
+      "sourcePath": "docs/installation/coding-agent-baseurl.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "AI Coding Assistants"
+        ],
+        "order": 14
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/installation/coding-agent-baseurl",
+        "status": 308,
+        "location": "/installation/coding-agent-baseurl/",
+        "final": {
+          "path": "/installation/coding-agent-baseurl/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/installation/coding-agent-baseurl/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/installation/coding-agent-baseurl",
+        "title": "Run your coding agent on Apertis: change the baseURL | Apertis Documentation",
+        "headingIds": [
+          "run-your-coding-agent-on-apertis-change-the-baseurl"
+        ],
+        "links": [
+          "/",
+          "https://apertis.ai/setting?tab=keys",
+          "https://docs.apertis.ai",
+          "https://docs.apertis.ai/installation/claude-code",
+          "https://docs.apertis.ai/models/",
+          "https://github.com/apertis-ai/docs/tree/main/docs/installation/coding-agent-baseurl.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/installation/coding-agent-baseurl-zh",
+      "kind": "doc",
+      "documentId": "default:installation/coding-agent-baseurl-zh",
+      "sourcePath": "docs/installation/coding-agent-baseurl-zh.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "AI Coding Assistants"
+        ],
+        "order": 15
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/installation/coding-agent-baseurl-zh",
+        "status": 308,
+        "location": "/installation/coding-agent-baseurl-zh/",
+        "final": {
+          "path": "/installation/coding-agent-baseurl-zh/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/installation/coding-agent-baseurl-zh/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/installation/coding-agent-baseurl-zh",
+        "title": "用 Apertis 跑 coding agent：改 baseURL 就好 | Apertis Documentation",
+        "headingIds": [
+          "用-apertis-跑-coding-agent改-baseurl-就好",
+          "前置",
+          "opencode",
+          "其他-client通用-openai-compatible",
+          "建議先試的開源模型",
+          "faq",
+          "下一步"
+        ],
+        "links": [
+          "/",
+          "https://apertis.ai/setting?tab=keys",
+          "https://docs.apertis.ai",
+          "https://docs.apertis.ai/installation/claude-code",
+          "https://docs.apertis.ai/models/",
+          "https://github.com/apertis-ai/docs/tree/main/docs/installation/coding-agent-baseurl-zh.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/installation/connection",
       "kind": "doc",
       "documentId": "default:installation/connection",
@@ -5995,7 +6115,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 26
+        "order": 28
       },
       "listed": true,
       "disposition": "preserve",
@@ -6053,7 +6173,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 19
+        "order": 21
       },
       "listed": true,
       "disposition": "preserve",
@@ -6116,7 +6236,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 15
+        "order": 17
       },
       "listed": true,
       "disposition": "preserve",
@@ -6190,7 +6310,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 18
+        "order": 20
       },
       "listed": true,
       "disposition": "preserve",
@@ -6253,7 +6373,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 16
+        "order": 18
       },
       "listed": true,
       "disposition": "preserve",
@@ -6328,7 +6448,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 22
+        "order": 24
       },
       "listed": true,
       "disposition": "preserve",
@@ -6400,7 +6520,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 21
+        "order": 23
       },
       "listed": true,
       "disposition": "preserve",
@@ -6524,7 +6644,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 14
+        "order": 16
       },
       "listed": true,
       "disposition": "preserve",
@@ -6603,7 +6723,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 20
+        "order": 22
       },
       "listed": true,
       "disposition": "preserve",
@@ -6666,7 +6786,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 27
+        "order": 29
       },
       "listed": true,
       "disposition": "preserve",
@@ -6722,7 +6842,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 24
+        "order": 26
       },
       "listed": true,
       "disposition": "preserve",
@@ -7018,7 +7138,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 33
+        "order": 35
       },
       "listed": true,
       "disposition": "preserve",
@@ -7121,6 +7241,123 @@
         ],
         "images": [],
         "articleSha256": "0fc96ffde770f673f62b33dc14832924c9e9b8a188b78b60d95e5b38bb8be84b"
+      }
+    },
+    {
+      "path": "/release-notes/portability",
+      "kind": "doc",
+      "documentId": "default:release-notes/portability",
+      "sourcePath": "docs/release-notes/portability.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Release Notes"
+        ],
+        "order": 37
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/release-notes/portability",
+        "status": 308,
+        "location": "/release-notes/portability/",
+        "final": {
+          "path": "/release-notes/portability/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/release-notes/portability/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/release-notes/portability",
+        "title": "Apertis changelog & portability | Apertis Documentation",
+        "headingIds": [
+          "apertis-changelog--portability",
+          "every-request-leaves-a-record-you-can-check",
+          "portable-change-the-baseurl-in-change-it-back-out",
+          "monthly-changelog"
+        ],
+        "links": [
+          "/",
+          "https://apertis.ai/compare",
+          "https://docs.apertis.ai",
+          "https://docs.apertis.ai/models/",
+          "https://github.com/apertis-ai/docs/tree/main/docs/release-notes/portability.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/release-notes/portability-zh",
+      "kind": "doc",
+      "documentId": "default:release-notes/portability-zh",
+      "sourcePath": "docs/release-notes/portability-zh.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Release Notes"
+        ],
+        "order": 38
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/release-notes/portability-zh",
+        "status": 308,
+        "location": "/release-notes/portability-zh/",
+        "final": {
+          "path": "/release-notes/portability-zh/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/release-notes/portability-zh/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/release-notes/portability-zh",
+        "title": "Apertis 更新紀錄與可攜性 | Apertis Documentation",
+        "headingIds": [
+          "apertis-更新紀錄與可攜性",
+          "你的請求都有可核對紀錄",
+          "可攜改-baseurl-就接入也能隨時離開",
+          "更新紀錄每月一篇",
+          "連結"
+        ],
+        "links": [
+          "/",
+          "https://apertis.ai/compare",
+          "https://docs.apertis.ai",
+          "https://docs.apertis.ai/models/",
+          "https://github.com/apertis-ai/docs/tree/main/docs/release-notes/portability-zh.md"
+        ],
+        "images": [],
+        "articleSha256": null
       }
     },
     {
@@ -7250,7 +7487,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 28
+        "order": 30
       },
       "listed": true,
       "disposition": "preserve",
@@ -7380,7 +7617,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 34
+        "order": 36
       },
       "listed": true,
       "disposition": "preserve",
