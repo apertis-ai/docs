@@ -60,6 +60,8 @@ const sidebars = {
           collapsed: false,
           items: [
             'installation/claude-code',
+            'installation/coding-agent-baseurl',
+            'installation/coding-agent-baseurl-zh',
             'installation/opencode',
             'installation/crush',
             'installation/goose',
@@ -115,6 +117,14 @@ const sidebars = {
       className: 'sidebar-category--resources',
       collapsed: false,
       items: ['opensource', 'stimachat'],
+    },
+
+    // Release Notes
+    {
+      type: 'category',
+      label: 'Release Notes',
+      collapsed: false,
+      items: ['release-notes/portability', 'release-notes/portability-zh'],
     },
   ],
 };
