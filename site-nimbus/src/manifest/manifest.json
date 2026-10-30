@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "54a1a9347a33403d7eeca91100666d6064c852df",
+  "buildId": "54a1a9347a33403d7eeca91100666d6064c852df.1816dc866efe",
   "documents": [
     {
       "id": "page:index",
@@ -1118,6 +1118,42 @@
       "contentSha256": "f657049753de1878ad7839477f92f334f33b732a8c3fca06cad7be2006330f2c"
     },
     {
+      "id": "default:installation/coding-agent-baseurl",
+      "sourcePath": "docs/installation/coding-agent-baseurl.md",
+      "servedPath": "/installation/coding-agent-baseurl/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/coding-agent-baseurl",
+      "title": "Run your coding agent on Apertis: change the baseURL",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/coding-agent-baseurl.md",
+        "sha256": "b6c38798725456cb003340d22922128ea47aac6d67587b21d4d4c12e3f016c3d"
+      },
+      "contentSha256": "b6c38798725456cb003340d22922128ea47aac6d67587b21d4d4c12e3f016c3d"
+    },
+    {
+      "id": "default:installation/coding-agent-baseurl-zh",
+      "sourcePath": "docs/installation/coding-agent-baseurl-zh.md",
+      "servedPath": "/installation/coding-agent-baseurl-zh/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/coding-agent-baseurl-zh",
+      "title": "用 Apertis 跑 coding agent：改 baseURL 就好",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/coding-agent-baseurl-zh.md",
+        "sha256": "1e27934478f5714a1a5480aa4230ca624fbe9a962e6393cb7972ad61d41dd695"
+      },
+      "contentSha256": "1e27934478f5714a1a5480aa4230ca624fbe9a962e6393cb7972ad61d41dd695"
+    },
+    {
       "id": "default:installation/connection",
       "sourcePath": "docs/installation/connection.md",
       "servedPath": "/installation/connection/",
@@ -1386,6 +1422,42 @@
         "sha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
       },
       "contentSha256": "f323a5d0baf49e4a9c32d573517e960e04608d2ac17d6e9b69e347e111f288b4"
+    },
+    {
+      "id": "default:release-notes/portability",
+      "sourcePath": "docs/release-notes/portability.md",
+      "servedPath": "/release-notes/portability/",
+      "canonicalUrl": "https://docs.apertis.ai/release-notes/portability",
+      "title": "Apertis changelog & portability",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/release-notes/portability.md",
+        "sha256": "5581d7079543feaed32cd0c58aef8b2cbfd39d7821b2313affc430dc123e863a"
+      },
+      "contentSha256": "5581d7079543feaed32cd0c58aef8b2cbfd39d7821b2313affc430dc123e863a"
+    },
+    {
+      "id": "default:release-notes/portability-zh",
+      "sourcePath": "docs/release-notes/portability-zh.md",
+      "servedPath": "/release-notes/portability-zh/",
+      "canonicalUrl": "https://docs.apertis.ai/release-notes/portability-zh",
+      "title": "Apertis 更新紀錄與可攜性",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/release-notes/portability-zh.md",
+        "sha256": "58517e5c6bedb3900ca68a6f4917607481786716953e0db1996b3277bd4d5f69"
+      },
+      "contentSha256": "58517e5c6bedb3900ca68a6f4917607481786716953e0db1996b3277bd4d5f69"
     },
     {
       "id": "default:security/best-practices",
