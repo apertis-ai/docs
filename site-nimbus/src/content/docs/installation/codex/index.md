@@ -34,7 +34,7 @@ export APERTIS_API_KEY="<your Apertis API key>"
 codex
 ```
 
-Codex sends its requests in the OpenAI Responses format, which Codex's documentation lists as the only supported `wire_api` value. Apertis accepts that format at `https://api.apertis.ai/v1/responses`. When a model's provider does not serve the Responses endpoint, Apertis sends the request to the provider's Chat Completions endpoint and converts the response back. See the [Responses API](/api/text-generation/responses) reference.
+With `wire_api = "responses"`, Codex sends its requests in the OpenAI Responses format. Apertis accepts that format at `https://api.apertis.ai/v1/responses`. When a model's provider does not serve the Responses endpoint, Apertis sends the request to the provider's Chat Completions endpoint and converts the response back. See the [Responses API](/api/text-generation/responses) reference.
 
 To use another model, change `model` to one of these IDs:
 

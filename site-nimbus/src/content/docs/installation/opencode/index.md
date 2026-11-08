@@ -45,13 +45,16 @@ Create or edit the configuration file at `~/.config/opencode/opencode.json`:
         "apiKey": "your_apertis_api_key"
       },
       "models": {
+        "claude-opus-4-8-thinking": {
+          "name": "Claude Opus 4.8 (Thinking)"
+        },
         "claude-opus-4-8": {
           "name": "Claude Opus 4.8"
         },
         "claude-sonnet-4-6": {
           "name": "Claude Sonnet 4.6"
         },
-        "claude-haiku-4.5": {
+        "claude-haiku-4-5": {
           "name": "Claude Haiku 4.5"
         },
         "gemini-3.1-pro-preview": {
@@ -97,6 +100,13 @@ If you prefer not to use the Apertis SDK, you can use the built-in OpenAI-compat
 
 Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys).
 
+<aside class="admonition admonition-tip">
+<p class="admonition-title">No <code>code:</code> prefix needed</p>
+
+Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude model IDs. Use the standard model ID directly (e.g., `claude-opus-4-8` instead of `code:claude-opus-4-8`).
+
+</aside>
+
 ### Configuration Fields
 
 | Field | Description |
@@ -111,9 +121,10 @@ Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard]
 
 | Model ID | Description |
 |----------|-------------|
+| `claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
 | `claude-opus-4-8` | Claude Opus 4.8 — most capable |
 | `claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
-| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest |
+| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest |
 | `gemini-3.1-pro-preview` | Gemini 3.1 Pro Preview |
 | `gemini-3.1-flash-lite-preview` | Gemini 3.1 Flash Lite Preview |
 
@@ -129,18 +140,18 @@ Use the `/models` command within OpenCode to switch models.
 
 ## Open models
 
-Copy this into `~/.config/opencode/opencode.json`. It points OpenCode at Apertis with open-weight models through the OpenAI-compatible provider. Set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`).
+Copy this into `~/.config/opencode/opencode.json`, and set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`). It uses the `providers` format from OpenCode's [providers guide](https://opencode.ai/docs/providers/).
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "provider": {
+  "providers": {
     "apertis": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Apertis AI",
-      "options": {
-        "baseURL": "https://api.apertis.ai/v1",
-        "apiKey": "{env:APERTIS_API_KEY}"
+      "name": "Apertis",
+      "env": ["APERTIS_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.apertis.ai/v1"
       },
       "models": {
         "glm-5.1": { "name": "GLM 5.1" },
@@ -155,7 +166,7 @@ Copy this into `~/.config/opencode/opencode.json`. It points OpenCode at Apertis
 }
 ```
 
-If the file already has an `apertis` provider from the sections above, merge the `models` entries into it instead of pasting a second one. OpenCode's current documentation says the `provider` format above remains supported alongside its newer `providers` format. The OpenAI-compatible provider sends requests in the OpenAI Chat Completions format to the `baseURL`.
+If your file already defines an `apertis` provider, add these model IDs to that entry instead of adding a second one.
 
 These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
 

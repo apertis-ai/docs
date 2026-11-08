@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "7ec50b7d629bd188080b3040f9f9803b16b0363b",
-  "buildId": "7ec50b7d629bd188080b3040f9f9803b16b0363b.ef2354303986",
+  "sourceSha": "0e4d6572fd23972de24524a3bf12209c6231505a",
+  "buildId": "0e4d6572fd23972de24524a3bf12209c6231505a.ef2354303986",
   "documents": [
     {
       "id": "page:index",
@@ -1095,9 +1095,9 @@
       },
       "markdown": {
         "path": "/installation/claude-code.md",
-        "sha256": "99a6d07ecd89efa3106621dfe6625e72d4d127ad40ba15c50fb6a9aa10d125b3"
+        "sha256": "e02f79418f2e7bed4eed746132e1e9f52995daf6f02c960f22447edf2777bdd9"
       },
-      "contentSha256": "99a6d07ecd89efa3106621dfe6625e72d4d127ad40ba15c50fb6a9aa10d125b3"
+      "contentSha256": "e02f79418f2e7bed4eed746132e1e9f52995daf6f02c960f22447edf2777bdd9"
     },
     {
       "id": "default:installation/cline",
@@ -1131,9 +1131,9 @@
       },
       "markdown": {
         "path": "/installation/codex.md",
-        "sha256": "c3dc200d488fc469eefb77e9e9afdab2e570abf13c61c11515009de98cdad73a"
+        "sha256": "dfa128b6db10177176aef1eb3ba9fc58d52ee3c71c1ec51909633b613e348f47"
       },
-      "contentSha256": "c3dc200d488fc469eefb77e9e9afdab2e570abf13c61c11515009de98cdad73a"
+      "contentSha256": "dfa128b6db10177176aef1eb3ba9fc58d52ee3c71c1ec51909633b613e348f47"
     },
     {
       "id": "default:installation/connection",
@@ -1203,9 +1203,9 @@
       },
       "markdown": {
         "path": "/installation/cursor.md",
-        "sha256": "e13188dfbc4d09ecd4cef2d76efd83ae7424fc44d7f7a7ee7b3d2024b6b55f2b"
+        "sha256": "fd6dd30b5e04ecfe95224960b287c59af08dce7b1d40cd62d1a42f9226dcba82"
       },
-      "contentSha256": "e13188dfbc4d09ecd4cef2d76efd83ae7424fc44d7f7a7ee7b3d2024b6b55f2b"
+      "contentSha256": "fd6dd30b5e04ecfe95224960b287c59af08dce7b1d40cd62d1a42f9226dcba82"
     },
     {
       "id": "default:installation/goose",
@@ -1257,9 +1257,9 @@
       },
       "markdown": {
         "path": "/installation/kilo-code.md",
-        "sha256": "444d682c9b2ff560d3f1e09274943675f542d419301c04e1bc2b350ede2bb361"
+        "sha256": "23f4f8695f49b9325ab34d675258cc55a26a56fc51b5494d8dda2c1da883e243"
       },
-      "contentSha256": "444d682c9b2ff560d3f1e09274943675f542d419301c04e1bc2b350ede2bb361"
+      "contentSha256": "23f4f8695f49b9325ab34d675258cc55a26a56fc51b5494d8dda2c1da883e243"
     },
     {
       "id": "default:installation/models",
@@ -1293,9 +1293,9 @@
       },
       "markdown": {
         "path": "/installation/opencode.md",
-        "sha256": "3e46ea5d5c02d2dcd369802842e30295f51c90ff0071f24a9ea59cdb21a7162f"
+        "sha256": "cc0b215e54a9d771edf18c7065b9d69b0f030df4ca965033777813bef002121b"
       },
-      "contentSha256": "3e46ea5d5c02d2dcd369802842e30295f51c90ff0071f24a9ea59cdb21a7162f"
+      "contentSha256": "cc0b215e54a9d771edf18c7065b9d69b0f030df4ca965033777813bef002121b"
     },
     {
       "id": "default:installation/roocode",
