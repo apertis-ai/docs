@@ -138,18 +138,18 @@ Use the `/models` command within OpenCode to switch models.
 
 ## Open models
 
-Copy this into `~/.config/opencode/opencode.json`. It points OpenCode at Apertis with open-weight models through the OpenAI-compatible provider. Set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`).
+Copy this into `~/.config/opencode/opencode.json`, and set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`). It uses the `providers` format from OpenCode's [providers guide](https://opencode.ai/docs/providers/).
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "provider": {
+  "providers": {
     "apertis": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Apertis AI",
-      "options": {
-        "baseURL": "https://api.apertis.ai/v1",
-        "apiKey": "{env:APERTIS_API_KEY}"
+      "name": "Apertis",
+      "env": ["APERTIS_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.apertis.ai/v1"
       },
       "models": {
         "glm-5.1": { "name": "GLM 5.1" },
@@ -164,7 +164,7 @@ Copy this into `~/.config/opencode/opencode.json`. It points OpenCode at Apertis
 }
 ```
 
-If the file already has an `apertis` provider from the sections above, merge the `models` entries into it instead of pasting a second one. OpenCode's current documentation says the `provider` format above remains supported alongside its newer `providers` format. The OpenAI-compatible provider sends requests in the OpenAI Chat Completions format to the `baseURL`.
+If your file already defines an `apertis` provider, add these model IDs to that entry instead of adding a second one.
 
 These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
 
