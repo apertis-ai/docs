@@ -248,6 +248,40 @@ Your configured model ID will appear in the list. Select it to start using a dif
 
 For the latest available models, check the [Model List](https://apertis.ai/models).
 
+## Open models
+
+Claude Code can run on open-weight models through Apertis. Claude Code sends its requests in the Anthropic Messages format to `https://api.apertis.ai`; for a model that is not a Claude model, Apertis converts the request to the OpenAI Chat Completions format for the model's provider and converts the response back.
+
+:::note Not an Anthropic-supported setup
+Anthropic's Claude Code documentation states that Anthropic does not support routing Claude Code to non-Claude models through a gateway. This conversion is done by Apertis.
+:::
+
+Copy this block into your terminal, replace the key with yours from the [API Keys](https://apertis.ai/setting?tab=keys) page, and start Claude Code:
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.apertis.ai"
+export ANTHROPIC_AUTH_TOKEN="<your Apertis API key>"
+export ANTHROPIC_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-5.1"
+claude
+```
+
+`ANTHROPIC_DEFAULT_HAIKU_MODEL` sets the model for Claude Code's background work, so every role in the session uses an open model. The variables apply to the terminal that exports them. To go back, open a new terminal or unset them.
+
+To use another model, change the value in all four model variables to one of these IDs:
+
+| Model ID | Developer |
+|----------|-----------|
+| `glm-5.1` | Z.AI (GLM) |
+| `kimi-k2.6` | Moonshot AI (Kimi) |
+| `deepseek-v3.2` | DeepSeek |
+| `minimax-m2.5` | MiniMax |
+| `qwen3-coder-next` | Alibaba (Qwen) |
+
+These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
+
 ## Troubleshooting
 
 ### Configuration Not Taking Effect

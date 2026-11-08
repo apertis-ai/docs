@@ -59,6 +59,33 @@ After installation, select **"Use your own API key"** option to configure custom
 | GPT-5.4 mini | `gpt-5.4-mini` |
 | Gemini 3.5 Flash | `gemini-3.5-flash` |
 
+## Open models
+
+In Kilo Code, open **Settings** (gear icon), go to the **Providers** tab, scroll to the bottom and click **Custom provider**. Fill in the dialog with these values:
+
+```text
+Provider ID:   apertis
+Display name:  Apertis
+Provider API:  OpenAI Compatible
+Base URL:      https://api.apertis.ai/v1
+API key:       <your Apertis API key>
+Models:        glm-5.1
+```
+
+Get the key from the [API Keys](https://apertis.ai/setting?tab=keys) page. **OpenAI Compatible** is Kilo Code's setting for an OpenAI Chat Completions endpoint, so requests reach Apertis in that format. Click **Submit**, then pick `apertis/glm-5.1` in the model picker.
+
+To add more models, edit the provider and add any of these IDs under **Models**:
+
+| Model ID | Developer |
+|----------|-----------|
+| `glm-5.1` | Z.AI (GLM) |
+| `kimi-k2.6` | Moonshot AI (Kimi) |
+| `deepseek-v3.2` | DeepSeek |
+| `minimax-m2.5` | MiniMax |
+| `qwen3-coder-next` | Alibaba (Qwen) |
+
+These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
+
 ## Capabilities
 
 Once configured, Kilo Code can assist with:
