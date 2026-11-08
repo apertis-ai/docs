@@ -1,0 +1,52 @@
+# OpenAI Codex CLI
+
+The OpenAI Codex CLI is a coding agent that runs in your terminal. You can point it at Apertis and run it on open-weight models.
+
+## Installation
+
+```bash
+npm install -g @openai/codex
+```
+
+See the [Codex documentation](https://developers.openai.com/codex) for other install methods.
+
+## Open models
+
+Codex reads custom providers from `~/.codex/config.toml`. Copy this block into that file, then export a key from the [API Keys](https://apertis.ai/setting?tab=keys) page and run `codex`:
+
+```toml
+model = "glm-5.1"
+model_provider = "apertis"
+
+[model_providers.apertis]
+name = "Apertis"
+base_url = "https://api.apertis.ai/v1"
+env_key = "APERTIS_API_KEY"
+wire_api = "responses"
+```
+
+```bash
+export APERTIS_API_KEY="<your Apertis API key>"
+codex
+```
+
+Codex sends its requests in the OpenAI Responses format, which Codex's documentation lists as the only supported `wire_api` value. Apertis accepts that format at `https://api.apertis.ai/v1/responses`. When a model's provider does not serve the Responses endpoint, Apertis sends the request to the provider's Chat Completions endpoint and converts the response back. See the [Responses API](/api/text-generation/responses) reference.
+
+To use another model, change `model` to one of these IDs:
+
+| Model ID | Developer |
+|----------|-----------|
+| `glm-5.1` | Z.AI (GLM) |
+| `kimi-k2.6` | Moonshot AI (Kimi) |
+| `deepseek-v3.2` | DeepSeek |
+| `minimax-m2.5` | MiniMax |
+| `qwen3-coder-next` | Alibaba (Qwen) |
+
+These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
+
+## Related Resources
+
+- [Apertis API Documentation](https://docs.apertis.ai)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
+- [Codex configuration reference](https://developers.openai.com/codex/config-advanced)

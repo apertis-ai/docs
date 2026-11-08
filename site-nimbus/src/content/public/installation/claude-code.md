@@ -47,7 +47,7 @@ Create a file named `ccswitch.sh` in your home directory (or any location you pr
 
 APERTIS_BASE_URL="https://api.apertis.ai"
 APERTIS_AUTH_TOKEN="your_apertis_api_key"      # ← Your API key from https://apertis.ai/setting?tab=keys
-DEFAULT_MODEL="code:claude-opus-4-8"            # ← Default model when using --apertis
+DEFAULT_MODEL="claude-opus-5.5"                #  ← Default model when using --apertis
 
 # ─── Script Logic (no changes needed below) ────────────────────
 
@@ -140,26 +140,27 @@ Edit the top of `ccswitch.sh` to match your credentials:
 |----------|-------------|---------|
 | `APERTIS_BASE_URL` | Apertis API endpoint. Typically no change needed. | `https://api.apertis.ai` |
 | `APERTIS_AUTH_TOKEN` | Your personal API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys). | `sk-xxxx...` |
-| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use the `code:` prefix for coding tools. | `code:claude-opus-4-8` |
+| `DEFAULT_MODEL` | The model used when running `ccs --apertis` without specifying a model. Use a model ID exactly as listed in the [Model List](https://apertis.ai/models). | `claude-opus-5.5` |
 
 ### Available Model IDs
 
-When using `ccs --model`, pass the model ID directly. **Only Claude models require the `code:` prefix**; all other models use their standard ID as-is.
+When using `ccs --model`, pass the model ID exactly as it appears in the [Model List](https://apertis.ai/models). The IDs below were checked against the public model catalog (`https://api.apertis.ai/api/models`).
 
-**Claude Models** (require `code:` prefix, except Haiku):
+**Claude Models:**
 
 | Model ID | Description |
 |----------|-------------|
-| `code:claude-fable-5` | Claude Fable 5 — newest generation |
-| `code:claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
-| `code:claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
-| `code:claude-opus-4-8` | Claude Opus 4.8 — most capable |
-| `claude-haiku-4-5-thinking` | Claude Haiku 4.5 with extended thinking |
-| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
+| `claude-opus-5.5` | Claude Opus 5.5 — most capable |
+| `claude-sonnet-5.5` | Claude Sonnet 5.5 — balanced speed and capability |
+| `claude-fable-5.1` | Claude Fable 5.1 |
+| `claude-fable-5` | Claude Fable 5 |
+| `claude-opus-4-8` | Claude Opus 4.8 |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 |
+| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest, ideal for simple tasks |
 
 For more Claude models, see the [Claude Models page](https://apertis.ai/models).
 
-**Other Models** (no prefix needed):
+**Other Models:**
 
 ```bash
 ccs --model gpt-5.4
@@ -175,12 +176,12 @@ For the full list of available model IDs, check the [Model List](https://apertis
 # Switch to Apertis with the default model
 ccs --apertis
 # ✅ Apertis enabled
-#    MODEL=code:claude-opus-4-8
+#    MODEL=claude-opus-5.5
 
 # Switch to a specific model
-ccs --model code:claude-sonnet-4-6
+ccs --model claude-sonnet-5.5
 # ✅ Apertis enabled
-#    MODEL=code:claude-sonnet-4-6
+#    MODEL=claude-sonnet-5.5
 
 # Revert to default Anthropic endpoint
 ccs --cc
@@ -217,16 +218,18 @@ Anthropic base URL: https://api.apertis.ai
 
 ### Coding Model IDs
 
-When using Claude Code (or any coding tool) with Apertis, use the `code:` prefix for Claude model IDs. This routes requests through optimized coding channels:
+Use the standard Claude model IDs from the [Model List](https://apertis.ai/models), for example:
 
-| Standard Model ID | Coding Model ID |
-|-------------------|-----------------|
-| `claude-opus-4-8` | `code:claude-opus-4-8` |
-| `claude-sonnet-4-6` | `code:claude-sonnet-4-6` |
+| Model ID | Description |
+|----------|-------------|
+| `claude-opus-5.5` | Default in the switch script above |
+| `claude-sonnet-5.5` | Balanced speed and capability |
+| `claude-opus-4-8` | Previous Opus generation |
+| `claude-sonnet-4-6` | Previous Sonnet generation |
 
-> **Tip: Why `code:` prefix?**
+> **Note: Plain model IDs**
 >
-> The `code:` prefix routes requests through dedicated coding channels optimized for tool use, extended thinking, and streaming — features essential for coding assistants. Always use `code:` prefixed model IDs with Claude Code and other coding tools.
+> This page uses the model IDs as they appear in the public model catalog at [apertis.ai/models](https://apertis.ai/models), without a `code:` prefix.
 
 ### Selecting Models in Claude Code
 
@@ -239,6 +242,40 @@ You can also switch models directly inside Claude Code using the `/model` comman
 Your configured model ID will appear in the list. Select it to start using a different model.
 
 For the latest available models, check the [Model List](https://apertis.ai/models).
+
+## Open models
+
+Claude Code can run on open-weight models through Apertis. Claude Code sends its requests in the Anthropic Messages format to `https://api.apertis.ai`; for a model that is not a Claude model, Apertis converts the request to the OpenAI Chat Completions format for the model's provider and converts the response back.
+
+> **Note: Not an Anthropic-supported setup**
+>
+> Anthropic's Claude Code documentation states that Anthropic does not support routing Claude Code to non-Claude models through a gateway. This conversion is done by Apertis.
+
+Copy this block into your terminal, replace the key with yours from the [API Keys](https://apertis.ai/setting?tab=keys) page, and start Claude Code:
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.apertis.ai"
+export ANTHROPIC_AUTH_TOKEN="<your Apertis API key>"
+export ANTHROPIC_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="glm-5.1"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-5.1"
+claude
+```
+
+`ANTHROPIC_DEFAULT_HAIKU_MODEL` sets the model for Claude Code's background work, so every role in the session uses an open model. The variables apply to the terminal that exports them. To go back, open a new terminal or unset them.
+
+To use another model, change the value in all four model variables to one of these IDs:
+
+| Model ID | Developer |
+|----------|-----------|
+| `glm-5.1` | Z.AI (GLM) |
+| `kimi-k2.6` | Moonshot AI (Kimi) |
+| `deepseek-v3.2` | DeepSeek |
+| `minimax-m2.5` | MiniMax |
+| `qwen3-coder-next` | Alibaba (Qwen) |
+
+These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
 
 ## Troubleshooting
 

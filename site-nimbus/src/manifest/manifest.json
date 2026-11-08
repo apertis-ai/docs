@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "0c7e0a6b3dfc04bb30c7557f223993ebfe8b2158",
+  "buildId": "0c7e0a6b3dfc04bb30c7557f223993ebfe8b2158.ef2354303986",
   "documents": [
     {
       "id": "page:index",
@@ -1095,9 +1095,9 @@
       },
       "markdown": {
         "path": "/installation/claude-code.md",
-        "sha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+        "sha256": "99a6d07ecd89efa3106621dfe6625e72d4d127ad40ba15c50fb6a9aa10d125b3"
       },
-      "contentSha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+      "contentSha256": "99a6d07ecd89efa3106621dfe6625e72d4d127ad40ba15c50fb6a9aa10d125b3"
     },
     {
       "id": "default:installation/cline",
@@ -1118,6 +1118,24 @@
       "contentSha256": "f657049753de1878ad7839477f92f334f33b732a8c3fca06cad7be2006330f2c"
     },
     {
+      "id": "default:installation/codex",
+      "sourcePath": "docs/installation/codex.mdx",
+      "servedPath": "/installation/codex/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/codex",
+      "title": "OpenAI Codex CLI",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/codex.md",
+        "sha256": "c3dc200d488fc469eefb77e9e9afdab2e570abf13c61c11515009de98cdad73a"
+      },
+      "contentSha256": "c3dc200d488fc469eefb77e9e9afdab2e570abf13c61c11515009de98cdad73a"
+    },
+    {
       "id": "default:installation/connection",
       "sourcePath": "docs/installation/connection.md",
       "servedPath": "/installation/connection/",
@@ -1131,9 +1149,9 @@
       },
       "markdown": {
         "path": "/installation/connection.md",
-        "sha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+        "sha256": "5b71ae60d514e86371c59986959a929e7b8c1291d5626b09fb19f77c3fdfa973"
       },
-      "contentSha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+      "contentSha256": "5b71ae60d514e86371c59986959a929e7b8c1291d5626b09fb19f77c3fdfa973"
     },
     {
       "id": "default:installation/continue",
@@ -1239,9 +1257,9 @@
       },
       "markdown": {
         "path": "/installation/kilo-code.md",
-        "sha256": "8d393b63661a68dac56d9703e681dac7a7fda87203e9b57e27d731827d6a52c0"
+        "sha256": "444d682c9b2ff560d3f1e09274943675f542d419301c04e1bc2b350ede2bb361"
       },
-      "contentSha256": "8d393b63661a68dac56d9703e681dac7a7fda87203e9b57e27d731827d6a52c0"
+      "contentSha256": "444d682c9b2ff560d3f1e09274943675f542d419301c04e1bc2b350ede2bb361"
     },
     {
       "id": "default:installation/models",
@@ -1275,9 +1293,9 @@
       },
       "markdown": {
         "path": "/installation/opencode.md",
-        "sha256": "6b6288358a56175d6102543494a61bb370b0c78d722b234dc74c5ef270175d48"
+        "sha256": "61f9661f5f7226310a653101226a5c7160b27ce83150f73d48e62ac3fe00e041"
       },
-      "contentSha256": "6b6288358a56175d6102543494a61bb370b0c78d722b234dc74c5ef270175d48"
+      "contentSha256": "61f9661f5f7226310a653101226a5c7160b27ce83150f73d48e62ac3fe00e041"
     },
     {
       "id": "default:installation/roocode",

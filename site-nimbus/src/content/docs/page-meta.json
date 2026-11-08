@@ -236,15 +236,19 @@
     "readingMinutes": 2
   },
   "default:installation/claude-code": {
-    "updated": "2026-10-06T14:59:11+08:00",
-    "readingMinutes": 5
+    "updated": "2026-11-08T19:58:58+08:00",
+    "readingMinutes": 6
   },
   "default:installation/cline": {
     "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
+  "default:installation/codex": {
+    "updated": "2026-11-08T19:58:58+08:00",
+    "readingMinutes": 2
+  },
   "default:installation/connection": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-11-08T19:58:06+08:00",
     "readingMinutes": 1
   },
   "default:installation/continue": {
@@ -268,7 +272,7 @@
     "readingMinutes": 3
   },
   "default:installation/kilo-code": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-11-08T19:58:58+08:00",
     "readingMinutes": 3
   },
   "default:installation/models": {
@@ -276,8 +280,8 @@
     "readingMinutes": 1
   },
   "default:installation/opencode": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "readingMinutes": 3
+    "updated": "2026-11-08T19:58:58+08:00",
+    "readingMinutes": 4
   },
   "default:installation/roocode": {
     "updated": "2026-07-20T11:55:30+08:00",

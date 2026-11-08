@@ -131,6 +131,38 @@ opencode
 
 Use the `/models` command within OpenCode to switch models.
 
+## Open models
+
+Copy this into `~/.config/opencode/opencode.json`. It points OpenCode at Apertis with open-weight models through the OpenAI-compatible provider. Set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`).
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "apertis": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Apertis AI",
+      "options": {
+        "baseURL": "https://api.apertis.ai/v1",
+        "apiKey": "{env:APERTIS_API_KEY}"
+      },
+      "models": {
+        "glm-5.1": { "name": "GLM 5.1" },
+        "kimi-k2.6": { "name": "Kimi K2.6" },
+        "deepseek-v3.2": { "name": "DeepSeek V3.2" },
+        "minimax-m2.5": { "name": "MiniMax M2.5" },
+        "qwen3-coder-next": { "name": "Qwen3 Coder Next" }
+      }
+    }
+  },
+  "model": "apertis/glm-5.1"
+}
+```
+
+If the file already has an `apertis` provider from the sections above, merge the `models` entries into it instead of pasting a second one. OpenCode's current documentation says the `provider` format above remains supported alongside its newer `providers` format. The OpenAI-compatible provider sends requests in the OpenAI Chat Completions format to the `baseURL`.
+
+These IDs were checked against the public model catalog on 2026-11-08. The developers of these model families publish their weights. For the current list, see the [Model List](https://apertis.ai/models).
+
 ## IDE Integration
 
 OpenCode works with VS Code, Cursor, and compatible terminals.
