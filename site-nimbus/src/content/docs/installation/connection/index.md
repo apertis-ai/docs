@@ -16,7 +16,7 @@ The following three connection endpoints are available:
 
 ### Anthropic-compatible endpoint
 
-Anthropic SDKs and tools such as Claude Code use the base URL `https://api.apertis.ai` and send requests to `/v1/messages` (the SDK appends the path). See the [Messages API](/api/text-generation/messages) for the full request format.
+Anthropic SDKs and tools such as Claude Code use the base URL `https://api.apertis.ai`; the SDK adds the request path itself. See the [Messages API](/api/text-generation/messages) for the full request format.
 
 ### API Key
 
