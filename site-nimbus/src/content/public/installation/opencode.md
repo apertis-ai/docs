@@ -41,16 +41,13 @@ Create or edit the configuration file at `~/.config/opencode/opencode.json`:
         "apiKey": "your_apertis_api_key"
       },
       "models": {
-        "claude-opus-4-8-thinking": {
-          "name": "Claude Opus 4.8 (Thinking)"
-        },
         "claude-opus-4-8": {
           "name": "Claude Opus 4.8"
         },
         "claude-sonnet-4-6": {
           "name": "Claude Sonnet 4.6"
         },
-        "claude-haiku-4-5": {
+        "claude-haiku-4.5": {
           "name": "Claude Haiku 4.5"
         },
         "gemini-3.1-pro-preview": {
@@ -96,10 +93,6 @@ If you prefer not to use the Apertis SDK, you can use the built-in OpenAI-compat
 
 Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard](https://apertis.ai/setting?tab=keys).
 
-> **Tip: No `code:` prefix needed**
->
-> Unlike Claude Code, OpenCode does **not** require the `code:` prefix for Claude model IDs. Use the standard model ID directly (e.g., `claude-opus-4-8` instead of `code:claude-opus-4-8`).
-
 ### Configuration Fields
 
 | Field | Description |
@@ -114,10 +107,9 @@ Replace `your_apertis_api_key` with your actual API key from [Apertis Dashboard]
 
 | Model ID | Description |
 |----------|-------------|
-| `claude-opus-4-8-thinking` | Claude Opus 4.8 with extended thinking |
 | `claude-opus-4-8` | Claude Opus 4.8 — most capable |
 | `claude-sonnet-4-6` | Claude Sonnet 4.6 — balanced speed and capability |
-| `claude-haiku-4-5` | Claude Haiku 4.5 — fastest |
+| `claude-haiku-4.5` | Claude Haiku 4.5 — fastest |
 | `gemini-3.1-pro-preview` | Gemini 3.1 Pro Preview |
 | `gemini-3.1-flash-lite-preview` | Gemini 3.1 Flash Lite Preview |
 

@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "0c7e0a6b3dfc04bb30c7557f223993ebfe8b2158",
-  "buildId": "0c7e0a6b3dfc04bb30c7557f223993ebfe8b2158.ef2354303986",
+  "sourceSha": "7ec50b7d629bd188080b3040f9f9803b16b0363b",
+  "buildId": "7ec50b7d629bd188080b3040f9f9803b16b0363b.ef2354303986",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+        "sha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
       },
-      "contentSha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+      "contentSha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
     },
     {
       "id": "api:audio-video/audio",
@@ -573,9 +573,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/messages.md",
-        "sha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
+        "sha256": "98b7fc5c04e168a08b1b142cae9db68ec89e6fbe8459f8d688aab82066d313a0"
       },
-      "contentSha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
+      "contentSha256": "98b7fc5c04e168a08b1b142cae9db68ec89e6fbe8459f8d688aab82066d313a0"
     },
     {
       "id": "api:text-generation/prompt-cache",
@@ -1203,9 +1203,9 @@
       },
       "markdown": {
         "path": "/installation/cursor.md",
-        "sha256": "bbc7db82934d595a1e377f2445ba3e1854cbcbc36b0333432d1ceda9a132a4b7"
+        "sha256": "e13188dfbc4d09ecd4cef2d76efd83ae7424fc44d7f7a7ee7b3d2024b6b55f2b"
       },
-      "contentSha256": "bbc7db82934d595a1e377f2445ba3e1854cbcbc36b0333432d1ceda9a132a4b7"
+      "contentSha256": "e13188dfbc4d09ecd4cef2d76efd83ae7424fc44d7f7a7ee7b3d2024b6b55f2b"
     },
     {
       "id": "default:installation/goose",
@@ -1293,9 +1293,9 @@
       },
       "markdown": {
         "path": "/installation/opencode.md",
-        "sha256": "61f9661f5f7226310a653101226a5c7160b27ce83150f73d48e62ac3fe00e041"
+        "sha256": "3e46ea5d5c02d2dcd369802842e30295f51c90ff0071f24a9ea59cdb21a7162f"
       },
-      "contentSha256": "61f9661f5f7226310a653101226a5c7160b27ce83150f73d48e62ac3fe00e041"
+      "contentSha256": "3e46ea5d5c02d2dcd369802842e30295f51c90ff0071f24a9ea59cdb21a7162f"
     },
     {
       "id": "default:installation/roocode",
