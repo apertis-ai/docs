@@ -2638,6 +2638,34 @@
       }
     },
     {
+      "path": "/api/utilities/organization-usage-costs",
+      "kind": "doc",
+      "documentId": "api:utilities/organization-usage-costs",
+      "sourcePath": "docs-api/utilities/organization-usage-costs.md",
+      "sidebar": {
+        "sidebar": "apiSidebar",
+        "trail": [
+          "Utilities"
+        ],
+        "order": 43
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": null
+    },
+    {
       "path": "/api/utilities/fallback-models",
       "kind": "doc",
       "documentId": "api:utilities/fallback-models",
