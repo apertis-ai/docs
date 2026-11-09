@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "a125006343a15c3b866350e1d4c1607db5955638",
+  "buildId": "a125006343a15c3b866350e1d4c1607db5955638.0070b4eea673",
   "documents": [
     {
       "id": "page:index",
@@ -1044,6 +1044,24 @@
         "sha256": "afe39072bb4c847a446204ef8b5a18b13762f6b230ca498c9ac192d2a677d12f"
       },
       "contentSha256": "afe39072bb4c847a446204ef8b5a18b13762f6b230ca498c9ac192d2a677d12f"
+    },
+    {
+      "id": "default:installation/antigravity",
+      "sourcePath": "docs/installation/antigravity.mdx",
+      "servedPath": "/installation/antigravity/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/antigravity",
+      "title": "Google Antigravity",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/antigravity.md",
+        "sha256": "8eea15a9d8c68b6535316e7bfce71b1bebd76e9f5253de4f857ca1edd15e5f63"
+      },
+      "contentSha256": "8eea15a9d8c68b6535316e7bfce71b1bebd76e9f5253de4f857ca1edd15e5f63"
     },
     {
       "id": "default:installation/bolt_diy",
