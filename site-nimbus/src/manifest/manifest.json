@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a125006343a15c3b866350e1d4c1607db5955638",
-  "buildId": "a125006343a15c3b866350e1d4c1607db5955638.0070b4eea673",
+  "sourceSha": "1759aa80a87d05737e7f46cfaa0ff039b719664f",
+  "buildId": "1759aa80a87d05737e7f46cfaa0ff039b719664f.0070b4eea673",
   "documents": [
     {
       "id": "page:index",
@@ -1059,9 +1059,9 @@
       },
       "markdown": {
         "path": "/installation/antigravity.md",
-        "sha256": "8eea15a9d8c68b6535316e7bfce71b1bebd76e9f5253de4f857ca1edd15e5f63"
+        "sha256": "3f26ce9c23abe90eb59c3e4644e62c3c56ba9999a0f631c51fc68d30dfb42029"
       },
-      "contentSha256": "8eea15a9d8c68b6535316e7bfce71b1bebd76e9f5253de4f857ca1edd15e5f63"
+      "contentSha256": "3f26ce9c23abe90eb59c3e4644e62c3c56ba9999a0f631c51fc68d30dfb42029"
     },
     {
       "id": "default:installation/bolt_diy",
