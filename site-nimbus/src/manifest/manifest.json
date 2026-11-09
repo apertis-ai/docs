@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3012c0d504ba7dc8142216db4122b407f2540bb",
-  "buildId": "a3012c0d504ba7dc8142216db4122b407f2540bb.ef2354303986",
+  "sourceSha": "9f59dc3640baff1f679d415276ed84b2d143f351",
+  "buildId": "9f59dc3640baff1f679d415276ed84b2d143f351.731f2c92203e",
   "documents": [
     {
       "id": "page:index",
@@ -1118,24 +1118,6 @@
       "contentSha256": "f657049753de1878ad7839477f92f334f33b732a8c3fca06cad7be2006330f2c"
     },
     {
-      "id": "default:installation/codex",
-      "sourcePath": "docs/installation/codex.mdx",
-      "servedPath": "/installation/codex/",
-      "canonicalUrl": "https://docs.apertis.ai/installation/codex",
-      "title": "OpenAI Codex CLI",
-      "eligibility": {
-        "publish": true,
-        "search": true,
-        "agent": true,
-        "rag": true
-      },
-      "markdown": {
-        "path": "/installation/codex.md",
-        "sha256": "dfa128b6db10177176aef1eb3ba9fc58d52ee3c71c1ec51909633b613e348f47"
-      },
-      "contentSha256": "dfa128b6db10177176aef1eb3ba9fc58d52ee3c71c1ec51909633b613e348f47"
-    },
-    {
       "id": "default:installation/connection",
       "sourcePath": "docs/installation/connection.md",
       "servedPath": "/installation/connection/",
@@ -1293,9 +1275,9 @@
       },
       "markdown": {
         "path": "/installation/opencode.md",
-        "sha256": "cc0b215e54a9d771edf18c7065b9d69b0f030df4ca965033777813bef002121b"
+        "sha256": "cae07b96fa40fe94d1d9ab5cfc01601482e78cfd9e6f166d2f22241a96e6198a"
       },
-      "contentSha256": "cc0b215e54a9d771edf18c7065b9d69b0f030df4ca965033777813bef002121b"
+      "contentSha256": "cae07b96fa40fe94d1d9ab5cfc01601482e78cfd9e6f166d2f22241a96e6198a"
     },
     {
       "id": "default:installation/roocode",

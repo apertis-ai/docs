@@ -243,10 +243,6 @@
     "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
-  "default:installation/codex": {
-    "updated": "2026-11-08T20:16:38+08:00",
-    "readingMinutes": 2
-  },
   "default:installation/connection": {
     "updated": "2026-11-08T20:38:06+08:00",
     "readingMinutes": 1
@@ -280,7 +276,7 @@
     "readingMinutes": 1
   },
   "default:installation/opencode": {
-    "updated": "2026-11-08T20:16:38+08:00",
+    "updated": "2026-11-09T12:13:44+08:00",
     "readingMinutes": 4
   },
   "default:installation/roocode": {
