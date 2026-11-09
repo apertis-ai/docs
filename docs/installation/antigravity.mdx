@@ -76,13 +76,13 @@ curl -s https://api.apertis.ai/v1/models \
   -H "Authorization: Bearer $APERTIS_API_KEY" | head -c 300
 
 # 2. The model answers
-curl -s https://api.apertis.ai/v1/chat/completions \
+curl -s https://api.apertis.ai/v1/responses \
   -H "Authorization: Bearer $APERTIS_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"model": "claude-sonnet-4-6", "messages": [{"role": "user", "content": "Reply with the word ok"}]}'
+  -d '{"model": "claude-sonnet-4-6", "input": "Reply with the word ok"}'
 ```
 
-The second command returns a chat completion whose message content is `ok`. Next, send a prompt from the extension's chat panel in Antigravity, and the extension shows the model's reply.
+The second command returns JSON with `"status": "completed"` and the reply `ok`. Next, send a prompt from the extension's chat panel in Antigravity, and the extension shows the model's reply.
 
 ## Troubleshooting
 
