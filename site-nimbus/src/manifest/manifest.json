@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41",
-  "buildId": "a3fc2b9c3e5a10f9d4bde980e841e34f02066d41.9b6c8af5dfd9",
+  "sourceSha": "6924a963cc7249758c4b970a6c8b19374d63dd41",
+  "buildId": "6924a963cc7249758c4b970a6c8b19374d63dd41.0f53d6924a9b",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+        "sha256": "9ca26ac4bcfd20c56ab5aeb687057ff7e213131a4a5dc4717289a3c6e06bc805"
       },
-      "contentSha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+      "contentSha256": "9ca26ac4bcfd20c56ab5aeb687057ff7e213131a4a5dc4717289a3c6e06bc805"
     },
     {
       "id": "api:audio-video/audio",
@@ -666,6 +666,24 @@
         "sha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
       },
       "contentSha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
+    },
+    {
+      "id": "api:utilities/organization-usage-costs",
+      "sourcePath": "docs-api/utilities/organization-usage-costs.md",
+      "servedPath": "/api/utilities/organization-usage-costs/",
+      "canonicalUrl": "https://docs.apertis.ai/api/utilities/organization-usage-costs",
+      "title": "Organization Usage and Costs",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/utilities/organization-usage-costs.md",
+        "sha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
+      },
+      "contentSha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
     },
     {
       "id": "api:utilities/fallback-models",

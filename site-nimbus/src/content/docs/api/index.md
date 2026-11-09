@@ -41,6 +41,7 @@ The gateway accepts text generation requests in three formats: Chat Completions,
 
 ### Utilities
 - [Billing Credits](/api/utilities/billing-credits) - Check remaining credits and subscription quota
+- [Organization Usage and Costs](/api/utilities/organization-usage-costs) - Export organization token usage and costs with an admin key
 
 ### SDKs & Libraries
 - [Python SDK](/api/sdks/python-sdk) - Official Python client
