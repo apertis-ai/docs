@@ -1,6 +1,6 @@
 {
   "api:index": {
-    "updated": "2026-10-06T16:09:16+08:00",
+    "updated": "2026-11-08T20:05:24+08:00",
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
@@ -120,7 +120,7 @@
     "readingMinutes": 7
   },
   "api:text-generation/messages": {
-    "updated": "2026-10-06T16:40:47+08:00",
+    "updated": "2026-11-08T20:05:24+08:00",
     "readingMinutes": 5
   },
   "api:text-generation/prompt-cache": {
@@ -236,15 +236,15 @@
     "readingMinutes": 2
   },
   "default:installation/claude-code": {
-    "updated": "2026-10-06T14:59:11+08:00",
-    "readingMinutes": 5
+    "updated": "2026-11-08T20:16:38+08:00",
+    "readingMinutes": 6
   },
   "default:installation/cline": {
     "updated": "2026-10-05T18:57:03+08:00",
     "readingMinutes": 1
   },
   "default:installation/connection": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-11-08T20:38:06+08:00",
     "readingMinutes": 1
   },
   "default:installation/continue": {
@@ -256,8 +256,8 @@
     "readingMinutes": 2
   },
   "default:installation/cursor": {
-    "updated": "2026-06-10T11:32:17+08:00",
-    "readingMinutes": 2
+    "updated": "2026-11-08T20:16:38+08:00",
+    "readingMinutes": 3
   },
   "default:installation/goose": {
     "updated": "2026-07-20T11:55:30+08:00",
@@ -268,7 +268,7 @@
     "readingMinutes": 3
   },
   "default:installation/kilo-code": {
-    "updated": "2026-07-20T11:55:30+08:00",
+    "updated": "2026-11-08T20:16:38+08:00",
     "readingMinutes": 3
   },
   "default:installation/models": {
@@ -276,8 +276,8 @@
     "readingMinutes": 1
   },
   "default:installation/opencode": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "readingMinutes": 3
+    "updated": "2026-11-09T12:13:44+08:00",
+    "readingMinutes": 4
   },
   "default:installation/roocode": {
     "updated": "2026-07-20T11:55:30+08:00",

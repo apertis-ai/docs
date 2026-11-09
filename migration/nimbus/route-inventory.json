@@ -6028,10 +6028,12 @@
         "title": "Base URL and API Key Connection Guide | Apertis Documentation",
         "headingIds": [
           "base_url",
+          "anthropic-compatible-endpoint",
           "api-key"
         ],
         "links": [
           "/",
+          "/api/text-generation/messages",
           "https://apertis.ai/setting?tab=keys",
           "https://api.apertis.ai",
           "https://api.apertis.ai/v1",

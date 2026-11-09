@@ -67,3 +67,33 @@ You can find the Cursor-compatible model ID for each model on its detail page at
 The `apertis/` prefix is only needed when you encounter model conflicts in Cursor IDE. Other tools (Claude Code, Kilo Code, etc.) can use the original model ID directly.
 
 </aside>
+
+## Open models
+
+1. Open **Cursor Settings** and go to **Models**.
+2. Paste your Apertis key from the [API Keys](https://apertis.ai/setting?tab=keys) page into the **OpenAI API Key** field.
+3. Enable **Override OpenAI Base URL** and set it to:
+
+```
+https://api.apertis.ai/v1
+```
+
+4. Add these model IDs by hand as custom models:
+
+```
+glm-5.1
+kimi-k2.6
+deepseek-v3.2
+minimax-m2.5
+qwen3-coder-next
+```
+
+These IDs were checked against the public model catalog on 2026-11-08. For the current list, see the [Model List](https://apertis.ai/models).
+
+<aside class="admonition admonition-note">
+<p class="admonition-title">Two things to know</p>
+
+- While **Override OpenAI Base URL** is on, Cursor also sends its own managed models to that URL. Turn the override off to use Cursor's models. Cursor staff describe this in the [Cursor forum thread](https://forum.cursor.com/t/cursor-managed-models-are-routed-through-override-openai-base-url/169088).
+- Tab completion keeps using Cursor's own service.
+
+</aside>
