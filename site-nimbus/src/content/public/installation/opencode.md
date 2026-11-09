@@ -133,18 +133,18 @@ Use the `/models` command within OpenCode to switch models.
 
 ## Open models
 
-Copy this into `~/.config/opencode/opencode.json`, and set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`). It uses the `providers` format from OpenCode's [providers guide](https://opencode.ai/docs/providers/).
+Copy this into `~/.config/opencode/opencode.json`, and set `APERTIS_API_KEY` to a key from the [API Keys](https://apertis.ai/setting?tab=keys) page first (`export APERTIS_API_KEY="<your Apertis API key>"`). It uses the `provider` format from OpenCode's [providers guide](https://opencode.ai/docs/providers/).
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "providers": {
+  "provider": {
     "apertis": {
       "name": "Apertis",
-      "env": ["APERTIS_API_KEY"],
-      "package": "@opencode/ai/providers/openai-compatible",
-      "settings": {
-        "baseURL": "https://api.apertis.ai/v1"
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://api.apertis.ai/v1",
+        "apiKey": "{env:APERTIS_API_KEY}"
       },
       "models": {
         "glm-5.1": { "name": "GLM 5.1" },

@@ -4926,7 +4926,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 32
+        "order": 31
       },
       "listed": true,
       "disposition": "preserve",
@@ -5022,7 +5022,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 30
+        "order": 29
       },
       "listed": true,
       "disposition": "preserve",
@@ -5194,7 +5194,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 33
+        "order": 32
       },
       "listed": true,
       "disposition": "preserve",
@@ -5285,7 +5285,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 30
       },
       "listed": true,
       "disposition": "preserve",
@@ -5733,7 +5733,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 26
+        "order": 25
       },
       "listed": true,
       "disposition": "preserve",
@@ -5796,7 +5796,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 24
+        "order": 23
       },
       "listed": true,
       "disposition": "preserve",
@@ -5986,67 +5986,6 @@
       }
     },
     {
-      "path": "/installation/codex",
-      "kind": "doc",
-      "documentId": "default:installation/codex",
-      "sourcePath": "docs/installation/codex.mdx",
-      "sidebar": {
-        "sidebar": "tutorialSidebar",
-        "trail": [
-          "Integrations",
-          "AI Coding Assistants"
-        ],
-        "order": 23
-      },
-      "listed": true,
-      "disposition": "preserve",
-      "eligibility": {
-        "publish": true,
-        "search": true,
-        "agent": true,
-        "rag": true
-      },
-      "legacy": {
-        "search": false,
-        "rag": false
-      },
-      "poc": false,
-      "built": false,
-      "live": {
-        "requested": "/installation/codex",
-        "status": 308,
-        "location": "/installation/codex/",
-        "final": {
-          "path": "/installation/codex/",
-          "status": 200
-        },
-        "slashVariant": {
-          "path": "/installation/codex/",
-          "status": 200,
-          "location": null
-        },
-        "canonical": "https://docs.apertis.ai/installation/codex",
-        "title": "OpenAI Codex CLI | Apertis Documentation",
-        "headingIds": [
-          "installation",
-          "open-models",
-          "related-resources"
-        ],
-        "links": [
-          "/",
-          "/api/text-generation/responses",
-          "https://apertis.ai/models",
-          "https://apertis.ai/setting?tab=keys",
-          "https://developers.openai.com/codex",
-          "https://developers.openai.com/codex/config-advanced",
-          "https://docs.apertis.ai",
-          "https://github.com/apertis-ai/docs/tree/main/docs/installation/codex.mdx"
-        ],
-        "images": [],
-        "articleSha256": null
-      }
-    },
-    {
       "path": "/installation/connection",
       "kind": "doc",
       "documentId": "default:installation/connection",
@@ -6056,7 +5995,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 27
+        "order": 26
       },
       "listed": true,
       "disposition": "preserve",
@@ -6729,7 +6668,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 28
+        "order": 27
       },
       "listed": true,
       "disposition": "preserve",
@@ -6785,7 +6724,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 25
+        "order": 24
       },
       "listed": true,
       "disposition": "preserve",
@@ -7081,7 +7020,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 34
+        "order": 33
       },
       "listed": true,
       "disposition": "preserve",
@@ -7313,7 +7252,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 29
+        "order": 28
       },
       "listed": true,
       "disposition": "preserve",
@@ -7443,7 +7382,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 35
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",
