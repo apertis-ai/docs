@@ -26,7 +26,7 @@ The organization is always the key's own organization; no parameter or page curs
 - A key without `usage.read` is `403 insufficient_permissions`.
 - A key whose creator was disabled, left the organization, or lost the right to manage admin keys is `403`.
 
-See [Organizations, Members, Projects, Groups, and Roles](https://docs.apertis.ai/authentication/organizations) for roles and admin key management.
+See [Organizations, Members, Projects, Groups, and Roles](/authentication/organizations) for roles and admin key management.
 
 ## Rate limit
 
@@ -174,7 +174,7 @@ An `organization.costs.result` carries `amount` (`value` in USD, `currency: "usd
 
 ## How amounts are calculated
 
-`amount.value` is exactly what the organization was charged for the requests in that bucket, in USD to six decimal places (1 USD = 1,000,000 quota), written as a JSON number with no floating-point rounding. It is the same figure the dashboard's Usage tab sums for the same range and filters. Each request is charged by its model's published price per input, output, cached-input and cache-write token, as listed on the [Models](https://apertis.ai/models) page and described in [Quota Management](https://docs.apertis.ai/billing/quota-management).
+`amount.value` is exactly what the organization was charged for the requests in that bucket, in USD to six decimal places (1 USD = 1,000,000 quota), written as a JSON number with no floating-point rounding. It is the same figure the dashboard's Usage tab sums for the same range and filters. Each request is charged by its model's published price per input, output, cached-input and cache-write token, as listed on the [Models](https://apertis.ai/models) page and described in [Quota Management](/billing/quota-management).
 
 ### Charge basis
 

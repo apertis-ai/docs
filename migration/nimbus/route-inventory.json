@@ -2663,7 +2663,51 @@
       },
       "poc": false,
       "built": false,
-      "live": null
+      "live": {
+        "requested": "/api/utilities/organization-usage-costs",
+        "status": 308,
+        "location": "/api/utilities/organization-usage-costs/",
+        "final": {
+          "path": "/api/utilities/organization-usage-costs/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/api/utilities/organization-usage-costs/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/api/utilities/organization-usage-costs",
+        "title": "Organization Usage and Costs | Apertis Documentation",
+        "headingIds": [
+          "authentication",
+          "rate-limit",
+          "parameters",
+          "examples",
+          "costs-per-project-for-the-last-7-days",
+          "token-usage-per-model-and-api-key",
+          "python-read-every-page",
+          "response-fields",
+          "usage-results",
+          "cost-results",
+          "apertis-extensions",
+          "how-amounts-are-calculated",
+          "charge-basis",
+          "projects-and-keys",
+          "pagination",
+          "csv",
+          "errors",
+          "dashboard-export"
+        ],
+        "links": [
+          "/",
+          "/authentication/organizations",
+          "/billing/quota-management",
+          "https://apertis.ai/models",
+          "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/organization-usage-costs.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
     },
     {
       "path": "/api/utilities/fallback-models",
