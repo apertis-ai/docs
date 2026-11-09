@@ -9,6 +9,7 @@ Google Antigravity is an agentic IDE built on VS Code. Its extensions come from 
 ## Prerequisites
 
 - Google Antigravity IDE installed, from [antigravity.google/download](https://antigravity.google/download)
+- A Google account. Antigravity asks you to sign in with Google when it first launches.
 - An Apertis API key, from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 
 ## Option 1: An extension (Cline or Kilo Code)

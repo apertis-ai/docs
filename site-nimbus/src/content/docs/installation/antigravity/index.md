@@ -17,6 +17,7 @@ Antigravity's own agent panel only runs the models Google offers in its model se
 ## Prerequisites
 
 - Google Antigravity IDE installed, from [antigravity.google/download](https://antigravity.google/download)
+- A Google account. Antigravity asks you to sign in with Google when it first launches.
 - An Apertis API key, from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
 
 ## Option 1: An extension (Cline or Kilo Code)
