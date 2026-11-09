@@ -9,7 +9,7 @@
     "api:index": {
       "commit": "699e595",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (docs-reader-features, operator 2026-10-05)",
-      "links": { "added": ["/api/text-generation/prompt-cache"], "removed": [] }
+      "links": { "added": ["/api/text-generation/prompt-cache", "/api/utilities/organization-usage-costs"], "removed": [] }
     },
     "api:sdks/mcp-server": {
       "commit": "d8cb8a3",
