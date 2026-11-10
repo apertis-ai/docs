@@ -56,6 +56,7 @@ Open Antigravity's integrated terminal (**Terminal → New Terminal**). Then run
 
 - [Claude Code](/installation/claude-code)
 - [OpenCode](/installation/opencode)
+- [OpenAI Codex CLI](/installation/codex)
 
 The agent edits files in the workspace that is open in Antigravity.
 
