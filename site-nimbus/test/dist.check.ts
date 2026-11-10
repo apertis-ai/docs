@@ -496,7 +496,7 @@ test('feedback: the published paths read from the built sitemap are the publish-
 
 test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url), with metadata and parseable JSON-LD', () => {
   const entries = [...read('sitemap.xml').matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
-  assert.equal(entries.length, 80);
+  assert.equal(entries.length, 81);
   let described = 0;
   let articles = 0;
   for (const [, loc, lastmod] of entries) {
