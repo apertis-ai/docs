@@ -13,6 +13,7 @@ import Navbar from '../components/shell/Navbar.astro';
 import Footer from '../components/shell/Footer.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import type { ManifestDocument } from '../contracts/manifest.ts';
+import type { SeoProps } from '../contracts/page.ts';
 import type { PageNavigation } from '../components/shell/navigation.ts';
 
 interface Props {
@@ -21,15 +22,17 @@ interface Props {
   nav?: PageNavigation | null;
   /** A page with nothing to index yet (the empty /blog/ index). */
   noindex?: boolean;
+  /** Description, last-modified date, JSON-LD and breadcrumbs (DocLayout); other pages pass none. */
+  seo?: SeoProps;
 }
-const { doc, buildId, nav = null, noindex = false } = Astro.props;
+const { doc, buildId, nav = null, noindex = false, seo = {} } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <DocumentHead doc={doc} buildId={buildId} />
+    <DocumentHead doc={doc} buildId={buildId} {...seo} />
     {noindex && <meta name="robots" content="noindex" />}
     <!-- The monochrome mark without a tile, dark on a light browser chrome and light on a dark one (the icon's
          own media query; the page itself never follows prefers-color-scheme); the legacy .ico stays for
