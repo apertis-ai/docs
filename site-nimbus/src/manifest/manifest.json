@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "0e7d15f2c251aa2011a3f66ee78737a77ee7b546",
-  "buildId": "0e7d15f2c251aa2011a3f66ee78737a77ee7b546.1bc5f368f35e",
+  "sourceSha": "b8916d44fd3bb97c86691e96eed70c55e40708c4",
+  "buildId": "b8916d44fd3bb97c86691e96eed70c55e40708c4.118b2e983e66",
   "documents": [
     {
       "id": "page:index",
@@ -902,6 +902,24 @@
       "contentSha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
     },
     {
+      "id": "default:billing/per-key-limits",
+      "sourcePath": "docs/billing/per-key-limits.md",
+      "servedPath": "/billing/per-key-limits/",
+      "canonicalUrl": "https://docs.apertis.ai/billing/per-key-limits",
+      "title": "Per-Key Limits and Budget Blocks",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/billing/per-key-limits.md",
+        "sha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+      },
+      "contentSha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+    },
+    {
       "id": "default:billing/subscription-plans",
       "sourcePath": "docs/billing/subscription-plans.md",
       "servedPath": "/billing/subscription-plans/",
@@ -1026,6 +1044,42 @@
         "sha256": "afe39072bb4c847a446204ef8b5a18b13762f6b230ca498c9ac192d2a677d12f"
       },
       "contentSha256": "afe39072bb4c847a446204ef8b5a18b13762f6b230ca498c9ac192d2a677d12f"
+    },
+    {
+      "id": "default:installation/antigravity",
+      "sourcePath": "docs/installation/antigravity.mdx",
+      "servedPath": "/installation/antigravity/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/antigravity",
+      "title": "Google Antigravity",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/antigravity.md",
+        "sha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+      },
+      "contentSha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+    },
+    {
+      "id": "default:installation/codex",
+      "sourcePath": "docs/installation/codex.mdx",
+      "servedPath": "/installation/codex/",
+      "canonicalUrl": "https://docs.apertis.ai/installation/codex",
+      "title": "OpenAI Codex CLI",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/installation/codex.md",
+        "sha256": "057e75df78f2ca722f74f3572b3ea1611b3efb9f550e5db1b0d4640e1c9900dd"
+      },
+      "contentSha256": "057e75df78f2ca722f74f3572b3ea1611b3efb9f550e5db1b0d4640e1c9900dd"
     },
     {
       "id": "default:installation/bolt_diy",
