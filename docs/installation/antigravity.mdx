@@ -1,0 +1,95 @@
+---
+title: Google Antigravity
+sidebar_label: Antigravity
+description: "Use Apertis models inside the Google Antigravity IDE through the Cline or Kilo Code extension, or a terminal coding agent."
+---
+
+# Google Antigravity
+
+Google Antigravity is an agentic IDE built on VS Code. Its extensions come from the Open VSX registry, and it has an integrated terminal. You can use Apertis models inside Antigravity in two ways. You can install an extension that accepts an OpenAI-compatible endpoint, or you can run a terminal coding agent.
+
+:::info Antigravity's built-in agent
+Antigravity's own agent panel only runs the models Google offers in its model selector. Google's plan documentation states that Antigravity does not support bring-your-own-key or bring-your-own-endpoint. You cannot point the built-in agent at Apertis. The routes below run alongside it.
+:::
+
+## Prerequisites
+
+- Google Antigravity IDE installed, from [antigravity.google/download](https://antigravity.google/download)
+- A Google account. Antigravity asks you to sign in with Google when it first launches.
+- An Apertis API key, from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
+
+## Option 1: An extension (Cline or Kilo Code)
+
+### Step 1: Install the extension
+
+1. In Antigravity, open the **Extensions** view: `Cmd`+`Shift`+`X` on macOS, `Ctrl`+`Shift`+`X` on Windows and Linux.
+2. Search for **Cline** (publisher `saoudrizwan`) or **Kilo Code** (publisher `kilocode`).
+3. Click **Install**.
+
+To install from the command line instead, run Antigravity's `antigravity-ide` command. On macOS it is at `Antigravity IDE.app/Contents/Resources/app/bin/antigravity-ide`.
+
+```bash
+antigravity-ide --install-extension saoudrizwan.claude-dev   # Cline
+antigravity-ide --install-extension kilocode.kilo-code       # Kilo Code
+```
+
+### Step 2: Point it at Apertis
+
+Open the extension's settings and enter these values.
+
+| Setting | Value |
+|---------|-------|
+| API Provider | `OpenAI Compatible` |
+| Base URL | `https://api.apertis.ai/v1` |
+| API Key | Your Apertis API key |
+| Model ID | A model ID from the table below |
+
+The [Cline](./cline) and [Kilo Code](./kilo-code) pages show each extension's settings screens.
+
+### Step 3: Choose a model
+
+Enter any model ID from the [Model List](https://apertis.ai/models). For example:
+
+| Model | Model ID |
+|-------|----------|
+| Claude Sonnet 4.6 | `claude-sonnet-4-6` |
+| GPT-5.5 | `gpt-5.5` |
+| Gemini 3.5 Flash | `gemini-3.5-flash` |
+
+## Option 2: A terminal coding agent
+
+Open Antigravity's integrated terminal (**Terminal → New Terminal**). Then run any coding agent that you have configured for Apertis:
+
+- [Claude Code](./claude-code)
+- [OpenCode](./opencode)
+- [OpenAI Codex CLI](./codex)
+
+The agent edits files in the workspace that is open in Antigravity.
+
+## Verify the connection
+
+Check your key and the model before you send a prompt from the extension:
+
+```bash
+export APERTIS_API_KEY="your_apertis_api_key"
+
+# 1. The key is valid: lists the models it can call
+curl -s https://api.apertis.ai/v1/models \
+  -H "Authorization: Bearer $APERTIS_API_KEY" | head -c 300
+
+# 2. The model answers
+curl -s https://api.apertis.ai/v1/responses \
+  -H "Authorization: Bearer $APERTIS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "claude-sonnet-4-6", "input": "Reply with the word ok"}'
+```
+
+The second command returns JSON with `"status": "completed"` and the reply `ok`. Next, send a prompt from the extension's chat panel in Antigravity, and the extension shows the model's reply.
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `401` or `Invalid API Key` | Copy the key again from the [Dashboard](https://apertis.ai/setting?tab=keys). Make sure the Base URL ends in `/v1`. |
+| `model not found` or `404` | Use a model ID exactly as it appears in the [Model List](https://apertis.ai/models). |
+| The extension is not in search results | Antigravity searches Open VSX. Search by the extension ID, `saoudrizwan.claude-dev` or `kilocode.kilo-code`. |

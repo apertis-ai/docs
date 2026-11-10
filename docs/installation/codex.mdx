@@ -1,0 +1,95 @@
+---
+title: OpenAI Codex CLI
+sidebar_label: OpenAI Codex CLI
+---
+
+# OpenAI Codex CLI
+
+The OpenAI Codex CLI is a coding agent that runs in your terminal. You can point it at Apertis and run it on open-weight models as well as Claude, Gemini and GPT models.
+
+## Prerequisites
+
+- Node.js 18 or later, for the npm install
+- An Apertis API key, from the [Apertis Dashboard](https://apertis.ai/setting?tab=keys)
+
+## Step 1: Install Codex
+
+```bash
+npm install -g @openai/codex
+codex --version
+```
+
+See the [Codex documentation](https://developers.openai.com/codex) for other install methods.
+
+## Step 2: Add Apertis as a provider
+
+Codex reads custom providers from `~/.codex/config.toml`. Copy this block into that file:
+
+```toml
+model = "glm-5.1"
+model_provider = "apertis"
+
+[model_providers.apertis]
+name = "Apertis"
+base_url = "https://api.apertis.ai/v1"
+env_key = "APERTIS_API_KEY"
+wire_api = "responses"
+```
+
+- `base_url` is `https://api.apertis.ai/v1`. It must end in `/v1`.
+- `env_key` names the environment variable that holds your key. Codex reads the key from it, so the key never goes into the file.
+- `wire_api = "responses"` makes Codex send its requests in the OpenAI Responses format, which Apertis accepts at `https://api.apertis.ai/v1/responses`. When a model's provider does not serve the Responses endpoint, Apertis converts the request and the response. See the [Responses API](../api/text-generation/responses) reference.
+
+## Step 3: Set your API key
+
+```bash
+export APERTIS_API_KEY="your_apertis_api_key"
+```
+
+Add the line to your shell profile (`~/.zshrc` or `~/.bashrc`) to keep it across sessions.
+
+## Step 4: Choose a model
+
+Set `model` in `config.toml`, or pass `-m <model>` on the command line. These models completed a Codex editing task through Apertis:
+
+| Model ID | Developer |
+|----------|-----------|
+| `glm-5.1` | Z.AI (GLM), open weights |
+| `kimi-k2.6` | Moonshot AI (Kimi), open weights |
+| `deepseek-v3.2` | DeepSeek, open weights |
+| `minimax-m2.5` | MiniMax, open weights |
+| `claude-sonnet-4-6` | Anthropic |
+| `gemini-3.1-pro-preview` | Google |
+| `gpt-5.5` | OpenAI |
+
+Each of these models completed the same task three times out of three with Codex CLI 0.166.0 on 2026-11-10: fix a bug in a file, then write a second file.
+
+For every model you can call, see the [Model List](https://apertis.ai/models).
+
+## Verify the connection
+
+```bash
+# 1. The key is valid: lists the models it can call
+curl -s https://api.apertis.ai/v1/models \
+  -H "Authorization: Bearer $APERTIS_API_KEY" | head -c 300
+
+# 2. Codex answers through Apertis
+codex exec --skip-git-repo-check "Reply with the word ok"
+```
+
+The second command ends with the model's reply, `ok`. Then run `codex` in a project directory to start an interactive session.
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `401` or `Invalid API Key` | Check that `APERTIS_API_KEY` is exported in the shell that runs `codex`, and copy the key again from the [Dashboard](https://apertis.ai/setting?tab=keys). |
+| `model not found` or `404` | Use a model ID exactly as it appears in the [Model List](https://apertis.ai/models), and make sure `base_url` ends in `/v1`. |
+| Codex still uses its default provider | Check that `model_provider = "apertis"` is at the top level of `config.toml`, above the `[model_providers.apertis]` table. |
+
+## Related Resources
+
+- [Apertis API Documentation](https://docs.apertis.ai)
+- [Model List](https://apertis.ai/models)
+- [API Keys Management](https://apertis.ai/setting?tab=keys)
+- [Codex configuration reference](https://developers.openai.com/codex/config-advanced)

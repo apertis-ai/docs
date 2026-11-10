@@ -4998,7 +4998,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 33
       },
       "listed": true,
       "disposition": "preserve",
@@ -5094,7 +5094,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 29
+        "order": 31
       },
       "listed": true,
       "disposition": "preserve",
@@ -5266,7 +5266,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 32
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",
@@ -5357,7 +5357,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 30
+        "order": 32
       },
       "listed": true,
       "disposition": "preserve",
@@ -5795,6 +5795,140 @@
       "live": null
     },
     {
+      "path": "/installation/antigravity",
+      "kind": "doc",
+      "documentId": "default:installation/antigravity",
+      "sourcePath": "docs/installation/antigravity.mdx",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "AI Coding Assistants"
+        ],
+        "order": 20
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/installation/antigravity",
+        "status": 308,
+        "location": "/installation/antigravity/",
+        "final": {
+          "path": "/installation/antigravity/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/installation/antigravity/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/installation/antigravity",
+        "title": "Google Antigravity | Apertis Documentation",
+        "headingIds": [
+          "prerequisites",
+          "option-1-an-extension-cline-or-kilo-code",
+          "step-1-install-the-extension",
+          "step-2-point-it-at-apertis",
+          "step-3-choose-a-model",
+          "option-2-a-terminal-coding-agent",
+          "verify-the-connection",
+          "troubleshooting"
+        ],
+        "links": [
+          "/",
+          "/installation/claude-code",
+          "/installation/cline",
+          "/installation/codex",
+          "/installation/kilo-code",
+          "/installation/opencode",
+          "https://antigravity.google/download",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://github.com/apertis-ai/docs/tree/main/docs/installation/antigravity.mdx"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/installation/codex",
+      "kind": "doc",
+      "documentId": "default:installation/codex",
+      "sourcePath": "docs/installation/codex.mdx",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "AI Coding Assistants"
+        ],
+        "order": 15
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/installation/codex",
+        "status": 308,
+        "location": "/installation/codex/",
+        "final": {
+          "path": "/installation/codex/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/installation/codex/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/installation/codex",
+        "title": "OpenAI Codex CLI | Apertis Documentation",
+        "headingIds": [
+          "prerequisites",
+          "step-1-install-codex",
+          "step-2-add-apertis-as-a-provider",
+          "step-3-set-your-api-key",
+          "step-4-choose-a-model",
+          "verify-the-connection",
+          "troubleshooting",
+          "related-resources"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/responses",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://developers.openai.com/codex",
+          "https://developers.openai.com/codex/config-advanced",
+          "https://docs.apertis.ai",
+          "https://github.com/apertis-ai/docs/tree/main/docs/installation/codex.mdx"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/installation/bolt_diy",
       "kind": "doc",
       "documentId": "default:installation/bolt_diy",
@@ -5805,7 +5939,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 25
+        "order": 27
       },
       "listed": true,
       "disposition": "preserve",
@@ -5868,7 +6002,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 23
+        "order": 25
       },
       "listed": true,
       "disposition": "preserve",
@@ -6010,7 +6144,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 17
+        "order": 18
       },
       "listed": true,
       "disposition": "preserve",
@@ -6067,7 +6201,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 26
+        "order": 28
       },
       "listed": true,
       "disposition": "preserve",
@@ -6125,7 +6259,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 19
+        "order": 21
       },
       "listed": true,
       "disposition": "preserve",
@@ -6188,7 +6322,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 15
+        "order": 16
       },
       "listed": true,
       "disposition": "preserve",
@@ -6262,7 +6396,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 18
+        "order": 19
       },
       "listed": true,
       "disposition": "preserve",
@@ -6325,7 +6459,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 16
+        "order": 17
       },
       "listed": true,
       "disposition": "preserve",
@@ -6400,7 +6534,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 22
+        "order": 24
       },
       "listed": true,
       "disposition": "preserve",
@@ -6472,7 +6606,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 21
+        "order": 23
       },
       "listed": true,
       "disposition": "preserve",
@@ -6675,7 +6809,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 20
+        "order": 22
       },
       "listed": true,
       "disposition": "preserve",
@@ -6738,7 +6872,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 27
+        "order": 29
       },
       "listed": true,
       "disposition": "preserve",
@@ -6794,7 +6928,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 24
+        "order": 26
       },
       "listed": true,
       "disposition": "preserve",
@@ -7090,7 +7224,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 33
+        "order": 35
       },
       "listed": true,
       "disposition": "preserve",
@@ -7322,7 +7456,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 28
+        "order": 30
       },
       "listed": true,
       "disposition": "preserve",
@@ -7452,7 +7586,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 34
+        "order": 36
       },
       "listed": true,
       "disposition": "preserve",

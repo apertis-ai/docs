@@ -61,10 +61,12 @@ const sidebars = {
           items: [
             'installation/claude-code',
             'installation/opencode',
+            'installation/codex',
             'installation/crush',
             'installation/goose',
             'installation/cline',
             'installation/cursor',
+            'installation/antigravity',
             'installation/continue',
             'installation/roocode',
             'installation/kilo-code',
