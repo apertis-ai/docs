@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "f262cec977fa9786e226c1f82b09e8ba44f357ee",
-  "buildId": "f262cec977fa9786e226c1f82b09e8ba44f357ee.118b2e983e66",
+  "sourceSha": "b8916d44fd3bb97c86691e96eed70c55e40708c4",
+  "buildId": "b8916d44fd3bb97c86691e96eed70c55e40708c4.118b2e983e66",
   "documents": [
     {
       "id": "page:index",
@@ -807,9 +807,9 @@
       },
       "markdown": {
         "path": "/authentication/api-keys.md",
-        "sha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+        "sha256": "abdcaa5ac89d90cc6d8f625e94555cdefd0d0af13d85f322fb30e738ff49ecd1"
       },
-      "contentSha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+      "contentSha256": "abdcaa5ac89d90cc6d8f625e94555cdefd0d0af13d85f322fb30e738ff49ecd1"
     },
     {
       "id": "default:authentication/organizations",
