@@ -65,6 +65,7 @@ const sidebars = {
             'installation/goose',
             'installation/cline',
             'installation/cursor',
+            'installation/antigravity',
             'installation/continue',
             'installation/roocode',
             'installation/kilo-code',
