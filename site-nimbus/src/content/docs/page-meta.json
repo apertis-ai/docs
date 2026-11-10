@@ -172,8 +172,8 @@
     "readingMinutes": 1
   },
   "default:authentication/api-keys": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "readingMinutes": 9
+    "updated": "2026-10-20T21:16:30+08:00",
+    "readingMinutes": 10
   },
   "default:authentication/organizations": {
     "updated": "2026-06-11T10:58:49+08:00",
