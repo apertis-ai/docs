@@ -228,7 +228,11 @@
     "readingMinutes": 4
   },
   "default:installation/antigravity": {
-    "updated": "2026-11-10T15:38:26+08:00",
+    "updated": "2026-11-10T16:38:22+08:00",
+    "readingMinutes": 3
+  },
+  "default:installation/codex": {
+    "updated": "2026-11-10T16:38:22+08:00",
     "readingMinutes": 3
   },
   "default:installation/bolt_diy": {
