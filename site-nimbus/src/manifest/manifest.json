@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "b005b6f155cc58195880a56cb53404b6bf684902",
-  "buildId": "b005b6f155cc58195880a56cb53404b6bf684902.0f53d6924a9b",
+  "sourceSha": "5377cd296375a64246115e8fac0458f231a91dd3",
+  "buildId": "5377cd296375a64246115e8fac0458f231a91dd3.135f7c521492",
   "documents": [
     {
       "id": "page:index",
@@ -666,24 +666,6 @@
         "sha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
       },
       "contentSha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
-    },
-    {
-      "id": "api:utilities/organization-usage-costs",
-      "sourcePath": "docs-api/utilities/organization-usage-costs.md",
-      "servedPath": "/api/utilities/organization-usage-costs/",
-      "canonicalUrl": "https://docs.apertis.ai/api/utilities/organization-usage-costs",
-      "title": "Organization Usage and Costs",
-      "eligibility": {
-        "publish": true,
-        "search": true,
-        "agent": true,
-        "rag": true
-      },
-      "markdown": {
-        "path": "/api/utilities/organization-usage-costs.md",
-        "sha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
-      },
-      "contentSha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
     },
     {
       "id": "api:utilities/fallback-models",

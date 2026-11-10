@@ -92,7 +92,7 @@ test('publication files: sitemap from published HTML routes; _redirects only for
   ] as unknown as InventoryRoute[];
   const files = publicationFiles(m, rows, out);
   assert.deepEqual([...files['sitemap.xml'].matchAll(/<loc>([^<]+)<\/loc>/g)].map((x) => x[1]),
-    ['https://docs.apertis.ai/a?x=1&amp;y=2', 'https://docs.apertis.ai/b', 'https://docs.apertis.ai/search']);
+    ['https://docs.apertis.ai/a/?x=1&amp;y=2', 'https://docs.apertis.ai/b/', 'https://docs.apertis.ai/search/']);
   assert.deepEqual(files._redirects.split('\n').filter((l) => l && !l.startsWith('#')),
     [`/404 ${RETIRED_TARGET} 200`, `/404/ ${RETIRED_TARGET} 200`, `/404.html ${RETIRED_TARGET} 200`]);
   fs.mkdirSync(path.join(out, RETIRED_TARGET.slice(1)));

@@ -27,6 +27,7 @@ const SUMMARY = 'Apertis is an AI API gateway: one API key reaches models from m
   + 'endpoints. Each link below is the clean Markdown version of a documentation page; /llms-full.txt holds all of them in one file, '
   + 'and the docs MCP server at https://docs.apertis.ai/mcp searches and reads the same pages.';
 
+const OPENAPI_URL = 'https://apertis.ai/docs/openapi.yaml';
 const ENTRY = /^- \[((?:\\.|[^\\\]])*)\]\((\S+)\): (.+)$/;
 const SOURCE = 'Source: ';
 
@@ -37,7 +38,8 @@ export function llmsIndex(pages: LlmsPage[]): string {
     sections.set(p.section, [...(sections.get(p.section) ?? []), p]);
   }
   const entry = (p: LlmsPage) => `- [${p.title.replace(/[\\[\]]/g, '\\$&')}](${p.markdownUrl}): ${p.description}`;
-  return `# Apertis Documentation\n\n> ${SUMMARY}\n${[...sections].map(([name, list]) => `\n## ${name}\n\n${list.map(entry).join('\n')}\n`).join('')}`;
+  // The OpenAPI spec is a bare link line (not a `- [..](..): ..` page entry), so parseIndex and the docs MCP skip it.
+  return `# Apertis Documentation\n\n> ${SUMMARY}\n${[...sections].map(([name, list]) => `\n## ${name}\n\n${list.map(entry).join('\n')}\n`).join('')}\n## Reference\n\n[OpenAPI specification](${OPENAPI_URL})\n`;
 }
 
 export function parseIndex(text: string): LlmsEntry[] {

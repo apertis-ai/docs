@@ -18,9 +18,10 @@ import { llmsFull, llmsIndex, type LlmsPage } from '../src/agent/llms.ts';
 import { leadSentence, topLevelParagraphs } from '../src/components/shell/page-header.ts';
 import { buildNavigation } from '../src/components/shell/navigation.ts';
 import { MANIFEST_SITE, type ManifestV1 } from '../src/contracts/manifest.ts';
+import { servedUrl } from '../src/contracts/page.ts';
 import type { InventoryRoute, SidebarId } from '../src/contracts/navigation.ts';
 import { decodeEntities, validateManifest } from '../src/contracts/validate-manifest.ts';
-import { GENERATED_PUBLIC, REPO_ROOT, SITE_ROOT, assertStaticClean, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
+import { GENERATED_PUBLIC, PAGE_META_FILE, REPO_ROOT, SITE_ROOT, assertStaticClean, mainTextSha256, readInventory, readRawInventory, writeManifest } from './convert.ts';
 
 /**
  * `check` (on when CI is set or M2_CHECK=1): never rewrite the committed manifest; fail if the build
@@ -119,12 +120,16 @@ export const RETIRED_TARGET = '/__retired';
  */
 export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
   const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  const urls = [
-    ...manifest.documents.filter((d) => d.eligibility.publish).map((d) => d.canonicalUrl),
-    ...inventory.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => r.live!.canonical!),
-  ].sort();
+  // `<loc>` is the served form (trailing slash, the 200), the same URL each page's canonical carries; `<lastmod>`
+  // is the converter's real last-modified date (page-meta.json, from git), absent for pages without one.
+  const metaFile = path.join(SITE_ROOT, PAGE_META_FILE);
+  const updated: Record<string, { updated?: string }> = fs.existsSync(metaFile) ? JSON.parse(fs.readFileSync(metaFile, 'utf8')) : {};
+  const urls: [string, string | undefined][] = [
+    ...manifest.documents.filter((d) => d.eligibility.publish).map((d): [string, string | undefined] => [servedUrl(d.canonicalUrl), updated[d.id]?.updated]),
+    ...inventory.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r): [string, string | undefined] => [servedUrl(r.live!.canonical!), undefined]),
+  ].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
   const files: Record<string, string> = {
-    'sitemap.xml': `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xml(u)}</loc></url>\n`).join('')}</urlset>\n`,
+    'sitemap.xml': `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, m]) => `  <url><loc>${xml(u)}</loc>${m ? `<lastmod>${m}</lastmod>` : ''}</url>\n`).join('')}</urlset>\n`,
   };
   const served = (p: string) => [`${p}.html`, `${p}/index.html`, p].some((f) => fs.existsSync(path.join(outDir, f)) && fs.statSync(path.join(outDir, f)).isFile());
   // The /blog/ index (served with or without articles since the operator review of 2026-10-03) supersedes
