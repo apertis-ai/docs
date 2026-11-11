@@ -1,5 +1,99 @@
 [
   {
+    "version": "2.2.115",
+    "date": "2026-11-10",
+    "title": "Models Added",
+    "description": "Add Claude Fable 5.2",
+    "category": "feature",
+    "items": [
+      "Claude Fable 5.2"
+    ],
+    "content": "## Claude Fable 5.2\n\nClaude Fable 5.2 is Anthropic’s most capable model for advanced technical work and open-ended problem solving, delivering significant improvements in coding, reasoning, and vision over Fable 5.1. It excels at exceptionally complex tasks, including large-scale software migrations, electronic system design, and advanced scientific and mathematical research.\n\nWith up to 30% faster output generation, clearer communication, and always-on adaptive extended thinking, Fable 5.2 supports configurable reasoning effort from low to max (default high), with thinking preserved across turns.\n\nDesigned for frontier engineering, scientific discovery, and ambitious long-horizon agentic workflows, it complements Opus 5.5 as a specialized option for the most demanding technical challenges.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.114",
+    "date": "2026-10-27",
+    "title": "Models Added",
+    "description": "Add GPT-6.1 Terra",
+    "category": "feature",
+    "items": [
+      "GPT-6.1 Terra"
+    ],
+    "content": "## GPT-6.1 Terra\n\nGPT-6.1 Terra is OpenAI's mid-tier model in the GPT-6.1 series, designed to balance capability, speed, and cost efficiency. Positioned below GPT-6.1 Sol, it delivers strong performance across everyday agentic workflows, coding, and professional writing, with particular strengths in screenshot understanding and on-screen content analysis. \n\nOptimized for high-volume production workloads, GPT-6.1 Terra is well suited for coding assistants, visual interface analysis, workflow automation, and scalable agentic applications that require reliable performance at an accessible cost.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.113",
+    "date": "2026-10-24",
+    "title": "Models Added",
+    "description": "Add Kimi K3.1 Pro",
+    "category": "feature",
+    "items": [
+      "Kimi K3.1 Pro"
+    ],
+    "content": "Kimi K3.1 Pro is Moonshot AI's flagship open-weight multimodal reasoning model, building on Kimi K3 with enhanced post-training for advanced reasoning and autonomous task execution. It features a 1M-token context window and native image and video understanding, enabling complex, long-context multimodal workflows.\n\nOptimized for long-horizon coding, 3D creation, financial research, and end-to-end agentic knowledge work, Kimi K3.1 Pro is well suited for autonomous software engineering, multimodal analysis, and complex professional workflows that require sustained reasoning and reliable execution.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.112",
+    "date": "2026-10-17",
+    "title": "Models Added",
+    "description": "Add DeepSeek V4.1 Flash 1017",
+    "category": "feature",
+    "items": [
+      "DeepSeek V4.1 Flash 1017"
+    ],
+    "content": "DeepSeek V4.1 Flash 1017 is the October 17, 2026 snapshot of DeepSeek’s cost-efficient Mixture-of-Experts (MoE) model, built on its innovative Causal Encoder-Decoder (CED) architecture. Featuring 552B total parameters with 8B activated for input and 16B for output, it combines efficient inference with native multimodal understanding through jointly trained text and visual representations. Optimized for coding, terminal and computer-use agents, and long-horizon workflows, the model introduces compressed KV caching that reduces cache memory usage to approximately one-quarter of the previous Flash generation.\n\nDeepSeek reports that it surpasses V4 Pro in performance, inference speed, and task completion time, making it well suited for cost-efficient autonomous agents, complex software engineering, and long-context analysis.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.111",
+    "date": "2026-10-17",
+    "title": "Models Added",
+    "description": "Add Nemotron 3.5 Super VL",
+    "category": "feature",
+    "items": [
+      "Nemotron 3.5 Super VL"
+    ],
+    "content": "NVIDIA Nemotron 3.5 Super VL is an open multimodal Mixture-of-Experts (MoE) model featuring 120B total parameters with 12B activated per token. Built on a hybrid Mamba–Transformer architecture with multi-token prediction, it supports text, images, documents, GUI screenshots, and video inputs, along with a 1M-token context window for complex, long-horizon workflows. \n\nOptimized for multimodal reasoning, visual understanding, and agentic tool use, the model supports configurable reasoning modes and token budgets. It is well suited for document intelligence, web research, coding validation, customer service, GUI analysis, and video understanding, enabling efficient, long-running multimodal agent applications.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.110",
+    "date": "2026-10-17",
+    "title": "Models Added",
+    "description": "Add Muse Spark Open",
+    "category": "feature",
+    "items": [
+      "Muse Spark Open"
+    ],
+    "content": "Muse Spark Open is an open-weight, coding-optimized model designed for agentic software engineering workflows. It delivers strong first-attempt accuracy, reliable tool calling, and deep codebase understanding, enabling effective development across real-world repositories. \n\nOptimized for autonomous coding agents, complex code navigation, and tool-driven development, Muse Spark Open is well suited for software engineering automation, debugging, code generation, and multi-step coding workflows where accuracy and reliable execution are essential.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.109",
+    "date": "2026-10-14",
+    "title": "Models Added",
+    "description": "Add Gemini 4 Argon",
+    "category": "feature",
+    "items": [],
+    "content": "Gemini 4 Argon is Google's flagship reasoning model, built for complex software engineering, deep mathematical and scientific problem solving, and autonomous multi-step agents. Google trained it to keep context across long, multi-step tasks and to turn long documents mixing text, tables, charts and images into a single grounded output. It leads the Vals Index across finance, legal, coding and tax work, and supports long decode of up to 1M output tokens in a single response.",
+    "abridged": false
+  },
+  {
+    "version": "2.2.108",
+    "date": "2026-10-07",
+    "title": "System Update",
+    "description": "Apertis joins the Claude Startups program",
+    "category": "system",
+    "items": [
+      "Claude Startups program"
+    ],
+    "content": "## Apertis joins the Claude Startups program\n\nSTIMA AI, the company behind Apertis, has joined the Claude Startups program.\n\nApertis is model supply and delivery infrastructure for teams bringing AI agents into production. Recent releases added organization API keys with expiry dates and credit limits, usage and cost attribution per member and service account, and audit events for organization changes.\n\nAs members, our team builds with Claude and works with Anthropic's startup team. That goes into what's next on our roadmap: workload-specific delivery, cost attribution that fits how companies budget, and managed procurement.\n\nNothing changes for you: your keys, endpoints, models and pricing stay the same.",
+    "abridged": false
+  },
+  {
     "version": "2.2.107",
     "date": "2026-10-01",
     "title": "Models Added",
