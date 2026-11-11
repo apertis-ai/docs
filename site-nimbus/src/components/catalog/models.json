@@ -1,6 +1,193 @@
 {
-  "version": "127",
+  "version": "216",
   "models": [
+    {
+      "id": "claude-fable-5.2",
+      "name": "Claude Fable 5.2",
+      "provider": "Anthropic",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$8.00",
+        "output": "$40.00"
+      }
+    },
+    {
+      "id": "gpt-6.1-terra",
+      "name": "GPT-6.1 Terra",
+      "provider": "OpenAI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.00",
+        "output": "$5.00"
+      }
+    },
+    {
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "provider": "MoonShot AI",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "deepseek-v4.1-flash-1017",
+      "name": "DeepSeek V4.1 Flash 1017",
+      "provider": "DeepSeek",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.20",
+        "output": "$0.80"
+      }
+    },
+    {
+      "id": "nemotron-3.5-super-vl:free",
+      "name": "Nemotron 3.5 Super VL (Free)",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Free",
+      "price": {
+        "kind": "free"
+      }
+    },
+    {
+      "id": "nemotron-3.5-super-vl",
+      "name": "Nemotron 3.5 Super VL",
+      "provider": "NVIDIA",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$0.10",
+        "output": "$0.40"
+      }
+    },
+    {
+      "id": "muse-spark-open",
+      "name": "Muse Spark Open",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$1.25",
+        "output": "$4.25"
+      }
+    },
+    {
+      "id": "gemini-4-argon",
+      "name": "Gemini 4 Argon",
+      "provider": "Google",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$2.00",
+        "output": "$10.00"
+      }
+    },
+    {
+      "id": "muse-wonder",
+      "name": "Muse Wonder",
+      "provider": "Meta",
+      "category": "chat",
+      "context": 1000000,
+      "charge": "Pay As You Go",
+      "price": {
+        "kind": "token",
+        "input": "$4.00",
+        "output": "$20.00"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-lite-image-vertex",
+      "name": "Gemini 3.1 Flash Lite Image (Google Vertex AI)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.0336"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-lite-image-aistudio",
+      "name": "Gemini 3.1 Flash Lite Image (Google AI Studio)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.0336"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-image-vertex",
+      "name": "Gemini 3.1 Flash Image (Google Vertex AI)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.067"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-image-aistudio",
+      "name": "Gemini 3.1 Flash Image (Google AI Studio)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.067"
+      }
+    },
+    {
+      "id": "gemini-3-pro-image-vertex",
+      "name": "Gemini 3 Pro Image (Google Vertex AI)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.134"
+      }
+    },
+    {
+      "id": "gemini-3-pro-image-aistudio",
+      "name": "Gemini 3 Pro Image (Google AI Studio)",
+      "provider": "Google",
+      "category": "image",
+      "context": null,
+      "charge": "Pay Per Request",
+      "price": {
+        "kind": "request",
+        "price": "$0.134"
+      }
+    },
     {
       "id": "gpt-6.1-sol",
       "name": "GPT-6.1 Sol",
@@ -946,8 +1133,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$4.00",
-        "output": "$20.00"
+        "input": "$5.00",
+        "output": "$25.00"
       }
     },
     {
@@ -987,19 +1174,6 @@
         "kind": "token",
         "input": "$1.50",
         "output": "$9.00"
-      }
-    },
-    {
-      "id": "claude-opus-4.7-fast",
-      "name": "Claude Opus 4.7 (Fast)",
-      "provider": "Anthropic",
-      "category": "chat",
-      "context": 1000000,
-      "charge": "Pay As You Go",
-      "price": {
-        "kind": "token",
-        "input": "$30.00",
-        "output": "$150.00"
       }
     },
     {
@@ -1307,21 +1481,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$4.00",
-        "output": "$20.00"
-      }
-    },
-    {
-      "id": "claude-opus-4.6-fast",
-      "name": "Claude Opus 4.6 (Fast)",
-      "provider": "Anthropic",
-      "category": "chat",
-      "context": 1000000,
-      "charge": "Pay As You Go",
-      "price": {
-        "kind": "token",
-        "input": "$30.00",
-        "output": "$150.00"
+        "input": "$5.00",
+        "output": "$25.00"
       }
     },
     {
@@ -1743,8 +1904,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$2.40",
-        "output": "$12.00"
+        "input": "$3.00",
+        "output": "$15.00"
       }
     },
     {
@@ -1834,8 +1995,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$4.00",
-        "output": "$20.00"
+        "input": "$5.00",
+        "output": "$25.00"
       }
     },
     {
@@ -1847,8 +2008,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$4.00",
-        "output": "$20.00"
+        "input": "$5.00",
+        "output": "$25.00"
       }
     },
     {
@@ -2211,8 +2372,8 @@
       "charge": "Pay As You Go",
       "price": {
         "kind": "token",
-        "input": "$4.00",
-        "output": "$20.00"
+        "input": "$5.00",
+        "output": "$25.00"
       }
     },
     {
