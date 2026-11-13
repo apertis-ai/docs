@@ -33,6 +33,6 @@ test('building twice is byte-identical and matches the committed manifest', { ti
   const second = run();
   assert.equal(second.manifest, first.manifest);
   assert.deepEqual(second.files, first.files);
-  // #13: one clean Markdown artifact per agent-eligible document (81 docs).
-  assert.equal(Object.keys(first.files).filter((f) => f.endsWith('.md')).length, 81);
+  // #13: one clean Markdown artifact per agent-eligible document (81 docs and the one published article).
+  assert.equal(Object.keys(first.files).filter((f) => f.endsWith('.md')).length, 82);
 });

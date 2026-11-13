@@ -29,6 +29,9 @@ interface Props {
 const { doc, entry } = Astro.props;
 const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
+// The article's social card, when src/assets/og/<slug>.png exists (1200x630).
+const cards = import.meta.glob<{ default: ImageMetadata }>('../../assets/og/*.png', { eager: true });
+const card = entry ? cards[`../../assets/og/${entry.id}.png`]?.default : undefined;
 const data = entry?.data as { title: string; description: string; author: string; category: string } | undefined;
 // The index is not a manifest document (like /search/): it is never indexed and has no Markdown.
 const index: ManifestDocument = {
@@ -37,12 +40,12 @@ const index: ManifestDocument = {
 };
 ---
 {doc && rendered && data ? (
-  <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description }}>
+  <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description, image: card }}>
     <h1 id={titleId(data.title)}>{data.title}</h1>
     <rendered.Content />
   </DocLayout>
 ) : (
-  <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles}>
+  <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles} seo={{ description: 'Guides, updates and field notes from the team building Apertis.' }}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <h1>Apertis blog</h1>

@@ -33,6 +33,8 @@ function cloneRepo(): string {
     execFileSync('cp', [...CP, path.join(site, entry), path.join(dest, 'site-nimbus')]);
   }
   fs.rmSync(path.join(dest, 'site-nimbus/dist'), { recursive: true, force: true });
+  // The fixture articles replace the committed ones, and so do their social cards (the fixtures have none).
+  for (const dir of ['src/articles', 'src/assets/og']) fs.rmSync(path.join(dest, 'site-nimbus', dir), { recursive: true, force: true });
   fs.cpSync(path.join(site, 'test/fixtures/articles/published/src/articles'), path.join(dest, 'site-nimbus/src/articles'), { recursive: true });
   const git = (...args: string[]) => execFileSync('git', ['-C', dest, '-c', 'user.name=fixture', '-c', 'user.email=fixture@invalid', ...args], { stdio: 'pipe' });
   git('init', '-q');

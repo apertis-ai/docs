@@ -23,6 +23,7 @@ import { getCollection, getEntry } from 'astro:content';
 import { isNativeArticle, parseRelated } from '../contracts/articles.ts';
 import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
 import type { ManifestDocument } from '../contracts/manifest.ts';
+import type { SocialImage } from '../contracts/page.ts';
 import type { RouteInventory } from '../contracts/navigation.ts';
 import { manifest } from '../manifest/manifest.ts';
 import inventoryFile from '../../../migration/nimbus/route-inventory.json' with { type: 'json' };
@@ -39,7 +40,7 @@ interface Props {
   /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
   headings?: Heading[];
   /** A native article (src/pages/blog): its front matter replaces the sidebar category and the docs entry. */
-  article?: { category: string; author: string; description: string };
+  article?: { category: string; author: string; description: string; image?: SocialImage };
 }
 const { doc, buildId, headings = [], article } = Astro.props;
 const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
@@ -55,6 +56,7 @@ const seo = {
   updated: meta.updated,
   article: true,
   trail: nav ? [...nav.trail, nav.entry.label] : [],
+  post: article ? { author: article.author, published: meta.updated, image: article.image } : undefined,
 };
 const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
 // Try it marks its cURL samples here, at build time; pages without one render no TryIt (and load none of it).
@@ -96,11 +98,11 @@ const related = native.length
           <Fragment set:html={header.h1} />
           {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
-            <dl class="doc-meta">
+            <dl class:list={['doc-meta', { 'doc-meta--byline': article }]}>
               {article && <div><dt>Author</dt><dd>{article.author}</dd></div>}
               <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
-              <div class="doc-header__edit"><a data-edit={editUrl(doc.sourcePath)} target="_blank" rel="noopener">Edit this page</a></div>
+              {!article && <div class="doc-header__edit"><a data-edit={editUrl(doc.sourcePath)} target="_blank" rel="noopener">Edit this page</a></div>}
             </dl>
           </div>
           {doc.markdown && (

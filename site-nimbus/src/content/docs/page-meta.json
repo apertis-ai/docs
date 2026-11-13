@@ -322,5 +322,9 @@
   "default:usage": {
     "updated": "2026-06-10T11:32:17+08:00",
     "readingMinutes": 2
+  },
+  "blog:ci-moved-three-times": {
+    "updated": "2026-11-13",
+    "readingMinutes": 10
   }
 }

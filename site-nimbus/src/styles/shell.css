@@ -358,6 +358,13 @@ button { font: inherit; color: inherit; }
 .doc-meta > div { display: flex; gap: 4px; }
 .doc-meta > div + div::before { content: '·'; margin: 0 8px; }
 .doc-meta dd { margin: 0; color: var(--ink); }
+/* An article's byline: author, date, reading time. The labels stay for screen readers and the separators are
+   gaps, so a row that wraps on a phone never starts with a dot. */
+.doc-meta--byline { gap: 4px 20px; }
+.doc-meta--byline > div + div::before { content: none; }
+.doc-meta--byline dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.doc-meta--byline dd { color: var(--muted); }
+.doc-meta--byline > div:first-child dd { color: var(--ink); }
 .doc-header__rule { height: 0; margin: 32px 0 36px; border: 0; border-top: 1px solid var(--line); }
 
 /* Page actions */

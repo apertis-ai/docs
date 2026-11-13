@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
   "sourceSha": "b8916d44fd3bb97c86691e96eed70c55e40708c4",
-  "buildId": "b8916d44fd3bb97c86691e96eed70c55e40708c4.b90cdc70ae66",
+  "buildId": "b8916d44fd3bb97c86691e96eed70c55e40708c4.1f6f70c1e32f",
   "documents": [
     {
       "id": "page:index",
@@ -17,7 +17,7 @@
         "rag": false
       },
       "markdown": null,
-      "contentSha256": "281a1afc6cb2c2376aeb5d8eefc212d0c658c52c9f204adf5ee0139775de2e30"
+      "contentSha256": "13e4d99a4dd7de9017aae920c8f5210b93e5a19f97722d42c154664c586f0a38"
     },
     {
       "id": "api:index",
@@ -1476,6 +1476,24 @@
         "sha256": "1f88d4ab34ee76b571ff74b6ac82f31df9391049b67a3ee59793232d3b1fc126"
       },
       "contentSha256": "1f88d4ab34ee76b571ff74b6ac82f31df9391049b67a3ee59793232d3b1fc126"
+    },
+    {
+      "id": "blog:ci-moved-three-times",
+      "sourcePath": "site-nimbus/src/articles/ci-moved-three-times.md",
+      "servedPath": "/blog/ci-moved-three-times/",
+      "canonicalUrl": "https://docs.apertis.ai/blog/ci-moved-three-times/",
+      "title": "We moved CI three times in two months",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/blog/ci-moved-three-times/index.md",
+        "sha256": "765dd51e0a96289c7b01d42a830391508439a33f365dc134bd3b52d2b9d2a85c"
+      },
+      "contentSha256": "765dd51e0a96289c7b01d42a830391508439a33f365dc134bd3b52d2b9d2a85c"
     }
   ]
 }
