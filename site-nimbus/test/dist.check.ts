@@ -534,6 +534,9 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
       assert.equal(post.url, loc);
       assert.match(post.datePublished, /^\d{4}-\d{2}-\d{2}$/, loc);
       assert.ok(post.author?.name, `${loc} author`);
+      // The /blog/ index says what each article is about, in the article's own description; the homepage list stays one line.
+      assert.ok(desc && read('blog/index.html').includes(`<span class="article-row__desc">${desc}</span>`), `${loc} description is not on /blog/`);
+      assert.ok(!read('index.html').includes('article-row__desc'), 'the homepage list carries descriptions');
       // The social card: one file in dist, named by og:image, twitter:image and the JSON-LD image alike.
       const card = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
       if (card) assert.ok(files.includes(new URL(card).pathname.slice(1)), `${loc} og:image is not a file in dist`);

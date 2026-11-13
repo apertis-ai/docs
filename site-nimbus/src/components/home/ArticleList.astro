@@ -2,6 +2,7 @@
 // Published native articles, newest first, as dated rows (the claude.dev blog index pattern): date,
 // title with its category, reading time. `limit` trims the list (the homepage shows three). `filter`
 // adds category buttons once there are two or more categories (the /blog/ index); without JS every row shows.
+// `describe` puts the article's description under its title (the /blog/ index; the homepage stays one line).
 import { getCollection } from 'astro:content';
 import pageMetaFile from '../../content/docs/page-meta.json' with { type: 'json' };
 import { isNativeArticle } from '../../contracts/articles.ts';
@@ -11,12 +12,14 @@ import { displayDate } from '../shell/page-header.ts';
 interface Props {
   limit?: number;
   filter?: boolean;
+  describe?: boolean;
 }
-const { limit, filter = false } = Astro.props;
+const { limit, filter = false, describe = false } = Astro.props;
 const meta = pageMetaFile as Record<string, { updated: string; readingMinutes: number }>;
-const data = new Map((await getCollection('articles')).map((e) => [e.id, e.data as { category: string }]));
+const data = new Map((await getCollection('articles')).map((e) => [e.id, e.data as { category: string; description: string }]));
 const rows = manifest.documents.filter(isNativeArticle)
-  .map((d) => ({ doc: d, date: meta[d.id].updated, minutes: meta[d.id].readingMinutes, category: data.get(d.servedPath.slice(6, -1))!.category }))
+  .map((d) => ({ doc: d, date: meta[d.id].updated, minutes: meta[d.id].readingMinutes, article: data.get(d.servedPath.slice(6, -1))! }))
+  .map((r) => ({ ...r, category: r.article.category, description: r.article.description }))
   .sort((a, b) => (a.date === b.date ? (a.doc.id < b.doc.id ? -1 : 1) : a.date < b.date ? 1 : -1))
   .slice(0, limit);
 const categories = [...new Set(rows.map((r) => r.category))].sort();
@@ -37,7 +40,7 @@ const categories = [...new Set(rows.map((r) => r.category))].sort();
     <li data-category={r.category}>
       <a class="article-row" href={r.doc.servedPath}>
         <time class="article-row__date" datetime={r.date}>{displayDate(r.date)}</time>
-        <span class="article-row__title">{r.doc.title}<span class="article-row__category">{r.category}</span></span>
+        <span class="article-row__title">{r.doc.title}<span class="article-row__category">{r.category}</span>{describe && <span class="article-row__desc">{r.description}</span>}</span>
         <span class="article-row__time">{r.minutes} min</span>
       </a>
     </li>

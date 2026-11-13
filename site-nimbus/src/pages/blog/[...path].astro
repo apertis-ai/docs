@@ -52,7 +52,7 @@ const index: ManifestDocument = {
         <p>Guides, updates and field notes from the team building Apertis.</p>
       </div>
       <div class="blog-index__list">
-        {hasArticles ? <ArticleList filter /> : (
+        {hasArticles ? <ArticleList filter describe /> : (
           <p class="blog-index__empty">The first articles are on their way: guides, engineering notes and model deep dives. Until then, see what ships in the <a href="https://apertis.ai/changelog" target="_blank" rel="noopener noreferrer">release notes</a>.</p>
         )}
       </div>
