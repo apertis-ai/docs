@@ -1682,12 +1682,15 @@
     {
       "path": "/blog/tags",
       "scope": "full",
-      "status": 404
+      "status": 308,
+      "location": "/blog/tags/"
     },
     {
       "path": "/blog/tags/",
       "scope": "full",
-      "status": 404
+      "status": 200,
+      "canonical": "https://docs.apertis.ai/blog/tags/",
+      "note": "Operator review 2026-11-14 (Native articles): articles carry tags, so the native /blog/tags/ index supersedes the retired legacy /blog/tags row. The legacy tag pages under it stay 404."
     },
     {
       "path": "/blog/tags/docusaurus",
