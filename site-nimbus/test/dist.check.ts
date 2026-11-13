@@ -17,7 +17,7 @@ import { mainTextSha256 } from '../converter/convert.ts';
 import { servedUrl } from '../src/contracts/page.ts';
 import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
-import { isNativeArticle } from '../src/contracts/articles.ts';
+import { bylineParts, isNativeArticle, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
@@ -68,7 +68,7 @@ test('every output file derives from a publishable manifest entry or is referenc
   // The /blog/ index (openspec docs-routing-publication "Native articles", operator review 2026-10-03): served
   // with or without articles, never a manifest document; so are /models/ and /changelog/ (openspec
   // docs-live-catalog), whose live data and feed are Pages Functions, not files.
-  const html = [...pages, ...generated, 'blog/index.html', 'models/index.html', 'changelog/index.html', '404.html'];
+  const html = [...pages, ...generated, 'blog/index.html', ...listings, 'models/index.html', 'changelog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // A native article's social card is named by its absolute URL (og:image, twitter:image and the JSON-LD image).
@@ -164,6 +164,10 @@ const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
 // Native articles (src/articles) have no inventory row and no legacy observation: they are checked on their own below.
 const native = manifest.documents.filter(isNativeArticle);
+// The listing pages the published articles make (src/pages/blog): the tags index, a page per tag and a page per
+// author. Not manifest documents, like the /blog/ index.
+const publishedArticles = readArticles(root).filter((a) => !a.draft);
+const listings = [...new Set(publishedArticles.flatMap((a) => [...(a.tags.length ? [TAGS_PATH] : []), ...a.tags.map(tagPath), bylineParts(a.author).path]))].map((p) => `${p.slice(1)}index.html`);
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:') && !isNativeArticle(d));
 // Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
 type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] }; headings?: { removed?: string[] } };
@@ -342,7 +346,10 @@ test('m8: retired routes are in no publication channel and every path they had a
   // The /blog/ index supersedes the retired legacy /blog row, and only it (docs-routing-publication "Native
   // articles"): blog/index.html is its one file; every other retired /blog/** path stays unserved.
   // A native article's own files are under /blog/ too; its slug can never name a retired path (converter/articles.ts).
-  const index = (r: InventoryRoute, f: string) => r.path === '/blog' && (f === 'blog/index.html' || native.some((d) => f.startsWith(d.servedPath.slice(1))));
+  // So are the native listing pages: the tags index supersedes the retired /blog/tags row, and a tag or author page
+  // sits under /blog/tags or /blog/authors without ever naming a retired path itself (converter/articles.ts).
+  const index = (r: InventoryRoute, f: string) => (r.path === '/blog' && (f === 'blog/index.html' || listings.includes(f) || native.some((d) => f.startsWith(d.servedPath.slice(1)))))
+    || (['/blog/tags', '/blog/authors'].includes(r.path) && listings.includes(f));
   for (const r of retired) {
     const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f) && !index(r, f));
     if (servedBy.length) for (const from of [r.path, `${r.path}/`, `${r.path}.html`]) assert.ok(rewritten.has(from), `${from} is served by ${servedBy} and not rewritten`);

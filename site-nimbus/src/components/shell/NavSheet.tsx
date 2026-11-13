@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { receive } from '@/lib/bridge';
 import { OPEN_EVENT } from '../../contracts/events.ts';
-import Logo from './Logo.tsx';
+import Logo, { Wordmark } from './Logo.tsx';
 
 interface Props {
   /** The page's sidebar (Sidebar.astro), passed as an Astro slot; absent on pages without one. */
@@ -81,7 +81,7 @@ export default function NavSheet({ sidebar, current }: Props) {
         <SheetTitle className="sr-only">Navigation</SheetTitle>
         <SheetDescription className="sr-only">Site navigation and the documentation sidebar</SheetDescription>
         <div className="drawer__head">
-          <a className="brand" href="/"><Logo /><span>Apertis Docs</span></a>
+          <a className="brand brand--lockup" href="/" aria-label="Apertis Docs home"><Logo /><Wordmark /><span>Docs</span></a>
           <button type="button" data-slot="button" className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'icon-button ml-auto')} data-theme-toggle aria-label="Toggle dark mode">
             <Sun className="icon-sun size-[18px]" aria-hidden="true" />
             <Moon className="icon-moon size-[18px]" aria-hidden="true" />

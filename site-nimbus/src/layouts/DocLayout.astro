@@ -11,6 +11,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
+import AuthorAvatar from '../components/home/AuthorAvatar.astro';
 import PageActions from '../components/shell/PageActions.tsx';
 import TocMobile from '../components/shell/TocMobile.tsx';
 import CodeTabs from '../components/CodeTabs.astro';
@@ -20,7 +21,7 @@ import { editUrl } from '../components/shell/edit-link.ts';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
 import { getCollection, getEntry } from 'astro:content';
-import { isNativeArticle, parseRelated } from '../contracts/articles.ts';
+import { bylineParts, isNativeArticle, parseRelated, tagPath } from '../contracts/articles.ts';
 import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import type { SocialImage } from '../contracts/page.ts';
@@ -40,7 +41,7 @@ interface Props {
   /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
   headings?: Heading[];
   /** A native article (src/pages/blog): its front matter replaces the sidebar category and the docs entry. */
-  article?: { category: string; author: string; description: string; image?: SocialImage };
+  article?: { category: string; author: string; description: string; image?: SocialImage; tags?: string[] };
 }
 const { doc, buildId, headings = [], article } = Astro.props;
 const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
@@ -56,12 +57,14 @@ const seo = {
   updated: meta.updated,
   article: true,
   trail: nav ? [...nav.trail, nav.entry.label] : [],
-  post: article ? { author: article.author, published: meta.updated, image: article.image } : undefined,
+  post: article ? { author: article.author, published: meta.updated, image: article.image, tags: article.tags } : undefined,
 };
 const header = pageHeaderParts(await Astro.slots.render('default'), article ? article.description : entry!.data.description);
 // Try it marks its cURL samples here, at build time; pages without one render no TryIt (and load none of it).
 const body = markTryIt(header.body);
 const category = article ? article.category : nav?.trail[0];
+// The byline is the author's avatar and name, linking to their page (src/pages/blog), which carries their role.
+const author = article ? bylineParts(article.author) : null;
 // Code tab groups (converter output) need the inline tab script before the first group; other pages get none.
 const hasCodeTabs = header.body.includes('<div class="code-tabs">');
 // Published articles that name this page in their `related` front matter (drafts have no manifest entry).
@@ -99,12 +102,17 @@ const related = native.length
           {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
             <dl class:list={['doc-meta', { 'doc-meta--byline': article }]}>
-              {article && <div><dt>Author</dt><dd>{article.author}</dd></div>}
+              {author && <div><dt>Author</dt><dd class="byline-author"><a href={author.path}><AuthorAvatar author={author} size={24} />{author.name}</a></dd></div>}
               <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
               {!article && <div class="doc-header__edit"><a data-edit={editUrl(doc.sourcePath)} target="_blank" rel="noopener">Edit this page</a></div>}
             </dl>
           </div>
+          {article?.tags?.length ? (
+            <ul class="tag-list" aria-label="Tags" data-pagefind-ignore="all">
+              {article.tags.map((t) => <li><a class="tag" href={tagPath(t)}>#{t}</a></li>)}
+            </ul>
+          ) : null}
           {doc.markdown && (
             <div class="doc-header__actions" data-pagefind-ignore="all">
               <PageActions client:idle markdownPath={doc.markdown.path} />
