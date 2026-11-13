@@ -5,25 +5,32 @@
 // The description comes from the page's front matter only (never generated); without one the description,
 // og:description and twitter:description tags are omitted.
 import type { ManifestDocument } from '../contracts/manifest.ts';
-import { PAGE_META, TITLE_SUFFIX, safeJsonLd, servedUrl, type SeoProps } from '../contracts/page.ts';
+import { MANIFEST_SITE } from '../contracts/manifest.ts';
+import { PAGE_META, TITLE_SUFFIX, bylineAuthor, safeJsonLd, servedUrl, type SeoProps } from '../contracts/page.ts';
 
 interface Props extends SeoProps {
   doc: ManifestDocument;
   buildId: string;
 }
-const { doc, buildId, description = null, updated, article = false, trail = [] } = Astro.props;
+const { doc, buildId, description = null, updated, article = false, trail = [], post } = Astro.props;
 const url = doc.canonicalUrl ? servedUrl(doc.canonicalUrl) : null;
 const fullTitle = doc.title + TITLE_SUFFIX;
 const desc = description?.replace(/\s+/g, ' ').trim() || null;
+// A native article is shared as a post: its own title without the site suffix, a large card, a byline.
+const socialTitle = post ? doc.title : fullTitle;
+const image = post?.image ? new URL(post.image.src, MANIFEST_SITE).toString() : null;
+const author = post ? bylineAuthor(post.author) : null;
 const jsonLd = url && article ? [
   {
     '@context': 'https://schema.org',
-    '@type': 'TechArticle',
+    '@type': post ? 'BlogPosting' : 'TechArticle',
     headline: doc.title,
     url,
     mainEntityOfPage: url,
     ...(desc ? { description: desc } : {}),
+    ...(post ? { datePublished: post.published, author } : {}),
     ...(updated ? { dateModified: updated } : {}),
+    ...(image ? { image } : {}),
     publisher: { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' },
   },
   ...(trail.length ? [{
@@ -42,12 +49,19 @@ const jsonLd = url && article ? [
 {url && <link rel="canonical" href={url} />}
 {desc && <meta name="description" content={desc} />}
 {url && <meta property="og:url" content={url} />}
-{url && <meta property="og:title" content={fullTitle} />}
+{author && <meta name="author" content={author.name} />}
+{url && <meta property="og:title" content={socialTitle} />}
 {url && desc && <meta property="og:description" content={desc} />}
 {url && <meta property="og:type" content={article ? 'article' : 'website'} />}
 {url && <meta property="og:site_name" content="Apertis Documentation" />}
-{url && <meta name="twitter:card" content="summary" />}
-{url && <meta name="twitter:title" content={fullTitle} />}
+{url && post && <meta property="article:published_time" content={post.published} />}
+{url && image && <meta property="og:image" content={image} />}
+{url && image && <meta property="og:image:width" content={String(post!.image!.width)} />}
+{url && image && <meta property="og:image:height" content={String(post!.image!.height)} />}
+{url && image && <meta property="og:image:alt" content={doc.title} />}
+{url && <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />}
+{url && <meta name="twitter:title" content={socialTitle} />}
+{url && image && <meta name="twitter:image" content={image} />}
 {url && desc && <meta name="twitter:description" content={desc} />}
 {jsonLd.map((block) => <script type="application/ld+json" set:html={safeJsonLd(block)} />)}
 <meta name={PAGE_META.id} content={doc.id} />

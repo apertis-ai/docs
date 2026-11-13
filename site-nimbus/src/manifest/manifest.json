@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "27f7610a750fef1a6864f20bb6db92cb7a999141",
-  "buildId": "27f7610a750fef1a6864f20bb6db92cb7a999141.7ed2c1d1466f",
+  "sourceSha": "b8916d44fd3bb97c86691e96eed70c55e40708c4",
+  "buildId": "b8916d44fd3bb97c86691e96eed70c55e40708c4.1f6f70c1e32f",
   "documents": [
     {
       "id": "page:index",
@@ -17,7 +17,7 @@
         "rag": false
       },
       "markdown": null,
-      "contentSha256": "281a1afc6cb2c2376aeb5d8eefc212d0c658c52c9f204adf5ee0139775de2e30"
+      "contentSha256": "13e4d99a4dd7de9017aae920c8f5210b93e5a19f97722d42c154664c586f0a38"
     },
     {
       "id": "api:index",
@@ -668,24 +668,6 @@
       "contentSha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
     },
     {
-      "id": "api:utilities/organization-usage-costs",
-      "sourcePath": "docs-api/utilities/organization-usage-costs.md",
-      "servedPath": "/api/utilities/organization-usage-costs/",
-      "canonicalUrl": "https://docs.apertis.ai/api/utilities/organization-usage-costs",
-      "title": "Organization Usage and Costs",
-      "eligibility": {
-        "publish": true,
-        "search": true,
-        "agent": true,
-        "rag": true
-      },
-      "markdown": {
-        "path": "/api/utilities/organization-usage-costs.md",
-        "sha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
-      },
-      "contentSha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380"
-    },
-    {
       "id": "api:utilities/fallback-models",
       "sourcePath": "docs-api/utilities/fallback-models.md",
       "servedPath": "/api/utilities/fallback-models/",
@@ -825,9 +807,9 @@
       },
       "markdown": {
         "path": "/authentication/api-keys.md",
-        "sha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+        "sha256": "abdcaa5ac89d90cc6d8f625e94555cdefd0d0af13d85f322fb30e738ff49ecd1"
       },
-      "contentSha256": "b7cfffb9cfbd8ca14407f1867f44456e0bd494edee0b854f2f1794f6bfe9d2d2"
+      "contentSha256": "abdcaa5ac89d90cc6d8f625e94555cdefd0d0af13d85f322fb30e738ff49ecd1"
     },
     {
       "id": "default:authentication/organizations",
@@ -1494,6 +1476,24 @@
         "sha256": "1f88d4ab34ee76b571ff74b6ac82f31df9391049b67a3ee59793232d3b1fc126"
       },
       "contentSha256": "1f88d4ab34ee76b571ff74b6ac82f31df9391049b67a3ee59793232d3b1fc126"
+    },
+    {
+      "id": "blog:ci-moved-three-times",
+      "sourcePath": "site-nimbus/src/articles/ci-moved-three-times.md",
+      "servedPath": "/blog/ci-moved-three-times/",
+      "canonicalUrl": "https://docs.apertis.ai/blog/ci-moved-three-times/",
+      "title": "We moved CI three times in two months",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/blog/ci-moved-three-times/index.md",
+        "sha256": "765dd51e0a96289c7b01d42a830391508439a33f365dc134bd3b52d2b9d2a85c"
+      },
+      "contentSha256": "765dd51e0a96289c7b01d42a830391508439a33f365dc134bd3b52d2b9d2a85c"
     }
   ]
 }

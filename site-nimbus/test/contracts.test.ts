@@ -18,6 +18,7 @@ import {
   type RouteInventory,
 } from '../src/contracts/navigation.ts';
 import { manifest as loadedManifest } from '../src/manifest/manifest.ts';
+import { isNativeArticle } from '../src/contracts/articles.ts';
 
 const repo = path.resolve(import.meta.dirname, '../..');
 const readJson = (p: string) => JSON.parse(fs.readFileSync(path.join(repo, p), 'utf8'));
@@ -126,7 +127,8 @@ test('the manifest loader reads the one canonical manifest location', () => {
 
 test('the committed manifest covers exactly the preserved doc/page set (#13) and matches the inventory apart from build output', () => {
   const poc: string[] = readJson('migration/nimbus/route-fixtures.json').pocRoutes;
-  const served = loadedManifest.documents.map((d) => d.servedPath).sort();
+  // Native articles (src/articles) have no inventory row; test/m9-articles.test.ts covers them.
+  const served = loadedManifest.documents.filter((d) => !isNativeArticle(d)).map((d) => d.servedPath).sort();
   const preserved = inventory.filter((r) => r.disposition === 'preserve' && r.documentId && (MANIFEST_KINDS as readonly string[]).includes(r.kind));
   assert.deepEqual(served, preserved.map((r) => { const p = new URL(r.live!.canonical!).pathname; return p.endsWith('/') ? p : `${p}/`; }).sort());
   for (const p of poc) assert.ok(served.includes(p === '/' ? p : `${p}/`), p);

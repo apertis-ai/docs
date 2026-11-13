@@ -17,7 +17,7 @@ If you have an active subscription, a dedicated API key is automatically created
 
 1. Click **My Plan** in the navbar (or go to [**Settings**](https://apertis.ai/setting?tab=keys))
 2. Switch to the **API Keys** tab
-3. Your subscription key (`sk-sub-...`) is listed with integration guides and ready to use
+3. Your subscription key (`sk-sub_apx_...`, or `sk-sub_...` for older keys) is listed with integration guides and ready to use
 
 > **Warning: Important**
 >
@@ -25,15 +25,26 @@ If you have an active subscription, a dedicated API key is automatically created
 
 ## API Key Format
 
-Apertis API keys follow this format:
+New Apertis API keys use a recognizable prefix and a built-in checksum:
 
 ```
-sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+sk-apx_<46 letters and digits>
 ```
 
-- **Prefix**: `sk-` (standard key) or `sk-sub-` (subscription key)
-- **Length**: 32+ characters after the prefix
-- **Characters**: Alphanumeric (a-z, A-Z, 0-9)
+| Key type | Prefix | Example shape |
+| --- | --- | --- |
+| Standard key | `sk-apx_` | `sk-apx_` + 46 characters |
+| Subscription key | `sk-sub_apx_` | `sk-sub_apx_` + 46 characters |
+| Organization key | `sk-org_apx_` | `sk-org_apx_` + 46 characters |
+
+- **Characters**: letters and digits only (a-z, A-Z, 0-9) after the prefix
+- **Checksum**: the last 6 characters are a checksum of the rest, so a mistyped or truncated key is rejected immediately, and secret scanners can recognize a leaked Apertis key with almost no false positives
+
+> **Info: Existing keys keep working**
+>
+> Keys created before this format (`sk-` followed by 48 characters, `sk-sub_…` and `sk-org_…` keys without `apx_`) keep authenticating exactly as before. You do not need to rotate them. A key you create or regenerate from now on uses the new format.
+
+Organization admin keys (`sk-admin_`) are not affected by this change.
 
 ## Using Your API Key
 
@@ -157,19 +168,19 @@ Set an expiration date for temporary or project-specific keys:
 
 ## Types of API Keys
 
-### Standard API Keys (`sk-`)
+### Standard API Keys (`sk-apx_`)
 
 - Created manually by users
 - Configurable quota and restrictions
 - Suitable for development and production use
 
-### Subscription API Keys (`sk-sub-`)
+### Subscription API Keys (`sk-sub_apx_`)
 
 - Automatically generated for subscription plans
 - Quota synced with subscription cycle
 - Automatically reset when billing cycle renews
 
-### Organization API Keys (`sk-org_`)
+### Organization API Keys (`sk-org_apx_`)
 
 - Created from an organization, usually scoped to a project
 - Bill to the organization instead of only the individual user
