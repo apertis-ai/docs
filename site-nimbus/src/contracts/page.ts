@@ -7,8 +7,12 @@ export const PAGE_META = {
   markdown: 'apertis-docs:markdown',
 } as const;
 
-/** Site suffix of every `<title>`: `<manifest title> | Apertis Documentation`. */
+/** Site suffix of a documentation page's `<title>`: `<manifest title> | Apertis Documentation`. */
 export const TITLE_SUFFIX = ' | Apertis Documentation';
+/** The blog (/blog/ and every native article) is the company's writing, not documentation: `<title> | Apertis`. */
+export const BLOG_TITLE_SUFFIX = ' | Apertis';
+/** The `<title>` suffix of the page served at `servedPath`; what follows ` | ` is also its og:site_name. */
+export const titleSuffix = (servedPath: string): string => (servedPath.startsWith('/blog/') ? BLOG_TITLE_SUFFIX : TITLE_SUFFIX);
 
 /** Ask Docs page context: `title` is the manifest title (the `<title>` without TITLE_SUFFIX), `href` from the current location. */
 export interface PageContext {

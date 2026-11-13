@@ -534,6 +534,11 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
       assert.equal(post.url, loc);
       assert.match(post.datePublished, /^\d{4}-\d{2}-\d{2}$/, loc);
       assert.ok(post.author?.name, `${loc} author`);
+      // A post is the company's writing: its <title> and og:site_name say Apertis, not Apertis Documentation.
+      assert.equal(html.match(/<title>([^<]*)<\/title>/)?.[1], `${post.headline} | Apertis`, loc);
+      assert.ok(html.includes('<meta property="og:site_name" content="Apertis">'), `${loc} og:site_name`);
+      assert.ok(read('blog/index.html').includes('<title>Blog | Apertis</title>'), '/blog/ title');
+      assert.ok(read('index.html').includes('<meta property="og:site_name" content="Apertis Documentation">'), 'the homepage og:site_name');
       // The /blog/ index says what each article is about, in the article's own description; the homepage list stays one line.
       assert.ok(desc && read('blog/index.html').includes(`<span class="article-row__desc">${desc}</span>`), `${loc} description is not on /blog/`);
       assert.ok(!read('index.html').includes('article-row__desc'), 'the homepage list carries descriptions');

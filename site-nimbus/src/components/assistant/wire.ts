@@ -1,6 +1,6 @@
 // Ask Docs wire client (migration/nimbus/fixtures/ask-wire.json, legacy contract v1). DOM-free so
 // node --test can exercise it; the panel in assistant.ts owns rendering.
-import { pageContext, TITLE_SUFFIX, type PageContext } from '../../contracts/page.ts';
+import { pageContext, titleSuffix, type PageContext } from '../../contracts/page.ts';
 
 export const ASK_PATH = '/api/ask';
 export const MAX_QUESTION = 2000;
@@ -21,12 +21,13 @@ export interface AskRequest {
   pageContext?: PageContext;
 }
 
-/** Page context read now: the manifest title (the `<title>` without TITLE_SUFFIX) and the current location. */
+/** Page context read now: the manifest title (the `<title>` without its site suffix) and the current location. */
 export function currentPageContext(
   documentTitle: string,
   loc: Pick<Location, 'pathname' | 'search' | 'hash'>,
 ): PageContext | undefined {
-  const title = (documentTitle.endsWith(TITLE_SUFFIX) ? documentTitle.slice(0, -TITLE_SUFFIX.length) : documentTitle).trim();
+  const suffix = titleSuffix(loc.pathname);
+  const title = (documentTitle.endsWith(suffix) ? documentTitle.slice(0, -suffix.length) : documentTitle).trim();
   return title ? pageContext(title, loc) : undefined;
 }
 

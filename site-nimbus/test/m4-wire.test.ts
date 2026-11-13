@@ -33,6 +33,10 @@ test('page context is the manifest title and the current location, read when cal
   assert.deepEqual(currentPageContext('API Reference | Apertis Documentation', loc), { title: 'API Reference', href: '/api/?a=1#h' });
   assert.deepEqual(currentPageContext('Home | Apertis Documentation', { pathname: '/', search: '', hash: '' }), { title: 'Home', href: '/' });
   assert.equal(currentPageContext(' | Apertis Documentation', loc), undefined);
+  // A blog page carries the company suffix, and only there is it stripped.
+  const post = { pathname: '/blog/ci-moved-three-times/', search: '', hash: '' };
+  assert.deepEqual(currentPageContext('We moved CI three times in two months | Apertis', post), { title: 'We moved CI three times in two months', href: post.pathname });
+  assert.equal(currentPageContext('About | Apertis', loc)?.title, 'About | Apertis');
 });
 
 test('success stream: content frames in order, [DONE] ends the answer', async () => {
