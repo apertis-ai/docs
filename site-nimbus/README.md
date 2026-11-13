@@ -468,8 +468,8 @@ all `false`, and their fixtures expect 404.
 ### Native articles (`/blog/`)
 
 Articles are written for this site, not converted: `src/articles/<slug>.md` (openspec
-docs-routing-publication "Native articles"). None is committed yet, so nothing below is emitted and
-`/blog` still answers 404.
+docs-routing-publication "Native articles"). One draft is committed (`ci-moved-three-times`) and none is
+published yet, so nothing below is emitted and `/blog` still answers 404.
 
 - Front matter: `title`, `description`, `date` (YYYY-MM-DD), `author`, `category`, optional
   `draft: true`, optional `related: /getting-started/quick-start/, /api/` (the documentation pages

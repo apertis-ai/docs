@@ -85,8 +85,8 @@ test('related docs must be published documentation pages: an unknown path or ano
   assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
-test('with no articles (the committed tree) nothing changes: 82 documents, no blog output', () => {
-  assert.equal(fs.existsSync(path.join(site, 'src/articles')), false, 'no article is committed yet');
+test('with only a draft article (the committed tree) nothing changes: 82 documents, no blog output', () => {
+  assert.deepEqual(fs.readdirSync(path.join(site, 'src/articles')), ['ci-moved-three-times.md'], 'the one committed article is a draft; publishing it or adding another changes this test');
   const out = tmp();
   const m = convert({ outRoot: out });
   assert.equal(m.documents.length, 82);
