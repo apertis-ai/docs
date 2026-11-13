@@ -6,7 +6,7 @@
 // og:description and twitter:description tags are omitted.
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import { MANIFEST_SITE } from '../contracts/manifest.ts';
-import { PAGE_META, TITLE_SUFFIX, bylineAuthor, safeJsonLd, servedUrl, type SeoProps } from '../contracts/page.ts';
+import { PAGE_META, bylineAuthor, safeJsonLd, servedUrl, titleSuffix, type SeoProps } from '../contracts/page.ts';
 
 interface Props extends SeoProps {
   doc: ManifestDocument;
@@ -14,7 +14,8 @@ interface Props extends SeoProps {
 }
 const { doc, buildId, description = null, updated, article = false, trail = [], post } = Astro.props;
 const url = doc.canonicalUrl ? servedUrl(doc.canonicalUrl) : null;
-const fullTitle = doc.title + TITLE_SUFFIX;
+const suffix = titleSuffix(doc.servedPath);
+const fullTitle = doc.title + suffix;
 const desc = description?.replace(/\s+/g, ' ').trim() || null;
 // A native article is shared as a post: its own title without the site suffix, a large card, a byline.
 const socialTitle = post ? doc.title : fullTitle;
@@ -53,7 +54,7 @@ const jsonLd = url && article ? [
 {url && <meta property="og:title" content={socialTitle} />}
 {url && desc && <meta property="og:description" content={desc} />}
 {url && <meta property="og:type" content={article ? 'article' : 'website'} />}
-{url && <meta property="og:site_name" content="Apertis Documentation" />}
+{url && <meta property="og:site_name" content={suffix.slice(' | '.length)} />}
 {url && post && <meta property="article:published_time" content={post.published} />}
 {url && image && <meta property="og:image" content={image} />}
 {url && image && <meta property="og:image:width" content={String(post!.image!.width)} />}

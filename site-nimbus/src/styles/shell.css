@@ -190,15 +190,22 @@ button { font: inherit; color: inherit; }
 .drawer__menu { display: flex; flex-direction: column; }
 
 /* Docs page grid */
+/* Without a sidebar (a native article) the page has no docs frame, so the header and footer sit on the site
+   container; the grid takes the same outer edges: the article starts at the header's left and the TOC ends at
+   its right. The 20px are the inner padding of .doc-page__main (left) and .doc-page__toc (right). */
 .doc-page {
   display: grid;
-  grid-template-columns: minmax(0, 828px) 273px;
-  justify-content: center;
+  grid-template-columns: minmax(0, 1fr) 273px;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: calc(var(--gutter) - 20px);
   min-height: calc(100vh - var(--navbar-height));
 }
 .doc-page--sidebar {
   grid-template-columns: var(--sidebar-width) minmax(0, 828px) 273px; /* also [data-frame='docs'] above */
   justify-content: center;
+  max-width: none;
+  padding-inline: 0;
 }
 
 .doc-page__sidebar {
