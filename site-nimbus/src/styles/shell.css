@@ -721,6 +721,8 @@ html:not(.js) .article-filter { display: none; }
 .article-row__date, .article-row__time { color: var(--muted); font: var(--fs-sm)/20px var(--mono); white-space: nowrap; }
 .article-row__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: var(--fs-md); font-weight: 500; transition: color 0.16s ease; }
 .article-row__category { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); font: var(--fs-2xs)/16px var(--mono); }
+/* Three lines at most, so a row's height does not follow the length of its description. */
+.article-row__desc { flex-basis: 100%; margin-top: 2px; color: var(--desc); font-size: var(--fs-sm); font-weight: 400; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .home-section__more { margin: 20px 0 0; }
 .home-section__more a { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-size: var(--fs-ui); font-weight: 500; }
 .home-section__more a:hover { text-decoration: underline; text-underline-offset: 3px; }
