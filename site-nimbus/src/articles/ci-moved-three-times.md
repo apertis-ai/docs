@@ -1,10 +1,9 @@
 ---
 title: "We moved CI three times in two months"
-description: "Our CI ran on GitHub-hosted runners, a self-hosted Mac mini, a GCE fleet and per-job microVMs within two months; these are the walls, the measured costs and the estimates we got wrong."
+description: "Our CI moved from GitHub-hosted runners to a Mac mini, a GCE fleet and per-job microVMs in two months: the walls, the measured costs and what we got wrong."
 date: 2026-11-13
 author: "Yu-Ting Lee, CTO of Apertis"
 category: Engineering
-draft: true
 ---
 
 Between September and November 2026 our CI ran in four places: GitHub-hosted runners, a self-hosted Mac mini, a fleet of GCE VMs, and now per-job microVMs on InstaBox. The last move took the runner bill from about USD 1,000 a month to a measured pace of about USD 195 to 245, and the slowest lane from 30 to 48 minutes down to about 20.

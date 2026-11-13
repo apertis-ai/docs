@@ -9,6 +9,7 @@ import path from 'node:path';
 
 import { PAGE_META_FILE, convert, readingMinutes, type PageMeta } from '../converter/convert.ts';
 import type { ManifestV1 } from '../src/contracts/manifest.ts';
+import { isNativeArticle } from '../src/contracts/articles.ts';
 
 const site = path.resolve(import.meta.dirname, '..');
 const repoRoot = path.resolve(site, '..');
@@ -28,9 +29,14 @@ test('every published document has committed meta: the last legacy commit author
   const meta = committed();
   assert.deepEqual(Object.keys(meta).sort(), docs.map((d) => d.id).sort());
   for (const d of docs) {
-    const date = execFileSync('git', ['-C', repoRoot, 'log', '-1', '--format=%aI', manifest.sourceSha, '--', d.sourcePath], { encoding: 'utf8' }).trim();
-    assert.match(date, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, d.id);
-    assert.equal(meta[d.id].updated, date, d.id);
+    if (isNativeArticle(d)) {
+      // A native article's date is the one its front matter states, not a commit's.
+      assert.match(meta[d.id].updated, /^\d{4}-\d{2}-\d{2}$/, d.id);
+    } else {
+      const date = execFileSync('git', ['-C', repoRoot, 'log', '-1', '--format=%aI', manifest.sourceSha, '--', d.sourcePath], { encoding: 'utf8' }).trim();
+      assert.match(date, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, d.id);
+      assert.equal(meta[d.id].updated, date, d.id);
+    }
     const clean = fs.readFileSync(path.join(site, 'src/content/public', d.markdown!.path), 'utf8');
     assert.equal(meta[d.id].readingMinutes, readingMinutes(clean), d.id);
     assert.ok(meta[d.id].readingMinutes >= 1 && meta[d.id].readingMinutes < 60, d.id);

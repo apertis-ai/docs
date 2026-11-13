@@ -49,4 +49,21 @@ export interface SeoProps {
   article?: boolean;
   /** Breadcrumb names from Home to the page; only the last has a URL of its own. */
   trail?: string[];
+  /** A native article: BlogPosting JSON-LD with its byline and publication date, and its social card when it has one. */
+  post?: { author: string; published: string; image?: SocialImage };
+}
+
+/** A social card (src/assets/og/<slug>.png), as Astro's image import describes it. */
+export interface SocialImage {
+  src: string;
+  width: number;
+  height: number;
+}
+
+const APERTIS = { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' } as const;
+
+/** schema.org author of an article byline: "Name, role" is a person at Apertis; a bare name is an organization. */
+export function bylineAuthor(byline: string) {
+  const [name, jobTitle] = byline.split(/,\s*/, 2);
+  return jobTitle ? { '@type': 'Person', name, jobTitle, worksFor: APERTIS } : { '@type': 'Organization', name };
 }

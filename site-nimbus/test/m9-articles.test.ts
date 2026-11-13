@@ -85,13 +85,13 @@ test('related docs must be published documentation pages: an unknown path or ano
   assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
-test('with only a draft article (the committed tree) nothing changes: 82 documents, no blog output', () => {
-  assert.deepEqual(fs.readdirSync(path.join(site, 'src/articles')), ['ci-moved-three-times.md'], 'the one committed article is a draft; publishing it or adding another changes this test');
+test('the committed tree: the 82 legacy documents plus the one published article and its Markdown artifact', () => {
+  assert.deepEqual(fs.readdirSync(path.join(site, 'src/articles')), ['ci-moved-three-times.md'], 'adding an article or unpublishing this one changes this test');
   const out = tmp();
   const m = convert({ outRoot: out });
-  assert.equal(m.documents.length, 82);
-  assert.equal(m.documents.filter(isNativeArticle).length, 0);
-  assert.equal(fs.existsSync(path.join(out, 'src/content/public/blog')), false);
+  assert.deepEqual(m.documents.filter(isNativeArticle).map((d) => d.id), ['blog:ci-moved-three-times']);
+  assert.equal(m.documents.length, 83);
+  assert.ok(fs.existsSync(path.join(out, 'src/content/public/blog/ci-moved-three-times/index.md')));
 });
 
 test('/blog/ is never rewritten to 404, with or without articles (the index says the first articles are on their way); every other retired /blog path stays 404', () => {
@@ -99,7 +99,7 @@ test('/blog/ is never rewritten to 404, with or without articles (the index says
   fs.mkdirSync(path.join(dist, 'blog/welcome'), { recursive: true });
   fs.writeFileSync(path.join(dist, 'blog/index.html'), '<!doctype html>');
   fs.writeFileSync(path.join(dist, 'blog/welcome/index.html'), '<!doctype html>');
-  const legacy = convert({ outRoot: tmp() });
+  const legacy = convert({ outRoot: tmp(), siteRoot: tmp() });
   const without = publicationFiles(legacy, inventory, dist)._redirects ?? '';
   assert.doesNotMatch(without, /^\/blog\/? /m, 'the /blog/ index is served without articles too');
   assert.match(without, /^\/blog\/welcome\/ \/__retired 200$/m, 'a retired legacy post stays 404');

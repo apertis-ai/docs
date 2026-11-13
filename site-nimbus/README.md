@@ -468,8 +468,8 @@ all `false`, and their fixtures expect 404.
 ### Native articles (`/blog/`)
 
 Articles are written for this site, not converted: `src/articles/<slug>.md` (openspec
-docs-routing-publication "Native articles"). One draft is committed (`ci-moved-three-times`) and none is
-published yet, so nothing below is emitted and `/blog` still answers 404.
+docs-routing-publication "Native articles"). The first one is published (`ci-moved-three-times`), so
+`/blog/` lists it and the homepage and footer link the blog.
 
 - Front matter: `title`, `description`, `date` (YYYY-MM-DD), `author`, `category`, optional
   `draft: true`, optional `related: /getting-started/quick-start/, /api/` (the documentation pages
@@ -480,8 +480,15 @@ published yet, so nothing below is emitted and `/blog` still answers 404.
   (all four eligibilities, source path under `site-nimbus/src/articles/`) and its artifact
   `/blog/<slug>/index.md`. A draft produces nothing. Articles are build inputs, so a new or edited
   article moves the buildId: `git add` it before `npm run m2:regenerate`.
-- `src/pages/blog/[...path].astro` renders `/blog/<slug>/` (the document page header with category,
-  author, published date and reading time) and the `/blog/` index. The homepage "Latest articles"
+- `src/pages/blog/[...path].astro` renders `/blog/<slug>/` (the document page header with category
+  and a byline: author, published date and reading time, without the docs pages' Edit link) and the
+  `/blog/` index.
+- Search and social metadata of an article (`src/components/DocumentHead.astro`): `BlogPosting` JSON-LD
+  with `datePublished` and the author (a byline written `Name, role` is a person at Apertis, a bare
+  name an organization), `og:title` without the site suffix, and `article:published_time`. A social
+  card is optional: `src/assets/og/<slug>.png` (1200x630) becomes `og:image`, `twitter:image` and the
+  JSON-LD `image`, and switches `twitter:card` to `summary_large_image`. `test/dist.check.ts` checks
+  all of it on every published article. The homepage "Latest articles"
   section and the footer Blog link appear with the first article. From then on the retired `/blog`
   row no longer rewrites `/blog/`; every other retired `/blog/**` path stays 404.
   With two or more categories the `/blog/` index shows category filter buttons (all rows stay

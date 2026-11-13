@@ -17,6 +17,7 @@ import { mainTextSha256 } from '../converter/convert.ts';
 import { servedUrl } from '../src/contracts/page.ts';
 import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
+import { isNativeArticle } from '../src/contracts/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
@@ -70,6 +71,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const html = [...pages, ...generated, 'blog/index.html', 'models/index.html', 'changelog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
+  // A native article's social card is named by its absolute URL (og:image, twitter:image and the JSON-LD image).
+  for (const f of html) for (const m of read(f).matchAll(/<meta property="og:image" content="https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
   // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
   for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
@@ -159,7 +162,9 @@ test('no simulated or canned Ask Docs answer path ships (baseline defect 6)', ()
 // ---- #7 conversion and publication manifest (run after `npm run build`) ----
 const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
-const converted = manifest.documents.filter((d) => !d.id.startsWith('page:'));
+// Native articles (src/articles) have no inventory row and no legacy observation: they are checked on their own below.
+const native = manifest.documents.filter(isNativeArticle);
+const converted = manifest.documents.filter((d) => !d.id.startsWith('page:') && !isNativeArticle(d));
 // Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
 type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] }; headings?: { removed?: string[] } };
 const contentChanges: Record<string, ContentChange> = JSON.parse(fs.readFileSync(path.join(root, '../migration/nimbus/content-changes.json'), 'utf8')).documents;
@@ -170,7 +175,7 @@ const expectedLinks = (id: string, legacy: string[]) => {
 
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
-  assert.equal(manifest.documents.length, 82);
+  assert.equal(manifest.documents.length - native.length, 82);
   // Content, not file names: Astro may name a CSS chunk after src/manifest/manifest.ts.
   const keys = ['manifestVersion', 'sourceSha', 'sourcePath', 'servedPath', 'canonicalUrl', 'contentSha256'].map((k) => `"${k}"`);
   const values = manifest.documents.flatMap((d) => [d.contentSha256, JSON.stringify(d.sourcePath)]);
@@ -221,6 +226,8 @@ test('docs-reader-shell-extras: every converted page carries one Edit-this-page 
     // href to GitHub's editor, so the article's own link set (checked above) never grows from this.
     assert.doesNotMatch(html, /<a[^>]+href="https:\/\/github\.com\/apertis-ai\/docs\/edit\//, d.id);
   }
+  // An article is not a docs page a reader corrects: its header is a byline, with no Edit link.
+  for (const d of native) assert.doesNotMatch(read(`${d.servedPath.slice(1)}index.html`), /data-edit=/, d.id);
 });
 
 test('m2: images resolve in dist, and no Docusaurus/MDX syntax survives into HTML or Markdown', () => {
@@ -315,7 +322,7 @@ test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML rou
     ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => servedUrl(r.live!.canonical!)),
   ].sort();
   assert.deepEqual(locs, expected);
-  assert.equal(locs.length, 83);
+  assert.equal(locs.length, 83 + native.length);
   assert.equal(read('sitemap.xml'), publicationFiles(manifest, routes, dist)['sitemap.xml']);
 });
 
@@ -334,7 +341,8 @@ test('m8: retired routes are in no publication channel and every path they had a
   assert.equal(files.some((f) => f === rel(RETIRED_TARGET) || f.startsWith(`${rel(RETIRED_TARGET)}/`)), false);
   // The /blog/ index supersedes the retired legacy /blog row, and only it (docs-routing-publication "Native
   // articles"): blog/index.html is its one file; every other retired /blog/** path stays unserved.
-  const index = (r: InventoryRoute, f: string) => r.path === '/blog' && f === 'blog/index.html';
+  // A native article's own files are under /blog/ too; its slug can never name a retired path (converter/articles.ts).
+  const index = (r: InventoryRoute, f: string) => r.path === '/blog' && (f === 'blog/index.html' || native.some((d) => f.startsWith(d.servedPath.slice(1))));
   for (const r of retired) {
     const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f) && !index(r, f));
     if (servedBy.length) for (const from of [r.path, `${r.path}/`, `${r.path}.html`]) assert.ok(rewritten.has(from), `${from} is served by ${servedBy} and not rewritten`);
@@ -425,7 +433,7 @@ test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar se
   const entries = parseIndex(body);
   assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
   assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
-  assert.equal(entries.length, 81);
+  assert.equal(entries.length, 81 + native.length);
   assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
   for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
   // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
@@ -496,8 +504,9 @@ test('feedback: the published paths read from the built sitemap are the publish-
 
 test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url), with metadata and parseable JSON-LD', () => {
   const entries = [...read('sitemap.xml').matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
-  assert.equal(entries.length, 83);
+  assert.equal(entries.length, 83 + native.length);
   let described = 0;
+  let posts = 0;
   let articles = 0;
   for (const [, loc, lastmod] of entries) {
     const file = path.join(dist, new URL(loc).pathname, 'index.html');
@@ -506,7 +515,8 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
     assert.equal(html.match(/<link rel="canonical" href="([^"]+)"/)?.[1], loc, `${loc} canonical`);
     assert.equal(html.match(/<meta property="og:url" content="([^"]+)"/)?.[1], loc, `${loc} og:url`);
     assert.ok(html.includes('name="twitter:card"') && html.includes('property="og:title"') && html.includes('property="og:type"'), loc);
-    if (lastmod) assert.match(lastmod, /^\d{4}-\d{2}-\d{2}T/, loc);
+    // A converted page's date is its last commit (date and time); an article's is its front matter date.
+    if (lastmod) assert.match(lastmod, /^\d{4}-\d{2}-\d{2}(T|$)/, loc);
     const desc = html.match(/<meta name="description" content="([^"]*)"/)?.[1];
     if (desc) { described++; assert.ok(html.includes('property="og:description"'), loc); } else assert.ok(!html.includes('og:description'), loc);
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
@@ -518,11 +528,25 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
       assert.deepEqual(tech.publisher, { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' });
       assert.equal(tech.dateModified === undefined, false, `${loc} dateModified`);
     }
+    const post = blocks.find((b) => b['@type'] === 'BlogPosting');
+    if (post) {
+      posts++;
+      assert.equal(post.url, loc);
+      assert.match(post.datePublished, /^\d{4}-\d{2}-\d{2}$/, loc);
+      assert.ok(post.author?.name, `${loc} author`);
+      // The social card: one file in dist, named by og:image, twitter:image and the JSON-LD image alike.
+      const card = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+      if (card) assert.ok(files.includes(new URL(card).pathname.slice(1)), `${loc} og:image is not a file in dist`);
+      assert.equal(html.match(/<meta name="twitter:image" content="([^"]+)"/)?.[1], card, loc);
+      assert.equal(post.image, card, loc);
+      assert.ok(html.includes(`<meta name="twitter:card" content="${card ? 'summary_large_image' : 'summary'}">`), loc);
+    }
     const crumbs = blocks.find((b) => b['@type'] === 'BreadcrumbList');
     // Google rejects a crumb without `item` anywhere but last; every crumb here has one.
     if (crumbs) for (const c of crumbs.itemListElement) assert.ok(c.item, `${loc} crumb ${c.name} has no item`);
   }
   assert.ok(described > 0 && articles > 0);
+  assert.equal(posts, native.length);
   assert.match(read('robots.txt'), /^Sitemap: https:\/\/docs\.apertis\.ai\/sitemap\.xml$/m);
   assert.match(read('robots.txt'), /^Allow: \/$/m);
 });
