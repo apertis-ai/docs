@@ -610,17 +610,18 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await m.context.close();
 });
 
-test('an article keeps the whole column for its title: on desktop the page actions share the byline row', { skip }, async () => {
+test('a title that wraps keeps the page actions level with its first line: an article on desktop', { skip }, async () => {
   const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
   const { context, page } = await open(article, VIEWS[1440]);
   await page.locator('.page-actions[data-ready]').waitFor();
   const d = await page.evaluate(() => {
     const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
-    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), byline = r('.doc-meta--byline'), art = r('.docs-content');
-    return { h1Bottom: h1.bottom, splitTop: split.top, splitMid: split.top + split.height / 2, bylineMid: byline.top + byline.height / 2, splitRight: split.right, artRight: art.right };
+    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), art = r('.docs-content');
+    const line = parseFloat(getComputedStyle(document.querySelector('.doc-header h1')!).lineHeight);
+    return { lines: Math.round(h1.height / line), firstLineMid: h1.top + line / 2, splitMid: split.top + split.height / 2, splitRight: split.right, artRight: art.right };
   });
-  assert.ok(d.splitTop >= d.h1Bottom, `split button is below the title, not beside it (${JSON.stringify(d)})`);
-  assert.ok(Math.abs(d.splitMid - d.bylineMid) <= 1, `split button is centred on the byline (${JSON.stringify(d)})`);
+  assert.ok(d.lines >= 2, `the article title wraps beside the button, which is the case under test (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitMid - d.firstLineMid) <= 1, `split button is centred on the title's first line (${JSON.stringify(d)})`);
   assert.ok(Math.abs(d.splitRight - d.artRight) <= 1, `split button ends at the content edge (${JSON.stringify(d)})`);
   await context.close();
 });

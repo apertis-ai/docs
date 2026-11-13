@@ -347,13 +347,10 @@ button { font: inherit; color: inherit; }
 .doc-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; justify-items: start; }
 .doc-header > * { grid-column: 1 / -1; }
 .doc-header > h1 { grid-column: 1; }
-.doc-header__actions { grid-column: 2; grid-row: 1; align-self: center; justify-self: end; }
+/* Centred on the title's first line (35px x 1.2 = 42px line, 32px button), so a title that wraps keeps the
+   button level with its first line rather than floating between the two. */
+.doc-header__actions { grid-column: 2; grid-row: 1; align-self: start; justify-self: end; margin-top: calc((var(--fs-5xl) * 1.2 - 32px) / 2); }
 .doc-header:has(> .doc-header__tag) > .doc-header__actions { grid-row: 2; }
-/* An article's title is a sentence: it keeps the whole column, and the page actions share the byline row
-   (both centred on it) instead of narrowing the title into two lines. */
-.doc-header:has(.doc-meta--byline) > h1 { grid-column: 1 / -1; }
-.doc-header:has(.doc-meta--byline) > .doc-header__meta { grid-column: 1; align-self: center; }
-.doc-header:has(.doc-meta--byline) > .doc-header__actions { grid-row: auto; margin-top: 20px; }
 .doc-header__tag { margin: 0 0 8px; color: var(--muted); }
 .docs-content .doc-header h1 { margin: 0; }
 .docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
