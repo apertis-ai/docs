@@ -28,8 +28,8 @@ test('published articles become blog:<slug> entries eligible everywhere, with a 
     ['blog:choosing-a-plan', '/blog/choosing-a-plan/', 'https://docs.apertis.ai/blog/choosing-a-plan/', 'site-nimbus/src/articles/choosing-a-plan.md'],
   ]);
   for (const d of native) assert.deepEqual(d.eligibility, { publish: true, search: true, agent: true, rag: true });
-  // The legacy corpus is untouched: 82 documents before the articles.
-  assert.equal(m.documents.length - native.length, 82);
+  // The legacy corpus is untouched: 83 documents before the articles.
+  assert.equal(m.documents.length - native.length, 83);
   const md = fs.readFileSync(path.join(out, 'src/content/public/blog/choosing-a-plan/index.md'), 'utf8');
   assert.equal(md, '# Choosing a plan\n\nA fixture article: subscription or pay-as-you-go, compared on one page.\n\nThis fixture stands in for a real article in tests only.\n\n## Subscription\n\nFixed quota per request.\n');
   const meta = JSON.parse(fs.readFileSync(path.join(out, 'src/content/docs/page-meta.json'), 'utf8'));
@@ -85,12 +85,12 @@ test('related docs must be published documentation pages: an unknown path or ano
   assert.ok(convert({ outRoot: tmp(), siteRoot: site('/getting-started/quick-start/') }).documents.some((d) => d.id === 'blog:a'));
 });
 
-test('the committed tree: the 82 legacy documents plus the one published article and its Markdown artifact', () => {
+test('the committed tree: the 83 legacy documents plus the one published article and its Markdown artifact', () => {
   assert.deepEqual(fs.readdirSync(path.join(site, 'src/articles')), ['ci-moved-three-times.md'], 'adding an article or unpublishing this one changes this test');
   const out = tmp();
   const m = convert({ outRoot: out });
   assert.deepEqual(m.documents.filter(isNativeArticle).map((d) => d.id), ['blog:ci-moved-three-times']);
-  assert.equal(m.documents.length, 83);
+  assert.equal(m.documents.length, 84);
   assert.ok(fs.existsSync(path.join(out, 'src/content/public/blog/ci-moved-three-times/index.md')));
 });
 

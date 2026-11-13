@@ -145,7 +145,7 @@ test('converting twice is byte-identical, and a rerun leaves no stale output', (
   assert.deepEqual(tree(b, OUT), tree(a, OUT));
   // One clean Markdown artifact per agent-eligible legacy document, plus the one published article's.
   assert.equal(Object.keys(tree(a, ['src/content/public'])).filter((f) => f.endsWith('.md')).length, artifacts + 1);
-  assert.equal(artifacts, 81);
+  assert.equal(artifacts, 82);
 });
 
 test('the committed generated output equals a fresh conversion (never hand-edited)', () => {
@@ -161,12 +161,12 @@ test('the committed generated output equals a fresh conversion (never hand-edite
   assert.deepEqual(strip(read(site)), strip(read(out)));
 });
 
-test('the manifest covers every preserved document (81 docs + the homepage) with the spec buildId form', () => {
+test('the manifest covers every preserved document (82 docs + the homepage) with the spec buildId form', () => {
   const m = convert({ outRoot: tmp() });
   // Native articles (src/articles) are not inventory rows; test/m9-articles.test.ts covers them.
   const legacy = m.documents.filter((d) => !isNativeArticle(d));
   assert.deepEqual(legacy.map((d) => d.id).sort(), preserved.map((r) => r.documentId).sort());
-  assert.equal(legacy.length, 82);
+  assert.equal(legacy.length, 83);
   // The PoC documents are a subset.
   for (const r of inventory.filter((x) => x.poc && x.documentId)) assert.ok(m.documents.some((d) => d.id === r.documentId), r.documentId!);
   assert.match(m.sourceSha, /^[0-9a-f]{40}$/);

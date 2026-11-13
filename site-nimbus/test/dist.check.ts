@@ -175,7 +175,7 @@ const expectedLinks = (id: string, legacy: string[]) => {
 
 test('m2: the generated manifest validates against dist and is never published', () => {
   assert.deepEqual(validateManifest(manifest, { inventory: routes, outDir: dist }), []);
-  assert.equal(manifest.documents.length - native.length, 82);
+  assert.equal(manifest.documents.length - native.length, 83);
   // Content, not file names: Astro may name a CSS chunk after src/manifest/manifest.ts.
   const keys = ['manifestVersion', 'sourceSha', 'sourcePath', 'servedPath', 'canonicalUrl', 'contentSha256'].map((k) => `"${k}"`);
   const values = manifest.documents.flatMap((d) => [d.contentSha256, JSON.stringify(d.sourcePath)]);
@@ -322,7 +322,7 @@ test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML rou
     ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => servedUrl(r.live!.canonical!)),
   ].sort();
   assert.deepEqual(locs, expected);
-  assert.equal(locs.length, 83 + native.length);
+  assert.equal(locs.length, 84 + native.length);
   assert.equal(read('sitemap.xml'), publicationFiles(manifest, routes, dist)['sitemap.xml']);
 });
 
@@ -408,7 +408,7 @@ test('m8: every converted page keeps the legacy external links and images (conte
     links += external.length;
     images += row.live!.images.length;
   }
-  assert.equal(converted.length, 81);
+  assert.equal(converted.length, 82);
   assert.ok(links > 100 && images > 40, `${links} links, ${images} images compared`);
 });
 
@@ -433,7 +433,7 @@ test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar se
   const entries = parseIndex(body);
   assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
   assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
-  assert.equal(entries.length, 81 + native.length);
+  assert.equal(entries.length, 82 + native.length);
   assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
   for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
   // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
@@ -504,7 +504,7 @@ test('feedback: the published paths read from the built sitemap are the publish-
 
 test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url), with metadata and parseable JSON-LD', () => {
   const entries = [...read('sitemap.xml').matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
-  assert.equal(entries.length, 83 + native.length);
+  assert.equal(entries.length, 84 + native.length);
   let described = 0;
   let posts = 0;
   let articles = 0;
