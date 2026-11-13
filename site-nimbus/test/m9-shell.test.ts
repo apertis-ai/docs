@@ -610,6 +610,21 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   await m.context.close();
 });
 
+test('an article keeps the whole column for its title: on desktop the page actions share the byline row', { skip }, async () => {
+  const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
+  const { context, page } = await open(article, VIEWS[1440]);
+  await page.locator('.page-actions[data-ready]').waitFor();
+  const d = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), byline = r('.doc-meta--byline'), art = r('.docs-content');
+    return { h1Bottom: h1.bottom, splitTop: split.top, splitMid: split.top + split.height / 2, bylineMid: byline.top + byline.height / 2, splitRight: split.right, artRight: art.right };
+  });
+  assert.ok(d.splitTop >= d.h1Bottom, `split button is below the title, not beside it (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitMid - d.bylineMid) <= 1, `split button is centred on the byline (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitRight - d.artRight) <= 1, `split button ends at the content edge (${JSON.stringify(d)})`);
+  await context.close();
+});
+
 test('two-row header and LINE Seed display face (canary step 5a): search on the right beside the theme switch, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
   const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
   await page.evaluate(() => document.fonts.ready);
@@ -780,9 +795,9 @@ test('UX canary 2026-10-03: opaque header, no shift when search opens, Ask Docs 
   await wide.page.locator('dialog[open] #aa-question').waitFor();
   await wide.page.click('#aa-close');
   assert.equal(await wide.page.evaluate(() => document.activeElement?.className.includes('ask-docs-trigger')), true, 'restored panel: focus goes to the trigger');
-  // The empty /blog/ index asks not to be indexed; real pages do not.
+  // Only an empty /blog/ index asks not to be indexed; with a published article it is a real page.
   await wide.page.goto(base + '/blog/', { waitUntil: 'load' });
-  assert.equal(await wide.page.getAttribute('meta[name="robots"]', 'content'), 'noindex');
+  assert.equal(await wide.page.$('meta[name="robots"]'), null);
   await wide.page.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
   assert.equal(await wide.page.$('meta[name="robots"]'), null);
   await wide.context.close();
