@@ -297,13 +297,20 @@ test('static parts are server-rendered without hydration; homepage links all res
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
   const internal = await page.$$eval('main a[href^="/"], footer a[href^="/"], header a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
   // The homepage body links each internal destination once: the quick start, the start items and the blog.
-  const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
+  // (An article row also links its category page, a listing outside the manifest: checked on its own below.)
+  const body = await page.$$eval('main a[href^="/"]:not(.article-row__category)', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
+  const categoryLinks: string[] = [...new Set<string>(await page.$$eval('main a.article-row__category', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!)))];
+  assert.ok(categoryLinks.length > 0);
+  for (const href of categoryLinks) {
+    assert.match(href, /^\/blog\/categories\/[a-z0-9-]+\/$/);
+    assert.equal((await page.request.get(base + href)).status(), 200, `${href} is not served`);
+  }
   assert.deepEqual(body.sort(), [...['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro'],
     // "From the blog" lists the three newest articles.
     ...manifest().documents.filter((d) => d.servedPath.startsWith('/blog/')).map((d) => d.servedPath).slice(0, 3)].sort());
   // /blog/ is the articles index and /changelog/ the release notes (openspec docs-live-catalog), not manifest
   // documents; both are always served.
-  for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
+  for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || categoryLinks.includes(href) || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
   assert.equal((await page.request.get(base + '/blog/')).status(), 200);
   assert.equal((await page.request.get(base + '/changelog/')).status(), 200);
   // The legacy feature-card destinations stay on the homepage (the Playground is gone, 2026-10-03), with SDKs.
@@ -523,7 +530,7 @@ test('homepage link labels use sentence case (canary step 2): only the first wor
   // A "Start building" item is checked by its title (its line is a sentence). Model cards and release-note
   // rows are not our labels: they come verbatim from the model catalog and apertis.ai/changelog. Nor is an
   // article row: it carries the article's own title and date.
-  const labels: string[] = await page.$$eval('main a:not(.release-row):not(.model-card):not(.article-row)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
+  const labels: string[] = await page.$$eval('main a:not(.release-row):not(.model-card):not(.article-row__link):not(.article-row__category)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
     [a.querySelector('[data-slot="item-title"]') ?? a]
       .map((e) => e.textContent!.replace(/\s+/g, ' ').trim())).filter(Boolean));
   const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
@@ -645,6 +652,7 @@ test('an article header on desktop: the title row runs past the reading column, 
       author: document.querySelector('.byline-author a')!.getAttribute('href'),
       byline: document.querySelector('.byline-author')!.textContent, name: document.querySelector('.byline-author a')!.textContent,
       portrait: document.querySelector('.byline-author .avatar')!.tagName,
+      category: [document.querySelector('.doc-header__tag')!.textContent, document.querySelector('.doc-header__tag a')?.getAttribute('href')],
       tags: [...document.querySelectorAll<HTMLAnchorElement>('.doc-header .tag')].map((a) => [a.textContent, a.getAttribute('href')]),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     };
@@ -657,13 +665,14 @@ test('an article header on desktop: the title row runs past the reading column, 
   assert.ok(Math.abs(d.avatarMid - d.nameMid) <= 1, 'the avatar is centred on the name');
   assert.match(d.author!, /^\/blog\/authors\/[a-z0-9-]+\/$/);
   assert.ok(d.tags.length > 0 && d.tags.every(([text, href]: (string | null)[]) => href === `/blog/tags/${text!.slice(1)}/`), `tags link to their pages (${JSON.stringify(d.tags)})`);
+  assert.equal(d.category[1], `/blog/categories/${d.category[0]!.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}/`, 'the category links to its page');
   assert.ok(d.overflow <= 0, `no horizontal overflow (${d.overflow})`);
   assert.equal(d.byline, d.name, 'the byline is the name alone: the role is on the author page');
   // The author page: the same name, their articles, and a table of contents of the titles by year.
   await page.click('.byline-author a');
   await page.waitForURL(`**${d.author}`);
   const a = await page.evaluate(() => ({
-    h1: document.querySelector('h1')!.textContent, rows: [...document.querySelectorAll('.article-row')].map((x) => x.getAttribute('href')),
+    h1: document.querySelector('h1')!.textContent, rows: [...document.querySelectorAll('.article-row__link')].map((x) => x.getAttribute('href')),
     toc: [...document.querySelectorAll<HTMLAnchorElement>('.doc-page__toc a')].map((x) => x.getAttribute('href')),
     shown: [...document.querySelectorAll<HTMLElement>('.doc-page__toc a')].every((x) => x.offsetParent !== null),
     targets: [...document.querySelectorAll<HTMLAnchorElement>('.doc-page__toc a')].every((x) => document.getElementById(x.hash.slice(1))),
@@ -671,9 +680,16 @@ test('an article header on desktop: the title row runs past the reading column, 
   assert.ok(a.rows.includes(article) && a.toc[0].startsWith('#year-') && a.toc.includes(`#article-${article.slice(6, -1)}`) && a.shown && a.targets, JSON.stringify(a));
   // A tag page lists the article; the tags index lists the tag.
   await page.goto(base + d.tags[0][1]);
-  assert.ok((await page.$$eval('.article-row', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(article));
+  assert.ok((await page.$$eval('.article-row__link', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(article));
   await page.goto(`${base}/blog/tags/`);
   assert.ok((await page.$$eval('.tag-list--index .tag', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(d.tags[0][1]));
+  // A category page lists the article, with the label as its h1; the categories index lists the category.
+  await page.goto(base + d.category[1]);
+  assert.equal(await page.textContent('h1'), d.category[0]);
+  assert.ok((await page.$$eval('.article-row__link', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(article));
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), 'no horizontal overflow on a category page');
+  await page.goto(`${base}/blog/categories/`);
+  assert.ok((await page.$$eval('.tag-list--index .tag', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(d.category[1]));
   await context.close();
 });
 

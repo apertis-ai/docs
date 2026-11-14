@@ -364,6 +364,8 @@ button { font: inherit; color: inherit; }
   .doc-header:has(.doc-meta--byline), .doc-header:has(.doc-meta--byline) ~ .doc-header__rule { margin-right: -96px; }
 }
 .doc-header__tag { margin: 0 0 8px; color: var(--muted); }
+.docs-content .doc-header__tag a { color: inherit; text-decoration: none; transition: color 0.16s ease; }
+.docs-content .doc-header__tag a:hover { color: var(--ink); }
 .docs-content .doc-header h1 { margin: 0; }
 .docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
 .doc-header__meta {
@@ -751,7 +753,12 @@ html:not(.js) .article-filter { display: none; }
   border-bottom: 1px solid var(--line);
   color: var(--ink);
 }
-.article-row:hover .article-row__title { text-decoration: underline; text-underline-offset: 3px; }
+.article-row { position: relative; }
+/* The title link covers the row, so the whole row opens the article; the category link sits above it. */
+.article-row__link::after { content: ''; position: absolute; inset: 0; }
+.article-row:hover .article-row__link { text-decoration: underline; text-underline-offset: 3px; }
+.article-row__category { position: relative; z-index: 1; }
+.article-row__category:hover { color: var(--ink); }
 .article-row__date, .article-row__time { color: var(--muted); font: var(--fs-sm)/20px var(--mono); white-space: nowrap; }
 .article-row__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: var(--fs-md); font-weight: 500; transition: color 0.16s ease; }
 .article-row__category { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); font: var(--fs-2xs)/16px var(--mono); }

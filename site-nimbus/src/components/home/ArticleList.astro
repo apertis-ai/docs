@@ -1,9 +1,10 @@
 ---
 // Published native articles, newest first, as dated rows (the claude.dev blog index pattern): date,
-// title with its category, reading time. `limit` trims the list (the homepage shows three). `filter`
+// title (a link spanning the row) with its category (a link to its page), reading time. `limit` trims the list (the homepage shows three). `filter`
 // adds category buttons once there are two or more categories (the /blog/ index); without JS every row shows.
 // `describe` puts the article's description under its title (the /blog/ index; the homepage stays one line).
 // The rows themselves come from article-rows.ts.
+import { categoryPath } from '../../contracts/articles.ts';
 import { displayDate } from '../shell/page-header.ts';
 import { articleRows, type ArticleRow } from './article-rows.ts';
 
@@ -34,11 +35,11 @@ const categories = [...new Set(rows.map((r) => r.category))].sort();
 <ol class="article-list">
   {rows.map((r) => (
     <li data-category={r.category} id={anchors ? `article-${r.slug}` : undefined}>
-      <a class="article-row" href={r.doc.servedPath}>
+      <div class="article-row">
         <time class="article-row__date" datetime={r.date}>{displayDate(r.date)}</time>
-        <span class="article-row__title">{r.doc.title}<span class="article-row__category">{r.category}</span>{describe && <span class="article-row__desc">{r.description}</span>}</span>
+        <span class="article-row__title"><a class="article-row__link" href={r.doc.servedPath}>{r.doc.title}</a><a class="article-row__category" href={categoryPath(r.category)}>{r.category}</a>{describe && <span class="article-row__desc">{r.description}</span>}</span>
         <span class="article-row__time">{r.minutes} min</span>
-      </a>
+      </div>
     </li>
   ))}
 </ol>

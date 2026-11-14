@@ -26,6 +26,11 @@ export const parseTags = parseRelated;
 export const TAGS_PATH = '/blog/tags/';
 export const tagPath = (tag: string) => `${TAGS_PATH}${tag}/`;
 
+/** An article's `category` front matter is a label ("CI"); its page is at categoryPath(), by the label as a slug. */
+export const categorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+export const CATEGORIES_PATH = '/blog/categories/';
+export const categoryPath = (category: string) => `${CATEGORIES_PATH}${categorySlug(category)}/`;
+
 /**
  * An article's byline is "Name, role" (or a bare name). Every author has a page listing their articles,
  * at /blog/authors/<the name as a slug>/; `initials` stand in for an avatar the author has not supplied.

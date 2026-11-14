@@ -22,7 +22,7 @@ import { editUrl } from '../components/shell/edit-link.ts';
 import { buildNavigation, pageNavigation } from '../components/shell/navigation.ts';
 import { displayDate, pageHeaderParts } from '../components/shell/page-header.ts';
 import { getCollection, getEntry } from 'astro:content';
-import { bylineParts, isNativeArticle, parseRelated, tagPath } from '../contracts/articles.ts';
+import { bylineParts, isNativeArticle, categoryPath, parseRelated, tagPath } from '../contracts/articles.ts';
 import pageMetaFile from '../content/docs/page-meta.json' with { type: 'json' };
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import type { SocialImage } from '../contracts/page.ts';
@@ -98,7 +98,7 @@ const related = native.length
       )}
       <article class="docs-content">
         <header class="doc-header">
-          {category && <p class="doc-header__tag" data-pagefind-ignore>{category}</p>}
+          {category && <p class="doc-header__tag" data-pagefind-ignore>{article ? <a href={categoryPath(category)}>{category}</a> : category}</p>}
           <Fragment set:html={header.h1} />
           {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
