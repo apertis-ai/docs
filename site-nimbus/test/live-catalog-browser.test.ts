@@ -42,6 +42,31 @@ test('changelog: every note listed newest first with its anchor, the feed advert
   }
 });
 
+test('changelog layout: a note reads at a 720px measure; a wide screen has a month rail whose links all land; a phone has no rail and no sideways scroll', { skip }, async () => {
+  const months = [...new Set(json('changelog.json').map((n: { date: string }) => n.date.slice(0, 7)))];
+  const wide = await open('/changelog/', { viewport: { width: 1440, height: 900 } });
+  try {
+    const measure = await wide.page.$$eval('.note__body', (els: HTMLElement[]) => Math.max(...els.map((e) => e.getBoundingClientRect().width)));
+    assert.ok(measure > 600 && measure <= 720, `the note text column is ${measure}px wide`);
+    assert.equal(await wide.page.isVisible('.changelog__rail'), true);
+    assert.deepEqual(await wide.page.$$eval('.changelog__rail a', (els: HTMLElement[]) => els.map((e) => e.getAttribute('href'))), months.map((m) => `#${m}`));
+    for (const m of months) assert.equal(await wide.page.$$eval(`[id="${m}"]`, (els: Element[]) => els.length), 1, `${m} has one anchor`);
+    // A month's link lands even while the filter hides the notes of that month.
+    await wide.page.click('label:has(#category-fix)');
+    await wide.page.click(`.changelog__rail a[href="#${months.at(-1)}"]`);
+    assert.ok(await wide.page.evaluate(() => scrollY) > 0);
+  } finally {
+    await wide.close();
+  }
+  const phone = await open('/changelog/', { viewport: { width: 390, height: 844 } });
+  try {
+    assert.equal(await phone.page.isVisible('.changelog__rail'), false);
+    assert.ok(await phone.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'the page scrolls sideways at 390px');
+  } finally {
+    await phone.close();
+  }
+});
+
 test('changelog without JavaScript: every note is listed', { skip }, async () => {
   const { page, close } = await open('/changelog/', { javaScriptEnabled: false });
   try {
