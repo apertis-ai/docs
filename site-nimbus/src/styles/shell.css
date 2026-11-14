@@ -131,6 +131,12 @@ button { font: inherit; color: inherit; }
 }
 .brand__mark { display: block; flex: none; width: 22px; height: 22px; color: var(--ink); }
 .navbar .brand { justify-self: start; }
+/* The apertis.ai header lockup: the wordmark at its 15px cap height, the mark's glyph (304/320 of its box)
+   on that cap height, a 9px gap; "Docs" follows in the secondary ink. */
+.brand--lockup { gap: 9px; }
+.brand--lockup .brand__mark { width: 16px; height: 16px; }
+.brand__wordmark { display: block; flex: none; height: 15px; width: auto; overflow: visible; }
+.brand--lockup span { color: var(--muted); font-weight: 500; }
 
 .navbar__tabs { height: calc(var(--navbar-height) - var(--navbar-top) - 1px); }
 .navbar__links { display: flex; align-items: stretch; gap: 28px; height: 100%; }
@@ -347,8 +353,16 @@ button { font: inherit; color: inherit; }
 .doc-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; justify-items: start; }
 .doc-header > * { grid-column: 1 / -1; }
 .doc-header > h1 { grid-column: 1; }
-.doc-header__actions { grid-column: 2; grid-row: 1; align-self: center; justify-self: end; }
+/* Centred on the title's first line (35px x 1.2 = 42px line, 32px button), so a title that wraps keeps the
+   button level with its first line rather than floating between the two. */
+.doc-header__actions { grid-column: 2; grid-row: 1; align-self: start; justify-self: end; margin-top: calc((var(--fs-5xl) * 1.2 - 32px) / 2); }
 .doc-header:has(> .doc-header__tag) > .doc-header__actions { grid-row: 2; }
+/* An article has no sidebar, so there is free room right of the reading column: its title row and the hairline
+   under it run 96px past the column, which hands the title the width the page actions would take from it.
+   From 1280px the row still ends 76px short of the table of contents; narrower, it stays in the column. */
+@media (min-width: 1280px) {
+  .doc-header:has(.doc-meta--byline), .doc-header:has(.doc-meta--byline) ~ .doc-header__rule { margin-right: -96px; }
+}
 .doc-header__tag { margin: 0 0 8px; color: var(--muted); }
 .docs-content .doc-header h1 { margin: 0; }
 .docs-content .doc-header__desc { margin: 14px 0 0; color: var(--desc); font-size: var(--fs-lg); line-height: 1.55; }
@@ -372,6 +386,19 @@ button { font: inherit; color: inherit; }
 .doc-meta--byline dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .doc-meta--byline dd { color: var(--muted); }
 .doc-meta--byline > div:first-child dd { color: var(--ink); }
+.doc-meta--byline { align-items: center; }
+.avatar { display: inline-grid; flex: none; place-items: center; border-radius: 50%; background: var(--ink); color: var(--bg); font-family: var(--font); font-weight: 500; line-height: 1; object-fit: cover; }
+.doc-meta .byline-author { display: flex; align-items: center; gap: 8px; }
+.docs-content .doc-header .byline-author a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 500; text-decoration: none; }
+.docs-content .doc-header .byline-author a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* Tags: an article's topics under its byline, and the /blog/tags/ index. Each links to the tag's articles. */
+.tag-list, .docs-content .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.docs-content .tag-list li + li { margin-top: 0; }
+.tag, .docs-content .doc-header a.tag { display: inline-flex; align-items: center; gap: 8px; height: 24px; padding: 0 9px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--muted); font: var(--fs-xs)/1 var(--mono); text-decoration: none; transition: color 0.16s ease, border-color 0.16s ease; }
+.tag:hover, .docs-content .doc-header a.tag:hover { border-color: var(--ink); color: var(--ink); }
+.tag__count { color: var(--muted); }
+.tag-list--index { gap: 12px; margin: 0; padding-top: 20px; border-top: 1px solid var(--line); }
+.tag-list--index .tag { height: 32px; padding: 0 14px; color: var(--ink); font-size: var(--fs-sm); }
 .doc-header__rule { height: 0; margin: 32px 0 36px; border: 0; border-top: 1px solid var(--line); }
 
 /* Page actions */
@@ -736,6 +763,20 @@ html:not(.js) .article-filter { display: none; }
 .blog-index { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 56px; padding-block: 72px 24px; }
 .blog-index__intro h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
 .blog-index__intro p { margin: 12px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+.blog-index__intro .blog-index__crumb { margin: 0 0 12px; color: var(--muted); font: var(--fs-sm)/20px var(--mono); }
+.blog-index__intro .blog-index__more { font-size: var(--fs-ui); }
+.blog-index__more a { color: var(--ink); font-weight: 500; }
+.blog-index__crumb a:hover, .blog-index__more a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* An author's page: who they are, then their articles by year; the table of contents lists every title. */
+.author-page { max-width: 792px; }
+.author-page__header { display: flex; align-items: center; gap: 20px; padding-bottom: 36px; }
+.author-page h1 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; line-height: 1.2; }
+.author-page__role { margin: 4px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.5; }
+.author-page__count { margin: 4px 0 0; color: var(--muted); font: var(--fs-sm)/20px var(--mono); }
+.author-page__year + .author-page__year { margin-top: 40px; }
+.author-page__year h2 { margin: 0 0 12px; color: var(--muted); font: 400 var(--fs-sm)/20px var(--mono); }
+.author-page__year :is(h2, li) { scroll-margin-top: calc(var(--navbar-height) + 16px); }
+.doc-page__toc--open .toc ul { display: block; }
 .blog-index__empty { margin: 0; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
 .blog-index__empty a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 

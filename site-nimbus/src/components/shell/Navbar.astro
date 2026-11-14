@@ -10,7 +10,7 @@ import { Menu, Moon, Search, Sun } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { SidebarId } from '../../contracts/navigation.ts';
-import Logo from './Logo.tsx';
+import Logo, { Wordmark } from './Logo.tsx';
 
 interface Props {
   sidebar: SidebarId | null;
@@ -28,7 +28,7 @@ const links = [
 ---
 <header class="navbar">
   <div class="shell-container navbar__inner">
-    <a class="brand" href="/"><Logo /><span>Apertis Docs</span></a>
+    <a class="brand brand--lockup" href="/" aria-label="Apertis Docs home"><Logo /><Wordmark /><span>Docs</span></a>
     <div class="navbar__right">
       <button type="button" class="navbar__search" data-open-surface="search" aria-label="Search documentation" aria-keyshortcuts="Meta+K Control+K">
         <Search className="size-4" aria-hidden="true" />

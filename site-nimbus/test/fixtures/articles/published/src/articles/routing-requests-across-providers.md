@@ -4,6 +4,7 @@ description: How one Apertis key reaches models from several providers, and what
 date: 2026-09-28
 author: Apertis team
 category: Engineering
+tags: routing, billing
 ---
 This fixture stands in for a real article in tests only; it is never published.
 

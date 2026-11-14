@@ -3,11 +3,17 @@
 // manifest entry, and the /blog/ index, which says the first articles are on their way while none is
 // published (operator review 2026-10-03: readers should know articles live here). Publication is decided
 // by the converter (drafts get no manifest entry); the collection only supplies the body and front matter.
+// The published articles also make three kinds of listing page (operator, 2026-11-14): /blog/tags/ (every
+// tag), /blog/tags/<tag>/ (the articles carrying it) and /blog/authors/<slug>/ (an author and their articles,
+// by year). Like the index they are not manifest documents: no Markdown artifact, no search entry.
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocLayout from '../../layouts/DocLayout.astro';
 import ArticleList from '../../components/home/ArticleList.astro';
-import { isNativeArticle, titleId } from '../../contracts/articles.ts';
+import AuthorAvatar from '../../components/home/AuthorAvatar.astro';
+import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
+import Toc from '../../components/shell/Toc.astro';
+import { isNativeArticle, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
 import type { ManifestDocument } from '../../contracts/manifest.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
@@ -19,37 +25,103 @@ export async function getStaticPaths() {
     if (!entry) throw new Error(`${doc.id}: no article source; run node converter/convert.ts`);
     return { params: { path: doc.servedPath.slice('/blog/'.length, -1) }, props: { doc, entry } };
   });
-  return [{ params: { path: undefined }, props: {} }, ...pages];
+  const rows = await articleRows();
+  const tags = [...new Set(rows.flatMap((r) => r.tags))].sort();
+  const authors = [...new Map(rows.map((r) => [r.author.slug, r.author])).values()];
+  return [
+    { params: { path: undefined }, props: {} },
+    ...pages,
+    ...(tags.length ? [{ params: { path: 'tags' }, props: { tags, rows } }] : []),
+    ...tags.map((tag) => ({ params: { path: `tags/${tag}` }, props: { tag, rows: rows.filter((r) => r.tags.includes(tag)) } })),
+    // The newest article's byline is the author's current role.
+    ...authors.map((a) => ({ params: { path: `authors/${a.slug}` }, props: { author: rows.find((r) => r.author.slug === a.slug)!.author, rows: rows.filter((r) => r.author.slug === a.slug) } })),
+  ];
 }
 
 interface Props {
   doc?: ManifestDocument;
   entry?: CollectionEntry<'articles'>;
+  /** A listing page: every tag (`tags`), one tag's articles (`tag`) or one author's (`author`), with its `rows`. */
+  tags?: string[];
+  tag?: string;
+  author?: Author;
+  rows?: ArticleRow[];
 }
-const { doc, entry } = Astro.props;
+const { doc, entry, tags, tag, author, rows = [] } = Astro.props;
 const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
 // The article's social card, when src/assets/og/<slug>.png exists (1200x630).
 const cards = import.meta.glob<{ default: ImageMetadata }>('../../assets/og/*.png', { eager: true });
 const card = entry ? cards[`../../assets/og/${entry.id}.png`]?.default : undefined;
-const data = entry?.data as { title: string; description: string; author: string; category: string } | undefined;
+const data = entry?.data as { title: string; description: string; author: string; category: string; tags?: unknown } | undefined;
 // The index is not a manifest document (like /search/): it is never indexed and has no Markdown.
-const index: ManifestDocument = {
-  id: 'page:blog', sourcePath: '', servedPath: '/blog/', canonicalUrl: 'https://docs.apertis.ai/blog/', title: 'Blog',
+const listing = (id: string, servedPath: string, title: string): ManifestDocument => ({
+  id, sourcePath: '', servedPath, canonicalUrl: `https://docs.apertis.ai${servedPath}`, title,
   eligibility: { publish: true, search: false, agent: false, rag: false }, markdown: null, contentSha256: '',
-};
+});
+const index = listing('page:blog', '/blog/', 'Blog');
+const count = (n: number) => `${n} ${n === 1 ? 'article' : 'articles'}`;
+// An author's articles by year, newest first: the page's sections and its table of contents.
+const years = [...new Set(rows.map((r) => r.date.slice(0, 4)))].map((year) => ({ year, rows: rows.filter((r) => r.date.startsWith(year)) }));
+const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()).some((r) => r.tags.length > 0);
 ---
 {doc && rendered && data ? (
-  <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description, image: card }}>
+  <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description, image: card, tags: parseTags(data.tags) }}>
     <h1 id={titleId(data.title)}>{data.title}</h1>
     <rendered.Content />
   </DocLayout>
+) : author ? (
+  <BaseLayout doc={listing(`page:blog-author:${author.slug}`, author.path, author.name)} buildId={manifest.buildId} seo={{ description: `Articles by ${author.name}${author.role ? `, ${author.role}` : ''}, on the Apertis blog.` }}>
+    <div class="doc-page">
+      <main class="doc-page__main" id="main">
+        <div class="author-page">
+          <header class="author-page__header">
+            <AuthorAvatar author={author} size={72} />
+            <div>
+              <h1>{author.name}</h1>
+              {author.role && <p class="author-page__role">{author.role}</p>}
+              <p class="author-page__count">{count(rows.length)}</p>
+            </div>
+          </header>
+          {years.map((y) => (
+            <section class="author-page__year" aria-labelledby={`year-${y.year}`}>
+              <h2 id={`year-${y.year}`}>{y.year}</h2>
+              <ArticleList rows={y.rows} describe anchors />
+            </section>
+          ))}
+        </div>
+      </main>
+      <aside class="doc-page__toc doc-page__toc--open" aria-label="Articles">
+        <p class="doc-page__toc-title">Articles</p>
+        <Toc headings={years.flatMap((y) => [{ depth: 2, slug: `year-${y.year}`, text: y.year }, ...y.rows.map((r) => ({ depth: 3, slug: `article-${r.slug}`, text: r.doc.title }))])} />
+      </aside>
+    </div>
+  </BaseLayout>
+) : tag || tags ? (
+  <BaseLayout doc={tag ? listing(`page:blog-tag:${tag}`, tagPath(tag), `#${tag}`) : listing('page:blog-tags', TAGS_PATH, 'Tags')} buildId={manifest.buildId}
+    seo={{ description: tag ? `Articles tagged #${tag} on the Apertis blog.` : 'Every topic on the Apertis blog, by tag.' }}>
+    <main class="shell-container blog-index" id="main">
+      <div class="blog-index__intro">
+        <p class="blog-index__crumb"><a href="/blog/">Blog</a>{tag && <Fragment> / <a href={TAGS_PATH}>Tags</a></Fragment>}</p>
+        <h1>{tag ? `#${tag}` : 'Tags'}</h1>
+        <p>{tag ? count(rows.length) : 'Every topic on the Apertis blog.'}</p>
+      </div>
+      <div class="blog-index__list">
+        {tag ? <ArticleList rows={rows} describe /> : (
+          <ul class="tag-list tag-list--index">
+            {tags!.map((t) => <li><a class="tag" href={tagPath(t)}>#{t}<span class="tag__count">{rows.filter((r) => r.tags.includes(t)).length}</span></a></li>)}
+          </ul>
+        )}
+      </div>
+    </main>
+  </BaseLayout>
 ) : (
   <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles} seo={{ description: 'Guides, updates and field notes from the team building Apertis.' }}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <h1>Apertis blog</h1>
         <p>Guides, updates and field notes from the team building Apertis.</p>
+        {hasTags && <p class="blog-index__more"><a href={TAGS_PATH}>Browse by tag</a></p>}
       </div>
       <div class="blog-index__list">
         {hasArticles ? <ArticleList filter describe /> : (

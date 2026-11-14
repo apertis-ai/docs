@@ -62,7 +62,27 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   const page = html('blog/choosing-a-plan/index.html');
   assert.match(page, /<h1 id="choosing-a-plan">Choosing a plan<\/h1>/);
   assert.match(page, /class="doc-header__tag"[^>]*>Guides</);
-  assert.match(page, /<dt>Author<\/dt><dd>Apertis team<\/dd>/);
+  // The byline links to the author's page, with their avatar (initials until a portrait is committed).
+  assert.match(page, /<dt>Author<\/dt><dd class="byline-author"><a href="\/blog\/authors\/apertis-team\/"><span class="avatar"[^>]*>AT<\/span>Apertis team<\/a><\/dd>/);
+  // Its tags link to the tag pages, in front matter order.
+  assert.deepEqual([...page.matchAll(/<a class="tag" href="([^"]+)">#([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]), [['/blog/tags/plans/', 'plans'], ['/blog/tags/billing/', 'billing']]);
+  assert.match(page, /"keywords":"plans, billing"/);
+
+  // Listing pages: a tag lists the articles that carry it, the tags index every tag with its count, an author's
+  // page their articles by year with a table of contents of the titles. A draft's tag makes no page.
+  const titles = (h: string) => [...h.matchAll(/class="article-row" href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(titles(html('blog/tags/billing/index.html')), ['/blog/routing-requests-across-providers/', '/blog/choosing-a-plan/']);
+  assert.deepEqual(titles(html('blog/tags/plans/index.html')), ['/blog/choosing-a-plan/']);
+  assert.deepEqual([...html('blog/tags/index.html').matchAll(/<a class="tag" href="([^"]+)">#[a-z-]+<span class="tag__count">(\d+)<\/span>/g)].map((m) => [m[1], m[2]]),
+    [['/blog/tags/billing/', '2'], ['/blog/tags/plans/', '1'], ['/blog/tags/routing/', '1']]);
+  assert.equal(fs.existsSync(path.join(dist, 'blog/tags/drafts-only')), false);
+  const author = html('blog/authors/apertis-team/index.html');
+  assert.match(author, /<h1>Apertis team<\/h1>/);
+  assert.deepEqual(titles(author), ['/blog/routing-requests-across-providers/', '/blog/choosing-a-plan/']);
+  assert.deepEqual([...author.match(/<aside class="doc-page__toc[\s\S]*?<\/aside>/)![0].matchAll(/<a href="#([^"]+)">([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]),
+    [['year-2026', '2026'], ['article-routing-requests-across-providers', 'Routing requests across providers'], ['article-choosing-a-plan', 'Choosing a plan']]);
+  for (const id of ['year-2026', 'article-choosing-a-plan']) assert.match(author, new RegExp(` id="${id}"`));
+  assert.match(index, /<a href="\/blog\/tags\/">Browse by tag<\/a>/);
   assert.match(page, /<dt>Published<\/dt><dd><time datetime="2026-09-20">Sep 20, 2026<\/time>/);
   assert.match(page, /<meta name="apertis-docs:markdown" content="\/blog\/choosing-a-plan\/index\.md">/);
   assert.match(page, /<h2 id="subscription">/);
@@ -113,7 +133,9 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   for (const slug of ['routing-requests-across-providers', 'choosing-a-plan']) assert.match(sitemap, new RegExp(`/blog/${slug}/</loc>`));
   const redirects = fs.existsSync(path.join(dist, '_redirects')) ? html('_redirects') : '';
   assert.doesNotMatch(redirects, /^\/blog\/? /m);
-  for (const legacy of ['welcome', 'first-blog-post', 'tags', 'authors']) assert.equal(fs.existsSync(path.join(dist, 'blog', legacy)), false, legacy);
+  // The native tags index is live too; the legacy posts, tags and authors (and an authors index) are still not served.
+  assert.doesNotMatch(redirects, /^\/blog\/tags\/? /m);
+  for (const legacy of ['welcome', 'first-blog-post', 'tags/docusaurus', 'authors/yangshun', 'authors/index.html']) assert.equal(fs.existsSync(path.join(dist, 'blog', legacy)), false, legacy);
 
   // The draft appears nowhere in dist, compressed search fragments included (dist.check decompresses them).
   const files = fs.readdirSync(dist, { recursive: true }).map(String);

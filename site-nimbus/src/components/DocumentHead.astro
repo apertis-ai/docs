@@ -6,6 +6,7 @@
 // og:description and twitter:description tags are omitted.
 import type { ManifestDocument } from '../contracts/manifest.ts';
 import { MANIFEST_SITE } from '../contracts/manifest.ts';
+import { bylineParts } from '../contracts/articles.ts';
 import { PAGE_META, bylineAuthor, safeJsonLd, servedUrl, titleSuffix, type SeoProps } from '../contracts/page.ts';
 
 interface Props extends SeoProps {
@@ -29,7 +30,8 @@ const jsonLd = url && article ? [
     url,
     mainEntityOfPage: url,
     ...(desc ? { description: desc } : {}),
-    ...(post ? { datePublished: post.published, author } : {}),
+    ...(post ? { datePublished: post.published, author: 'jobTitle' in author! ? { ...author, url: new URL(bylineParts(post.author).path, MANIFEST_SITE).toString() } : author } : {}),
+    ...(post?.tags?.length ? { keywords: post.tags.join(', ') } : {}),
     ...(updated ? { dateModified: updated } : {}),
     ...(image ? { image } : {}),
     publisher: { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' },
@@ -56,6 +58,7 @@ const jsonLd = url && article ? [
 {url && <meta property="og:type" content={article ? 'article' : 'website'} />}
 {url && <meta property="og:site_name" content={suffix.slice(' | '.length)} />}
 {url && post && <meta property="article:published_time" content={post.published} />}
+{url && post?.tags?.map((t) => <meta property="article:tag" content={t} />)}
 {url && image && <meta property="og:image" content={image} />}
 {url && image && <meta property="og:image:width" content={String(post!.image!.width)} />}
 {url && image && <meta property="og:image:height" content={String(post!.image!.height)} />}

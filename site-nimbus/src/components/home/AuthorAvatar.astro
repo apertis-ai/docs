@@ -1,0 +1,16 @@
+---
+// An author's avatar: their portrait when one is committed (article-rows.ts), their initials otherwise.
+// Decorative: the name always stands beside it.
+import { portrait, type Author } from './article-rows.ts';
+
+interface Props {
+  author: Author;
+  /** Rendered width and height in CSS pixels. */
+  size: number;
+}
+const { author, size } = Astro.props;
+const image = portrait(author.slug);
+---
+{image
+  ? <img class="avatar" src={image.src} width={size} height={size} alt="" loading="lazy" decoding="async" />
+  : <span class="avatar" style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.4)}px`} aria-hidden="true">{author.initials}</span>}

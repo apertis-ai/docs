@@ -61,7 +61,11 @@ test('malformed articles fail loudly: front matter, slug, H1 in the body, MDX', 
   };
   const fm = (extra = '', body = 'Body.\n') => `---\ntitle: T\ndescription: D\ndate: 2026-09-28\nauthor: A\ncategory: C\n${extra}---\n${body}`;
   bad('a.md', 'no front matter\n', /front matter must open the file/);
-  bad('a.md', fm('tags: x\n'), /unknown front matter tags/);
+  bad('a.md', fm('series: x\n'), /unknown front matter series/);
+  bad('a.md', fm('tags: CI, Infra\n'), /tags must be distinct lowercase words/);
+  bad('a.md', fm('tags: ci, ci\n'), /tags must be distinct lowercase words/);
+  bad('a.md', fm().replace('title: T', `title: ${'x'.repeat(61)}`), /title is 61 characters; at most 60/);
+  bad('a.md', fm().replace('author: A', 'author: "李, CTO"'), /author must start with a name in Latin letters/);
   bad('a.md', fm().replace('author: A\n', ''), /author is required/);
   bad('a.md', fm().replace('2026-09-28', '28/09/2026'), /date must be YYYY-MM-DD/);
   bad('a.md', fm('draft: maybe\n'), /draft must be true or false/);

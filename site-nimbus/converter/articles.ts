@@ -1,7 +1,7 @@
 // Native articles (openspec docs-routing-publication "Native articles"): Markdown written for this site,
 // not converted from the legacy tree, so they have no route-inventory row and no `live` observation.
 // Each file under ARTICLES_ROOT is `<slug>.md` with front matter (title, description, date, author,
-// category, optional draft and related) and a plain Markdown body. A published article becomes the manifest entry
+// category, optional draft, related and tags) and a plain Markdown body. A published article becomes the manifest entry
 // `blog:<slug>` at /blog/<slug>/, eligible for HTML, search, the Markdown artifact and RAG; a draft
 // becomes nothing at all (no entry, no output). The route inventory is never edited: a slug whose path
 // or id any inventory row already names (the retired legacy blog, its tags, authors, archive and feeds)
@@ -11,7 +11,7 @@ import path from 'node:path';
 
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
-import { ARTICLES_ROOT, parseRelated } from '../src/contracts/articles.ts';
+import { ARTICLES_ROOT, bylineParts, parseRelated, parseTags, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
 import type { ManifestDocument } from '../src/contracts/manifest.ts';
 
 export { ARTICLES_ROOT };
@@ -27,6 +27,8 @@ export interface Article {
   draft: boolean;
   /** Served paths of the documentation pages this article follows on from (they link back to it). */
   related: string[];
+  /** Topics, as lowercase slugs; each has a page listing the articles that carry it. */
+  tags: string[];
   /** Markdown body, front matter removed. */
   body: string;
   /** Repository-relative source file. */
@@ -38,6 +40,8 @@ export class ArticleError extends Error {}
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SERVED_PATH = /^\/(?:[a-z0-9._-]+\/)*$/;
 const REQUIRED = ['title', 'description', 'date', 'author', 'category'] as const;
+// The page header gives a title two lines beside the page actions on a desktop; 60 characters fit them.
+export const TITLE_MAX = 60;
 
 /** Front matter is flat `key: value` lines (values may be double-quoted); anything else is refused. */
 function parse(file: string, text: string): Omit<Article, 'slug' | 'sourcePath'> {
@@ -51,17 +55,21 @@ function parse(file: string, text: string): Omit<Article, 'slug' | 'sourcePath'>
     if (kv[1] in fields) throw new ArticleError(`${file}: duplicate ${kv[1]}`);
     fields[kv[1]] = value;
   }
-  const unknown = Object.keys(fields).filter((k) => ![...REQUIRED, 'draft', 'related'].includes(k));
+  const unknown = Object.keys(fields).filter((k) => ![...REQUIRED, 'draft', 'related', 'tags'].includes(k));
   if (unknown.length) throw new ArticleError(`${file}: unknown front matter ${unknown.join(', ')}`);
   for (const k of REQUIRED) if (!fields[k]) throw new ArticleError(`${file}: ${k} is required`);
+  if (fields.title.length > TITLE_MAX) throw new ArticleError(`${file}: title is ${fields.title.length} characters; at most ${TITLE_MAX} (two lines in the page header)`);
+  if (!bylineParts(fields.author).slug) throw new ArticleError(`${file}: author must start with a name in Latin letters or digits (it names the author page)`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.date) || Number.isNaN(Date.parse(fields.date))) throw new ArticleError(`${file}: date must be YYYY-MM-DD`);
   if (fields.draft !== undefined && !['true', 'false'].includes(fields.draft)) throw new ArticleError(`${file}: draft must be true or false`);
   const related = parseRelated(fields.related);
   if (related.some((p) => !SERVED_PATH.test(p))) throw new ArticleError(`${file}: related must be root-absolute served paths ending in /, comma-separated`);
+  const tags = parseTags(fields.tags);
+  if (tags.some((t) => !SLUG.test(t)) || new Set(tags).size !== tags.length) throw new ArticleError(`${file}: tags must be distinct lowercase words joined by hyphens, comma-separated`);
   const body = m[2].replace(/^\n+/, '');
   if (/^#\s/m.test(body)) throw new ArticleError(`${file}: the title is the front matter title; the body must not have an H1`);
   if (/^\s*(import|export)\s/m.test(body) || /<[A-Z]/.test(body)) throw new ArticleError(`${file}: articles are plain Markdown (no MDX)`);
-  return { title: fields.title, description: fields.description, date: fields.date, author: fields.author, category: fields.category, draft: fields.draft === 'true', related, body };
+  return { title: fields.title, description: fields.description, date: fields.date, author: fields.author, category: fields.category, draft: fields.draft === 'true', related, tags, body };
 }
 
 /**
@@ -92,6 +100,11 @@ export function assertNoInventoryCollision(articles: Article[], inventory: Inven
     const p = articlePath(a.slug);
     if (paths.has(p) || paths.has(p.slice(0, -1)) || ids.has(`blog:${a.slug}`)) {
       throw new ArticleError(`${a.sourcePath}: /blog/${a.slug} is an inventory route (the retired legacy blog); choose another slug`);
+    }
+    // The tag and author pages live beside the retired legacy ones. The tags index supersedes its retired
+    // row (converter/integration.ts); no other retired path may come back as a native tag or author page.
+    for (const q of [...a.tags.map(tagPath), bylineParts(a.author).path]) {
+      if (q !== TAGS_PATH && paths.has(q)) throw new ArticleError(`${a.sourcePath}: ${q} is an inventory route (the retired legacy blog); choose another tag or author name`);
     }
   }
 }

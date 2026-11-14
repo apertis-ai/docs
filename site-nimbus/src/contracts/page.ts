@@ -53,8 +53,8 @@ export interface SeoProps {
   article?: boolean;
   /** Breadcrumb names from Home to the page; only the last has a URL of its own. */
   trail?: string[];
-  /** A native article: BlogPosting JSON-LD with its byline and publication date, and its social card when it has one. */
-  post?: { author: string; published: string; image?: SocialImage };
+  /** A native article: BlogPosting JSON-LD with its byline, publication date and tags, and its social card when it has one. */
+  post?: { author: string; published: string; image?: SocialImage; tags?: string[] };
 }
 
 /** A social card (src/assets/og/<slug>.png), as Astro's image import describes it. */

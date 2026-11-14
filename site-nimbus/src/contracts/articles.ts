@@ -20,3 +20,20 @@ export const titleId = (title: string) => title.toLowerCase().replace(/[^\p{L}\p
  * root-absolute served paths. Each of those pages lists the article under "Related articles".
  */
 export const parseRelated = (raw: unknown) => (typeof raw === 'string' ? raw.split(',').map((p) => p.trim()).filter(Boolean) : []);
+
+/** An article's `tags` front matter: comma-separated lowercase slugs. Each tag has a page at tagPath(). */
+export const parseTags = parseRelated;
+export const TAGS_PATH = '/blog/tags/';
+export const tagPath = (tag: string) => `${TAGS_PATH}${tag}/`;
+
+/**
+ * An article's byline is "Name, role" (or a bare name). Every author has a page listing their articles,
+ * at /blog/authors/<the name as a slug>/; `initials` stand in for an avatar the author has not supplied.
+ */
+export function bylineParts(byline: string) {
+  const [name, role = ''] = byline.split(/,\s*/, 2);
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const words = name.split(/\s+/).filter(Boolean);
+  const initials = (words.length > 1 ? words[0][0] + words[words.length - 1][0] : name.slice(0, 2)).toUpperCase();
+  return { name, role, slug, initials, path: `/blog/authors/${slug}/` };
+}

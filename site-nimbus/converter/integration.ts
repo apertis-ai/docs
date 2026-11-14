@@ -117,6 +117,9 @@ export const RETIRED_TARGET = '/__retired';
  *   One supersession (operator, 2026-09-30): once a native article is published, the blog index at
  *   `/blog/` lists the native articles, so the retired legacy `/blog` row no longer rewrites it. Every
  *   other retired `/blog/**` path stays 404; native slugs can never name one (converter/articles.ts).
+ *   Second supersession (operator, 2026-11-14): articles carry tags, and `/blog/tags/` lists them, so the
+ *   retired legacy `/blog/tags` row no longer rewrites it either. Native tag and author pages can never
+ *   name another retired path (converter/articles.ts).
  */
 export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
   const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -133,8 +136,9 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
   };
   const served = (p: string) => [`${p}.html`, `${p}/index.html`, p].some((f) => fs.existsSync(path.join(outDir, f)) && fs.statSync(path.join(outDir, f)).isFile());
   // The /blog/ index (served with or without articles since the operator review of 2026-10-03) supersedes
-  // the retired legacy /blog row, and only it: every other retired /blog/** path keeps answering 404.
-  const rules = inventory.filter((r) => r.disposition === 'retired' && served(r.path) && r.path !== '/blog')
+  // the retired legacy /blog row, and the native tags index the /blog/tags row: every other retired
+  // /blog/** path keeps answering 404.
+  const rules = inventory.filter((r) => r.disposition === 'retired' && served(r.path) && r.path !== '/blog' && r.path !== '/blog/tags')
     .flatMap((r) => [r.path, `${r.path}/`, `${r.path}.html`].map((from) => `${from} ${RETIRED_TARGET} 200`));
   if (served(RETIRED_TARGET)) throw new Error(`m2: ${RETIRED_TARGET} must not exist in dist`);
   if (rules.length) files._redirects = `# Retired routes (decision on #4) answer 404: rewritten to a path nothing serves.\n${rules.join('\n')}\n`;

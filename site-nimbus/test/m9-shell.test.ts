@@ -298,7 +298,9 @@ test('static parts are server-rendered without hydration; homepage links all res
   const internal = await page.$$eval('main a[href^="/"], footer a[href^="/"], header a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
   // The homepage body links each internal destination once: the quick start, the start items and the blog.
   const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
-  assert.deepEqual(body.sort(), ['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro']);
+  assert.deepEqual(body.sort(), [...['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro'],
+    // "From the blog" lists the three newest articles.
+    ...manifest().documents.filter((d) => d.servedPath.startsWith('/blog/')).map((d) => d.servedPath).slice(0, 3)].sort());
   // /blog/ is the articles index and /changelog/ the release notes (openspec docs-live-catalog), not manifest
   // documents; both are always served.
   for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
@@ -519,14 +521,15 @@ test('one search control on the homepage (canary step 5b reverses step 1): the h
 test('homepage link labels use sentence case (canary step 2): only the first word and proper nouns are capitalized', { skip }, async () => {
   const { context, page } = await open('/');
   // A "Start building" item is checked by its title (its line is a sentence). Model cards and release-note
-  // rows are not our labels: they come verbatim from the model catalog and apertis.ai/changelog.
-  const labels: string[] = await page.$$eval('main a:not(.release-row):not(.model-card)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
+  // rows are not our labels: they come verbatim from the model catalog and apertis.ai/changelog. Nor is an
+  // article row: it carries the article's own title and date.
+  const labels: string[] = await page.$$eval('main a:not(.release-row):not(.model-card):not(.article-row)', (as: HTMLAnchorElement[]) => as.flatMap((a) =>
     [a.querySelector('[data-slot="item-title"]') ?? a]
       .map((e) => e.textContent!.replace(/\s+/g, ' ').trim())).filter(Boolean));
   const proper = new Set(['API', 'SDK', 'Python', 'Claude', 'Code', 'Cursor', 'Cline', 'Messages', 'OpenAI', 'Anthropic', 'Apertis', 'Node.js', 'cURL']);
   const offenders = labels.filter((l) => l.split(' ').slice(1).some((w) => /^[A-Z]/.test(w) && !proper.has(w)));
   assert.deepEqual(offenders, [], 'labels with a capitalized non-initial word');
-  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing') && labels.includes('Visit the blog'), `labels ${JSON.stringify(labels)}`);
+  assert.ok(labels.includes('Get started') && labels.includes('API reference') && labels.includes('Plans and billing') && labels.includes('All articles'), `labels ${JSON.stringify(labels)}`);
   await context.close();
 });
 
@@ -608,6 +611,70 @@ test('page actions follow the Claude Docs pattern (canary step 4): one bordered 
   const order = await m.page.evaluate(() => [document.querySelector('.doc-meta')!.getBoundingClientRect().bottom, document.querySelector('.page-actions__split')!.getBoundingClientRect().top]);
   assert.ok(order[1] >= order[0], `mobile: page actions after the meta row (${order})`);
   await m.context.close();
+});
+
+test('a title that wraps keeps the page actions level with its first line: an article at 1024', { skip }, async () => {
+  const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
+  const { context, page } = await open(article, VIEWS[1024]);
+  await page.locator('.page-actions[data-ready]').waitFor();
+  const d = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), art = r('.docs-content');
+    const line = parseFloat(getComputedStyle(document.querySelector('.doc-header h1')!).lineHeight);
+    return { lines: Math.round(h1.height / line), firstLineMid: h1.top + line / 2, splitMid: split.top + split.height / 2, splitRight: split.right, artRight: art.right };
+  });
+  assert.equal(d.lines, 2, `the article title wraps beside the button at this width, which is the case under test (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitMid - d.firstLineMid) <= 1, `split button is centred on the title's first line (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitRight - d.artRight) <= 1, `split button ends at the content edge (${JSON.stringify(d)})`);
+  await context.close();
+});
+
+test('an article header on desktop: the title row runs past the reading column, so the title has at most two lines; the byline carries the avatar and links to the author page; tags link to their pages', { skip }, async () => {
+  const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
+  const { context, page } = await open(article, VIEWS[1440]);
+  await page.locator('.page-actions[data-ready]').waitFor();
+  const d = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+    const h1 = r('.doc-header h1'), split = r('.page-actions__split'), art = r('.docs-content'), rule = r('.doc-header__rule'), toc = r('.doc-page__toc');
+    const line = parseFloat(getComputedStyle(document.querySelector('.doc-header h1')!).lineHeight);
+    const avatar = r('.byline-author .avatar'), name = r('.byline-author a');
+    return {
+      lines: Math.round(h1.height / line), past: split.right - art.right, ruleRight: rule.right, splitRight: split.right, tocLeft: toc.left,
+      splitMid: split.top + split.height / 2, firstLineMid: h1.top + line / 2,
+      avatar: [avatar.width, avatar.height], avatarMid: avatar.top + avatar.height / 2, nameMid: name.top + name.height / 2,
+      author: document.querySelector('.byline-author a')!.getAttribute('href'),
+      byline: document.querySelector('.byline-author')!.textContent, name: document.querySelector('.byline-author a')!.textContent,
+      portrait: document.querySelector('.byline-author .avatar')!.tagName,
+      tags: [...document.querySelectorAll<HTMLAnchorElement>('.doc-header .tag')].map((a) => [a.textContent, a.getAttribute('href')]),
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  assert.ok(d.lines <= 2, `the title has at most two lines (${JSON.stringify(d)})`);
+  assert.equal(d.past, 96, 'the page actions sit 96px past the reading column');
+  assert.ok(Math.abs(d.ruleRight - d.splitRight) <= 1 && d.splitRight < d.tocLeft, `the hairline ends where the button does, clear of the table of contents (${JSON.stringify(d)})`);
+  assert.ok(Math.abs(d.splitMid - d.firstLineMid) <= 1, `split button is centred on the title's first line (${JSON.stringify(d)})`);
+  assert.deepEqual(d.avatar, [24, 24]);
+  assert.ok(Math.abs(d.avatarMid - d.nameMid) <= 1, 'the avatar is centred on the name');
+  assert.match(d.author!, /^\/blog\/authors\/[a-z0-9-]+\/$/);
+  assert.ok(d.tags.length > 0 && d.tags.every(([text, href]: (string | null)[]) => href === `/blog/tags/${text!.slice(1)}/`), `tags link to their pages (${JSON.stringify(d.tags)})`);
+  assert.ok(d.overflow <= 0, `no horizontal overflow (${d.overflow})`);
+  assert.equal(d.byline, d.name, 'the byline is the name alone: the role is on the author page');
+  // The author page: the same name, their articles, and a table of contents of the titles by year.
+  await page.click('.byline-author a');
+  await page.waitForURL(`**${d.author}`);
+  const a = await page.evaluate(() => ({
+    h1: document.querySelector('h1')!.textContent, rows: [...document.querySelectorAll('.article-row')].map((x) => x.getAttribute('href')),
+    toc: [...document.querySelectorAll<HTMLAnchorElement>('.doc-page__toc a')].map((x) => x.getAttribute('href')),
+    shown: [...document.querySelectorAll<HTMLElement>('.doc-page__toc a')].every((x) => x.offsetParent !== null),
+    targets: [...document.querySelectorAll<HTMLAnchorElement>('.doc-page__toc a')].every((x) => document.getElementById(x.hash.slice(1))),
+  }));
+  assert.ok(a.rows.includes(article) && a.toc[0].startsWith('#year-') && a.toc.includes(`#article-${article.slice(6, -1)}`) && a.shown && a.targets, JSON.stringify(a));
+  // A tag page lists the article; the tags index lists the tag.
+  await page.goto(base + d.tags[0][1]);
+  assert.ok((await page.$$eval('.article-row', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(article));
+  await page.goto(`${base}/blog/tags/`);
+  assert.ok((await page.$$eval('.tag-list--index .tag', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(d.tags[0][1]));
+  await context.close();
 });
 
 test('two-row header and LINE Seed display face (canary step 5a): search on the right beside the theme switch, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
@@ -780,9 +847,9 @@ test('UX canary 2026-10-03: opaque header, no shift when search opens, Ask Docs 
   await wide.page.locator('dialog[open] #aa-question').waitFor();
   await wide.page.click('#aa-close');
   assert.equal(await wide.page.evaluate(() => document.activeElement?.className.includes('ask-docs-trigger')), true, 'restored panel: focus goes to the trigger');
-  // The empty /blog/ index asks not to be indexed; real pages do not.
+  // Only an empty /blog/ index asks not to be indexed; with a published article it is a real page.
   await wide.page.goto(base + '/blog/', { waitUntil: 'load' });
-  assert.equal(await wide.page.getAttribute('meta[name="robots"]', 'content'), 'noindex');
+  assert.equal(await wide.page.$('meta[name="robots"]'), null);
   await wide.page.goto(base + '/getting-started/quick-start/', { waitUntil: 'load' });
   assert.equal(await wide.page.$('meta[name="robots"]'), null);
   await wide.context.close();
