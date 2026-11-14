@@ -12,6 +12,7 @@ import {
   readingMinutes, renderBody, rowHtml,
 } from '../src/components/home/articles-feed.ts';
 import { readingMinutes as converterMinutes } from '../converter/convert.ts';
+import { LEGACY_BLOG_PATHS } from '../src/contracts/articles.ts';
 import { edge, type Scenario, type Upstream } from './blog-edge.ts';
 
 const fixture = (f: string) => fs.readFileSync(path.join(import.meta.dirname, 'fixtures/blog-live', f), 'utf8');
@@ -103,6 +104,11 @@ test('category names: a committed article\'s name first, else short slugs upper-
 
 test('reading time is the converter\'s rule', () => {
   for (const md of ['', 'one two', `${'word '.repeat(450)}\n\n\`\`\`\n${'code '.repeat(900)}\n\`\`\``]) assert.equal(readingMinutes(md), converterMinutes(md), md.slice(0, 20));
+});
+
+test('the legacy blog paths the edge refuses are the route inventory\'s', () => {
+  const inventory = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../migration/nimbus/route-inventory.json'), 'utf8')) as { routes: { path: string }[] };
+  assert.deepEqual([...LEGACY_BLOG_PATHS].sort(), inventory.routes.map((r) => r.path.replace(/(.)\/$/, '$1')).filter((p) => p === '/blog' || p.startsWith('/blog/')).sort());
 });
 
 // ---- functions/blog/[[path]].ts on the edge ----
@@ -280,6 +286,15 @@ test('a tag or category page only live articles have is rendered into the listin
   assert.ok(tag.body.includes('<title>#vision | Apertis</title>') && tag.body.includes('<h1>#vision</h1>') && tag.body.includes('<a href="/blog/tags/">Tags</a>'));
   const none = await run({ path: '/blog/tags/nothing/', upstream: up });
   assert.deepEqual([none.status, none.body === STATICS['404']], [404, true]);
+});
+
+test('a live article that would bring back a retired legacy blog path is shown nowhere', async () => {
+  const up = liveUp([row({ slug: 'welcome' }), row({ slug: 'tagged', tags: ['hello'] }), row({ slug: 'by-legacy', author_slug: 'yangshun' })]);
+  for (const p of ['/blog/welcome/', '/blog/tagged/', '/blog/by-legacy/', '/blog/tags/hello/']) {
+    const res = await run({ path: p, upstream: up });
+    assert.deepEqual([res.status, res.body === STATICS['404'], res.calls], [404, true, [LIST_SOURCE]], p);
+  }
+  for (const p of ['/blog/', '/blog/tags/', '/blog/categories/ci/']) assert.equal((await run({ path: p, upstream: up })).body, STATICS[p], p);
 });
 
 test('other methods and other paths are the static response', async () => {

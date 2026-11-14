@@ -7,7 +7,7 @@
 // escaped and unsafe link protocols are dropped; every other value is text, and the markup helpers below escape
 // it. Pure (no Node or Workers APIs), so the function bundles it and the tests run it as is.
 import { micromark } from 'micromark';
-import { categoryPath, tagPath } from '../../contracts/articles.ts';
+import { categoryPath, LEGACY_BLOG_PATHS, tagPath } from '../../contracts/articles.ts';
 import { displayDate } from '../shell/page-header.ts';
 
 export const LIST_SOURCE = 'https://apertis.ai/api/blog/articles';
@@ -71,6 +71,14 @@ export function liveArticle(data: unknown, slug: string): LiveArticle {
   if (typeof markdown !== 'string' || new TextEncoder().encode(markdown).length > MAX.body) throw new Error(`blog article ${slug}: unusable body`);
   return { ...r, markdown };
 }
+
+const legacy = new Set(LEGACY_BLOG_PATHS);
+/**
+ * Whether a live row would bring back a path of the retired legacy blog: its page, a tag page or its author's page (the
+ * rule converter/articles.ts applies to committed articles). Such a row is shown nowhere.
+ */
+export const revivesLegacyPath = (r: LiveRow) =>
+  [`/blog/${r.slug}`, ...r.tags.map((t) => tagPath(t).slice(0, -1)), `/blog/authors/${r.author}`].some((p) => legacy.has(p));
 
 const time = (iso: string) => Date.parse(iso);
 const newestFirst = (a: LiveRow, b: LiveRow) => time(b.published) - time(a.published) || (a.slug < b.slug ? -1 : 1);

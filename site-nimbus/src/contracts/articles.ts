@@ -51,3 +51,15 @@ export function bylineParts(byline: string) {
  */
 export const ARTICLE_TEMPLATE_PATH = '/blog/_article/';
 export const LISTING_TEMPLATE_PATH = '/blog/_listing/';
+
+/**
+ * Every route inventory path under /blog (the retired legacy blog), without the trailing slash. The converter refuses a
+ * committed article whose page, tag page or author page is one of them (converter/articles.ts); the edge refuses a live
+ * article the same way (functions/blog/[[path]].ts), from this copy, so the function need not bundle the inventory.
+ * test/blog-articles.test.ts keeps it equal to the inventory.
+ */
+export const LEGACY_BLOG_PATHS: readonly string[] = [
+  '/blog', '/blog/archive', '/blog/atom.css', '/blog/atom.xml', '/blog/atom.xsl', '/blog/authors', '/blog/authors/all-sebastien-lorber-articles',
+  '/blog/authors/yangshun', '/blog/first-blog-post', '/blog/long-blog-post', '/blog/mdx-blog-post', '/blog/rss.css', '/blog/rss.xml', '/blog/rss.xsl',
+  '/blog/tags', '/blog/tags/docusaurus', '/blog/tags/facebook', '/blog/tags/hello', '/blog/tags/hola', '/blog/welcome',
+];

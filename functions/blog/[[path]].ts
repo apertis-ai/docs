@@ -11,12 +11,14 @@
 //     build already publishes skipped. A tag or category page only live articles have is rendered into the listing
 //     template (/blog/_listing/).
 //   - The two templates themselves answer 404.
+// A live article whose page, tag page or author page would be a retired legacy blog path is shown nowhere, as the
+// converter refuses such a committed article.
 // The API's origin is a constant; a request contributes only a path that passed the slug pattern, and the edge cache
 // keys are the site's constant origin plus that slug. API answers are kept for ten minutes. Any upstream failure
 // serves the static response unchanged, caches nothing and is logged as `blog-articles:`.
 import {
   categoryLabel, chipHtml, countText, decodeText, escapeHtml, fetchArticle, fetchArticles, isSlug, liveArticle, liveRows,
-  publishedDay, readingMinutes, renderBody, rowHtml, SLUG, tagItemHtml, type LiveArticle, type LiveRow,
+  publishedDay, readingMinutes, renderBody, revivesLegacyPath, rowHtml, SLUG, tagItemHtml, type LiveArticle, type LiveRow,
 } from '../../site-nimbus/src/components/home/articles-feed.ts';
 import { fetchAuthors, type LiveAuthors } from '../../site-nimbus/src/components/home/authors-feed.ts';
 import {
@@ -182,8 +184,9 @@ class Live {
     return value;
   }
 
-  rows() {
-    return this.cached(KEY, () => fetchArticles(this.deps.fetch), liveRows, (rows) => rows.map(toApi));
+  /** The published rows, without any that would bring back a retired legacy blog path. */
+  async rows() {
+    return (await this.cached(KEY, () => fetchArticles(this.deps.fetch), liveRows, (rows) => rows.map(toApi))).filter((r) => !revivesLegacyPath(r));
   }
 
   /** The published article, or null (unpublished since the list was read: the static 404 stands, and nothing is cached). */
