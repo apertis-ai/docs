@@ -26,6 +26,15 @@ const body = (md: string) => micromark(md.replace(/<\/?[A-Za-z][^<>]*>/g, ''))
   .replace(/<(\/?)h([1-6])>/g, (_, slash, n) => `<${slash}h${Math.min(6, Number(n) + 2)}>`);
 // One rule per category: while its radio is checked, every other note is hidden (category tags are
 // [a-z0-9-]+, changelog.ts).
+// The notes by month, newest first: each month is a block with its own anchor, and the rail on wide screens
+// lists them. A month's block stays in the page while a category filter hides its notes, so its link still lands.
+// Notes are ordered by version, so a month could come up twice; only its first block is the anchor.
+const months: { id: string; anchor: boolean; label: string; notes: typeof list }[] = [];
+for (const n of list) {
+  const id = n.date.slice(0, 7);
+  if (months.at(-1)?.id !== id) months.push({ id, anchor: !months.some((m) => m.id === id), label: new Date(`${id}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }), notes: [] });
+  months.at(-1)!.notes.push(n);
+}
 const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .note:not([data-category="${c}"]){display:none}`).join('\n');
 ---
 <BaseLayout doc={doc} buildId={manifest.buildId}>
@@ -41,25 +50,39 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
       <label><input type="radio" name="category" id="category-all" value="" checked />All</label>
       {categories.map((c) => <label><input type="radio" name="category" id={`category-${c}`} value={c} />{label(c)}</label>)}
     </fieldset>
-    <ol class="changelog__list">
-      {list.map((n) => (
-        <li class="note" id={n.version} data-category={n.category}>
-          <div class="note__meta">
-            <a class="note__version" href={`#${n.version}`}>v{n.version}</a>
-            <time datetime={n.date}>{displayDate(n.date)}</time>
-            <span class="note__tag">{label(n.category)}</span>
+    <div class="changelog__layout">
+      <div class="changelog__months">
+        {months.map((m) => (
+          <div class="changelog__month" id={m.anchor ? m.id : undefined}>
+            <ol class="changelog__list">
+              {m.notes.map((n) => (
+                <li class="note" id={n.version} data-category={n.category}>
+                  <div class="note__meta">
+                    <a class="note__version" href={`#${n.version}`}>v{n.version}</a>
+                    <time datetime={n.date}>{displayDate(n.date)}</time>
+                    <span class="note__tag">{label(n.category)}</span>
+                  </div>
+                  <div class="note__body">
+                    <h2>{n.title}</h2>
+                    {n.description && <p class="note__desc">{n.description}</p>}
+                    {/* The body repeats the items (as headings or a list), so they show only for a note without a body. */}
+                    {!n.content && n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t.replace(/^\s*[-*]\s+/, '')}</li>)}</ul>}
+                    {n.content && <div class="note__content" set:html={body(n.content)} />}
+                    {n.abridged && <p class="note__desc"><a href={ORIGINAL_NOTES} target="_blank" rel="noopener">Full notes on apertis.ai</a></p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
-          <div class="note__body">
-            <h2>{n.title}</h2>
-            {n.description && <p class="note__desc">{n.description}</p>}
-            {/* The body repeats the items (as headings or a list), so they show only for a note without a body. */}
-            {!n.content && n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t.replace(/^\s*[-*]\s+/, '')}</li>)}</ul>}
-            {n.content && <div class="note__content" set:html={body(n.content)} />}
-            {n.abridged && <p class="note__desc"><a href={ORIGINAL_NOTES} target="_blank" rel="noopener">Full notes on apertis.ai</a></p>}
-          </div>
-        </li>
-      ))}
-    </ol>
+        ))}
+      </div>
+      <nav class="changelog__rail" aria-label="Release notes by month">
+        <p class="label">Jump to</p>
+        <ul class="toc">
+          {months.filter((m) => m.anchor).map((m) => <li><a href={`#${m.id}`}>{m.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
   </main>
 </BaseLayout>
 
@@ -75,21 +98,34 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
   .changelog__filter input { position: absolute; opacity: 0; pointer-events: none; }
   .changelog__filter label:has(:checked) { border-color: var(--ink); color: var(--ink); font-weight: 500; }
   .changelog__filter label:has(:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .changelog__list { margin: 24px 0 0; padding: 0; list-style: none; }
-  .note { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 28px 0; border-top: 1px solid var(--line); scroll-margin-top: 96px; }
-  .note__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; color: var(--muted); font-size: var(--fs-ui); }
+  /* Reading measure: the note's text column stops at 720px, so a line holds about 90 characters instead of
+     running the full container. On wide screens the freed space carries the month rail. */
+  .changelog__layout { margin: 24px 0 0; }
+  .changelog__months { max-width: 932px; }
+  .changelog__month { scroll-margin-top: 96px; }
+  .changelog__list { margin: 0; padding: 0; list-style: none; }
+  .changelog__rail { display: none; }
+  .note { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; padding: 44px 0; border-top: 1px solid var(--line); scroll-margin-top: 96px; }
+  .note__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: var(--muted); font-size: var(--fs-ui); }
   .note__version { color: var(--ink); font-family: var(--mono); font-size: var(--fs-xs); }
   .note__tag { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; font: var(--fs-2xs)/16px var(--mono); }
-  .note__body h2 { margin: 0; color: var(--ink); font-size: var(--fs-lg); font-weight: 600; line-height: 1.4; }
-  .note__desc { margin: 6px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
-  .note__items { margin: 12px 0 0; padding-left: 20px; color: var(--desc); font-size: var(--fs-ui); line-height: 1.7; }
-  .note__content { margin-top: 16px; color: var(--desc); font-size: var(--fs-ui); line-height: 1.7; overflow-wrap: anywhere; }
-  .note__content :is(h3, h4, h5, h6) { margin: 16px 0 4px; color: var(--ink); font-size: var(--fs-md); font-weight: 600; }
-  .note__content p { margin: 8px 0 0; }
-  .note__content :is(ul, ol) { margin: 8px 0 0; padding-left: 20px; }
+  .note__body h2 { margin: 0; color: var(--ink); font-size: var(--fs-xl); font-weight: 600; line-height: 1.35; }
+  .note__desc { margin: 8px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
+  .note__items { margin: 16px 0 0; padding-left: 20px; color: var(--desc); font-size: var(--fs-base); line-height: 1.7; }
+  .note__content { margin-top: 20px; color: var(--desc); font-size: var(--fs-base); line-height: 1.7; overflow-wrap: anywhere; }
+  .note__content > :first-child { margin-top: 0; }
+  .note__content :is(h3, h4, h5, h6) { margin: 28px 0 0; color: var(--ink); font-size: var(--fs-base); font-weight: 600; line-height: 1.5; }
+  .note__content p { margin: 12px 0 0; }
+  .note__content :is(ul, ol) { margin: 12px 0 0; padding-left: 20px; }
+  .note__content li + li, .note__items li + li { margin-top: 4px; }
   .note__content a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  .note__content code { font-family: var(--mono); font-size: var(--fs-xs); }
-  .note__content pre { overflow-x: auto; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+  .note__content code { font-family: var(--mono); font-size: var(--fs-sm); }
+  .note__content pre { overflow-x: auto; margin: 16px 0 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
   .note__content img { max-width: 100%; height: auto; }
-  @media (max-width: 720px) { .note { grid-template-columns: minmax(0, 1fr); gap: 12px; } .note__meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; } }
+  @media (min-width: 1160px) {
+    .changelog__layout { display: grid; grid-template-columns: minmax(0, 932px) 200px; justify-content: space-between; gap: 48px; align-items: start; }
+    .changelog__rail { display: block; position: sticky; top: 96px; max-height: calc(100vh - 128px); overflow-y: auto; padding: 44px 0 0 20px; border-left: 1px solid var(--line); }
+    .changelog__rail .label { margin: 0 0 8px; color: var(--muted); }
+  }
+  @media (max-width: 720px) { .note { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 32px 0; } .note__meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; } }
 </style>
