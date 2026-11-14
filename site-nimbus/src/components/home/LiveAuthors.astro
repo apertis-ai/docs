@@ -1,0 +1,16 @@
+---
+// The live swap for pages that show an author (the article byline, the author page): placed once, after the
+// content, so its inline script is never inside the byline.
+---
+<script>
+  // Swap in the live authors (functions/_nimbus/blog-authors.ts) into every `[data-author]` element. Any failure
+  // keeps what the build rendered.
+  import { applyAuthors, type LiveAuthors } from './authors-feed.ts';
+
+  if (document.querySelector('[data-author]')) {
+    fetch('/_nimbus/blog-authors', { priority: 'low' } as RequestInit)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then((authors: LiveAuthors) => applyAuthors(document, authors))
+      .catch(() => {});
+  }
+</script>
