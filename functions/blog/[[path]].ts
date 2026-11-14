@@ -71,7 +71,7 @@ interface Env {
 }
 
 const API_ORIGIN = /^https:\/\/apertis\.ai(?=\/)/;
-const loopback = (v: unknown) => (typeof v === 'string' && /^http:\/\/(127\.0\.0\.1|localhost):\d{1,5}$/.test(v) ? v : null);
+export const loopback = (v: unknown) => (typeof v === 'string' && /^http:\/\/(127\.0\.0\.1|localhost):\d{1,5}$/.test(v) ? v : null);
 
 export const onRequest: PagesFunction<Env> = (context) => {
   const stub = loopback(context.env.BLOG_API_STUB_ORIGIN);

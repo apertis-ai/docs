@@ -30,6 +30,7 @@ const STATICS: Record<string, string> = {
 };
 const AUTHORS = 'https://apertis.ai/api/blog/authors';
 const KEY = 'https://docs.apertis.ai/_nimbus/blog-articles';
+const AUTHORS_KEY = 'https://docs.apertis.ai/_nimbus/blog-authors';
 
 const row = (over: Record<string, unknown> = {}) => ({
   slug: 'edge-notes', title: 'Edge notes', description: 'What the edge does.', author_slug: 'yu-ting-lee', category: 'ci',
@@ -228,6 +229,35 @@ test('a missing live author leaves the byline on the slug; an authors failure do
   assert.equal(res.status, 200);
   assert.ok(res.body.includes('data-author="guest-writer" data-author-field="name">guest-writer</span>'));
   assert.ok(res.logs.some((l) => l.startsWith('blog-articles: authors:')));
+  assert.ok(!res.puts.includes(AUTHORS_KEY), `a failed authors read is never cached: ${res.puts}`);
+});
+
+test('an upstream that never answers is cut off by the timeout: the static listing, byte for byte, uncached and logged', async () => {
+  const res = await run({ path: '/blog/', upstream: { [LIST_SOURCE]: { body: null, hang: true } } });
+  assert.deepEqual([res.status, res.body === STATICS['/blog/'], res.puts], [200, true, []]);
+  assert.ok(res.logs.some((l) => l.startsWith('blog-articles:')), `${res.logs}`);
+});
+
+test('loopback accepts only an http loopback origin with a port', async () => {
+  const accepted = ['http://127.0.0.1:8788', 'http://localhost:1'];
+  const refused = ['http://evil.example', 'http://127.0.0.1.evil:1', 'http://localhost:1/x', 'https://127.0.0.1:1', 'http://user@127.0.0.1:1', null, ''];
+  assert.deepEqual(await mf.loopback(accepted), accepted);
+  assert.deepEqual(await mf.loopback(refused), refused.map(() => null));
+});
+
+test('a cached entry that fails validation is not served as is: bad list rows are skipped, a non-map authors entry is a miss', async () => {
+  const cache = {
+    [KEY]: JSON.stringify([row({ slug: '../x' }), row({ slug: 'bad-title', title: 'two\nlines' }), row()]),
+    [AUTHORS_KEY]: JSON.stringify([{ name: 'x' }]),
+  };
+  const res = await run({ path: '/blog/edge-notes/', cache, upstream: { [AUTHORS]: ok([]), [articleSource('edge-notes')]: ok(article()) } });
+  const index = await run({ path: '/blog/', cache });
+  assert.ok(index.body.includes('edge-notes') && !index.body.includes('../x') && !index.body.includes('bad-title') && !index.body.includes('two\nlines'));
+  // What the code does: the list entry parses (bad rows skipped, the good row shown, no refetch); the authors entry is a miss, so the API is asked and the answer is stored.
+  assert.equal(res.status, 200);
+  assert.ok(!res.calls.includes(LIST_SOURCE));
+  assert.ok(res.calls.includes(AUTHORS), `${res.calls}`);
+  assert.ok(res.puts.includes(AUTHORS_KEY));
 });
 
 test('/blog/<slug> redirects to the article\'s page; the templates themselves answer 404', async () => {

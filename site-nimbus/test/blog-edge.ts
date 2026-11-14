@@ -7,7 +7,7 @@ import path from 'node:path';
 import { build } from 'esbuild';
 import { Miniflare } from 'miniflare';
 
-export interface Upstream { status?: number; body: unknown }
+export interface Upstream { status?: number; body: unknown; /** Never answers; rejects only when the request's signal aborts. */ hang?: boolean }
 export interface Scenario {
   path: string;
   method?: string;
@@ -29,10 +29,11 @@ export interface Outcome {
 }
 
 const ENTRY = `
-import { handler } from ${JSON.stringify(path.resolve(import.meta.dirname, '../../functions/blog/[[path]].ts'))};
+import { handler, loopback } from ${JSON.stringify(path.resolve(import.meta.dirname, '../../functions/blog/[[path]].ts'))};
 export default {
   async fetch(req) {
     const s = await req.json();
+    if (s.loopback) return Response.json(s.loopback.map((v) => loopback(v ?? undefined)));
     const calls = [], puts = [], logs = [], pending = [];
     const store = new Map(Object.entries(s.cache ?? {}));
     const key = (k) => (typeof k === 'string' ? k : k.url);
@@ -40,11 +41,12 @@ export default {
       match: async (k) => (store.has(key(k)) ? new Response(store.get(key(k))) : undefined),
       put: async (k, r) => { puts.push(key(k)); store.set(key(k), await r.text()); },
     };
-    const fetcher = async (input) => {
+    const fetcher = async (input, init) => {
       const u = typeof input === 'string' ? input : input.url;
       calls.push(u);
       const a = (s.upstream ?? {})[u];
       if (!a) throw new TypeError('network connection lost');
+      if (a.hang) return new Promise((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal.reason)));
       return new Response(typeof a.body === 'string' ? a.body : JSON.stringify(a.body), { status: a.status ?? 200, headers: { 'content-type': 'application/json' } });
     };
     const asset = (input) => {
@@ -80,6 +82,11 @@ export async function edge() {
       const res = await mf.dispatchFetch('http://edge.test/', { method: 'POST', body: JSON.stringify(s) });
       if (res.status !== 200) throw new Error(`edge harness: HTTP ${res.status}: ${await res.text()}`);
       return res.json() as Promise<Outcome>;
+    },
+    /** The function's `loopback` over each value (null stands for undefined). */
+    async loopback(values: (string | null)[]): Promise<(string | null)[]> {
+      const res = await mf.dispatchFetch('http://edge.test/', { method: 'POST', body: JSON.stringify({ loopback: values }) });
+      return res.json() as Promise<(string | null)[]>;
     },
     dispose: () => mf.dispose(),
   };

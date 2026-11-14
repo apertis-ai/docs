@@ -83,9 +83,12 @@ export const revivesLegacyPath = (r: LiveRow) =>
 const time = (iso: string) => Date.parse(iso);
 const newestFirst = (a: LiveRow, b: LiveRow) => time(b.published) - time(a.published) || (a.slug < b.slug ? -1 : 1);
 
+/** A hung upstream throws after this long and takes the caller's fallback path. */
+export const FETCH_TIMEOUT_MS = 3000;
+
 /** The endpoint's `data`, or null when it answers 404; any other failure throws. */
 async function read(fetcher: typeof fetch, url: string): Promise<unknown> {
-  const res = await fetcher(url, { headers: { accept: 'application/json', 'user-agent': 'apertis-docs-blog-articles' } });
+  const res = await fetcher(url, { headers: { accept: 'application/json', 'user-agent': 'apertis-docs-blog-articles' }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   const body = await res.json() as { success?: boolean; message?: string; data?: unknown };
@@ -108,7 +111,8 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
 
 /**
  * The article body as HTML: micromark with its defaults (raw HTML escaped, `javascript:` and other unsafe
- * destinations emptied). A link whose destination was emptied loses the attribute, so it points nowhere.
+ * destinations emptied). A link whose destination was emptied and has no title loses the attribute, so it points nowhere; with a title
+ * (`[a](javascript:x "t")`) it stays `<a href="" title="t">`, which points nowhere harmful.
  */
 export const renderBody = (markdown: string) => micromark(markdown).replace(/<a href="">/g, '<a>');
 

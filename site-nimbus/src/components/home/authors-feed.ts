@@ -31,7 +31,7 @@ export function liveAuthors(data: unknown): LiveAuthors {
 }
 
 export async function fetchAuthors(fetcher: typeof fetch): Promise<LiveAuthors> {
-  const res = await fetcher(SOURCE, { headers: { accept: 'application/json', 'user-agent': 'apertis-docs-blog-authors' } });
+  const res = await fetcher(SOURCE, { headers: { accept: 'application/json', 'user-agent': 'apertis-docs-blog-authors' }, signal: AbortSignal.timeout(3000) });
   if (!res.ok) throw new Error(`${SOURCE}: HTTP ${res.status}`);
   const body = await res.json() as { success?: boolean; message?: string; data?: unknown };
   if (body.success === false) throw new Error(`${SOURCE}: ${body.message || 'not successful'}`);
