@@ -61,7 +61,7 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   // An article: the page header of a document, with the article's front matter.
   const page = html('blog/choosing-a-plan/index.html');
   assert.match(page, /<h1 id="choosing-a-plan">Choosing a plan<\/h1>/);
-  assert.match(page, /class="doc-header__tag"[^>]*>Guides</);
+  assert.match(page, /class="doc-header__tag"[^>]*><a href="\/blog\/categories\/guides\/">Guides<\/a></);
   // The byline links to the author's page, with their avatar (initials until a portrait is committed).
   assert.match(page, /<dt>Author<\/dt><dd class="byline-author"><a href="\/blog\/authors\/apertis-team\/"><span class="avatar"[^>]*>AT<\/span>Apertis team<\/a><\/dd>/);
   // Its tags link to the tag pages, in front matter order.
@@ -70,12 +70,21 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
 
   // Listing pages: a tag lists the articles that carry it, the tags index every tag with its count, an author's
   // page their articles by year with a table of contents of the titles. A draft's tag makes no page.
-  const titles = (h: string) => [...h.matchAll(/class="article-row" href="([^"]+)"/g)].map((m) => m[1]);
+  const titles = (h: string) => [...h.matchAll(/class="article-row__link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(titles(html('blog/tags/billing/index.html')), ['/blog/routing-requests-across-providers/', '/blog/choosing-a-plan/']);
   assert.deepEqual(titles(html('blog/tags/plans/index.html')), ['/blog/choosing-a-plan/']);
   assert.deepEqual([...html('blog/tags/index.html').matchAll(/<a class="tag" href="([^"]+)">#[a-z-]+<span class="tag__count">(\d+)<\/span>/g)].map((m) => [m[1], m[2]]),
     [['/blog/tags/billing/', '2'], ['/blog/tags/plans/', '1'], ['/blog/tags/routing/', '1']]);
   assert.equal(fs.existsSync(path.join(dist, 'blog/tags/drafts-only')), false);
+  // The same for categories: a category lists its articles, the index every category with its count.
+  assert.deepEqual(titles(html('blog/categories/guides/index.html')), ['/blog/choosing-a-plan/']);
+  assert.deepEqual(titles(html('blog/categories/engineering/index.html')), ['/blog/routing-requests-across-providers/']);
+  assert.match(html('blog/categories/engineering/index.html'), /<h1>Engineering<\/h1>/);
+  assert.match(html('blog/categories/engineering/index.html'), /<a href="\/blog\/categories\/">Categories<\/a>/);
+  assert.deepEqual([...html('blog/categories/index.html').matchAll(/<a class="tag" href="([^"]+)">([A-Za-z]+)<span class="tag__count">(\d+)<\/span>/g)].map((m) => [m[1], m[2], m[3]]),
+    [['/blog/categories/engineering/', 'Engineering', '1'], ['/blog/categories/guides/', 'Guides', '1']]);
+  assert.match(index, /<a href="\/blog\/categories\/">Browse by category<\/a>/);
+  assert.match(index, /<a class="article-row__category" href="\/blog\/categories\/guides\/">Guides<\/a>/);
   const author = html('blog/authors/apertis-team/index.html');
   assert.match(author, /<h1>Apertis team<\/h1>/);
   assert.deepEqual(titles(author), ['/blog/routing-requests-across-providers/', '/blog/choosing-a-plan/']);

@@ -3,7 +3,7 @@ title: "We moved CI three times in two months"
 description: "Our CI moved from GitHub-hosted runners to a Mac mini, a GCE fleet and per-job microVMs in two months: the walls, the measured costs and what we got wrong."
 date: 2026-11-13
 author: "Yu-Ting Lee, CTO of Apertis"
-category: Engineering
+category: CI
 tags: ci, infrastructure, cost
 ---
 

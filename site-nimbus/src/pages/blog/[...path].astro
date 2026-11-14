@@ -3,8 +3,9 @@
 // manifest entry, and the /blog/ index, which says the first articles are on their way while none is
 // published (operator review 2026-10-03: readers should know articles live here). Publication is decided
 // by the converter (drafts get no manifest entry); the collection only supplies the body and front matter.
-// The published articles also make three kinds of listing page (operator, 2026-11-14): /blog/tags/ (every
-// tag), /blog/tags/<tag>/ (the articles carrying it) and /blog/authors/<slug>/ (an author and their articles,
+// The published articles also make listing pages (operator, 2026-11-14): /blog/tags/ (every
+// tag), /blog/tags/<tag>/ (the articles carrying it), /blog/categories/ and /blog/categories/<slug>/ (the same for
+// categories) and /blog/authors/<slug>/ (an author and their articles,
 // by year). Like the index they are not manifest documents: no Markdown artifact, no search entry.
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -13,7 +14,7 @@ import ArticleList from '../../components/home/ArticleList.astro';
 import AuthorAvatar from '../../components/home/AuthorAvatar.astro';
 import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
 import Toc from '../../components/shell/Toc.astro';
-import { isNativeArticle, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
+import { categoryPath, CATEGORIES_PATH, isNativeArticle, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
 import type { ManifestDocument } from '../../contracts/manifest.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
@@ -27,12 +28,15 @@ export async function getStaticPaths() {
   });
   const rows = await articleRows();
   const tags = [...new Set(rows.flatMap((r) => r.tags))].sort();
+  const categories = [...new Map(rows.map((r) => [categoryPath(r.category), r.category])).entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).map(([, label]) => label);
   const authors = [...new Map(rows.map((r) => [r.author.slug, r.author])).values()];
   return [
     { params: { path: undefined }, props: {} },
     ...pages,
     ...(tags.length ? [{ params: { path: 'tags' }, props: { tags, rows } }] : []),
     ...tags.map((tag) => ({ params: { path: `tags/${tag}` }, props: { tag, rows: rows.filter((r) => r.tags.includes(tag)) } })),
+    ...(categories.length ? [{ params: { path: 'categories' }, props: { categories, rows } }] : []),
+    ...categories.map((category) => ({ params: { path: categoryPath(category).slice('/blog/'.length, -1) }, props: { category, rows: rows.filter((r) => r.category === category) } })),
     // The newest article's byline is the author's current role.
     ...authors.map((a) => ({ params: { path: `authors/${a.slug}` }, props: { author: rows.find((r) => r.author.slug === a.slug)!.author, rows: rows.filter((r) => r.author.slug === a.slug) } })),
   ];
@@ -41,13 +45,15 @@ export async function getStaticPaths() {
 interface Props {
   doc?: ManifestDocument;
   entry?: CollectionEntry<'articles'>;
-  /** A listing page: every tag (`tags`), one tag's articles (`tag`) or one author's (`author`), with its `rows`. */
+  /** A listing page: every tag (`tags`), one tag's articles (`tag`), every category (`categories`), one category's articles (`category`) or one author's (`author`), with its `rows`. */
   tags?: string[];
   tag?: string;
+  categories?: string[];
+  category?: string;
   author?: Author;
   rows?: ArticleRow[];
 }
-const { doc, entry, tags, tag, author, rows = [] } = Astro.props;
+const { doc, entry, tags, tag, categories, category, author, rows = [] } = Astro.props;
 const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
 // The article's social card, when src/assets/og/<slug>.png exists (1200x630).
@@ -115,13 +121,35 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
       </div>
     </main>
   </BaseLayout>
+) : category || categories ? (
+  <BaseLayout doc={category ? listing(`page:blog-category:${categoryPath(category)}`, categoryPath(category), category) : listing('page:blog-categories', CATEGORIES_PATH, 'Categories')} buildId={manifest.buildId}
+    seo={{ description: category ? `${category} articles on the Apertis blog.` : 'Every category on the Apertis blog.' }}>
+    <main class="shell-container blog-index" id="main">
+      <div class="blog-index__intro">
+        <p class="blog-index__crumb"><a href="/blog/">Blog</a>{category && <Fragment> / <a href={CATEGORIES_PATH}>Categories</a></Fragment>}</p>
+        <h1>{category ?? 'Categories'}</h1>
+        <p>{category ? count(rows.length) : 'Every category on the Apertis blog.'}</p>
+      </div>
+      <div class="blog-index__list">
+        {category ? <ArticleList rows={rows} describe /> : (
+          <ul class="tag-list tag-list--index">
+            {categories!.map((c) => <li><a class="tag" href={categoryPath(c)}>{c}<span class="tag__count">{rows.filter((r) => r.category === c).length}</span></a></li>)}
+          </ul>
+        )}
+      </div>
+    </main>
+  </BaseLayout>
 ) : (
   <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles} seo={{ description: 'Guides, updates and field notes from the team building Apertis.' }}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <h1>Apertis blog</h1>
         <p>Guides, updates and field notes from the team building Apertis.</p>
-        {hasTags && <p class="blog-index__more"><a href={TAGS_PATH}>Browse by tag</a></p>}
+        {(hasTags || hasArticles) && (
+          <p class="blog-index__more">
+            {hasTags && <a href={TAGS_PATH}>Browse by tag</a>}{hasTags && hasArticles && ' · '}{hasArticles && <a href={CATEGORIES_PATH}>Browse by category</a>}
+          </p>
+        )}
       </div>
       <div class="blog-index__list">
         {hasArticles ? <ArticleList filter describe /> : (

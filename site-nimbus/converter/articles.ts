@@ -11,7 +11,7 @@ import path from 'node:path';
 
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import type { InventoryRoute } from '../src/contracts/navigation.ts';
-import { ARTICLES_ROOT, bylineParts, parseRelated, parseTags, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
+import { ARTICLES_ROOT, bylineParts, categorySlug, parseRelated, parseTags, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
 import type { ManifestDocument } from '../src/contracts/manifest.ts';
 
 export { ARTICLES_ROOT };
@@ -59,6 +59,7 @@ function parse(file: string, text: string): Omit<Article, 'slug' | 'sourcePath'>
   if (unknown.length) throw new ArticleError(`${file}: unknown front matter ${unknown.join(', ')}`);
   for (const k of REQUIRED) if (!fields[k]) throw new ArticleError(`${file}: ${k} is required`);
   if (fields.title.length > TITLE_MAX) throw new ArticleError(`${file}: title is ${fields.title.length} characters; at most ${TITLE_MAX} (two lines in the page header)`);
+  if (!categorySlug(fields.category)) throw new ArticleError(`${file}: category must contain a Latin letter or digit (it names the category page)`);
   if (!bylineParts(fields.author).slug) throw new ArticleError(`${file}: author must start with a name in Latin letters or digits (it names the author page)`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.date) || Number.isNaN(Date.parse(fields.date))) throw new ArticleError(`${file}: date must be YYYY-MM-DD`);
   if (fields.draft !== undefined && !['true', 'false'].includes(fields.draft)) throw new ArticleError(`${file}: draft must be true or false`);
@@ -80,7 +81,7 @@ function parse(file: string, text: string): Omit<Article, 'slug' | 'sourcePath'>
 export function readArticles(siteRoot: string): Article[] {
   const dir = path.join(siteRoot, ARTICLES_ROOT);
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir).sort().map((name) => {
+  const articles = fs.readdirSync(dir).sort().map((name) => {
     const file = path.join(dir, name);
     const rel = `site-nimbus/${ARTICLES_ROOT}/${name}`;
     if (!name.endsWith('.md') || !fs.statSync(file).isFile()) throw new ArticleError(`${rel}: only <slug>.md files belong in ${ARTICLES_ROOT}`);
@@ -88,6 +89,15 @@ export function readArticles(siteRoot: string): Article[] {
     if (!SLUG.test(slug)) throw new ArticleError(`${rel}: slug must be lowercase words joined by hyphens`);
     return { slug, sourcePath: rel, ...parse(rel, fs.readFileSync(file, 'utf8')) };
   }).sort((a, b) => (a.date === b.date ? (a.slug < b.slug ? -1 : 1) : a.date < b.date ? 1 : -1));
+  // Two labels that make one slug would share one category page.
+  const labels = new Map<string, string>();
+  for (const a of articles) {
+    const slug = categorySlug(a.category);
+    const other = labels.get(slug);
+    if (other !== undefined && other !== a.category) throw new ArticleError(`${a.sourcePath}: category "${a.category}" and "${other}" both make the page /blog/categories/${slug}/; use one label`);
+    labels.set(slug, a.category);
+  }
+  return articles;
 }
 
 export const articlePath = (slug: string) => `/blog/${slug}/`;

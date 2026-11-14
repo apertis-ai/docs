@@ -11,7 +11,7 @@ import path from 'node:path';
 import { ArticleError, readArticles } from '../converter/articles.ts';
 import { convert, readInventory } from '../converter/convert.ts';
 import { publicationFiles } from '../converter/integration.ts';
-import { isNativeArticle } from '../src/contracts/articles.ts';
+import { categoryPath, categorySlug, isNativeArticle } from '../src/contracts/articles.ts';
 import { validateManifest } from '../src/contracts/validate-manifest.ts';
 
 const site = path.resolve(import.meta.dirname, '..');
@@ -50,6 +50,25 @@ test('published articles become blog:<slug> entries eligible everywhere, with a 
 test('a slug that names a retired legacy blog route is refused', () => {
   assert.throws(() => convert({ outRoot: tmp(), siteRoot: path.join(fixtures, 'collide') }),
     (e: unknown) => e instanceof ArticleError && /\/blog\/welcome is an inventory route/.test(e.message));
+});
+
+test('a category label makes its page slug: lowercase, runs of other characters become one hyphen, none at the ends', () => {
+  assert.equal(categorySlug('CI'), 'ci');
+  assert.equal(categorySlug(' Model  Deep-Dives! '), 'model-deep-dives');
+  assert.equal(categoryPath('CI'), '/blog/categories/ci/');
+});
+
+test('two category labels that make one slug fail the build, and a label with no letter or digit has no page', () => {
+  const article = (category: string) => `---\ntitle: T\ndescription: D\ndate: 2026-09-28\nauthor: A\ncategory: ${category}\n---\nBody.\n`;
+  const root = tmp();
+  fs.mkdirSync(path.join(root, 'src/articles'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'src/articles/a.md'), article('Dev Tools'));
+  fs.writeFileSync(path.join(root, 'src/articles/b.md'), article('dev-tools'));
+  assert.throws(() => readArticles(root), (e: unknown) => e instanceof ArticleError && /category "[^"]+" and "[^"]+" both make the page \/blog\/categories\/dev-tools\//.test(e.message));
+  fs.writeFileSync(path.join(root, 'src/articles/b.md'), article('Dev Tools'));
+  assert.equal(readArticles(root).length, 2, 'one label on two articles is fine');
+  fs.writeFileSync(path.join(root, 'src/articles/b.md'), article('???'));
+  assert.throws(() => readArticles(root), (e: unknown) => e instanceof ArticleError && /category must contain a Latin letter or digit/.test(e.message));
 });
 
 test('malformed articles fail loudly: front matter, slug, H1 in the body, MDX', () => {
