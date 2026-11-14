@@ -63,7 +63,7 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   assert.match(page, /<h1 id="choosing-a-plan">Choosing a plan<\/h1>/);
   assert.match(page, /class="doc-header__tag"[^>]*><a href="\/blog\/categories\/guides\/">Guides<\/a></);
   // The byline links to the author's page, with their avatar (initials until a portrait is committed).
-  assert.match(page, /<dt>Author<\/dt><dd class="byline-author"><a href="\/blog\/authors\/apertis-team\/"><span class="avatar"[^>]*>AT<\/span>Apertis team<\/a><\/dd>/);
+  assert.match(page, /<dt>Author<\/dt><dd class="byline-author"><a href="\/blog\/authors\/apertis-team\/"><span class="avatar"[^>]*>AT<\/span><span data-author="apertis-team" data-author-field="name">Apertis team<\/span><\/a><\/dd>/);
   // Its tags link to the tag pages, in front matter order.
   assert.deepEqual([...page.matchAll(/<a class="tag" href="([^"]+)">#([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]), [['/blog/tags/plans/', 'plans'], ['/blog/tags/billing/', 'billing']]);
   assert.match(page, /"keywords":"plans, billing"/);
@@ -86,7 +86,9 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   assert.match(index, /<a href="\/blog\/categories\/">Browse by category<\/a>/);
   assert.match(index, /<a class="article-row__category" href="\/blog\/categories\/guides\/">Guides<\/a>/);
   const author = html('blog/authors/apertis-team/index.html');
-  assert.match(author, /<h1>Apertis team<\/h1>/);
+  assert.match(author, /<h1 data-author="apertis-team" data-author-field="name">Apertis team<\/h1>/);
+  // A bare name has no role: the line is there for the live title, hidden.
+  assert.match(author, /<p class="author-page__role" data-author="apertis-team" data-author-field="title" hidden><\/p>/);
   assert.deepEqual(titles(author), ['/blog/routing-requests-across-providers/', '/blog/choosing-a-plan/']);
   assert.deepEqual([...author.match(/<aside class="doc-page__toc[\s\S]*?<\/aside>/)![0].matchAll(/<a href="#([^"]+)">([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]),
     [['year-2026', '2026'], ['article-routing-requests-across-providers', 'Routing requests across providers'], ['article-choosing-a-plan', 'Choosing a plan']]);

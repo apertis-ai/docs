@@ -12,6 +12,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocLayout from '../../layouts/DocLayout.astro';
 import ArticleList from '../../components/home/ArticleList.astro';
 import AuthorAvatar from '../../components/home/AuthorAvatar.astro';
+import LiveAuthors from '../../components/home/LiveAuthors.astro';
 import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
 import Toc from '../../components/shell/Toc.astro';
 import { categoryPath, CATEGORIES_PATH, isNativeArticle, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
@@ -84,8 +85,8 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
           <header class="author-page__header">
             <AuthorAvatar author={author} size={72} />
             <div>
-              <h1>{author.name}</h1>
-              {author.role && <p class="author-page__role">{author.role}</p>}
+              <h1 data-author={author.slug} data-author-field="name">{author.name}</h1>
+              <p class="author-page__role" data-author={author.slug} data-author-field="title" hidden={!author.role}>{author.role}</p>
               <p class="author-page__count">{count(rows.length)}</p>
             </div>
           </header>
@@ -96,6 +97,7 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
             </section>
           ))}
         </div>
+        <LiveAuthors />
       </main>
       <aside class="doc-page__toc doc-page__toc--open" aria-label="Articles">
         <p class="doc-page__toc-title">Articles</p>

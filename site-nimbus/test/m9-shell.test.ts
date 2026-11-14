@@ -297,13 +297,20 @@ test('static parts are server-rendered without hydration; homepage links all res
   const served = new Set(manifest().documents.filter((d) => d.eligibility.publish).map((d) => d.servedPath));
   const internal = await page.$$eval('main a[href^="/"], footer a[href^="/"], header a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
   // The homepage body links each internal destination once: the quick start, the start items and the blog.
-  const body = await page.$$eval('main a[href^="/"]', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
+  // (An article row also links its category page, a listing outside the manifest: checked on its own below.)
+  const body = await page.$$eval('main a[href^="/"]:not(.article-row__category)', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
+  const categoryLinks = [...new Set(await page.$$eval('main a.article-row__category', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!)))];
+  assert.ok(categoryLinks.length > 0);
+  for (const href of categoryLinks) {
+    assert.match(href, /^\/blog\/categories\/[a-z0-9-]+\/$/);
+    assert.equal((await page.request.get(base + href)).status(), 200, `${href} is not served`);
+  }
   assert.deepEqual(body.sort(), [...['/api', '/billing/subscription-plans', '/blog/', '/getting-started/quick-start/', '/installation/claude-code', '/installation/models', '/installation/scripts', '/intro'],
     // "From the blog" lists the three newest articles.
     ...manifest().documents.filter((d) => d.servedPath.startsWith('/blog/')).map((d) => d.servedPath).slice(0, 3)].sort());
   // /blog/ is the articles index and /changelog/ the release notes (openspec docs-live-catalog), not manifest
   // documents; both are always served.
-  for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
+  for (const href of internal) assert.ok(href === '/blog/' || href === '/changelog/' || categoryLinks.includes(href) || served.has(href.endsWith('/') ? href : `${href}/`), `${href} is not a published route`);
   assert.equal((await page.request.get(base + '/blog/')).status(), 200);
   assert.equal((await page.request.get(base + '/changelog/')).status(), 200);
   // The legacy feature-card destinations stay on the homepage (the Playground is gone, 2026-10-03), with SDKs.
@@ -684,6 +691,39 @@ test('an article header on desktop: the title row runs past the reading column, 
   await page.goto(`${base}/blog/categories/`);
   assert.ok((await page.$$eval('.tag-list--index .tag', (els: Element[]) => els.map((x) => x.getAttribute('href')))).includes(d.category[1]));
   await context.close();
+});
+
+test('the byline and the author page swap in the live author after load: name, title and avatar from /_nimbus/blog-authors, text never parsed as HTML; an unknown author, a failing feed or an avatar that does not load keeps the build copy', { skip }, async () => {
+  const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
+  const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
+  const read = () => {
+    const q = (s: string) => document.querySelector<HTMLElement>(s);
+    const avatar = q('.avatar')!;
+    return { name: q('[data-author-field="name"]')!.textContent, bold: document.querySelectorAll('[data-author] b').length, avatar: [avatar.tagName, avatar.getAttribute('src'), avatar.offsetWidth, avatar.offsetHeight],
+      title: q('[data-author-field="title"]') && [q('[data-author-field="title"]')!.textContent, q('[data-author-field="title"]')!.checkVisibility()], slug: q('[data-author]')!.dataset.author };
+  };
+  const visit = async (feed: object | number, servedPath: string, avatarLoads = true) => {
+    const context = await browser.newContext(VIEWS[1440]);
+    await context.route('**/_nimbus/blog-authors', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill(typeof feed === 'number' ? { status: feed, json: { error: 'authors unavailable' } } : { json: feed }));
+    await context.route('https://avatars.example/**', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill(avatarLoads ? { contentType: 'image/png', body: PNG } : { status: 404, body: '' }));
+    const page = await context.newPage();
+    await page.goto(base + servedPath, { waitUntil: 'networkidle' });
+    const seen = await page.evaluate(read);
+    await context.close();
+    return seen;
+  };
+  const built = await visit(502, article);
+  const authorPage = `/blog/authors/${built.slug}/`;
+  const builtPage = await visit(502, authorPage);
+  const live = { [built.slug!]: { name: 'Live <b>Name</b>', title: 'Live title', avatar: 'https://avatars.example/live.png' } };
+  const swapped = await visit(live, article);
+  assert.deepEqual([swapped.name, swapped.bold, swapped.avatar], ['Live <b>Name</b>', 0, ['IMG', 'https://avatars.example/live.png', 24, 24]], 'the byline shows the live name and avatar, as text, at the same size');
+  assert.equal(swapped.title, null, 'the byline carries no title');
+  const swappedPage = await visit(live, authorPage);
+  assert.deepEqual([swappedPage.name, swappedPage.title, swappedPage.avatar], ['Live <b>Name</b>', ['Live title', true], ['IMG', 'https://avatars.example/live.png', 72, 72]]);
+  assert.deepEqual((await visit({ [built.slug!]: { name: built.name, title: '', avatar: '' } }, authorPage)).title, ['', false], 'an author without a live title shows none');
+  assert.deepEqual(await visit({ 'someone-else': live[built.slug!] }, authorPage), builtPage, 'an author the feed does not hold keeps the build copy');
+  assert.deepEqual((await visit(live, article, false)).avatar, built.avatar, 'an avatar that does not load keeps the committed portrait');
 });
 
 test('two-row header and LINE Seed display face (canary step 5a): search on the right beside the theme switch, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
