@@ -7,6 +7,9 @@
 // tag), /blog/tags/<tag>/ (the articles carrying it), /blog/categories/ and /blog/categories/<slug>/ (the same for
 // categories) and /blog/authors/<slug>/ (an author and their articles,
 // by year). Like the index they are not manifest documents: no Markdown artifact, no search entry.
+// Two more pages are templates the edge renders live articles into (functions/blog/[[path]].ts): /blog/_article/
+// (an article, from DocLayout) and /blog/_listing/ (a tag or category page). Placeholder values only, noindex, and
+// never served as themselves (the function answers 404 there).
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocLayout from '../../layouts/DocLayout.astro';
@@ -15,7 +18,7 @@ import AuthorAvatar from '../../components/home/AuthorAvatar.astro';
 import LiveAuthors from '../../components/home/LiveAuthors.astro';
 import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
 import Toc from '../../components/shell/Toc.astro';
-import { categoryPath, CATEGORIES_PATH, isNativeArticle, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
+import { ARTICLE_TEMPLATE_PATH, categoryPath, CATEGORIES_PATH, isNativeArticle, LISTING_TEMPLATE_PATH, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
 import type { ManifestDocument } from '../../contracts/manifest.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
@@ -33,6 +36,8 @@ export async function getStaticPaths() {
   const authors = [...new Map(rows.map((r) => [r.author.slug, r.author])).values()];
   return [
     { params: { path: undefined }, props: {} },
+    { params: { path: ARTICLE_TEMPLATE_PATH.slice('/blog/'.length, -1) }, props: { template: 'article' } },
+    { params: { path: LISTING_TEMPLATE_PATH.slice('/blog/'.length, -1) }, props: { template: 'listing', category: 'Category', rows: [] } },
     ...pages,
     ...(tags.length ? [{ params: { path: 'tags' }, props: { tags, rows } }] : []),
     ...tags.map((tag) => ({ params: { path: `tags/${tag}` }, props: { tag, rows: rows.filter((r) => r.tags.includes(tag)) } })),
@@ -53,8 +58,10 @@ interface Props {
   category?: string;
   author?: Author;
   rows?: ArticleRow[];
+  /** A template for live articles: `article` (an article page) or `listing` (a tag or category page, with `category`). */
+  template?: 'article' | 'listing';
 }
-const { doc, entry, tags, tag, categories, category, author, rows = [] } = Astro.props;
+const { doc, entry, tags, tag, categories, category, author, rows = [], template } = Astro.props;
 const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
 // The article's social card, when src/assets/og/<slug>.png exists (1200x630).
@@ -72,7 +79,12 @@ const count = (n: number) => `${n} ${n === 1 ? 'article' : 'articles'}`;
 const years = [...new Set(rows.map((r) => r.date.slice(0, 4)))].map((year) => ({ year, rows: rows.filter((r) => r.date.startsWith(year)) }));
 const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()).some((r) => r.tags.length > 0);
 ---
-{doc && rendered && data ? (
+{template === 'article' ? (
+  <DocLayout doc={listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article')} buildId={manifest.buildId} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
+    <h1 id={titleId('Article')}>Article</h1>
+    <p data-live-body>Body</p>
+  </DocLayout>
+) : doc && rendered && data ? (
   <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description, image: card, tags: parseTags(data.tags) }}>
     <h1 id={titleId(data.title)}>{data.title}</h1>
     <rendered.Content />
@@ -124,8 +136,8 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
     </main>
   </BaseLayout>
 ) : category || categories ? (
-  <BaseLayout doc={category ? listing(`page:blog-category:${categoryPath(category)}`, categoryPath(category), category) : listing('page:blog-categories', CATEGORIES_PATH, 'Categories')} buildId={manifest.buildId}
-    seo={{ description: category ? `${category} articles on the Apertis blog.` : 'Every category on the Apertis blog.' }}>
+  <BaseLayout doc={template ? listing('page:blog-listing-template', LISTING_TEMPLATE_PATH, category!) : category ? listing(`page:blog-category:${categoryPath(category)}`, categoryPath(category), category) : listing('page:blog-categories', CATEGORIES_PATH, 'Categories')} buildId={manifest.buildId}
+    noindex={template === 'listing'} seo={{ description: category ? `${category} articles on the Apertis blog.` : 'Every category on the Apertis blog.' }}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <p class="blog-index__crumb"><a href="/blog/">Blog</a>{category && <Fragment> / <a href={CATEGORIES_PATH}>Categories</a></Fragment>}</p>

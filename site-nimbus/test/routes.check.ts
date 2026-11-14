@@ -43,6 +43,15 @@ for (const path of ['/does-not-exist', '/api/does-not-exist', '/api/ask', '/api/
   });
 }
 
+// functions/blog/[[path]].ts renders live articles into these templates and never serves them as themselves.
+for (const path of ['/blog/_article/', '/blog/_listing/']) {
+  test(`GET ${path} (a live article template) is a real 404`, async () => {
+    const res = await get(path);
+    assert.equal(res.status, 404);
+    assert.doesNotMatch(await res.text(), /data-live-body|blog-(article|listing)-template/);
+  });
+}
+
 test('POST /api/ask reaches the root Pages Function', async () => {
   const res = await get('/api/ask', {
     method: 'POST',
