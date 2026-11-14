@@ -299,7 +299,7 @@ test('static parts are server-rendered without hydration; homepage links all res
   // The homepage body links each internal destination once: the quick start, the start items and the blog.
   // (An article row also links its category page, a listing outside the manifest: checked on its own below.)
   const body = await page.$$eval('main a[href^="/"]:not(.article-row__category)', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!));
-  const categoryLinks = [...new Set(await page.$$eval('main a.article-row__category', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!)))];
+  const categoryLinks: string[] = [...new Set<string>(await page.$$eval('main a.article-row__category', (as: HTMLAnchorElement[]) => as.map((a) => a.getAttribute('href')!)))];
   assert.ok(categoryLinks.length > 0);
   for (const href of categoryLinks) {
     assert.match(href, /^\/blog\/categories\/[a-z0-9-]+\/$/);
