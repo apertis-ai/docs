@@ -17,7 +17,7 @@ import { mainTextSha256 } from '../converter/convert.ts';
 import { servedUrl } from '../src/contracts/page.ts';
 import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
-import { bylineParts, isNativeArticle, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
+import { bylineParts, categoryPath, CATEGORIES_PATH, isNativeArticle, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
@@ -164,10 +164,10 @@ const routes: InventoryRoute[] = inventory.routes;
 const article = (html: string) => html.match(/<article[\s\S]*?<\/article>/)?.[0] ?? '';
 // Native articles (src/articles) have no inventory row and no legacy observation: they are checked on their own below.
 const native = manifest.documents.filter(isNativeArticle);
-// The listing pages the published articles make (src/pages/blog): the tags index, a page per tag and a page per
+// The listing pages the published articles make (src/pages/blog): the tags index, a page per tag, the categories index, a page per category and a page per
 // author. Not manifest documents, like the /blog/ index.
 const publishedArticles = readArticles(root).filter((a) => !a.draft);
-const listings = [...new Set(publishedArticles.flatMap((a) => [...(a.tags.length ? [TAGS_PATH] : []), ...a.tags.map(tagPath), bylineParts(a.author).path]))].map((p) => `${p.slice(1)}index.html`);
+const listings = [...new Set(publishedArticles.flatMap((a) => [...(a.tags.length ? [TAGS_PATH] : []), ...a.tags.map(tagPath), CATEGORIES_PATH, categoryPath(a.category), bylineParts(a.author).path]))].map((p) => `${p.slice(1)}index.html`);
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:') && !isNativeArticle(d));
 // Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
 type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] }; headings?: { removed?: string[] } };
