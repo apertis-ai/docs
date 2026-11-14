@@ -677,6 +677,39 @@ test('an article header on desktop: the title row runs past the reading column, 
   await context.close();
 });
 
+test('the byline and the author page swap in the live author after load: name, title and avatar from /_nimbus/blog-authors, text never parsed as HTML; an unknown author, a failing feed or an avatar that does not load keeps the build copy', { skip }, async () => {
+  const article = manifest().documents.find((d) => d.servedPath.startsWith('/blog/'))!.servedPath;
+  const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
+  const read = () => {
+    const q = (s: string) => document.querySelector<HTMLElement>(s);
+    const avatar = q('.avatar')!;
+    return { name: q('[data-author-field="name"]')!.textContent, bold: document.querySelectorAll('[data-author] b').length, avatar: [avatar.tagName, avatar.getAttribute('src'), avatar.offsetWidth, avatar.offsetHeight],
+      title: q('[data-author-field="title"]') && [q('[data-author-field="title"]')!.textContent, q('[data-author-field="title"]')!.checkVisibility()], slug: q('[data-author]')!.dataset.author };
+  };
+  const visit = async (feed: object | number, servedPath: string, avatarLoads = true) => {
+    const context = await browser.newContext(VIEWS[1440]);
+    await context.route('**/_nimbus/blog-authors', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill(typeof feed === 'number' ? { status: feed, json: { error: 'authors unavailable' } } : { json: feed }));
+    await context.route('https://avatars.example/**', (route: { fulfill: (r: object) => Promise<void> }) => route.fulfill(avatarLoads ? { contentType: 'image/png', body: PNG } : { status: 404, body: '' }));
+    const page = await context.newPage();
+    await page.goto(base + servedPath, { waitUntil: 'networkidle' });
+    const seen = await page.evaluate(read);
+    await context.close();
+    return seen;
+  };
+  const built = await visit(502, article);
+  const authorPage = `/blog/authors/${built.slug}/`;
+  const builtPage = await visit(502, authorPage);
+  const live = { [built.slug!]: { name: 'Live <b>Name</b>', title: 'Live title', avatar: 'https://avatars.example/live.png' } };
+  const swapped = await visit(live, article);
+  assert.deepEqual([swapped.name, swapped.bold, swapped.avatar], ['Live <b>Name</b>', 0, ['IMG', 'https://avatars.example/live.png', 24, 24]], 'the byline shows the live name and avatar, as text, at the same size');
+  assert.equal(swapped.title, null, 'the byline carries no title');
+  const swappedPage = await visit(live, authorPage);
+  assert.deepEqual([swappedPage.name, swappedPage.title, swappedPage.avatar], ['Live <b>Name</b>', ['Live title', true], ['IMG', 'https://avatars.example/live.png', 72, 72]]);
+  assert.deepEqual((await visit({ [built.slug!]: { name: built.name, title: '', avatar: '' } }, authorPage)).title, ['', false], 'an author without a live title shows none');
+  assert.deepEqual(await visit({ 'someone-else': live[built.slug!] }, authorPage), builtPage, 'an author the feed does not hold keeps the build copy');
+  assert.deepEqual((await visit(live, article, false)).avatar, built.avatar, 'an avatar that does not load keeps the committed portrait');
+});
+
 test('two-row header and LINE Seed display face (canary step 5a): search on the right beside the theme switch, section tabs under the logo, the current tab underlined; titles in LINE Seed 400', { skip }, async () => {
   const { context, page } = await open('/getting-started/quick-start/', VIEWS[1440]);
   await page.evaluate(() => document.fonts.ready);
