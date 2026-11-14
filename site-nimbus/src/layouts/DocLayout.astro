@@ -12,6 +12,7 @@ import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/shell/Sidebar.astro';
 import Toc from '../components/shell/Toc.astro';
 import AuthorAvatar from '../components/home/AuthorAvatar.astro';
+import LiveAuthors from '../components/home/LiveAuthors.astro';
 import PageActions from '../components/shell/PageActions.tsx';
 import TocMobile from '../components/shell/TocMobile.tsx';
 import CodeTabs from '../components/CodeTabs.astro';
@@ -102,7 +103,7 @@ const related = native.length
           {header.description && <p class="doc-header__desc" set:html={header.description} />}
           <div class="doc-header__meta" data-pagefind-ignore="all">
             <dl class:list={['doc-meta', { 'doc-meta--byline': article }]}>
-              {author && <div><dt>Author</dt><dd class="byline-author"><a href={author.path}><AuthorAvatar author={author} size={24} />{author.name}</a></dd></div>}
+              {author && <div><dt>Author</dt><dd class="byline-author"><a href={author.path}><AuthorAvatar author={author} size={24} /><span data-author={author.slug} data-author-field="name">{author.name}</span></a></dd></div>}
               <div><dt>{article ? 'Published' : 'Updated'}</dt><dd><time datetime={meta.updated}>{displayDate(meta.updated)}</time></dd></div>
               <div><dt>Reading time</dt><dd>{meta.readingMinutes} min</dd></div>
               {!article && <div class="doc-header__edit"><a data-edit={editUrl(doc.sourcePath)} target="_blank" rel="noopener">Edit this page</a></div>}
@@ -128,6 +129,7 @@ const related = native.length
         {hasCodeTabs && <CodeTabs />}
         <Fragment set:html={body.html} />
       </article>
+      {author && <LiveAuthors />}
       {related.length > 0 && (
         <section class="related-articles" aria-labelledby="related-articles-title" data-pagefind-ignore="all">
           <h2 id="related-articles-title">Related articles</h2>
