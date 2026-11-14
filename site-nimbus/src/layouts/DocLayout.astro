@@ -42,13 +42,14 @@ interface Props {
   /** Headings of the rendered body (Astro `render()` headings), for the table of contents. */
   headings?: Heading[];
   /** A native article (src/pages/blog): its front matter replaces the sidebar category and the docs entry. */
-  article?: { category: string; author: string; description: string; image?: SocialImage; tags?: string[] };
+  article?: { category: string; author: string; description: string; image?: SocialImage; tags?: string[]; template?: boolean };
 }
 const { doc, buildId, headings = [], article } = Astro.props;
 const nav = pageNavigation(buildNavigation((inventoryFile as RouteInventory).routes, manifest.documents), doc.id);
 const hasToc = headings.some((h) => h.depth === 2 || h.depth === 3);
 // Converter output (never git at build time): last legacy commit author date and reading time.
-const meta = (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
+// The live article template (src/pages/blog, `template`) has no source: placeholders the edge replaces.
+const meta = article?.template ? { updated: '2000-01-01', readingMinutes: 1 } : (pageMetaFile as Record<string, { updated: string; readingMinutes: number }>)[doc.id];
 if (!meta) throw new Error(`${doc.id}: no page meta in src/content/docs/page-meta.json; run node converter/convert.ts`);
 const entry = article ? null : await getEntry('docs', doc.servedPath.slice(1, -1));
 if (!article && !entry) throw new Error(`${doc.id}: no content entry for ${doc.servedPath}; the front-matter description would be lost`);
@@ -75,7 +76,7 @@ const related = native.length
     .flatMap((e) => native.filter((d) => d.servedPath === `/blog/${e.id}/`))
   : [];
 ---
-<BaseLayout doc={doc} buildId={buildId} nav={nav} seo={seo}>
+<BaseLayout doc={doc} buildId={buildId} nav={nav} seo={seo} noindex={article?.template}>
   <!-- Shiki token colours for the code blocks in the body (Nimbus writes it on every build). -->
   <link slot="head" rel="stylesheet" href="/_nimbus/shiki.css" />
   <div class:list={['doc-page', { 'doc-page--sidebar': nav }]}>
@@ -145,7 +146,9 @@ const related = native.length
       {/* "Was this page helpful?" (openspec docs-reader-shell-extras "Page feedback"): outside <article>, so it
           is outside both the search index (rootSelector: 'article') and the article link set test/dist.check.ts
           reads from <article>...</article>. Server-rendered hidden; the script below reveals it, so a reader
-          without JavaScript sees no dead control. POST /_nimbus/feedback is functions/_nimbus/feedback.ts. */}
+          without JavaScript sees no dead control. POST /_nimbus/feedback is functions/_nimbus/feedback.ts. The live
+          article template has none: feedback accepts only the paths in the built sitemap, and a live article is not one. */}
+      {!article?.template && <Fragment>
       <section class="page-feedback" data-feedback={doc.servedPath} data-pagefind-ignore="all" hidden>
         <p class="page-feedback__prompt">Was this page helpful?</p>
         <div class="page-feedback__choices" role="group" aria-label="Was this page helpful?">
@@ -160,6 +163,7 @@ const related = native.length
         <p class="page-feedback__status" role="status" aria-live="polite" tabindex="-1"></p>
       </section>
       <script is:inline>(()=>{const r=document.currentScript.previousElementSibling,p=r.getAttribute('data-feedback'),c=r.querySelector('.page-feedback__choices'),f=r.querySelector('.page-feedback__form'),s=r.querySelector('.page-feedback__status'),t=r.querySelector('textarea');let h=null,busy=false;r.hidden=false;c.addEventListener('click',e=>{const b=e.target.closest('[data-choice]');if(!b)return;h=b.dataset.choice==='yes';for(const x of c.querySelectorAll('[data-choice]'))x.setAttribute('aria-pressed',String(x===b));f.hidden=false;t.focus()});f.addEventListener('submit',async e=>{e.preventDefault();if(busy)return;busy=true;s.removeAttribute('data-state');s.textContent='';try{const res=await fetch('/_nimbus/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({path:p,helpful:h,comment:t.value||undefined})});if(res.status!==204)throw new Error();s.textContent='Thanks for the feedback.';s.dataset.state='ok';c.hidden=true;f.hidden=true;s.focus()}catch{s.textContent='Feedback was not sent.';s.dataset.state='error'}finally{busy=false}})})()</script>
+      </Fragment>}
     </main>
     {body.count > 0 && <TryIt />}
     {hasToc && (

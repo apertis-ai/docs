@@ -42,3 +42,12 @@ export function bylineParts(byline: string) {
   const initials = (words.length > 1 ? words[0][0] + words[words.length - 1][0] : name.slice(0, 2)).toUpperCase();
   return { name, role, slug, initials, path: `/blog/authors/${slug}/` };
 }
+
+/**
+ * The two pages the edge renders live articles into (functions/blog/[[path]].ts): an article page and a tag or
+ * category page, built from the same layouts with placeholder values. Never documents of their own: noindex,
+ * outside the manifest, the sitemap and the search index, and the function answers 404 when either is asked for.
+ * The leading underscore keeps them out of every slug (no article, tag or category can be named so).
+ */
+export const ARTICLE_TEMPLATE_PATH = '/blog/_article/';
+export const LISTING_TEMPLATE_PATH = '/blog/_listing/';

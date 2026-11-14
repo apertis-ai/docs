@@ -17,7 +17,7 @@ import { mainTextSha256 } from '../converter/convert.ts';
 import { servedUrl } from '../src/contracts/page.ts';
 import { RETIRED_TARGET, llmsFiles, publicationFiles } from '../converter/integration.ts';
 import { readArticles } from '../converter/articles.ts';
-import { bylineParts, categoryPath, CATEGORIES_PATH, isNativeArticle, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
+import { ARTICLE_TEMPLATE_PATH, bylineParts, categoryPath, CATEGORIES_PATH, isNativeArticle, LISTING_TEMPLATE_PATH, tagPath, TAGS_PATH } from '../src/contracts/articles.ts';
 import { MANIFEST_SITE } from '../src/contracts/manifest.ts';
 import { decodeEntities } from '../src/contracts/validate-manifest.ts';
 import { pageKey, parseFull, parseIndex } from '../src/agent/llms.ts';
@@ -68,7 +68,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   // The /blog/ index (openspec docs-routing-publication "Native articles", operator review 2026-10-03): served
   // with or without articles, never a manifest document; so are /models/ and /changelog/ (openspec
   // docs-live-catalog), whose live data and feed are Pages Functions, not files.
-  const html = [...pages, ...generated, 'blog/index.html', ...listings, 'models/index.html', 'changelog/index.html', '404.html'];
+  // The live article templates (functions/blog/[[path]].ts) are emitted like the index; checked on their own below.
+  const html = [...pages, ...generated, 'blog/index.html', ...listings, ...templates, 'models/index.html', 'changelog/index.html', '404.html'];
   // Astro islands reference their component and renderer chunks from <astro-island> attributes.
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // A native article's social card is named by its absolute URL (og:image, twitter:image and the JSON-LD image).
@@ -168,6 +169,7 @@ const native = manifest.documents.filter(isNativeArticle);
 // author. Not manifest documents, like the /blog/ index.
 const publishedArticles = readArticles(root).filter((a) => !a.draft);
 const listings = [...new Set(publishedArticles.flatMap((a) => [...(a.tags.length ? [TAGS_PATH] : []), ...a.tags.map(tagPath), CATEGORIES_PATH, categoryPath(a.category), bylineParts(a.author).path]))].map((p) => `${p.slice(1)}index.html`);
+const templates = [ARTICLE_TEMPLATE_PATH, LISTING_TEMPLATE_PATH].map((p) => `${p.slice(1)}index.html`);
 const converted = manifest.documents.filter((d) => !d.id.startsWith('page:') && !isNativeArticle(d));
 // Post-cutover content edits, recorded against the frozen legacy link sets (migration/nimbus/content-changes.json).
 type ContentChange = { commit: string; decision: string; links: { added?: string[]; removed?: string[] }; headings?: { removed?: string[] } };
@@ -348,7 +350,8 @@ test('m8: retired routes are in no publication channel and every path they had a
   // A native article's own files are under /blog/ too; its slug can never name a retired path (converter/articles.ts).
   // So are the native listing pages: the tags index supersedes the retired /blog/tags row, and a tag or author page
   // sits under /blog/tags or /blog/authors without ever naming a retired path itself (converter/articles.ts).
-  const index = (r: InventoryRoute, f: string) => (r.path === '/blog' && (f === 'blog/index.html' || listings.includes(f) || native.some((d) => f.startsWith(d.servedPath.slice(1)))))
+  // The live article templates too: their names start with `_`, which no retired path has.
+  const index = (r: InventoryRoute, f: string) => (r.path === '/blog' && (f === 'blog/index.html' || listings.includes(f) || templates.includes(f) || native.some((d) => f.startsWith(d.servedPath.slice(1)))))
     || (['/blog/tags', '/blog/authors'].includes(r.path) && listings.includes(f));
   for (const r of retired) {
     const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f) && !index(r, f));
@@ -564,4 +567,29 @@ test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url
   assert.equal(posts, native.length);
   assert.match(read('robots.txt'), /^Sitemap: https:\/\/docs\.apertis\.ai\/sitemap\.xml$/m);
   assert.match(read('robots.txt'), /^Allow: \/$/m);
+});
+
+test('the live article templates: noindex, in no sitemap, search index or llms file, with every element the edge rewrites', () => {
+  // functions/blog/[[path]].ts renders live articles into these and answers 404 for the templates themselves; it
+  // removes the robots tag only from what it renders. The selectors below are the ones it rewrites.
+  const text = [read('sitemap.xml'), read('llms.txt'), read('llms-full.txt'), ...fragments().map((f) => f.url)].join('\n');
+  for (const p of [ARTICLE_TEMPLATE_PATH, LISTING_TEMPLATE_PATH]) {
+    const html = read(`${p.slice(1)}index.html`);
+    assert.equal(html.match(/<meta name="robots" content="noindex">/g)?.length, 1, p);
+    assert.ok(!text.includes(p), `${p} is published`);
+    for (const tag of ['<title>', '<link rel="canonical"', '<meta name="description"', '<meta property="og:url"', '<meta property="og:title"', '<meta property="og:description"', '<meta name="twitter:title"', '<meta name="twitter:description"', '<meta name="apertis-docs:id"']) {
+      assert.equal(html.split(tag).length - 1, 1, `${p}: ${tag}`);
+    }
+    assert.ok(!html.includes('og:image') && !html.includes('page-feedback'), p);
+  }
+  const article = read(`${ARTICLE_TEMPLATE_PATH.slice(1)}index.html`);
+  for (const re of [/<meta name="author" content="Author">/, /<meta property="article:published_time"/, /<meta property="article:tag" content="tag">/,
+    /<script type="application\/ld\+json">[^<]*"@type":"BlogPosting"/, /<p class="doc-header__tag"[^>]*><a href="[^"]+">Category<\/a><\/p>/, /<header class="doc-header"><p[^>]*>.*?<\/p><h1 id="article">Article<\/h1><p class="doc-header__desc">Description<\/p>/,
+    /<dd class="byline-author"><a href="\/blog\/authors\/author\/"><span class="avatar" data-author="author" data-author-field="avatar"[^>]*>AU<\/span><span data-author="author" data-author-field="name">Author<\/span><\/a><\/dd>/,
+    /<dl class="doc-meta doc-meta--byline"><div><dt>Author<\/dt>.*?<\/div><div><dt>Published<\/dt><dd><time datetime="2000-01-01">[^<]+<\/time><\/dd><\/div><div><dt>Reading time<\/dt><dd>1 min<\/dd><\/div><\/dl>/,
+    /<ul class="tag-list"[^>]*><li><a class="tag" href="\/blog\/tags\/tag\/">#tag<\/a><\/li><\/ul>/, /<hr class="doc-header__rule"><p data-live-body>Body<\/p><\/article>/]) {
+    assert.match(article, re);
+  }
+  const listing = read(`${LISTING_TEMPLATE_PATH.slice(1)}index.html`);
+  assert.match(listing, /<p class="blog-index__crumb"><a href="\/blog\/">Blog<\/a> \/ <a href="\/blog\/categories\/">Categories<\/a><\/p><h1>Category<\/h1><p>0 articles<\/p><\/div><div class="blog-index__list"><ol class="article-list"><\/ol>/);
 });
