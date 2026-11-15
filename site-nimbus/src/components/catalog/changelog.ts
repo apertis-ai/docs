@@ -20,9 +20,13 @@ export interface Note extends ReleaseNote {
 
 // What the developer-activation guard (scripts/check-developer-activation.mjs, openspec
 // developer-activation-docs) forbids in anything this site publishes. The page publishes each note's title and
-// description (and the feed its items); some older descriptions state a fixed model count or link the legacy
-// API-key route, and such a note keeps its title and its link to the full note, with its description left out.
+// description; some older descriptions state a fixed model count or link the legacy API-key route, and such a
+// note keeps its title and its link to the full note, with its description left out (pageDescription: noteView
+// and /_nimbus/changelog apply it; the data and the feed keep the text as the source has it).
 const ACTIVATION = [/apertis\.ai\/token\b/i, /apertis\.ai\/setting\?tab=apikeys\b/i, /[?&]utm_(?:source|medium|campaign|term|content)=/i, /\b\d{2,4}\+\s+(?:AI\s+)?models\b/i];
+
+/** A note's description as the page publishes it: empty if it names what the activation guard forbids. */
+export const pageDescription = (description: string): string => (ACTIVATION.some((re) => re.test(description)) ? '' : description);
 
 /** The release notes, newest first with unique versions; throws on anything the page or feed could not show. */
 export function changelogNotes(data: unknown): Note[] {
@@ -30,7 +34,7 @@ export function changelogNotes(data: unknown): Note[] {
     const { category, items = [] } = (data as Record<string, unknown>[])[i] as { category?: unknown; items?: unknown };
     if (typeof category !== 'string' || !/^[a-z0-9-]+$/.test(category)) throw new Error(`release notes: entry ${i} category ${String(category)} is not a tag`);
     if (!Array.isArray(items) || items.some((t) => typeof t !== 'string')) throw new Error(`release notes: entry ${i} items are not text`);
-    return { ...n, category, items, description: ACTIVATION.some((re) => re.test(n.description)) ? '' : n.description };
+    return { ...n, category, items };
   });
   if (new Set(notes.map((n) => n.version)).size !== notes.length) throw new Error('release notes: repeated versions');
   return notes;
@@ -43,7 +47,7 @@ export function noteView(n: Omit<Note, 'items'>): NoteView {
   return {
     href: `${FULL_NOTE}${encodeURIComponent(n.version)}`, version: n.version, 'version-label': `v${n.version}`,
     date: displayDate(n.date), datetime: n.date, category: n.category, 'category-label': n.category.charAt(0).toUpperCase() + n.category.slice(1),
-    title: n.title, description: n.description,
+    title: n.title, description: pageDescription(n.description),
   };
 }
 

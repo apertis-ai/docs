@@ -126,8 +126,11 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
     }
   };
 
+  const target = () => document.getElementById(decodeURIComponent(location.hash.slice(1)));
+
   const fill = (live: Omit<Note, 'items'>[]) => {
     if (!monthT || !noteT || !railT) return;
+    const had = location.hash.length > 1 && !!target();
     const blocks = monthBlocks(live);
     container.replaceChildren(...blocks.map((m) => {
       const block = monthT.cloneNode(true) as HTMLElement;
@@ -152,8 +155,9 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
       a.setAttribute('href', `#${m.id}`);
       return li;
     }));
-    // An RSS item can link to a note newer than the build's copy.
-    if (location.hash.length > 1) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
+    // An RSS item can link to a note newer than the build's copy: scroll to it only if it was not there before,
+    // so a reader who already scrolled is not moved.
+    if (location.hash.length > 1 && !had) target()?.scrollIntoView();
   };
 
   fetch('/_nimbus/changelog', { priority: 'low' } as RequestInit)

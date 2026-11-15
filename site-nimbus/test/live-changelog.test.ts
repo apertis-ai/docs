@@ -102,26 +102,26 @@ test('the served /changelog/rss.xml parses as RSS 2.0, newest first, with unique
   for (const i of feed.items) assert.ok(i.link.endsWith(`/changelog/#${i.guid}`) && i.category && i.isPermaLink === 'false', i.guid);
 });
 
-test('a note whose description names a legacy key route or a fixed model count keeps its title and items and loses the description', () => {
+test('a note whose description names a legacy key route or a fixed model count is published with no description; the data and the feed keep it', () => {
   const [a, b, c] = changelogNotes([
     note('2.0.3', '2026-10-02', { description: 'Now 470+ AI models.' }),
     note('2.0.2', '2026-10-01', { description: 'Create a key at https://apertis.ai/token' }),
     note('2.0.1', '2026-09-01'),
   ]);
-  assert.deepEqual([a.description, a.title, a.items], ['', 'Models Added', ['A model']]);
-  assert.equal(b.description, '');
-  assert.equal(c.description, 'Add a model');
-  assert.equal(changelogNotes([a, b, c])[0].description, '');
+  assert.deepEqual([noteView(a).description, noteView(a).title, a.items], ['', 'Models Added', ['A model']]);
+  assert.equal(noteView(b).description, '');
+  assert.equal(noteView(c).description, 'Add a model');
+  assert.equal(a.description, 'Now 470+ AI models.');
+  assert.match(rss([a], 'https://docs.example'), /<description>Now 470\+ AI models\.\nA model<\/description>/);
 });
 
 test('the note view links to the full note on apertis.ai; months group newest first and only a month\'s first block is the anchor', () => {
   const [a, b, c] = changelogNotes([note('2.0.4', '2026-11-02'), note('2.0.3', '2026-10-05'), note('2.0.2', '2026-10-01')]);
   const d = { ...a, version: '2.0.1', date: '2026-11-01' }; // a month that recurs (validated notes cannot produce it)
   assert.deepEqual(noteView(a), {
-    href: 'https://apertis.ai/changelog/2.0.4', version: '2.0.4', 'version-label': 'v2.0.4', date: noteView(a).date, datetime: '2026-11-02',
+    href: 'https://apertis.ai/changelog/2.0.4', version: '2.0.4', 'version-label': 'v2.0.4', date: 'Nov 2, 2026', datetime: '2026-11-02',
     category: 'feature', 'category-label': 'Feature', title: 'Models Added', description: 'Add a model',
   });
-  assert.match(noteView(a).date, /2026/);
   assert.equal(noteView({ ...a, version: '2.0.4 beta/1' }).href, 'https://apertis.ai/changelog/2.0.4%20beta%2F1');
   assert.deepEqual(monthBlocks([a, b, c, d]).map((m) => [m.id, m.anchor, m.label, m.notes.map((n) => n.version)]),
     [['2026-11', true, 'November 2026', ['2.0.4']], ['2026-10', true, 'October 2026', ['2.0.3', '2.0.2']], ['2026-11', false, 'November 2026', ['2.0.1']]]);
@@ -145,6 +145,8 @@ test('GET /_nimbus/changelog: the notes without items, edge-cached for ten minut
     assert.equal(bad.status, 502);
     assert.equal(bad.headers.get('cache-control'), 'no-store');
     assert.equal(put.length, 1);
+    globalThis.fetch = (async () => Response.json({ success: true, data: [note('2.2.0', '2026-10-01', { description: 'Over 470+ models' })] })) as typeof fetch;
+    assert.equal(((await (await call()).json()) as { description: string }[])[0].description, '');
   } finally {
     globalThis.fetch = real;
   }

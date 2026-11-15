@@ -9,11 +9,13 @@ const base = process.env.PREVIEW_URL?.replace(/\/$/, '');
 const skip = !base || !process.env.PLAYWRIGHT ? 'set PREVIEW_URL and PLAYWRIGHT' : false;
 const json = (f: string) => JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/catalog', f), 'utf8'));
 
-async function open(url: string, options: { javaScriptEnabled?: boolean; viewport?: { width: number; height: number } } = {}, route?: (r: any) => Promise<void>) {
+async function open(url: string, options: { javaScriptEnabled?: boolean; viewport?: { width: number; height: number } } = {}, route?: (r: any) => Promise<void>, changelog: (r: any) => Promise<void> = (r) => r.abort()) {
   const { chromium } = await import(process.env.PLAYWRIGHT!);
   const browser = await chromium.launch({ channel: 'chrome' });
   const context = await browser.newContext(options);
   if (route) await context.route('**/_nimbus/catalog', route);
+  // The page's live swap is tested on its own; elsewhere it is aborted, so the DOM is the build's copy the snapshot describes.
+  await context.route('**/_nimbus/changelog', changelog);
   const page = await context.newPage();
   await page.goto(base + url, { waitUntil: 'networkidle' });
   return { page, close: () => browser.close() };
@@ -41,6 +43,34 @@ test('changelog: every note listed newest first with its anchor, the feed advert
     assert.equal(await page.getAttribute('.navbar__links a[aria-current="true"]', 'href'), '/changelog/');
   } finally {
     await close();
+  }
+});
+
+test('changelog live swap: notes, months and rail come from /_nimbus/changelog, as text; a note newer than the build is scrolled to; a failure keeps the build\'s copy', { skip }, async () => {
+  const snapshot = json('changelog.json');
+  const live = [
+    { version: '9.9.9', date: '2027-01-05', title: '<b>New</b>', description: '', category: 'weird' },
+    { version: '9.9.8', date: '2026-12-05', title: 'Two', description: 'A summary', category: 'fix' },
+  ];
+  const swapped = await open('/changelog/#9.9.9', { viewport: { width: 1440, height: 900 } }, undefined, (r) => r.fulfill({ json: live }));
+  try {
+    await swapped.page.waitForFunction(() => document.querySelectorAll('.note').length === 2);
+    assert.deepEqual(await swapped.page.$$eval('.note', (els: HTMLElement[]) => els.map((e) => [e.id, e.dataset.category, e.querySelector('h2')!.textContent, e.querySelector<HTMLElement>('.note__desc')!.hidden, e.querySelector('.note__more a')!.getAttribute('href')])),
+      [['9.9.9', 'weird', '<b>New</b>', true, 'https://apertis.ai/changelog/9.9.9'], ['9.9.8', 'fix', 'Two', false, 'https://apertis.ai/changelog/9.9.8']]);
+    assert.equal(await swapped.page.$$eval('.note h2 b', (els: Element[]) => els.length), 0);
+    assert.deepEqual(await swapped.page.$$eval('.changelog__month', (els: HTMLElement[]) => els.map((e) => e.id)), ['2027-01', '2026-12']);
+    assert.deepEqual(await swapped.page.$$eval('.changelog__rail a', (els: HTMLElement[]) => els.map((e) => [e.getAttribute('href'), e.textContent])), [['#2027-01', 'January 2027'], ['#2026-12', 'December 2026']]);
+    assert.equal(await swapped.page.$$eval('input[name="category"]', (els: HTMLInputElement[]) => els.some((e) => e.value === 'weird')), false);
+    assert.equal((await visible(swapped.page, '.note')).length, 2);
+    assert.equal(await swapped.page.evaluate(() => { const r = document.getElementById('9.9.9')!.getBoundingClientRect(); return r.top >= 0 && r.top < window.innerHeight; }), true);
+  } finally {
+    await swapped.close();
+  }
+  const failing = await open('/changelog/', {}, undefined, (r) => r.fulfill({ status: 502, json: { error: 'changelog unavailable' } }));
+  try {
+    assert.deepEqual(await failing.page.$$eval('.note', (els: HTMLElement[]) => els.map((e) => e.id)), snapshot.map((n: { version: string }) => n.version));
+  } finally {
+    await failing.close();
   }
 });
 
