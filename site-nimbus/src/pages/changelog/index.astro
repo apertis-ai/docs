@@ -1,15 +1,15 @@
 ---
 // Release notes (openspec docs-live-catalog "Changelog page and feed"): the public Apertis changelog, newest
-// first, from changelog.json (components/catalog/changelog.ts). Each note has its version as anchor, date,
-// category tag, title, description and items as text; its Markdown body is rendered here, at build time, by
-// micromark, which escapes raw HTML and drops unsafe link protocols. The category filter is radio buttons and
-// CSS (:has), so it needs no JavaScript, and with none selected but All every note is listed. The live feed is
-// /changelog/rss.xml. Like the /blog/ index, the page is not a manifest document: never indexed, no Markdown.
-import { micromark } from 'micromark';
+// first, from changelog.json (components/catalog/changelog.ts). Each note is a summary: its version as anchor,
+// date, category tag, title and description, with a link to the full note on apertis.ai (its body, images and
+// demos live there). The category filter is radio buttons and CSS (:has), so it needs no JavaScript, and with
+// none selected but All every note is listed. After load the script at the bottom swaps in /_nimbus/changelog
+// (functions/_nimbus/changelog.ts) by cloning this markup, so the page is current without a rebuild; any
+// failure keeps this copy. The live feed is /changelog/rss.xml. Like the /blog/ index, the page is not a
+// manifest document: never indexed, no Markdown.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import notes from '../../components/catalog/changelog.json';
-import { FEED_PATH, ORIGINAL_NOTES, changelogNotes } from '../../components/catalog/changelog.ts';
-import { displayDate } from '../../components/shell/page-header.ts';
+import { FEED_PATH, changelogNotes, monthBlocks, noteView } from '../../components/catalog/changelog.ts';
 import type { ManifestDocument } from '../../contracts/manifest.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
@@ -20,21 +20,9 @@ const doc: ManifestDocument = {
 const list = changelogNotes(notes);
 const categories = [...new Set(list.map((n) => n.category))].sort();
 const label = (c: string) => c.charAt(0).toUpperCase() + c.slice(1);
-// A note's own headings sit below its title (h2). The few raw HTML tags upstream (centred images) are dropped
-// first so they do not show as escaped text; micromark escapes whatever else is left.
-const body = (md: string) => micromark(md.replace(/<\/?[A-Za-z][^<>]*>/g, ''))
-  .replace(/<(\/?)h([1-6])>/g, (_, slash, n) => `<${slash}h${Math.min(6, Number(n) + 2)}>`);
 // One rule per category: while its radio is checked, every other note is hidden (category tags are
-// [a-z0-9-]+, changelog.ts).
-// The notes by month, newest first: each month is a block with its own anchor, and the rail on wide screens
-// lists them. A month's block stays in the page while a category filter hides its notes, so its link still lands.
-// Notes are ordered by version, so a month could come up twice; only its first block is the anchor.
-const months: { id: string; anchor: boolean; label: string; notes: typeof list }[] = [];
-for (const n of list) {
-  const id = n.date.slice(0, 7);
-  if (months.at(-1)?.id !== id) months.push({ id, anchor: !months.some((m) => m.id === id), label: new Date(`${id}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }), notes: [] });
-  months.at(-1)!.notes.push(n);
-}
+// [a-z0-9-]+, changelog.ts). A month's block stays in the page while a filter hides its notes, so its link still lands.
+const months = monthBlocks(list);
 const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .note:not([data-category="${c}"]){display:none}`).join('\n');
 ---
 <BaseLayout doc={doc} buildId={manifest.buildId}>
@@ -55,23 +43,20 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
         {months.map((m) => (
           <div class="changelog__month" id={m.anchor ? m.id : undefined}>
             <ol class="changelog__list">
-              {m.notes.map((n) => (
+              {m.notes.map((n) => { const v = noteView(n); return (
                 <li class="note" id={n.version} data-category={n.category}>
                   <div class="note__meta">
-                    <a class="note__version" href={`#${n.version}`}>v{n.version}</a>
-                    <time datetime={n.date}>{displayDate(n.date)}</time>
-                    <span class="note__tag">{label(n.category)}</span>
+                    <a class="note__version" href={`#${n.version}`} data-f="version-label">{v['version-label']}</a>
+                    <time datetime={n.date} data-f="date">{v.date}</time>
+                    <span class="note__tag" data-f="category-label">{v['category-label']}</span>
                   </div>
                   <div class="note__body">
-                    <h2>{n.title}</h2>
-                    {n.description && <p class="note__desc">{n.description}</p>}
-                    {/* The body repeats the items (as headings or a list), so they show only for a note without a body. */}
-                    {!n.content && n.items.length > 0 && <ul class="note__items">{n.items.map((t) => <li>{t.replace(/^\s*[-*]\s+/, '')}</li>)}</ul>}
-                    {n.content && <div class="note__content" set:html={body(n.content)} />}
-                    {n.abridged && <p class="note__desc"><a href={ORIGINAL_NOTES} target="_blank" rel="noopener">Full notes on apertis.ai</a></p>}
+                    <h2 data-f="title">{v.title}</h2>
+                    <p class="note__desc" data-f="description" hidden={!v.description}>{v.description}</p>
+                    <p class="note__more"><a href={v.href} target="_blank" rel="noopener" data-f="href">Read the full note</a></p>
                   </div>
                 </li>
-              ))}
+              ); })}
             </ol>
           </div>
         ))}
@@ -79,7 +64,7 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
       <nav class="changelog__rail" aria-label="Release notes by month">
         <p class="label">Jump to</p>
         <ul class="toc">
-          {months.filter((m) => m.anchor).map((m) => <li><a href={`#${m.id}`}>{m.label}</a></li>)}
+          {months.filter((m) => m.anchor).map((m) => <li><a href={`#${m.id}`} data-f="label">{m.label}</a></li>)}
         </ul>
       </nav>
     </div>
@@ -111,17 +96,8 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
   .note__tag { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; font: var(--fs-2xs)/16px var(--mono); }
   .note__body h2 { margin: 0; color: var(--ink); font-size: var(--fs-xl); font-weight: 600; line-height: 1.35; }
   .note__desc { margin: 8px 0 0; color: var(--desc); font-size: var(--fs-base); line-height: 1.6; }
-  .note__items { margin: 16px 0 0; padding-left: 20px; color: var(--desc); font-size: var(--fs-base); line-height: 1.7; }
-  .note__content { margin-top: 20px; color: var(--desc); font-size: var(--fs-base); line-height: 1.7; overflow-wrap: anywhere; }
-  .note__content > :first-child { margin-top: 0; }
-  .note__content :is(h3, h4, h5, h6) { margin: 28px 0 0; color: var(--ink); font-size: var(--fs-base); font-weight: 600; line-height: 1.5; }
-  .note__content p { margin: 12px 0 0; }
-  .note__content :is(ul, ol) { margin: 12px 0 0; padding-left: 20px; }
-  .note__content li + li, .note__items li + li { margin-top: 4px; }
-  .note__content a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  .note__content code { font-family: var(--mono); font-size: var(--fs-sm); }
-  .note__content pre { overflow-x: auto; margin: 16px 0 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
-  .note__content img { max-width: 100%; height: auto; }
+  .note__more { margin: 12px 0 0; font-size: var(--fs-base); line-height: 1.6; }
+  .note__more a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   @media (min-width: 1160px) {
     .changelog__layout { display: grid; grid-template-columns: minmax(0, 932px) 200px; justify-content: space-between; gap: 48px; align-items: start; }
     .changelog__rail { display: block; position: sticky; top: 96px; max-height: calc(100vh - 128px); overflow-y: auto; padding: 44px 0 0 20px; border-left: 1px solid var(--line); }
@@ -129,3 +105,64 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
   }
   @media (max-width: 720px) { .note { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 32px 0; } .note__meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; } }
 </style>
+
+<script>
+  // The live swap from functions/_nimbus/changelog.ts: month blocks, notes and the rail are rebuilt by cloning the
+  // build's first of each and filling its `data-f` fields from the same views the build used (text via
+  // textContent, URLs via setAttribute). A category with no radio adds none (its notes still list under All).
+  // Any failure keeps the build's copy.
+  import { monthBlocks, noteView, type Note } from '../../components/catalog/changelog.ts';
+
+  const container = document.querySelector('.changelog__months')!;
+  const rail = document.querySelector('.changelog__rail .toc')!;
+  const monthT = container.firstElementChild as HTMLElement | null;
+  const noteT = monthT?.querySelector<HTMLElement>('.note');
+  const railT = rail.firstElementChild as HTMLElement | null;
+
+  const fields = (root: HTMLElement, values: Record<string, string>) => {
+    for (const el of root.querySelectorAll<HTMLElement>('[data-f]')) {
+      if (el.dataset.f === 'href') el.setAttribute('href', values.href);
+      else el.textContent = values[el.dataset.f!] ?? '';
+    }
+  };
+
+  // A hash that does not decode (#100%) names nothing; it must not stop the swap.
+  const target = () => { try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch { return null; } };
+
+  const fill = (live: Omit<Note, 'items'>[]) => {
+    if (!monthT || !noteT || !railT) return;
+    const had = location.hash.length > 1 && !!target();
+    const blocks = monthBlocks(live);
+    container.replaceChildren(...blocks.map((m) => {
+      const block = monthT.cloneNode(true) as HTMLElement;
+      if (m.anchor) block.id = m.id; else block.removeAttribute('id');
+      block.querySelector('.changelog__list')!.replaceChildren(...m.notes.map((n) => {
+        const v = noteView(n);
+        const li = noteT.cloneNode(true) as HTMLElement;
+        li.id = n.version;
+        li.dataset.category = n.category;
+        fields(li, { ...v });
+        li.querySelector('.note__version')!.setAttribute('href', `#${n.version}`);
+        li.querySelector('time')!.setAttribute('datetime', v.datetime);
+        li.querySelector<HTMLElement>('.note__desc')!.hidden = !v.description;
+        return li;
+      }));
+      return block;
+    }));
+    rail.replaceChildren(...blocks.filter((m) => m.anchor).map((m) => {
+      const li = railT.cloneNode(true) as HTMLElement;
+      const a = li.querySelector('a')!;
+      a.textContent = m.label;
+      a.setAttribute('href', `#${m.id}`);
+      return li;
+    }));
+    // An RSS item can link to a note newer than the build's copy: scroll to it only if it was not there before,
+    // so a reader who already scrolled is not moved.
+    if (location.hash.length > 1 && !had) target()?.scrollIntoView();
+  };
+
+  fetch('/_nimbus/changelog', { priority: 'low' } as RequestInit)
+    .then((r) => (r.ok ? (r.json() as Promise<Omit<Note, 'items'>[]>) : null))
+    .then((live) => { if (Array.isArray(live) && live.length) fill(live); })
+    .catch(() => {});
+</script>

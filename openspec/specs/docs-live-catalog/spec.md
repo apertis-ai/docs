@@ -28,7 +28,7 @@ The page renders from a build-time snapshot, and then swaps in the edge-cached l
 - **THEN** no catalog output contains it
 
 ### Requirement: Changelog page and feed
-`/changelog/` SHALL list the public release notes (`https://apertis.ai/api/changelog`), newest first. Each note shows its version, date, category tag, title and description; its items are rendered as text, never as raw HTML. Readers can filter by category. Without JavaScript, all notes are listed.
+`/changelog/` SHALL list the public release notes (`https://apertis.ai/api/changelog`), newest first. Each note shows a summary (its version, date, category tag, title and description, as text, never as raw HTML) and a link to the full note on apertis.ai, which holds its body, images and demos. The page is rendered from the build's copy and refreshed after load from `/_nimbus/changelog`, the same notes served live and edge-cached for ten minutes; if that fails, the build's copy stays. Readers can filter by category. Without JavaScript, the build's copy is listed in full.
 
 `/changelog/rss.xml` SHALL be a live RSS 2.0 feed of the same notes, edge-cached for ten minutes. Each note is an item with a guid made of its version, a link to `/changelog/#<version>`, and a category. An upstream failure answers 503 with `Retry-After`, and that response is not cached. `/changelog/` advertises the feed with `<link rel="alternate" type="application/rss+xml">`.
 
@@ -37,6 +37,10 @@ The navbar's Release Notes item SHALL point to `/changelog/`.
 #### Scenario: Feed is valid
 - **WHEN** `/changelog/rss.xml` is fetched
 - **THEN** it parses as RSS 2.0, and its items are the release notes newest first, each with a unique guid
+
+#### Scenario: Live refresh
+- **WHEN** `/changelog/` loads and `/_nimbus/changelog` answers a non-empty list
+- **THEN** the page lists those notes, each with its link to the full note on apertis.ai; if the request fails, the build's copy stays
 
 #### Scenario: Category filter
 - **WHEN** the reader selects the category `fix`

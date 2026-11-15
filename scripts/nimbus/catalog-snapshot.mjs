@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fetchCatalog } from '../../site-nimbus/src/components/catalog/models.ts';
-import { fetchChangelog } from '../../site-nimbus/src/components/catalog/changelog.ts';
+import { fetchChangelog, pageDescription } from '../../site-nimbus/src/components/catalog/changelog.ts';
 
 const dir = path.resolve(import.meta.dirname, '../../site-nimbus/src/components/catalog');
 export const MODELS_SNAPSHOT = path.join(dir, 'models.json');
@@ -16,6 +16,6 @@ export const CHANGELOG_SNAPSHOT = path.join(dir, 'changelog.json');
 if (process.argv[1] && import.meta.filename === fs.realpathSync(process.argv[1])) {
   const [catalog, notes] = await Promise.all([fetchCatalog(fetch), fetchChangelog(fetch)]);
   fs.writeFileSync(MODELS_SNAPSHOT, JSON.stringify(catalog, null, 2) + '\n');
-  fs.writeFileSync(CHANGELOG_SNAPSHOT, JSON.stringify(notes, null, 2) + '\n');
+  fs.writeFileSync(CHANGELOG_SNAPSHOT, JSON.stringify(notes.map((n) => ({ ...n, description: pageDescription(n.description) })), null, 2) + '\n');
   console.log(`${catalog.models.length} models (data version ${catalog.version}), ${notes.length} release notes (newest ${notes[0].version})`);
 }
