@@ -1,42 +1,64 @@
 // The /changelog/ page and /changelog/rss.xml (openspec docs-live-catalog "Changelog page and feed"): the
 // public Apertis release notes, newest first, validated once for every reader:
 //   - scripts/nimbus/catalog-snapshot.mjs writes changelog.json, which the page renders at build time;
+//   - functions/_nimbus/changelog.ts serves them live (without items) and the page swaps them in after load;
 //   - functions/changelog/rss.xml.ts serves them live as RSS 2.0, edge-cached.
-// Pure (no Node or Workers APIs). The Markdown `content` is rendered only at build time (the page).
+// Pure (no Node or Workers APIs): bundled into the build, both functions and the page's swap script, whose
+// views below (noteView, monthBlocks) are the one source of the text the build and the swap both show.
+import { displayDate } from '../shell/page-header.ts';
 import { releaseNotes, type ReleaseNote } from '../home/feed.ts';
 import { getJson } from './models.ts';
 
 export const CHANGELOG_SOURCE = 'https://apertis.ai/api/changelog';
 export const FEED_PATH = '/changelog/rss.xml';
+export const FULL_NOTE = 'https://apertis.ai/changelog/';
 
 export interface Note extends ReleaseNote {
   category: string;
   items: string[];
-  content: string;
-  /** The body was left out: it names a legacy API-key route or a fixed model count (see ACTIVATION below). */
-  abridged: boolean;
 }
 
 // What the developer-activation guard (scripts/check-developer-activation.mjs, openspec
-// developer-activation-docs) forbids in anything this site publishes. Some older release notes state a fixed
-// model count or link the legacy API-key route; such a note keeps its title, description and items, and its
-// body is replaced by a link to the original on apertis.ai rather than rewritten.
+// developer-activation-docs) forbids in anything this site publishes. The page publishes each note's title and
+// description (and the feed its items); some older descriptions state a fixed model count or link the legacy
+// API-key route, and such a note keeps its title and its link to the full note, with its description left out.
 const ACTIVATION = [/apertis\.ai\/token\b/i, /apertis\.ai\/setting\?tab=apikeys\b/i, /[?&]utm_(?:source|medium|campaign|term|content)=/i, /\b\d{2,4}\+\s+(?:AI\s+)?models\b/i];
-export const ORIGINAL_NOTES = 'https://apertis.ai/changelog';
 
 /** The release notes, newest first with unique versions; throws on anything the page or feed could not show. */
 export function changelogNotes(data: unknown): Note[] {
   const notes = releaseNotes(data).map((n, i): Note => {
-    const e = (data as Record<string, unknown>[])[i];
-    const { category, items = [], content = '' } = e as { category?: unknown; items?: unknown; content?: unknown };
+    const { category, items = [] } = (data as Record<string, unknown>[])[i] as { category?: unknown; items?: unknown };
     if (typeof category !== 'string' || !/^[a-z0-9-]+$/.test(category)) throw new Error(`release notes: entry ${i} category ${String(category)} is not a tag`);
     if (!Array.isArray(items) || items.some((t) => typeof t !== 'string')) throw new Error(`release notes: entry ${i} items are not text`);
-    if (typeof content !== 'string') throw new Error(`release notes: entry ${i} content is not text`);
-    const abridged = (e as { abridged?: unknown }).abridged === true || ACTIVATION.some((re) => re.test(content));
-    return { ...n, category, items, content: abridged ? '' : content, abridged };
+    return { ...n, category, items, description: ACTIVATION.some((re) => re.test(n.description)) ? '' : n.description };
   });
   if (new Set(notes.map((n) => n.version)).size !== notes.length) throw new Error('release notes: repeated versions');
   return notes;
+}
+
+/** What the page shows of a note; the keys are the page's `data-f` fields (`href` is the full note on apertis.ai). */
+export interface NoteView { href: string; version: string; 'version-label': string; date: string; datetime: string; category: string; 'category-label': string; title: string; description: string }
+
+export function noteView(n: Omit<Note, 'items'>): NoteView {
+  return {
+    href: `${FULL_NOTE}${encodeURIComponent(n.version)}`, version: n.version, 'version-label': `v${n.version}`,
+    date: displayDate(n.date), datetime: n.date, category: n.category, 'category-label': n.category.charAt(0).toUpperCase() + n.category.slice(1),
+    title: n.title, description: n.description,
+  };
+}
+
+/**
+ * The notes by month, newest first: each month is a block with its own anchor (`YYYY-MM`), and the rail on wide
+ * screens lists them. Notes are ordered by version, so a month could come up twice; only its first block is the anchor.
+ */
+export function monthBlocks<T extends { date: string }>(notes: T[]): { id: string; anchor: boolean; label: string; notes: T[] }[] {
+  const months: { id: string; anchor: boolean; label: string; notes: T[] }[] = [];
+  for (const n of notes) {
+    const id = n.date.slice(0, 7);
+    if (months.at(-1)?.id !== id) months.push({ id, anchor: !months.some((m) => m.id === id), label: new Date(`${id}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }), notes: [] });
+    months.at(-1)!.notes.push(n);
+  }
+  return months;
 }
 
 export async function fetchChangelog(fetcher: typeof fetch): Promise<Note[]> {

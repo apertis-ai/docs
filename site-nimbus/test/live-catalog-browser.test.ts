@@ -34,8 +34,10 @@ test('changelog: every note listed newest first with its anchor, the feed advert
     assert.equal(shown.length, notes.filter((n: { category: string }) => n.category === 'fix').length);
     await page.click('label:has(#category-all)');
     assert.equal((await visible(page, '.note')).length, notes.length);
-    // Raw HTML in a note body is never markup: no element from it, and no script anywhere in the notes.
-    assert.equal(await page.$$eval('.note__content script, .note__content [align], .note__content img[width]', (els: Element[]) => els.length), 0);
+    // Each note links to its full note on apertis.ai, in a new tab; the page carries no note body.
+    assert.deepEqual(await page.$$eval('.note', (els: HTMLElement[]) => els.map((e) => [e.querySelector('.note__more a')?.getAttribute('href'), e.querySelector('.note__more a')?.getAttribute('rel')])),
+      notes.map((n: { version: string }) => [`https://apertis.ai/changelog/${encodeURIComponent(n.version)}`, 'noopener']));
+    assert.equal(await page.$$eval('.note__content, .note__items', (els: Element[]) => els.length), 0);
     assert.equal(await page.getAttribute('.navbar__links a[aria-current="true"]', 'href'), '/changelog/');
   } finally {
     await close();

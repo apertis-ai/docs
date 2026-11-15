@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import sax from 'sax';
 
 import { CHANGELOG_SNAPSHOT } from '../../scripts/nimbus/catalog-snapshot.mjs';
-import { CHANGELOG_SOURCE, changelogNotes, rss, type Note } from '../src/components/catalog/changelog.ts';
+import { CHANGELOG_SOURCE, changelogNotes, monthBlocks, noteView, rss, type Note } from '../src/components/catalog/changelog.ts';
 
 const snapshot = JSON.parse(fs.readFileSync(CHANGELOG_SNAPSHOT, 'utf8'));
 const note = (version: string, date: string, extra = {}) => ({ version, date, title: 'Models Added', description: 'Add a model', category: 'feature', items: ['A model'], content: '## A model', pinned: false, ...extra });
@@ -34,12 +34,12 @@ function parseRss(text: string) {
 test('the committed copy is valid: newest first, unique versions, a category tag on every note', () => {
   assert.deepEqual(changelogNotes(snapshot), snapshot);
   assert.ok(snapshot.length > 10);
-  for (const n of snapshot) assert.deepEqual(Object.keys(n).sort(), ['abridged', 'category', 'content', 'date', 'description', 'items', 'title', 'version']);
+  for (const n of snapshot) assert.deepEqual(Object.keys(n).sort(), ['category', 'date', 'description', 'items', 'title', 'version']);
 });
 
 test('release notes without a category tag, with non-text items or a repeated version are rejected', () => {
-  assert.deepEqual(changelogNotes([note('2.0.2', '2026-10-01'), note('2.0.1', '2026-09-01', { items: undefined, content: undefined })]).map((n) => [n.version, n.items, n.content]),
-    [['2.0.2', ['A model'], '## A model'], ['2.0.1', [], '']]);
+  assert.deepEqual(changelogNotes([note('2.0.2', '2026-10-01'), note('2.0.1', '2026-09-01', { items: undefined, content: undefined })]).map((n) => [n.version, n.items, 'content' in n]),
+    [['2.0.2', ['A model'], false], ['2.0.1', [], false]]);
   assert.throws(() => changelogNotes([note('1', '2026-10-01', { category: '' })]), /category/);
   assert.throws(() => changelogNotes([note('1', '2026-10-01', { category: '<b>' })]), /category/);
   assert.throws(() => changelogNotes([note('1', '2026-10-01', { items: [1] })]), /items/);
@@ -102,15 +102,50 @@ test('the served /changelog/rss.xml parses as RSS 2.0, newest first, with unique
   for (const i of feed.items) assert.ok(i.link.endsWith(`/changelog/#${i.guid}`) && i.category && i.isPermaLink === 'false', i.guid);
 });
 
-test('a note whose body names a legacy key route or a fixed model count keeps its summary and drops the body', () => {
+test('a note whose description names a legacy key route or a fixed model count keeps its title and items and loses the description', () => {
   const [a, b, c] = changelogNotes([
-    note('2.0.3', '2026-10-02', { content: 'Now 470+ AI models.' }),
-    note('2.0.2', '2026-10-01', { content: 'Create a key at https://apertis.ai/token' }),
+    note('2.0.3', '2026-10-02', { description: 'Now 470+ AI models.' }),
+    note('2.0.2', '2026-10-01', { description: 'Create a key at https://apertis.ai/token' }),
     note('2.0.1', '2026-09-01'),
   ]);
-  assert.deepEqual([a.abridged, a.content, a.title, a.items], [true, '', 'Models Added', ['A model']]);
-  assert.deepEqual([b.abridged, b.content], [true, '']);
-  assert.deepEqual([c.abridged, c.content], [false, '## A model']);
-  // Re-validating the snapshot keeps the flag although the body is gone.
-  assert.equal(changelogNotes([a, b, c])[0].abridged, true);
+  assert.deepEqual([a.description, a.title, a.items], ['', 'Models Added', ['A model']]);
+  assert.equal(b.description, '');
+  assert.equal(c.description, 'Add a model');
+  assert.equal(changelogNotes([a, b, c])[0].description, '');
+});
+
+test('the note view links to the full note on apertis.ai; months group newest first and only a month\'s first block is the anchor', () => {
+  const [a, b, c] = changelogNotes([note('2.0.4', '2026-11-02'), note('2.0.3', '2026-10-05'), note('2.0.2', '2026-10-01')]);
+  const d = { ...a, version: '2.0.1', date: '2026-11-01' }; // a month that recurs (validated notes cannot produce it)
+  assert.deepEqual(noteView(a), {
+    href: 'https://apertis.ai/changelog/2.0.4', version: '2.0.4', 'version-label': 'v2.0.4', date: noteView(a).date, datetime: '2026-11-02',
+    category: 'feature', 'category-label': 'Feature', title: 'Models Added', description: 'Add a model',
+  });
+  assert.match(noteView(a).date, /2026/);
+  assert.equal(noteView({ ...a, version: '2.0.4 beta/1' }).href, 'https://apertis.ai/changelog/2.0.4%20beta%2F1');
+  assert.deepEqual(monthBlocks([a, b, c, d]).map((m) => [m.id, m.anchor, m.label, m.notes.map((n) => n.version)]),
+    [['2026-11', true, 'November 2026', ['2.0.4']], ['2026-10', true, 'October 2026', ['2.0.3', '2.0.2']], ['2026-11', false, 'November 2026', ['2.0.1']]]);
+});
+
+test('GET /_nimbus/changelog: the notes without items, edge-cached for ten minutes; an upstream failure answers 502 no-store, not cached', async () => {
+  const { onRequestGet } = await import(new URL('../../functions/_nimbus/changelog.ts', import.meta.url).href);
+  const put: string[] = [];
+  (globalThis as any).caches = { default: { match: async () => undefined, put: async (k: Request) => { put.push(k.url); } } };
+  const real = globalThis.fetch;
+  const call = () => onRequestGet({ request: new Request('https://docs.example/_nimbus/changelog?utm=x'), waitUntil: (p: Promise<unknown>) => p } as never);
+  try {
+    globalThis.fetch = (async (url: string) => { assert.equal(url, CHANGELOG_SOURCE); return Response.json({ success: true, data: [note('2.2.0', '2026-10-01')] }); }) as typeof fetch;
+    const ok = await call();
+    assert.equal(ok.status, 200);
+    assert.equal(ok.headers.get('cache-control'), 'public, max-age=600');
+    assert.deepEqual(await ok.json(), [{ version: '2.2.0', date: '2026-10-01', title: 'Models Added', description: 'Add a model', category: 'feature' }]);
+    assert.deepEqual(put, ['https://docs.example/_nimbus/changelog']);
+    globalThis.fetch = (async () => new Response('down', { status: 500 })) as typeof fetch;
+    const bad = await call();
+    assert.equal(bad.status, 502);
+    assert.equal(bad.headers.get('cache-control'), 'no-store');
+    assert.equal(put.length, 1);
+  } finally {
+    globalThis.fetch = real;
+  }
 });
