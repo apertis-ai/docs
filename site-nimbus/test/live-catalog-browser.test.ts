@@ -48,23 +48,30 @@ test('changelog: every note listed newest first with its anchor, the feed advert
 
 test('changelog live swap: notes, months and rail come from /_nimbus/changelog, as text; a note newer than the build is scrolled to; a failure keeps the build\'s copy', { skip }, async () => {
   const snapshot = json('changelog.json');
-  const live = [
-    { version: '9.9.9', date: '2027-01-05', title: '<b>New</b>', description: '', category: 'weird' },
-    { version: '9.9.8', date: '2026-12-05', title: 'Two', description: 'A summary', category: 'fix' },
-  ];
-  const swapped = await open('/changelog/#9.9.9', { viewport: { width: 1440, height: 900 } }, undefined, (r) => r.fulfill({ json: live }));
+  // Thirty notes, none in the build's copy, so a late one lies well below the first screen.
+  const live = Array.from({ length: 30 }, (_, i) => ({ version: `9.9.${30 - i}`, date: i === 0 ? '2027-01-05' : '2026-12-05', title: `Note ${30 - i}`, description: 'A summary', category: 'fix' }));
+  Object.assign(live[0], { title: '<b>New</b>', description: '', category: 'weird' });
+  const swapped = await open('/changelog/#9.9.5', { viewport: { width: 1440, height: 900 } }, undefined, (r) => r.fulfill({ json: live }));
   try {
-    await swapped.page.waitForFunction(() => document.querySelectorAll('.note').length === 2);
-    assert.deepEqual(await swapped.page.$$eval('.note', (els: HTMLElement[]) => els.map((e) => [e.id, e.dataset.category, e.querySelector('h2')!.textContent, e.querySelector<HTMLElement>('.note__desc')!.hidden, e.querySelector('.note__more a')!.getAttribute('href')])),
-      [['9.9.9', 'weird', '<b>New</b>', true, 'https://apertis.ai/changelog/9.9.9'], ['9.9.8', 'fix', 'Two', false, 'https://apertis.ai/changelog/9.9.8']]);
+    await swapped.page.waitForFunction(() => document.querySelectorAll('.note').length === 30);
+    assert.deepEqual(await swapped.page.$$eval('.note', (els: HTMLElement[]) => els.slice(0, 2).map((e) => [e.id, e.dataset.category, e.querySelector('h2')!.textContent, e.querySelector<HTMLElement>('.note__desc')!.hidden, e.querySelector('.note__more a')!.getAttribute('href')])),
+      [['9.9.30', 'weird', '<b>New</b>', true, 'https://apertis.ai/changelog/9.9.30'], ['9.9.29', 'fix', 'Note 29', false, 'https://apertis.ai/changelog/9.9.29']]);
     assert.equal(await swapped.page.$$eval('.note h2 b', (els: Element[]) => els.length), 0);
     assert.deepEqual(await swapped.page.$$eval('.changelog__month', (els: HTMLElement[]) => els.map((e) => e.id)), ['2027-01', '2026-12']);
     assert.deepEqual(await swapped.page.$$eval('.changelog__rail a', (els: HTMLElement[]) => els.map((e) => [e.getAttribute('href'), e.textContent])), [['#2027-01', 'January 2027'], ['#2026-12', 'December 2026']]);
     assert.equal(await swapped.page.$$eval('input[name="category"]', (els: HTMLInputElement[]) => els.some((e) => e.value === 'weird')), false);
-    assert.equal((await visible(swapped.page, '.note')).length, 2);
-    assert.equal(await swapped.page.evaluate(() => { const r = document.getElementById('9.9.9')!.getBoundingClientRect(); return r.top >= 0 && r.top < window.innerHeight; }), true);
+    assert.equal((await visible(swapped.page, '.note')).length, 30);
+    assert.equal(await swapped.page.evaluate(() => { const r = document.getElementById('9.9.5')!.getBoundingClientRect(); return r.top >= 0 && r.top < window.innerHeight; }), true);
+    assert.ok(await swapped.page.evaluate(() => window.scrollY) > 0);
   } finally {
     await swapped.close();
+  }
+  // A hash that does not decode must not stop the swap.
+  const malformed = await open('/changelog/#100%', {}, undefined, (r) => r.fulfill({ json: live }));
+  try {
+    await malformed.page.waitForFunction(() => document.querySelectorAll('.note').length === 30, undefined, { timeout: 5000 });
+  } finally {
+    await malformed.close();
   }
   const failing = await open('/changelog/', {}, undefined, (r) => r.fulfill({ status: 502, json: { error: 'changelog unavailable' } }));
   try {

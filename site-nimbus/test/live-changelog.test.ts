@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import sax from 'sax';
 
 import { CHANGELOG_SNAPSHOT } from '../../scripts/nimbus/catalog-snapshot.mjs';
-import { CHANGELOG_SOURCE, changelogNotes, monthBlocks, noteView, rss, type Note } from '../src/components/catalog/changelog.ts';
+import { CHANGELOG_SOURCE, changelogNotes, monthBlocks, noteView, pageDescription, rss, type Note } from '../src/components/catalog/changelog.ts';
 
 const snapshot = JSON.parse(fs.readFileSync(CHANGELOG_SNAPSHOT, 'utf8'));
 const note = (version: string, date: string, extra = {}) => ({ version, date, title: 'Models Added', description: 'Add a model', category: 'feature', items: ['A model'], content: '## A model', pinned: false, ...extra });
@@ -35,6 +35,10 @@ test('the committed copy is valid: newest first, unique versions, a category tag
   assert.deepEqual(changelogNotes(snapshot), snapshot);
   assert.ok(snapshot.length > 10);
   for (const n of snapshot) assert.deepEqual(Object.keys(n).sort(), ['category', 'date', 'description', 'items', 'title', 'version']);
+});
+
+test('the committed copy holds no description the activation rule would blank', () => {
+  for (const n of snapshot) assert.equal(n.description, pageDescription(n.description), n.version);
 });
 
 test('release notes without a category tag, with non-text items or a repeated version are rejected', () => {

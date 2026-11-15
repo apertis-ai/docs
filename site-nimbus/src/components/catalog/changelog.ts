@@ -21,8 +21,9 @@ export interface Note extends ReleaseNote {
 // What the developer-activation guard (scripts/check-developer-activation.mjs, openspec
 // developer-activation-docs) forbids in anything this site publishes. The page publishes each note's title and
 // description; some older descriptions state a fixed model count or link the legacy API-key route, and such a
-// note keeps its title and its link to the full note, with its description left out (pageDescription: noteView
-// and /_nimbus/changelog apply it; the data and the feed keep the text as the source has it).
+// note keeps its title and its link to the full note, with its description left out. pageDescription applies
+// wherever this site persists or serves page text: the committed snapshot (catalog-snapshot.mjs), the
+// /_nimbus/changelog payload and noteView. The RSS feed reads live data and keeps the text as the source has it.
 const ACTIVATION = [/apertis\.ai\/token\b/i, /apertis\.ai\/setting\?tab=apikeys\b/i, /[?&]utm_(?:source|medium|campaign|term|content)=/i, /\b\d{2,4}\+\s+(?:AI\s+)?models\b/i];
 
 /** A note's description as the page publishes it: empty if it names what the activation guard forbids. */

@@ -126,7 +126,8 @@ const rules = categories.map((c) => `.changelog:has(#category-${c}:checked) .not
     }
   };
 
-  const target = () => document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  // A hash that does not decode (#100%) names nothing; it must not stop the swap.
+  const target = () => { try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch { return null; } };
 
   const fill = (live: Omit<Note, 'items'>[]) => {
     if (!monthT || !noteT || !railT) return;
