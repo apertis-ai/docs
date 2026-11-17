@@ -80,7 +80,7 @@ const years = [...new Set(rows.map((r) => r.date.slice(0, 4)))].map((year) => ({
 const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()).some((r) => r.tags.length > 0);
 ---
 {template === 'article' ? (
-  <DocLayout doc={listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article')} buildId={manifest.buildId} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
+  <DocLayout doc={listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article')} buildId={manifest.buildId} headings={[{ depth: 2, slug: 'heading', text: 'Heading' }]} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
     <h1 id={titleId('Article')}>Article</h1>
     <p data-live-body>Body</p>
   </DocLayout>

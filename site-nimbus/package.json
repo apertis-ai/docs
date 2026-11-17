@@ -27,6 +27,7 @@
     "astro": "7.3.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "github-slugger": "2.0.0",
     "lucide-react": "1.48.0",
     "micromark": "4.0.3",
     "radix-ui": "1.6.7",

@@ -17,8 +17,8 @@
 // keys are the site's constant origin plus that slug. API answers are kept for ten minutes. Any upstream failure
 // serves the static response unchanged, caches nothing and is logged as `blog-articles:`.
 import {
-  categoryLabel, chipHtml, countText, decodeText, escapeHtml, fetchArticle, fetchArticles, isSlug, liveArticle, liveRows,
-  publishedDay, readingMinutes, renderBody, revivesLegacyPath, rowHtml, SLUG, tagItemHtml, type LiveArticle, type LiveRow,
+  articleBody, categoryLabel, chipHtml, countText, decodeText, escapeHtml, fetchArticle, fetchArticles, isSlug, liveArticle, liveRows,
+  publishedDay, readingMinutes, revivesLegacyPath, rowHtml, SLUG, tagItemHtml, tocHtml, type LiveArticle, type LiveRow,
 } from '../../site-nimbus/src/components/home/articles-feed.ts';
 import { fetchAuthors, type LiveAuthors } from '../../site-nimbus/src/components/home/authors-feed.ts';
 import {
@@ -302,7 +302,10 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
   };
   const description = a.description ? (e: Element) => e.setAttribute('content', a.description) : (e: Element) => e.remove();
   // Everything that can fail is computed here, before the response streams.
-  const body = renderBody(a.markdown);
+  const body = articleBody(a.markdown, [a.title]);
+  // "On this page" (the template's placeholder entry, in the mobile disclosure and the aside): the body's h2 and h3,
+  // or, with none, neither of the two.
+  const toc = tocHtml(body.headings);
   const minutes = `${readingMinutes(a.markdown)} min`;
   const initials = bylineParts(name).initials;
   const tags = a.tags.map(tagItemHtml).join('');
@@ -336,7 +339,10 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
     .on('dl.doc-meta > div:nth-child(3) > dd', setText(minutes))
     .on('ul.tag-list', { element(e) { if (!a.tags.length) e.remove(); } })
     .on('ul.tag-list > li', { element(e) { e.replace(tags, html); } })
-    .on('p[data-live-body]', { element(e) { e.replace(body, html); } })
+    .on('astro-island[component-url*="TocMobile"]', { element(e) { if (!toc) e.remove(); } })
+    .on('aside.doc-page__toc', { element(e) { if (!toc) e.remove(); } })
+    .on('ul.toc', { element(e) { e.setInnerContent(toc, html); } })
+    .on('p[data-live-body]', { element(e) { e.replace(body.html, html); } })
     .transform(new Response(template.body, { status: 200, headers }));
 }
 

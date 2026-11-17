@@ -590,6 +590,11 @@ test('the live article templates: noindex, in no sitemap, search index or llms f
     /<ul class="tag-list"[^>]*><li><a class="tag" href="\/blog\/tags\/tag\/">#tag<\/a><\/li><\/ul>/, /<hr class="doc-header__rule"><p data-live-body>Body<\/p><\/article>/]) {
     assert.match(article, re);
   }
+  // "On this page": the placeholder entry the edge replaces with the live body's headings, in the mobile disclosure
+  // (inside the TocMobile island, which the edge removes with the aside when the body has none) and the aside.
+  assert.equal(article.split('<ul class="toc"><li><a href="#heading">Heading</a></li></ul>').length - 1, 2);
+  assert.match(article, /<astro-island[^>]*component-url="[^"]*TocMobile[^"]*"[^>]*>.*?<ul class="toc">/);
+  assert.match(article, /<aside class="doc-page__toc" aria-label="On this page"><p class="doc-page__toc-title">On this page<\/p><ul class="toc">/);
   const listing = read(`${LISTING_TEMPLATE_PATH.slice(1)}index.html`);
   assert.match(listing, /<p class="blog-index__crumb"><a href="\/blog\/">Blog<\/a> \/ <a href="\/blog\/categories\/">Categories<\/a><\/p><h1>Category<\/h1><p>0 articles<\/p><\/div><div class="blog-index__list"><ol class="article-list"><\/ol>/);
 });
