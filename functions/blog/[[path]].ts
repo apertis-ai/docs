@@ -302,7 +302,7 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
   };
   const description = a.description ? (e: Element) => e.setAttribute('content', a.description) : (e: Element) => e.remove();
   // Everything that can fail is computed here, before the response streams.
-  const body = articleBody(a.markdown, [titleId(a.title)]);
+  const body = articleBody(a.markdown, [a.title]);
   // "On this page" (the template's placeholder entry, in the mobile disclosure and the aside): the body's h2 and h3,
   // or, with none, neither of the two.
   const toc = tocHtml(body.headings);

@@ -86,18 +86,22 @@ test('the body is micromark with its defaults: raw HTML is text, an unsafe link 
   assert.ok(out.includes('<a>click</a>') && out.includes('<a href="https://apertis.ai/">ok</a>') && out.includes('<img src="" alt="i" />') && out.includes('<h1>Heading</h1>'), out);
 });
 
-test('a live body gets the build\'s heading ids and its "On this page" entries: h2 with h3 nested, repeats numbered', () => {
-  const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Deep\n\n## Edge notes';
-  const { html, headings } = articleBody(md, ['edge-notes']);
-  assert.ok(html.includes('<h1>Title</h1>') && html.includes('<h4>Deep</h4>'), 'only h2 and h3 get an id');
+test('a live body gets the build\'s heading ids (github-slugger over h1 to h6) and its h2/h3 for "On this page"', () => {
+  const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Notes\n\n## Notes\n\n## O(n²) lookups\n\n## Edge notes\n\n##';
+  const { html, headings } = articleBody(md, ['Edge notes']);
+  assert.ok(html.includes('<h1 id="title">Title</h1>') && html.includes('<h4 id="notes">Notes</h4>'), 'every heading level gets an id');
   assert.ok(html.includes('<h2 id="change-1-the-key-lookup">Change 1: the <code>key</code> lookup</h2>'), html);
   assert.ok(html.includes('<h3 id="why--how">Why &amp; how</h3>'), html);
   assert.ok(html.includes('<h2 id="still-open">Still open</h2>') && html.includes('<h2 id="still-open-1">Still open</h2>'), 'a repeat is numbered');
+  assert.ok(html.includes('<h2 id="notes-1">Notes</h2>'), 'one counter across levels, as the build');
+  assert.ok(html.includes('<h2 id="on-lookups">O(n²) lookups</h2>'), 'github-slugger drops what it drops');
   assert.ok(html.includes('<h2 id="edge-notes-1">Edge notes</h2>'), 'the title\'s id is taken');
+  assert.ok(html.includes('<h2 id="section"></h2>'), 'an empty heading gets section, not an empty id');
   assert.deepEqual(headings.map((h) => [h.depth, h.slug, h.text]), [
     [2, 'change-1-the-key-lookup', 'Change 1: the key lookup'], [3, 'why--how', 'Why & how'], [2, 'still-open', 'Still open'],
-    [2, 'still-open-1', 'Still open'], [2, 'edge-notes-1', 'Edge notes']]);
+    [2, 'still-open-1', 'Still open'], [2, 'notes-1', 'Notes'], [2, 'on-lookups', 'O(n²) lookups'], [2, 'edge-notes-1', 'Edge notes'], [2, 'section', '']]);
   assert.equal(tocHtml(headings.slice(0, 3)), '<li><a href="#change-1-the-key-lookup">Change 1: the key lookup</a><ul><li><a href="#why--how">Why &amp; how</a></li></ul></li><li><a href="#still-open">Still open</a></li>');
+  assert.equal(tocHtml(articleBody('### Lead\n\n## Main').headings), '<li><a href="#lead">Lead</a></li><li><a href="#main">Main</a></li>', 'an h3 before any h2 stands alone');
   const evil = articleBody('## "><img src=x onerror=alert(1)>');
   assert.ok(!/<img|onerror=alert\(1\)>/.test(evil.html + tocHtml(evil.headings)), 'heading text stays text');
   assert.deepEqual(articleBody('No headings.').headings, []);

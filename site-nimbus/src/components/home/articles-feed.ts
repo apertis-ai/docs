@@ -6,8 +6,9 @@
 // answer is refused (one article). The Markdown body is rendered with micromark's defaults only, so raw HTML is
 // escaped and unsafe link protocols are dropped; every other value is text, and the markup helpers below escape
 // it. Pure (no Node or Workers APIs), so the function bundles it and the tests run it as is.
+import GithubSlugger from 'github-slugger';
 import { micromark } from 'micromark';
-import { categoryPath, LEGACY_BLOG_PATHS, tagPath, titleId } from '../../contracts/articles.ts';
+import { categoryPath, LEGACY_BLOG_PATHS, tagPath } from '../../contracts/articles.ts';
 import { tocTree, type TocHeading } from '../shell/navigation.ts';
 import { displayDate } from '../shell/page-header.ts';
 
@@ -118,24 +119,20 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
 export const renderBody = (markdown: string) => micromark(markdown).replace(/<a href="">/g, '<a>');
 
 /**
- * A live article's body with an id on each h2 and h3, and those headings for "On this page", as a committed
- * article gets them from the build: the id is the heading's text under titleId (the build's slug rule), and a
- * repeat, or an id in `taken` (the page title's), gets -1, -2 and so on.
+ * A live article's body with an id on every heading, and its h2 and h3 for "On this page", as a committed article
+ * gets them from the build: one github-slugger over the body's h1 to h6 in order (the slugger the build's heading
+ * ids use), on each heading's text content, so a repeat gets -1, -2 and so on.
+ * Two deliberate differences: the page title (`titles`) is slugged first, so no body heading repeats the h1's id
+ * (a committed article can); and a heading with no sluggable text gets `section` rather than an empty id.
  */
-export function articleBody(markdown: string, taken: string[] = []): { html: string; headings: TocHeading[] } {
-  const seen = new Map<string, number>(taken.map((t) => [t, 0]));
+export function articleBody(markdown: string, titles: string[] = []): { html: string; headings: TocHeading[] } {
+  const slugger = new GithubSlugger();
+  for (const t of titles) slugger.slug(t);
   const headings: TocHeading[] = [];
-  const html = renderBody(markdown).replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_, depth: string, inner: string) => {
-    const text = decodeText(inner.replace(/<[^>]*>/g, '')).trim();
-    const base = titleId(text) || 'section';
-    let slug = base;
-    if (seen.has(base)) {
-      let n = seen.get(base)!;
-      do slug = `${base}-${++n}`; while (seen.has(slug));
-      seen.set(base, n);
-    }
-    seen.set(slug, 0);
-    headings.push({ depth: Number(depth), slug, text });
+  const html = renderBody(markdown).replace(/<h([1-6])>([\s\S]*?)<\/h\1>/g, (_, depth: string, inner: string) => {
+    const text = decodeText(inner.replace(/<[^>]*>/g, ''));
+    const slug = slugger.slug(text) || slugger.slug('section');
+    if (depth === '2' || depth === '3') headings.push({ depth: Number(depth), slug, text: text.trim() });
     return `<h${depth} id="${escapeHtml(slug)}">${inner}</h${depth}>`;
   });
   return { html, headings };
