@@ -74,6 +74,8 @@ test('every output file derives from a publishable manifest entry or is referenc
   const referenced = html.flatMap((f) => [...read(f).matchAll(/(?:href|src|component-url|renderer-url|before-hydration-url)="\/([^"#?]+)"/g)].map((m) => m[1]));
   // A native article's social card is named by its absolute URL (og:image, twitter:image and the JSON-LD image).
   for (const f of html) for (const m of read(f).matchAll(/<meta property="og:image" content="https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
+  // A live article's is named in the article template's card list (data-live-cards), which the edge reads.
+  for (const f of html) for (const m of read(f).matchAll(/"src":"https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
   // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
   for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
@@ -587,7 +589,7 @@ test('the live article templates: noindex, in no sitemap, search index or llms f
     /<script type="application\/ld\+json">[^<]*"@type":"BlogPosting"/, /<p class="doc-header__tag"[^>]*><a href="[^"]+">Category<\/a><\/p>/, /<header class="doc-header"><p[^>]*>.*?<\/p><h1 id="article">Article<\/h1><p class="doc-header__desc">Description<\/p>/,
     /<dd class="byline-author"><a href="\/blog\/authors\/author\/"><span class="avatar" data-author="author" data-author-field="avatar"[^>]*>AU<\/span><span data-author="author" data-author-field="name">Author<\/span><\/a><\/dd>/,
     /<dl class="doc-meta doc-meta--byline"><div><dt>Author<\/dt>.*?<\/div><div><dt>Published<\/dt><dd><time datetime="2000-01-01">[^<]+<\/time><\/dd><\/div><div><dt>Reading time<\/dt><dd>1 min<\/dd><\/div><\/dl>/,
-    /<ul class="tag-list"[^>]*><li><a class="tag" href="\/blog\/tags\/tag\/">#tag<\/a><\/li><\/ul>/, /<hr class="doc-header__rule"><p data-live-body>Body<\/p><\/article>/]) {
+    /<ul class="tag-list"[^>]*><li><a class="tag" href="\/blog\/tags\/tag\/">#tag<\/a><\/li><\/ul>/, /<hr class="doc-header__rule"><p data-live-body>Body<\/p><script type="application\/json" data-live-cards>[^<]*<\/script><\/article>/]) {
     assert.match(article, re);
   }
   // "On this page": the placeholder entry the edge replaces with the live body's headings, in the mobile disclosure
@@ -595,6 +597,15 @@ test('the live article templates: noindex, in no sitemap, search index or llms f
   assert.equal(article.split('<ul class="toc"><li><a href="#heading">Heading</a></li></ul>').length - 1, 2);
   assert.match(article, /<astro-island[^>]*component-url="[^"]*TocMobile[^"]*"[^>]*>.*?<ul class="toc">/);
   assert.match(article, /<aside class="doc-page__toc" aria-label="On this page"><p class="doc-page__toc-title">On this page<\/p><ul class="toc">/);
+  // The social cards, by slug, for the edge to give a live article its own: every src/assets/og/<slug>.png, emitted, 1200x630.
+  const cards = JSON.parse(article.match(/<script type="application\/json" data-live-cards>([^<]*)<\/script>/)![1]) as Record<string, { src: string; width: number; height: number }>;
+  const committed = fs.readdirSync(path.join(import.meta.dirname, '../src/assets/og')).filter((f) => f.endsWith('.png')).map((f) => f.slice(0, -4)).sort();
+  assert.deepEqual(Object.keys(cards).sort(), committed);
+  for (const [slug, c] of Object.entries(cards)) {
+    assert.match(c.src, /^https:\/\/docs\.apertis\.ai\/_astro\/[\w.-]+\.png$/, slug);
+    assert.ok(files.includes(c.src.slice('https://docs.apertis.ai/'.length)), `${slug}: ${c.src} is not emitted`);
+    assert.deepEqual([c.width, c.height], [1200, 630], slug);
+  }
   const listing = read(`${LISTING_TEMPLATE_PATH.slice(1)}index.html`);
   assert.match(listing, /<p class="blog-index__crumb"><a href="\/blog\/">Blog<\/a> \/ <a href="\/blog\/categories\/">Categories<\/a><\/p><h1>Category<\/h1><p>0 articles<\/p><\/div><div class="blog-index__list"><ol class="article-list"><\/ol>/);
 });
