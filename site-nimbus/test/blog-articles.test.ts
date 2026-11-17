@@ -9,7 +9,7 @@ import path from 'node:path';
 
 import {
   LIST_SOURCE, articleSource, categoryLabel, decodeText, escapeHtml, fetchArticle, fetchArticles, liveArticle, liveRow, liveRows,
-  readingMinutes, renderBody, rowHtml,
+  articleBody, readingMinutes, renderBody, rowHtml, tocHtml,
 } from '../src/components/home/articles-feed.ts';
 import { readingMinutes as converterMinutes } from '../converter/convert.ts';
 import { LEGACY_BLOG_PATHS } from '../src/contracts/articles.ts';
@@ -86,6 +86,23 @@ test('the body is micromark with its defaults: raw HTML is text, an unsafe link 
   assert.ok(out.includes('<a>click</a>') && out.includes('<a href="https://apertis.ai/">ok</a>') && out.includes('<img src="" alt="i" />') && out.includes('<h1>Heading</h1>'), out);
 });
 
+test('a live body gets the build\'s heading ids and its "On this page" entries: h2 with h3 nested, repeats numbered', () => {
+  const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Deep\n\n## Edge notes';
+  const { html, headings } = articleBody(md, ['edge-notes']);
+  assert.ok(html.includes('<h1>Title</h1>') && html.includes('<h4>Deep</h4>'), 'only h2 and h3 get an id');
+  assert.ok(html.includes('<h2 id="change-1-the-key-lookup">Change 1: the <code>key</code> lookup</h2>'), html);
+  assert.ok(html.includes('<h3 id="why--how">Why &amp; how</h3>'), html);
+  assert.ok(html.includes('<h2 id="still-open">Still open</h2>') && html.includes('<h2 id="still-open-1">Still open</h2>'), 'a repeat is numbered');
+  assert.ok(html.includes('<h2 id="edge-notes-1">Edge notes</h2>'), 'the title\'s id is taken');
+  assert.deepEqual(headings.map((h) => [h.depth, h.slug, h.text]), [
+    [2, 'change-1-the-key-lookup', 'Change 1: the key lookup'], [3, 'why--how', 'Why & how'], [2, 'still-open', 'Still open'],
+    [2, 'still-open-1', 'Still open'], [2, 'edge-notes-1', 'Edge notes']]);
+  assert.equal(tocHtml(headings.slice(0, 3)), '<li><a href="#change-1-the-key-lookup">Change 1: the key lookup</a><ul><li><a href="#why--how">Why &amp; how</a></li></ul></li><li><a href="#still-open">Still open</a></li>');
+  const evil = articleBody('## "><img src=x onerror=alert(1)>');
+  assert.ok(!/<img|onerror=alert\(1\)>/.test(evil.html + tocHtml(evil.headings)), 'heading text stays text');
+  assert.deepEqual(articleBody('No headings.').headings, []);
+});
+
 test('the escaping helper and every row it builds keep markup inert', () => {
   assert.equal(escapeHtml(`"><script>alert('x')</script>&`), '&quot;&gt;&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;&amp;');
   assert.equal(decodeText('R&amp;D &lt;b&gt; &#39;q&#39; &#x41;'), "R&D <b> 'q' A");
@@ -142,7 +159,10 @@ test('a published article the build does not have is rendered into the article t
   assert.ok(h.includes('<a href="/blog/authors/yu-ting-lee/">') && h.includes('data-author="yu-ting-lee" data-author-field="name">Yu-Ting Lee</span>') && h.includes('>YL</span>'));
   assert.ok(h.includes('<time datetime="2026-11-14">Nov 14, 2026</time>') && h.includes('<dd>1 min</dd>'));
   assert.ok(h.includes('<li><a class="tag" href="/blog/tags/ci/">#ci</a></li><li><a class="tag" href="/blog/tags/edge/">#edge</a></li>'));
-  assert.ok(h.includes('<hr class="doc-header__rule"><h2>Why</h2>\n<p>Because the <strong>edge</strong> said so.</p></article>'));
+  assert.ok(h.includes('<hr class="doc-header__rule"><h2 id="why">Why</h2>\n<p>Because the <strong>edge</strong> said so.</p></article>'));
+  // "On this page", as a committed article has it: the mobile disclosure and the aside, the placeholder entry gone.
+  assert.equal(h.split('<ul class="toc"><li><a href="#why">Why</a></li></ul>').length - 1, 2, 'both tables of contents');
+  assert.ok(h.includes('<aside class="doc-page__toc" aria-label="On this page">') && /<astro-island[^>]*TocMobile/.test(h) && !h.includes('#heading'));
   const ld = JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]);
   assert.deepEqual([ld['@type'], ld.headline, ld.url, ld.datePublished, ld.author.name, ld.author.jobTitle], ['BlogPosting', 'Edge notes', 'https://docs.apertis.ai/blog/edge-notes/', '2026-11-14', 'Yu-Ting Lee', 'CTO of Apertis']);
   assert.equal(res.headers.etag, undefined);
@@ -169,6 +189,8 @@ test('stored values in title, description and body are inert in text and attribu
   assert.ok(/<h1 id="[^"<>]*">"&gt;&lt;script&gt;/.test(h), 'heading');
   assert.ok(h.includes('&lt;script&gt;alert(2)&lt;/script&gt;') && h.includes('&lt;img src=x onerror=alert(3)&gt;') && h.includes('<a>go</a>'), 'body');
   assert.ok(h.includes('"headline":"\\">\\u003cscript>alert(1)\\u003c/script>"'), 'JSON-LD');
+  // An article with no h2 or h3 has no "On this page" at all.
+  assert.ok(!h.includes('doc-page__toc') && !h.includes('TocMobile') && !h.includes('class="toc"'), 'no table of contents');
   // A tag that is not a slug fails the row (and so the article): the static 404 stands.
   const tag = await run({ path: '/blog/edge-notes/', upstream: liveUp([row({ tags: [evil] })], { 'edge-notes': article({ tags: [evil] }) }) });
   assert.equal(tag.status, 404);

@@ -7,7 +7,8 @@
 // escaped and unsafe link protocols are dropped; every other value is text, and the markup helpers below escape
 // it. Pure (no Node or Workers APIs), so the function bundles it and the tests run it as is.
 import { micromark } from 'micromark';
-import { categoryPath, LEGACY_BLOG_PATHS, tagPath } from '../../contracts/articles.ts';
+import { categoryPath, LEGACY_BLOG_PATHS, tagPath, titleId } from '../../contracts/articles.ts';
+import { tocTree, type TocHeading } from '../shell/navigation.ts';
 import { displayDate } from '../shell/page-header.ts';
 
 export const LIST_SOURCE = 'https://apertis.ai/api/blog/articles';
@@ -115,6 +116,36 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
  * (`[a](javascript:x "t")`) it stays `<a href="" title="t">`, which points nowhere harmful.
  */
 export const renderBody = (markdown: string) => micromark(markdown).replace(/<a href="">/g, '<a>');
+
+/**
+ * A live article's body with an id on each h2 and h3, and those headings for "On this page", as a committed
+ * article gets them from the build: the id is the heading's text under titleId (the build's slug rule), and a
+ * repeat, or an id in `taken` (the page title's), gets -1, -2 and so on.
+ */
+export function articleBody(markdown: string, taken: string[] = []): { html: string; headings: TocHeading[] } {
+  const seen = new Map<string, number>(taken.map((t) => [t, 0]));
+  const headings: TocHeading[] = [];
+  const html = renderBody(markdown).replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_, depth: string, inner: string) => {
+    const text = decodeText(inner.replace(/<[^>]*>/g, '')).trim();
+    const base = titleId(text) || 'section';
+    let slug = base;
+    if (seen.has(base)) {
+      let n = seen.get(base)!;
+      do slug = `${base}-${++n}`; while (seen.has(slug));
+      seen.set(base, n);
+    }
+    seen.set(slug, 0);
+    headings.push({ depth: Number(depth), slug, text });
+    return `<h${depth} id="${escapeHtml(slug)}">${inner}</h${depth}>`;
+  });
+  return { html, headings };
+}
+
+/** The items of "On this page" (Toc.astro's markup) for these headings: h2 entries with their h3s nested. */
+export const tocHtml = (headings: TocHeading[]) => {
+  const item = (h: TocHeading) => `<a href="#${escapeHtml(h.slug)}">${escapeHtml(h.text)}</a>`;
+  return tocTree(headings).map(({ h, children }) => `<li>${item(h)}${children.length ? `<ul>${children.map((c) => `<li>${item(c)}</li>`).join('')}</ul>` : ''}</li>`).join('');
+};
 
 /** converter/convert.ts readingMinutes(): words outside fenced code blocks, at 200 per minute, rounded up (at least 1). */
 export function readingMinutes(markdown: string): number {
