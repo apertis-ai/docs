@@ -75,7 +75,7 @@ test('every output file derives from a publishable manifest entry or is referenc
   // A native article's social card is named by its absolute URL (og:image, twitter:image and the JSON-LD image).
   for (const f of html) for (const m of read(f).matchAll(/<meta property="og:image" content="https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
   // A live article's is named in the article template's card list (data-live-cards), which the edge reads.
-  for (const f of html) for (const m of read(f).matchAll(/"src":"https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
+  for (const m of read(`${ARTICLE_TEMPLATE_PATH.slice(1)}index.html`).matchAll(/"src":"https:\/\/docs\.apertis\.ai\/(_astro\/[\w.-]+\.png)"/g)) referenced.push(m[1]);
   // Try it's inline trigger loads its panel bundle by URL (a plain script, `src:` + the root-absolute path).
   for (const f of html) for (const m of read(f).matchAll(/\bsrc:`\/(_astro\/try-it-panel-[\w-]+\.js)`/g)) referenced.push(m[1]);
   // Chunks a referenced script imports (static or dynamic, relative to its own directory) are referenced too,
