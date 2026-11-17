@@ -19,7 +19,8 @@ import LiveAuthors from '../../components/home/LiveAuthors.astro';
 import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
 import Toc from '../../components/shell/Toc.astro';
 import { ARTICLE_TEMPLATE_PATH, categoryPath, CATEGORIES_PATH, isNativeArticle, LISTING_TEMPLATE_PATH, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
-import type { ManifestDocument } from '../../contracts/manifest.ts';
+import { MANIFEST_SITE, type ManifestDocument } from '../../contracts/manifest.ts';
+import { safeJsonLd } from '../../contracts/page.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
 export async function getStaticPaths() {
@@ -64,7 +65,7 @@ interface Props {
 const { doc, entry, tags, tag, categories, category, author, rows = [], template } = Astro.props;
 const hasArticles = manifest.documents.some(isNativeArticle);
 const rendered = entry ? await render(entry) : null;
-// The article's social card, when src/assets/og/<slug>.png exists (1200x630).
+// The article's social card, when src/assets/og/<slug>.png exists (1200x630); a live article's too (the template lists them).
 const cards = import.meta.glob<{ default: ImageMetadata }>('../../assets/og/*.png', { eager: true });
 const card = entry ? cards[`../../assets/og/${entry.id}.png`]?.default : undefined;
 const data = entry?.data as { title: string; description: string; author: string; category: string; tags?: unknown } | undefined;
@@ -83,6 +84,8 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
   <DocLayout doc={listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article')} buildId={manifest.buildId} headings={[{ depth: 2, slug: 'heading', text: 'Heading' }]} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
     <h1 id={titleId('Article')}>Article</h1>
     <p data-live-body>Body</p>
+    {/* Every social card, by slug: the edge gives a live article its own (og:image, twitter:image, JSON-LD image) and removes this. */}
+    <script is:inline type="application/json" data-live-cards set:html={safeJsonLd(Object.fromEntries(Object.entries(cards).map(([p, m]) => [p.slice('../../assets/og/'.length, -'.png'.length), { src: new URL(m.default.src, MANIFEST_SITE).href, width: m.default.width, height: m.default.height }])))} />
   </DocLayout>
 ) : doc && rendered && data ? (
   <DocLayout doc={doc} buildId={manifest.buildId} headings={rendered.headings} article={{ category: data.category, author: data.author, description: data.description, image: card, tags: parseTags(data.tags) }}>

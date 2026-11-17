@@ -25,7 +25,7 @@ import {
   ARTICLE_TEMPLATE_PATH, bylineParts, CATEGORIES_PATH, categoryPath, LISTING_TEMPLATE_PATH, TAGS_PATH, tagPath, titleId,
 } from '../../site-nimbus/src/contracts/articles.ts';
 import { MANIFEST_SITE } from '../../site-nimbus/src/contracts/manifest.ts';
-import { BLOG_TITLE_SUFFIX, bylineAuthor, safeJsonLd } from '../../site-nimbus/src/contracts/page.ts';
+import { BLOG_TITLE_SUFFIX, bylineAuthor, safeJsonLd, type SocialImage } from '../../site-nimbus/src/contracts/page.ts';
 import { displayDate } from '../../site-nimbus/src/components/shell/page-header.ts';
 
 const TTL = 600;
@@ -234,7 +234,9 @@ class Live {
     const a = await this.one(slug);
     if (!a) return res;
     const authors = await this.authors();
-    return renderArticle(await this.template(ARTICLE_TEMPLATE_PATH), a, categoryLabel(a.category, site.labels), authors);
+    const template = await this.template(ARTICLE_TEMPLATE_PATH);
+    const text = await template.text();
+    return renderArticle(new Response(text, template), a, categoryLabel(a.category, site.labels), authors, liveCard(text, slug));
   }
 
   async listing(r: Exclude<Route, { kind: 'article' | 'template' | 'other' }>, res: Response): Promise<Response> {
@@ -279,8 +281,19 @@ const setText = (value: string) => ({ element(e: Element) { e.setInnerContent(va
 const setAttr = (name: string, value: string) => ({ element(e: Element) { e.setAttribute(name, value); } });
 const remove = { element(e: Element) { e.remove(); } };
 
+/** The article's social card (src/assets/og/<slug>.png) from the template's list of them, or null. */
+export function liveCard(template: string, slug: string): SocialImage | null {
+  const m = /<script[^>]*\bdata-live-cards\b[^>]*>([\s\S]*?)<\/script>/.exec(template);
+  if (!m) return null;
+  let cards: Record<string, Partial<SocialImage>>;
+  try { cards = JSON.parse(m[1]); } catch { return null; }
+  const c = cards && typeof cards === 'object' && Object.hasOwn(cards, slug) ? cards[slug] : null;
+  return c && typeof c.src === 'string' && c.src.startsWith(`${MANIFEST_SITE}/_astro/`) && Number.isInteger(c.width) && Number.isInteger(c.height)
+    ? { src: c.src, width: c.width!, height: c.height! } : null;
+}
+
 /** A live article in the build's article template: every value as text or an attribute, the body as micromark renders it. */
-export function renderArticle(template: Response, a: LiveArticle, label: string, authors: LiveAuthors): Response {
+export function renderArticle(template: Response, a: LiveArticle, label: string, authors: LiveAuthors, card: SocialImage | null = null): Response {
   const url = `${MANIFEST_SITE}/blog/${a.slug}/`;
   const live = Object.hasOwn(authors, a.author) ? authors[a.author] : null;
   const name = live?.name ?? a.author;
@@ -298,6 +311,7 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
     author: 'jobTitle' in person ? { ...person, url: `${MANIFEST_SITE}/blog/authors/${a.author}/` } : person,
     ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}),
     dateModified: day,
+    ...(card ? { image: card.src } : {}),
     publisher: { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' },
   };
   const description = a.description ? (e: Element) => e.setAttribute('content', a.description) : (e: Element) => e.remove();
@@ -311,6 +325,9 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
   const tags = a.tags.map(tagItemHtml).join('');
   const tagMetas = a.tags.map((t) => `<meta property="article:tag" content="${escapeHtml(t)}">`).join('');
   const json = safeJsonLd(ld);
+  // The social card, where DocumentHead puts a native article's: og:image before twitter:card, twitter:image after twitter:title.
+  const src = card ? escapeHtml(card.src) : '';
+  const ogImage = card ? `<meta property="og:image" content="${src}"><meta property="og:image:width" content="${card.width}"><meta property="og:image:height" content="${card.height}"><meta property="og:image:alt" content="${escapeHtml(a.title)}">` : '';
   const headers = new Headers(template.headers);
   headers.delete('etag');
   headers.delete('content-length');
@@ -320,7 +337,9 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
     .on('link[rel="canonical"]', setAttr('href', url))
     .on('meta[property="og:url"]', setAttr('content', url))
     .on('meta[property="og:title"]', setAttr('content', a.title))
-    .on('meta[name="twitter:title"]', setAttr('content', a.title))
+    .on('meta[name="twitter:title"]', { element(e) { e.setAttribute('content', a.title); if (card) e.after(`<meta name="twitter:image" content="${src}">`, html); } })
+    .on('meta[name="twitter:card"]', { element(e) { if (card) { e.setAttribute('content', 'summary_large_image'); e.before(ogImage, html); } } })
+    .on('script[data-live-cards]', remove)
     .on('meta[name="description"]', { element: description })
     .on('meta[property="og:description"]', { element: description })
     .on('meta[name="twitter:description"]', { element: description })

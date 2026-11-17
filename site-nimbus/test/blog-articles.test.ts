@@ -157,7 +157,7 @@ test('a published article the build does not have is rendered into the article t
   assert.ok(h.includes('<meta name="description" content="What the edge does.">'));
   assert.ok(h.includes('<meta property="article:tag" content="ci"><meta property="article:tag" content="edge">'));
   assert.ok(h.includes('<meta name="twitter:card" content="summary">') && !h.includes('og:image'), 'the default card');
-  assert.ok(!h.includes('noindex') && !h.includes('_article') && !h.includes('Description') && !h.includes('>Body<'), 'a placeholder is left');
+  assert.ok(!h.includes('noindex') && !h.includes('_article') && !h.includes('Description') && !h.includes('>Body<') && !h.includes('data-live-cards'), 'a placeholder is left');
   assert.ok(h.includes('<a href="/blog/categories/ci/">CI</a>'), 'the category the committed article names');
   assert.ok(h.includes('<h1 id="edge-notes">Edge notes</h1>'));
   assert.ok(h.includes('<a href="/blog/authors/yu-ting-lee/">') && h.includes('data-author="yu-ting-lee" data-author-field="name">Yu-Ting Lee</span>') && h.includes('>YL</span>'));
@@ -173,6 +173,20 @@ test('a published article the build does not have is rendered into the article t
   // Only the constant API origin is fetched, and the cache keys are the site's constant origin plus the slug.
   assert.deepEqual(res.calls, [LIST_SOURCE, articleSource('edge-notes'), AUTHORS]);
   assert.deepEqual(res.puts, [KEY, `${KEY}/edge-notes`, 'https://docs.apertis.ai/_nimbus/blog-authors']);
+});
+
+test('a live article with a committed social card gets it as a committed article does; a foreign or unreadable card list gives none', async () => {
+  const card = 'https://docs.apertis.ai/_astro/card-notes.Ab12_x.png';
+  const live = (slug: string, statics = STATICS) => run({ path: `/blog/${slug}/`, statics, upstream: liveUp([row({ slug, title: 'Card notes' })], { [slug]: article({ slug, title: 'Card notes' }) }) });
+  const h = (await live('card-notes')).body;
+  // DocumentHead's order: og:image and its size and alt just before twitter:card, twitter:image right after twitter:title.
+  assert.ok(h.includes(`<meta property="og:image" content="${card}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Card notes"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Card notes"><meta name="twitter:image" content="${card}">`));
+  assert.equal(JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]).image, card);
+  assert.ok(!h.includes('data-live-cards') && !h.includes('ci-moved-three-times.CJ'), 'the list itself is not served');
+  for (const page of [(await live('foreign-card')).body, (await live('card-notes', { ...STATICS, '/blog/_article/': STATICS['/blog/_article/'].replace('{"card-notes"', '{"card-notes",') })).body]) {
+    assert.ok(page.includes('<meta name="twitter:card" content="summary">') && !page.includes('og:image') && !page.includes('twitter:image') && !page.includes('data-live-cards'));
+    assert.ok(page.includes('<h1 id="card-notes">Card notes</h1>'), 'the article is still rendered');
+  }
 });
 
 test('stored values in title, description and body are inert in text and attribute positions', async () => {
