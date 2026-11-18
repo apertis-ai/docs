@@ -86,6 +86,26 @@ test('the body is micromark with its defaults: raw HTML is text, an unsafe link 
   assert.ok(out.includes('<a>click</a>') && out.includes('<a href="https://apertis.ai/">ok</a>') && out.includes('<img src="" alt="i" />') && out.includes('<h1>Heading</h1>'), out);
 });
 
+test('a pipe table renders as a table with a head, a body and column alignment', () => {
+  const out = renderBody('| Name | Count | Note |\n| :--- | ---: | :---: |\n| a | 1 | x |\n| b | 2 | y |');
+  assert.ok(out.includes('<table>') && out.includes('<thead>') && out.includes('<tbody>'), out);
+  assert.ok(out.includes('<th align="left">Name</th>') && out.includes('<th align="right">Count</th>') && out.includes('<th align="center">Note</th>'), out);
+  assert.ok(out.includes('<td align="right">2</td>'), out);
+});
+
+test('table cells stay inert: raw HTML is text and an unsafe link points nowhere', () => {
+  const out = renderBody('| a | b |\n| - | - |\n| <script>alert(1)</script> | <img src=x onerror=alert(1)> |\n| [c](javascript:alert(1)) | [d](https://apertis.ai/) |');
+  assert.ok(out.includes('<table>'), out);
+  assert.ok(!/<script|<img src=x|onerror=alert\(1\)>|javascript:/i.test(out), out);
+  assert.ok(out.includes('&lt;script&gt;') && out.includes('<a>c</a>') && out.includes('<a href="https://apertis.ai/">d</a>'), out);
+});
+
+test('text with pipes that is not a table stays a paragraph, and no other GFM syntax turns on', () => {
+  const out = renderBody('a | b | c\n\nsee https://apertis.ai/ and ~~gone~~');
+  assert.ok(!out.includes('<table>') && out.includes('<p>a | b | c</p>'), out);
+  assert.ok(!out.includes('<a ') && !out.includes('<del>'), out);
+});
+
 test('a live body gets the build\'s heading ids (github-slugger over h1 to h6) and its h2/h3 for "On this page"', () => {
   const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Notes\n\n## Notes\n\n## O(n²) lookups\n\n## Edge notes\n\n##';
   const { html, headings } = articleBody(md, ['Edge notes']);

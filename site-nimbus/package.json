@@ -30,6 +30,7 @@
     "github-slugger": "2.0.0",
     "lucide-react": "1.48.0",
     "micromark": "4.0.3",
+    "micromark-extension-gfm-table": "2.1.2",
     "radix-ui": "1.6.7",
     "react": "19.2.7",
     "react-dom": "19.2.7",

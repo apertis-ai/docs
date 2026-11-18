@@ -8,6 +8,7 @@
 // it. Pure (no Node or Workers APIs), so the function bundles it and the tests run it as is.
 import GithubSlugger from 'github-slugger';
 import { micromark } from 'micromark';
+import { gfmTable, gfmTableHtml } from 'micromark-extension-gfm-table';
 import { categoryPath, LEGACY_BLOG_PATHS, tagPath } from '../../contracts/articles.ts';
 import { tocTree, type TocHeading } from '../shell/navigation.ts';
 import { displayDate } from '../shell/page-header.ts';
@@ -112,11 +113,11 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
 }
 
 /**
- * The article body as HTML: micromark with its defaults (raw HTML escaped, `javascript:` and other unsafe
+ * The article body as HTML: micromark with its defaults plus GFM tables only (no other GFM syntax; raw HTML escaped, `javascript:` and other unsafe
  * destinations emptied). A link whose destination was emptied and has no title loses the attribute, so it points nowhere; with a title
  * (`[a](javascript:x "t")`) it stays `<a href="" title="t">`, which points nowhere harmful.
  */
-export const renderBody = (markdown: string) => micromark(markdown).replace(/<a href="">/g, '<a>');
+export const renderBody = (markdown: string) => micromark(markdown, { extensions: [gfmTable()], htmlExtensions: [gfmTableHtml()] }).replace(/<a href="">/g, '<a>');
 
 /**
  * A live article's body with an id on every heading, and its h2 and h3 for "On this page", as a committed article
