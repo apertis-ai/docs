@@ -3,11 +3,12 @@
 //   - GET LIST_SOURCE: every published article, newest first, without its body (the listing pages);
 //   - GET articleSource(slug): one published article with its Markdown body (its own page), 404 when unpublished.
 // Every value is validated again here, whatever the API promises: a row that fails is skipped (the list) or the
-// answer is refused (one article). The Markdown body is rendered with micromark's defaults only, so raw HTML is
+// answer is refused (one article). The Markdown body is rendered with micromark's defaults plus GFM tables, so raw HTML is
 // escaped and unsafe link protocols are dropped; every other value is text, and the markup helpers below escape
 // it. Pure (no Node or Workers APIs), so the function bundles it and the tests run it as is.
 import GithubSlugger from 'github-slugger';
 import { micromark } from 'micromark';
+import { gfmTable, gfmTableHtml } from 'micromark-extension-gfm-table';
 import { categoryPath, LEGACY_BLOG_PATHS, tagPath } from '../../contracts/articles.ts';
 import { tocTree, type TocHeading } from '../shell/navigation.ts';
 import { displayDate } from '../shell/page-header.ts';
@@ -112,11 +113,34 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
 }
 
 /**
- * The article body as HTML: micromark with its defaults (raw HTML escaped, `javascript:` and other unsafe
+ * The article body as HTML: micromark with its defaults plus GFM tables only (no other GFM syntax; raw HTML escaped, `javascript:` and other unsafe
  * destinations emptied). A link whose destination was emptied and has no title loses the attribute, so it points nowhere; with a title
  * (`[a](javascript:x "t")`) it stays `<a href="" title="t">`, which points nowhere harmful.
  */
-export const renderBody = (markdown: string) => micromark(markdown).replace(/<a href="">/g, '<a>');
+// A table row shorter than its delimiter row is padded to the full width, so a few KiB of `|a|a…` over many one-word lines would
+// render columns × rows cells. A blank line (spaces and tabs only, as Markdown defines it) ends a table, so every table lies inside one
+// run of non-blank lines, is no wider than the most pipes on one line of that run plus one, and no longer than the run. Past this sum
+// over the runs the body renders without tables (they stay paragraphs), which is linear in its size.
+const MAX_TABLE_CELLS = 20_000;
+const tableCellBound = (markdown: string) => {
+  let total = 0;
+  let rows = 0;
+  let pipes = 0;
+  for (const line of markdown.split(/\r\n?|\n/)) {
+    if (/^[ \t]*$/.test(line)) {
+      total += rows * (pipes + 1);
+      rows = 0;
+      pipes = 0;
+    } else {
+      rows += 1;
+      pipes = Math.max(pipes, line.split('|').length - 1);
+    }
+  }
+  return total + rows * (pipes + 1);
+};
+const TABLES = { extensions: [gfmTable()], htmlExtensions: [gfmTableHtml()] };
+export const renderBody = (markdown: string) =>
+  micromark(markdown, tableCellBound(markdown) > MAX_TABLE_CELLS ? {} : TABLES).replace(/<a href="">/g, '<a>');
 
 /**
  * A live article's body with an id on every heading, and its h2 and h3 for "On this page", as a committed article

@@ -86,6 +86,44 @@ test('the body is micromark with its defaults: raw HTML is text, an unsafe link 
   assert.ok(out.includes('<a>click</a>') && out.includes('<a href="https://apertis.ai/">ok</a>') && out.includes('<img src="" alt="i" />') && out.includes('<h1>Heading</h1>'), out);
 });
 
+test('a pipe table renders as a table with a head, a body and column alignment', () => {
+  const out = renderBody('| Name | Count | Note |\n| :--- | ---: | :---: |\n| a | 1 | x |\n| b | 2 | y |');
+  assert.ok(out.includes('<table>') && out.includes('<thead>') && out.includes('<tbody>'), out);
+  assert.ok(out.includes('<th align="left">Name</th>') && out.includes('<th align="right">Count</th>') && out.includes('<th align="center">Note</th>'), out);
+  assert.ok(out.includes('<td align="right">2</td>'), out);
+});
+
+test('table cells stay inert: raw HTML is text and an unsafe link points nowhere', () => {
+  const out = renderBody('| a | b |\n| - | - |\n| <script>alert(1)</script> | <img src=x onerror=alert(1)> |\n| [c](javascript:alert(1)) | [d](https://apertis.ai/) |');
+  assert.ok(out.includes('<table>'), out);
+  assert.ok(!/<script|<img src=x|onerror=alert\(1\)>|javascript:/i.test(out), out);
+  assert.ok(out.includes('&lt;script&gt;') && out.includes('<a>c</a>') && out.includes('<a href="https://apertis.ai/">d</a>'), out);
+});
+
+test('text with pipes that is not a table stays a paragraph, and no other GFM syntax turns on', () => {
+  const out = renderBody('a | b | c\n\nsee https://apertis.ai/ and ~~gone~~');
+  assert.ok(!out.includes('<table>') && out.includes('<p>a | b | c</p>'), out);
+  assert.ok(!out.includes('<a ') && !out.includes('<del>'), out);
+});
+
+test('a wide header over many short rows renders without tables, so the output stays linear in the body', () => {
+  const md = `${'|a'.repeat(400)}|\n${'|-'.repeat(400)}|\n${'x\n'.repeat(400)}`;
+  const out = renderBody(md);
+  assert.ok(!out.includes('<table>') && out.length < md.length * 4, String(out.length));
+  const wide = renderBody(`${'|a'.repeat(30)}|\n${'|-'.repeat(30)}|\n${'|x'.repeat(30)}|\n`);
+  assert.ok(wide.includes('<table>') && wide.split('<td>').length - 1 === 30, wide);
+});
+
+test('a long article keeps its tables: the cell bound is summed over runs of non-blank lines, not taken over the whole body', () => {
+  const table = `${'|a'.repeat(12)}|\n${'|-'.repeat(12)}|\n${'|x'.repeat(12)}|\n`;
+  const long = renderBody(`${'A paragraph.\n\n'.repeat(800)}\`\`\`\n${'|'.repeat(60)}\n\`\`\`\n\n${table}`);
+  assert.ok(long.includes('<table>') && long.split('<td>').length - 1 === 12, String(long.length));
+  // a line of other white space is not blank to Markdown, so it does not end the run (or the table) for the bound either
+  const nbsp = renderBody(`${'|a'.repeat(400)}|\n${'|-'.repeat(400)}|\n${'\u00a0\n'.repeat(400)}`);
+  assert.ok(!nbsp.includes('<table>') && nbsp.length < 20_000, String(nbsp.length));
+  assert.ok(renderBody('\n'.repeat(200_000)) === '');
+});
+
 test('a live body gets the build\'s heading ids (github-slugger over h1 to h6) and its h2/h3 for "On this page"', () => {
   const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Notes\n\n## Notes\n\n## O(n²) lookups\n\n## Edge notes\n\n##';
   const { html, headings } = articleBody(md, ['Edge notes']);

@@ -501,6 +501,7 @@ button { font: inherit; color: inherit; }
   color: var(--ink);
   font-family: var(--mono);
   font-size: 0.86em;
+  overflow-wrap: break-word; /* a long identifier in prose wraps at 390px; break-word leaves a table cell's min-content width alone */
 }
 .docs-content figure { margin: 0; }
 /* Nimbus emits Shiki tokens as --shiki-light / --shiki-dark variables (_nimbus/shiki.css). */
