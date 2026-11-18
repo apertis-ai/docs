@@ -106,6 +106,14 @@ test('text with pipes that is not a table stays a paragraph, and no other GFM sy
   assert.ok(!out.includes('<a ') && !out.includes('<del>'), out);
 });
 
+test('a wide header over many short rows renders without tables, so the output stays linear in the body', () => {
+  const md = `${'|a'.repeat(400)}|\n${'|-'.repeat(400)}|\n${'x\n'.repeat(400)}`;
+  const out = renderBody(md);
+  assert.ok(!out.includes('<table>') && out.length < md.length * 4, String(out.length));
+  const wide = renderBody(`${'|a'.repeat(30)}|\n${'|-'.repeat(30)}|\n${'|x'.repeat(30)}|\n`);
+  assert.ok(wide.includes('<table>') && wide.split('<td>').length - 1 === 30, wide);
+});
+
 test('a live body gets the build\'s heading ids (github-slugger over h1 to h6) and its h2/h3 for "On this page"', () => {
   const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Notes\n\n## Notes\n\n## O(n²) lookups\n\n## Edge notes\n\n##';
   const { html, headings } = articleBody(md, ['Edge notes']);
