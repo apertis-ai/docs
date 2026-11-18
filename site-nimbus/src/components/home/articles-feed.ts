@@ -118,12 +118,25 @@ export async function fetchArticle(fetcher: typeof fetch, slug: string): Promise
  * (`[a](javascript:x "t")`) it stays `<a href="" title="t">`, which points nowhere harmful.
  */
 // A table row shorter than its delimiter row is padded to the full width, so a few KiB of `|a|a…` over many one-word lines would
-// render columns × rows cells. No table is wider than the most pipes on any one line plus one, nor longer than the body has lines:
-// past this product the body renders without tables (they stay paragraphs), which is linear in its size.
+// render columns × rows cells. A blank line (spaces and tabs only, as Markdown defines it) ends a table, so every table lies inside one
+// run of non-blank lines, is no wider than the most pipes on one line of that run plus one, and no longer than the run. Past this sum
+// over the runs the body renders without tables (they stay paragraphs), which is linear in its size.
 const MAX_TABLE_CELLS = 20_000;
 const tableCellBound = (markdown: string) => {
-  const lines = markdown.split(/\r\n?|\n/);
-  return lines.length * (1 + Math.max(0, ...lines.map((line) => line.split('|').length - 1)));
+  let total = 0;
+  let rows = 0;
+  let pipes = 0;
+  for (const line of markdown.split(/\r\n?|\n/)) {
+    if (/^[ \t]*$/.test(line)) {
+      total += rows * (pipes + 1);
+      rows = 0;
+      pipes = 0;
+    } else {
+      rows += 1;
+      pipes = Math.max(pipes, line.split('|').length - 1);
+    }
+  }
+  return total + rows * (pipes + 1);
 };
 const TABLES = { extensions: [gfmTable()], htmlExtensions: [gfmTableHtml()] };
 export const renderBody = (markdown: string) =>

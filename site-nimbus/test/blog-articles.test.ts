@@ -114,6 +114,16 @@ test('a wide header over many short rows renders without tables, so the output s
   assert.ok(wide.includes('<table>') && wide.split('<td>').length - 1 === 30, wide);
 });
 
+test('a long article keeps its tables: the cell bound is summed over runs of non-blank lines, not taken over the whole body', () => {
+  const table = `${'|a'.repeat(12)}|\n${'|-'.repeat(12)}|\n${'|x'.repeat(12)}|\n`;
+  const long = renderBody(`${'A paragraph.\n\n'.repeat(800)}\`\`\`\n${'|'.repeat(60)}\n\`\`\`\n\n${table}`);
+  assert.ok(long.includes('<table>') && long.split('<td>').length - 1 === 12, String(long.length));
+  // a line of other white space is not blank to Markdown, so it does not end the run (or the table) for the bound either
+  const nbsp = renderBody(`${'|a'.repeat(400)}|\n${'|-'.repeat(400)}|\n${'\u00a0\n'.repeat(400)}`);
+  assert.ok(!nbsp.includes('<table>') && nbsp.length < 20_000, String(nbsp.length));
+  assert.ok(renderBody('\n'.repeat(200_000)) === '');
+});
+
 test('a live body gets the build\'s heading ids (github-slugger over h1 to h6) and its h2/h3 for "On this page"', () => {
   const md = '# Title\n\n## Change 1: the `key` lookup\n\n### Why & how\n\n## Still open\n\n## Still open\n\n#### Notes\n\n## Notes\n\n## O(n²) lookups\n\n## Edge notes\n\n##';
   const { html, headings } = articleBody(md, ['Edge notes']);
