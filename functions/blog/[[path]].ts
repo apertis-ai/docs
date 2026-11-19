@@ -6,6 +6,8 @@
 // rows. In detail:
 //   - /blog/<slug>/ answering 404 statically, for a slug the published list holds: the article, rendered into the
 //     build's article template (/blog/_article/) with HTMLRewriter. /blog/<slug> redirects there first.
+//   - /blog/<slug>/index.md (where a committed article's Markdown is, and what its page actions point at) answering 404
+//     statically, for the same slug: the article as Markdown (`# <title>`, then the body as stored).
 //   - /blog/, /blog/tags/, /blog/tags/<tag>/, /blog/categories/, /blog/categories/<slug>/ and /blog/authors/<slug>/:
 //     the live rows (or tag and category chips) inserted in the static page's own markup, by date, any slug the
 //     build already publishes skipped. A tag or category page only live articles have is rendered into the listing
@@ -38,6 +40,7 @@ const RESERVED = new Set(['tags', 'categories', 'authors']);
 
 type Route =
   | { kind: 'article'; slug: string; slash: boolean }
+  | { kind: 'markdown'; slug: string }
   | { kind: 'index' | 'tags' | 'categories' }
   | { kind: 'tag' | 'category' | 'author'; slug: string }
   | { kind: 'template' }
@@ -51,6 +54,8 @@ export function route(pathname: string): Route {
   if (pathname === CATEGORIES_PATH) return { kind: 'categories' };
   const sub = /^\/blog\/(tags|categories|authors)\/([^/]+)\/$/.exec(pathname);
   if (sub) return isSlug(sub[2], sub[1] === 'authors' ? 96 : 40) ? { kind: ({ tags: 'tag', categories: 'category', authors: 'author' } as const)[sub[1] as 'tags'], slug: sub[2] } : { kind: 'other' };
+  const md = /^\/blog\/([^/]+)\/index\.md$/.exec(pathname);
+  if (md && isSlug(md[1]) && !RESERVED.has(md[1])) return { kind: 'markdown', slug: md[1] };
   const article = /^\/blog\/([^/]+)(\/?)$/.exec(pathname);
   if (article && isSlug(article[1]) && !RESERVED.has(article[1])) return { kind: 'article', slug: article[1], slash: article[2] === '/' };
   return { kind: 'other' };
@@ -86,12 +91,13 @@ export function handler(deps: Deps) {
     if (r.kind === 'template') return env.ASSETS.fetch(new Request(MANIFEST_SITE + MISSING_PATH));
     if ((request.method !== 'GET' && request.method !== 'HEAD') || r.kind === 'other') return next();
     // A listing page is rewritten from its full body: ask without the conditional headers, so the answer is never a bare 304.
-    const listing = r.kind !== 'article';
+    const listing = r.kind !== 'article' && r.kind !== 'markdown';
     const res = await next(listing ? unconditional(request) : request);
-    if (r.kind === 'article' ? res.status !== 404 : res.status !== 200 && !(res.status === 404 && (r.kind === 'tag' || r.kind === 'category'))) return res;
+    if (r.kind === 'article' || r.kind === 'markdown' ? res.status !== 404 : res.status !== 200 && !(res.status === 404 && (r.kind === 'tag' || r.kind === 'category'))) return res;
     const live = new Live(deps, context);
     try {
       if (r.kind === 'article') return await live.article(r.slug, r.slash, res);
+      if (r.kind === 'markdown') return await live.markdown(r.slug, res);
       return await live.listing(r, res);
     } catch (e) {
       deps.log('blog-articles:', e instanceof Error ? e.message : e);
@@ -239,7 +245,16 @@ class Live {
     return renderArticle(new Response(text, template), a, categoryLabel(a.category, site.labels), authors, liveCard(text, slug));
   }
 
-  async listing(r: Exclude<Route, { kind: 'article' | 'template' | 'other' }>, res: Response): Promise<Response> {
+  /** The published live article as Markdown, in a committed article's shape (title, description, body); any other slug (unlisted, built, unpublished since) leaves the static 404. */
+  async markdown(slug: string, res: Response): Promise<Response> {
+    if (!(await this.rows()).some((x) => x.slug === slug)) return res;
+    if ((await this.site()).slugs.has(slug)) return res;
+    const a = await this.one(slug);
+    if (!a) return res;
+    return new Response([`# ${a.title}`, ...(a.description ? [a.description] : []), a.markdown].join('\n\n'), { headers: { 'content-type': 'text/markdown; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
+  }
+
+  async listing(r: Exclude<Route, { kind: 'article' | 'markdown' | 'template' | 'other' }>, res: Response): Promise<Response> {
     const all = await this.rows();
     if (res.status === 404) {
       // A tag or category page only live articles have.
@@ -295,6 +310,8 @@ export function liveCard(template: string, slug: string): SocialImage | null {
 /** A live article in the build's article template: every value as text or an attribute, the body as micromark renders it. */
 export function renderArticle(template: Response, a: LiveArticle, label: string, authors: LiveAuthors, card: SocialImage | null = null): Response {
   const url = `${MANIFEST_SITE}/blog/${a.slug}/`;
+  // Where a committed article's Markdown is (markdownPathFor): the page actions and the meta both name it.
+  const markdown = `/blog/${a.slug}/index.md`;
   const live = Object.hasOwn(authors, a.author) ? authors[a.author] : null;
   const name = live?.name ?? a.author;
   const byline = live?.title ? `${name}, ${live.title}` : name;
@@ -348,6 +365,8 @@ export function renderArticle(template: Response, a: LiveArticle, label: string,
     .on('meta[property="article:tag"]', { element(e) { e.replace(tagMetas, html); } })
     .on('script[type="application/ld+json"]', { element(e) { e.setInnerContent(json, html); } })
     .on('meta[name="apertis-docs:id"]', setAttr('content', `blog:${a.slug}`))
+    .on('meta[name="apertis-docs:markdown"]', setAttr('content', markdown))
+    .on('astro-island[component-url*="PageActions"]', setAttr('props', JSON.stringify({ markdownPath: [0, markdown] })))
     .on('p.doc-header__tag > a', { element(e) { e.setAttribute('href', categoryPath(a.category)); e.setInnerContent(label); } })
     .on('header.doc-header > h1', { element(e) { e.setAttribute('id', titleId(a.title)); e.setInnerContent(a.title); } })
     .on('p.doc-header__desc', { element(e) { if (a.description) e.setInnerContent(a.description); else e.remove(); } })
