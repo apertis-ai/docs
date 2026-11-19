@@ -9,7 +9,7 @@
 // by year). Like the index they are not manifest documents: no Markdown artifact, no search entry.
 // Two more pages are templates the edge renders live articles into (functions/blog/[[path]].ts): /blog/_article/
 // (an article, from DocLayout) and /blog/_listing/ (a tag or category page). Placeholder values only, noindex, and
-// never served as themselves (the function answers 404 there).
+// never served as themselves (the function answers 404 there). The article template carries a placeholder Markdown path so its page actions are rendered; the edge points them, and the meta, at the live article's own /blog/<slug>/index.md.
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocLayout from '../../layouts/DocLayout.astro';
@@ -81,7 +81,7 @@ const years = [...new Set(rows.map((r) => r.date.slice(0, 4)))].map((year) => ({
 const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()).some((r) => r.tags.length > 0);
 ---
 {template === 'article' ? (
-  <DocLayout doc={listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article')} buildId={manifest.buildId} headings={[{ depth: 2, slug: 'heading', text: 'Heading' }]} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
+  <DocLayout doc={{ ...listing('page:blog-article-template', ARTICLE_TEMPLATE_PATH, 'Article'), markdown: { path: `${ARTICLE_TEMPLATE_PATH}index.md`, sha256: '' } }} buildId={manifest.buildId} headings={[{ depth: 2, slug: 'heading', text: 'Heading' }]} article={{ category: 'Category', author: 'Author', description: 'Description', tags: ['tag'], template: true }}>
     <h1 id={titleId('Article')}>Article</h1>
     <p data-live-body>Body</p>
     {/* Every social card, by slug: the edge gives a live article its own (og:image, twitter:image, JSON-LD image) and removes this. */}

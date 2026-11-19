@@ -408,8 +408,71 @@ test('a live article that would bring back a retired legacy blog path is shown n
 test('other methods and other paths are the static response', async () => {
   const post = await run({ path: '/blog/edge-notes/', method: 'POST', upstream: liveUp([row()], { 'edge-notes': article() }) });
   assert.deepEqual([post.status, post.calls], [404, []]);
-  for (const p of ['/blog/Edge-Notes/', '/blog/edge_notes/', '/blog/a/b/c/', '/blog/tags', '/blog/ci-moved-three-times/index.md']) {
+  for (const p of ['/blog/Edge-Notes/', '/blog/edge_notes/', '/blog/a/b/c/', '/blog/tags', ]) {
     const res = await run({ path: p, upstream: liveUp([row()]) });
     assert.deepEqual(res.calls, [], p);
   }
+});
+
+// ---- a live article has what a committed article page has ----
+
+const MD = (slug: string) => `/blog/${slug}/index.md`;
+const live = () => run({ path: '/blog/edge-notes/', upstream: liveUp([row({ tags: ['ci', 'edge'] })], { 'edge-notes': article({ tags: ['ci', 'edge'] }) }) });
+
+test('parity: a live article page has every item a committed article page has, page actions included', async () => {
+  const h = (await live()).body;
+  const md = MD('edge-notes');
+  const items: Record<string, boolean> = {
+    'table of contents in the aside': /<aside class="doc-page__toc" aria-label="On this page">[\s\S]*<ul class="toc"><li><a href="#why">Why<\/a><\/li><\/ul>/.test(h),
+    'table of contents in the mobile disclosure': /<astro-island[^>]*TocMobile[^>]*>[\s\S]*<ul class="toc"><li><a href="#why">/.test(h),
+    'an id on every h2': h.includes('<h2 id="why">'),
+    'byline': h.includes('<dd class="byline-author"><a href="/blog/authors/yu-ting-lee/">'),
+    'published date': h.includes('<time datetime="2026-11-14">Nov 14, 2026</time>'),
+    'reading time': h.includes('<dd>1 min</dd>'),
+    'tags': h.includes('<li><a class="tag" href="/blog/tags/ci/">#ci</a></li>'),
+    'category link': h.includes('<p class="doc-header__tag" data-pagefind-ignore><a href="/blog/categories/ci/">CI</a></p>'),
+    'description': h.includes('<p class="doc-header__desc">What the edge does.</p>') && h.includes('<meta name="description" content="What the edge does.">'),
+    'social card meta': h.includes('<meta property="og:title" content="Edge notes">') && h.includes('<meta name="twitter:card" content="summary">'),
+    'page actions': /<div class="doc-header__actions" data-pagefind-ignore="all"><astro-island[^>]*PageActions/.test(h),
+    'the Markdown meta': h.includes(`<meta name="apertis-docs:markdown" content="${md}">`),
+    'the actions\' own Markdown path': h.includes(`markdownPath&quot;:[0,&quot;${md}&quot;]`),
+  };
+  assert.deepEqual(Object.keys(items).filter((k) => !items[k]), []);
+  assert.ok(!h.includes('/blog/_article/index.md'), 'the template\'s placeholder path is gone');
+  // The h3 ids and a second h2 are the same ones the committed build gives.
+  const two = (await run({ path: '/blog/edge-notes/', upstream: liveUp([row()], { 'edge-notes': { ...article(), body_markdown: '## One\n\n### Two\n\ntext' } }) })).body;
+  assert.ok(two.includes('<h2 id="one">One</h2>') && two.includes('<h3 id="two">Two</h3>'));
+});
+
+test('a live article\'s Markdown path answers the article as Markdown, from the cache path the page uses', async () => {
+  const res = await run({ path: MD('edge-notes'), upstream: liveUp([row()], { 'edge-notes': article() }) });
+  assert.equal(res.status, 200);
+  assert.equal(res.headers['content-type'], 'text/markdown; charset=utf-8');
+  assert.equal(res.body, '# Edge notes\n\n## Why\n\nBecause the **edge** said so.');
+  assert.deepEqual(res.calls, [LIST_SOURCE, articleSource('edge-notes')]);
+  assert.deepEqual(res.puts, [KEY, `${KEY}/edge-notes`]);
+  const hit = await run({ path: MD('edge-notes'), cache: { [KEY]: JSON.stringify([row()]), [`${KEY}/edge-notes`]: JSON.stringify(article()) } });
+  assert.deepEqual([hit.status, hit.calls, hit.puts], [200, [], []]);
+});
+
+test('the Markdown path of an unknown slug, a draft, a reserved name, a template or a legacy-path article is the static 404', async () => {
+  const drafts = { [LIST_SOURCE]: ok([row()]), [articleSource('edge-notes')]: { status: 404, body: { success: false } } };
+  const cases: [string, Record<string, Upstream>][] = [
+    [MD('not-published'), liveUp([row()])], [MD('edge-notes'), drafts], [MD('tags'), liveUp([row({ slug: 'tags' })], { tags: article({ slug: 'tags' }) })],
+    ['/blog/_article/index.md', liveUp([row()])], ['/blog/_listing/index.md', liveUp([row()])], [MD('welcome'), liveUp([row({ slug: 'welcome' })], { welcome: article({ slug: 'welcome' }) })],
+  ];
+  for (const [p, upstream] of cases) {
+    const res = await run({ path: p, upstream });
+    assert.deepEqual([res.status, res.body === STATICS['404']], [404, true], p);
+  }
+  assert.ok(!(await run({ path: '/blog/_article/index.md', upstream: liveUp([row()]) })).calls.length, 'a template path never asks the API');
+});
+
+test('the static Markdown response wins, and a committed article\'s slug is never read from the API', async () => {
+  const statics = { ...STATICS, '/blog/ci-moved-three-times/index.md': '# Committed' };
+  const res = await run({ path: '/blog/ci-moved-three-times/index.md', statics, upstream: liveUp([row({ slug: 'ci-moved-three-times' })], { 'ci-moved-three-times': article({ slug: 'ci-moved-three-times' }) }) });
+  assert.deepEqual([res.status, res.body, res.calls, res.puts], [200, '# Committed', [], []]);
+  // A committed slug whose Markdown the build lacks stays 404 too: the live row is shadowed by the build.
+  const lacking = await run({ path: '/blog/ci-moved-three-times/index.md', upstream: liveUp([row({ slug: 'ci-moved-three-times' })], { 'ci-moved-three-times': article({ slug: 'ci-moved-three-times' }) }) });
+  assert.deepEqual([lacking.status, lacking.body === STATICS['404'], lacking.calls.includes(articleSource('ci-moved-three-times'))], [404, true, false]);
 });
