@@ -448,7 +448,9 @@ test('a live article\'s Markdown path answers the article as Markdown, from the 
   const res = await run({ path: MD('edge-notes'), upstream: liveUp([row()], { 'edge-notes': article() }) });
   assert.equal(res.status, 200);
   assert.equal(res.headers['content-type'], 'text/markdown; charset=utf-8');
-  assert.equal(res.body, '# Edge notes\n\n## Why\n\nBecause the **edge** said so.');
+  assert.equal(res.body, '# Edge notes\n\nWhat the edge does.\n\n## Why\n\nBecause the **edge** said so.');
+  const bare = await run({ path: MD('edge-notes'), upstream: liveUp([row()], { 'edge-notes': article({ description: '' }) }) });
+  assert.equal(bare.body, '# Edge notes\n\n## Why\n\nBecause the **edge** said so.');
   assert.deepEqual(res.calls, [LIST_SOURCE, articleSource('edge-notes')]);
   assert.deepEqual(res.puts, [KEY, `${KEY}/edge-notes`]);
   const hit = await run({ path: MD('edge-notes'), cache: { [KEY]: JSON.stringify([row()]), [`${KEY}/edge-notes`]: JSON.stringify(article()) } });

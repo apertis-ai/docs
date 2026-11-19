@@ -245,13 +245,13 @@ class Live {
     return renderArticle(new Response(text, template), a, categoryLabel(a.category, site.labels), authors, liveCard(text, slug));
   }
 
-  /** The published live article as Markdown; any other slug (unlisted, built, unpublished since) leaves the static 404. */
+  /** The published live article as Markdown, in a committed article's shape (title, description, body); any other slug (unlisted, built, unpublished since) leaves the static 404. */
   async markdown(slug: string, res: Response): Promise<Response> {
     if (!(await this.rows()).some((x) => x.slug === slug)) return res;
     if ((await this.site()).slugs.has(slug)) return res;
     const a = await this.one(slug);
     if (!a) return res;
-    return new Response(`# ${a.title}\n\n${a.markdown}`, { headers: { 'content-type': 'text/markdown; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
+    return new Response([`# ${a.title}`, ...(a.description ? [a.description] : []), a.markdown].join('\n\n'), { headers: { 'content-type': 'text/markdown; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
   }
 
   async listing(r: Exclude<Route, { kind: 'article' | 'markdown' | 'template' | 'other' }>, res: Response): Promise<Response> {

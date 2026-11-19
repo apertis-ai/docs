@@ -592,6 +592,10 @@ test('the live article templates: noindex, in no sitemap, search index or llms f
     /<ul class="tag-list"[^>]*><li><a class="tag" href="\/blog\/tags\/tag\/">#tag<\/a><\/li><\/ul>/, /<hr class="doc-header__rule"><p data-live-body>Body<\/p><script type="application\/json" data-live-cards>[^<]*<\/script><\/article>/]) {
     assert.match(article, re);
   }
+  // The page actions ("Copy page") and the Markdown meta, both of which the edge points at the live article's own path.
+  assert.equal(article.split(`<meta name="apertis-docs:markdown" content="${ARTICLE_TEMPLATE_PATH}index.md">`).length - 1, 1);
+  assert.equal(article.match(/<astro-island[^>]*component-url="[^"]*PageActions[^"]*"[^>]*>/g)?.length, 1);
+  assert.match(article, new RegExp(`<astro-island[^>]*component-url="[^"]*PageActions[^"]*"[^>]*props="\\{&quot;markdownPath&quot;:\\[0,&quot;${ARTICLE_TEMPLATE_PATH}index\\.md&quot;\\]\\}"`));
   // "On this page": the placeholder entry the edge replaces with the live body's headings, in the mobile disclosure
   // (inside the TocMobile island, which the edge removes with the aside when the body has none) and the aside.
   assert.equal(article.split('<ul class="toc"><li><a href="#heading">Heading</a></li></ul>').length - 1, 2);
