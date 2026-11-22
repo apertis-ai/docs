@@ -63,3 +63,6 @@ export const LEGACY_BLOG_PATHS: readonly string[] = [
   '/blog/authors/yangshun', '/blog/first-blog-post', '/blog/long-blog-post', '/blog/mdx-blog-post', '/blog/rss.css', '/blog/rss.xml', '/blog/rss.xsl',
   '/blog/tags', '/blog/tags/docusaurus', '/blog/tags/facebook', '/blog/tags/hello', '/blog/tags/hola', '/blog/welcome',
 ];
+
+/** The /blog/ index's description (meta, og, JSON-LD and its Markdown twin): plain and factual, 140 to 160 characters. */
+export const BLOG_DESCRIPTION = 'Engineering articles from the Apertis team about the API gateway, routing, billing and CI, written by the engineers who build and run the service.';

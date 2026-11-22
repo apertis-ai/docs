@@ -478,3 +478,20 @@ test('the static Markdown response wins, and a committed article\'s slug is neve
   const lacking = await run({ path: '/blog/ci-moved-three-times/index.md', upstream: liveUp([row({ slug: 'ci-moved-three-times' })], { 'ci-moved-three-times': article({ slug: 'ci-moved-three-times' }) }) });
   assert.deepEqual([lacking.status, lacking.body === STATICS['404'], lacking.calls.includes(articleSource('ci-moved-three-times'))], [404, true, false]);
 });
+
+test('the /blog/ index\'s Blog JSON-LD and its Markdown twin gain the live articles, once each', async () => {
+  const ld = { '@context': 'https://schema.org', '@type': 'Blog', blogPost: [{ '@type': 'BlogPosting', headline: 'CI', url: 'https://docs.apertis.ai/blog/ci-moved-three-times/', datePublished: '2026-11-13' }] };
+  const page = STATICS['/blog/'].replace('</head>', `<script type="application/ld+json">${JSON.stringify(ld)}</script></head>`);
+  const res = await run({ path: '/blog/', statics: { ...STATICS, '/blog/': page }, upstream: liveUp([row()]) });
+  const json = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(res.body)![1]);
+  assert.deepEqual(json.blogPost.map((p: { url: string; datePublished: string }) => [p.url, p.datePublished]), [
+    ['https://docs.apertis.ai/blog/ci-moved-three-times/', '2026-11-13'],
+    ['https://docs.apertis.ai/blog/edge-notes/', '2026-11-14'],
+  ]);
+  const twin = '# Apertis blog\n\nD.\n\n## Articles\n\n- [CI](https://docs.apertis.ai/blog/ci-moved-three-times/): Moved.\n';
+  const md = await run({ path: '/blog/index.md', statics: { ...STATICS, '/blog/index.md': twin, '/blog/': page }, upstream: liveUp([row()]) });
+  assert.equal(md.status, 200);
+  assert.equal(md.body, `${twin}- [Edge notes](https://docs.apertis.ai/blog/edge-notes/): What the edge does.\n`);
+  const none = await run({ path: '/blog/index.md', statics: { ...STATICS, '/blog/index.md': twin }, upstream: liveUp([]) });
+  assert.equal(none.body, twin);
+});

@@ -18,9 +18,9 @@ import AuthorAvatar from '../../components/home/AuthorAvatar.astro';
 import LiveAuthors from '../../components/home/LiveAuthors.astro';
 import { articleRows, type ArticleRow, type Author } from '../../components/home/article-rows.ts';
 import Toc from '../../components/shell/Toc.astro';
-import { ARTICLE_TEMPLATE_PATH, categoryPath, CATEGORIES_PATH, isNativeArticle, LISTING_TEMPLATE_PATH, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
+import { ARTICLE_TEMPLATE_PATH, BLOG_DESCRIPTION, categoryPath, CATEGORIES_PATH, isNativeArticle, LISTING_TEMPLATE_PATH, parseTags, tagPath, TAGS_PATH, titleId } from '../../contracts/articles.ts';
 import { MANIFEST_SITE, type ManifestDocument } from '../../contracts/manifest.ts';
-import { safeJsonLd } from '../../contracts/page.ts';
+import { safeJsonLd, servedUrl } from '../../contracts/page.ts';
 import { manifest } from '../../manifest/manifest.ts';
 
 export async function getStaticPaths() {
@@ -68,6 +68,8 @@ const rendered = entry ? await render(entry) : null;
 // The article's social card, when src/assets/og/<slug>.png exists (1200x630); a live article's too (the template lists them).
 const cards = import.meta.glob<{ default: ImageMetadata }>('../../assets/og/*.png', { eager: true });
 const card = entry ? cards[`../../assets/og/${entry.id}.png`]?.default : undefined;
+// The index shares the newest article's card that has one: the site has no card of its own for a listing.
+const indexCard = (await articleRows()).map((r) => cards[`../../assets/og/${r.slug}.png`]?.default).find(Boolean);
 const data = entry?.data as { title: string; description: string; author: string; category: string; tags?: unknown } | undefined;
 // The index is not a manifest document (like /search/): it is never indexed and has no Markdown.
 const listing = (id: string, servedPath: string, title: string): ManifestDocument => ({
@@ -157,7 +159,8 @@ const hasTags = manifest.documents.some(isNativeArticle) && (await articleRows()
     </main>
   </BaseLayout>
 ) : (
-  <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles} seo={{ description: 'Guides, updates and field notes from the team building Apertis.' }}>
+  <BaseLayout doc={index} buildId={manifest.buildId} noindex={!hasArticles}
+    seo={{ description: BLOG_DESCRIPTION, blog: hasArticles ? { posts: (await articleRows()).map((r) => ({ headline: r.doc.title, url: servedUrl(r.doc.canonicalUrl), datePublished: r.date })), image: indexCard } : undefined }}>
     <main class="shell-container blog-index" id="main">
       <div class="blog-index__intro">
         <h1>Apertis blog</h1>
