@@ -68,8 +68,8 @@ const rendered = entry ? await render(entry) : null;
 // The article's social card, when src/assets/og/<slug>.png exists (1200x630); a live article's too (the template lists them).
 const cards = import.meta.glob<{ default: ImageMetadata }>('../../assets/og/*.png', { eager: true });
 const card = entry ? cards[`../../assets/og/${entry.id}.png`]?.default : undefined;
-// The index shares the newest article's card: the site has no card of its own for a listing.
-const indexCard = cards['../../assets/og/ci-moved-three-times.png']?.default;
+// The index shares the newest article's card that has one: the site has no card of its own for a listing.
+const indexCard = (await articleRows()).map((r) => cards[`../../assets/og/${r.slug}.png`]?.default).find(Boolean);
 const data = entry?.data as { title: string; description: string; author: string; category: string; tags?: unknown } | undefined;
 // The index is not a manifest document (like /search/): it is never indexed and has no Markdown.
 const listing = (id: string, servedPath: string, title: string): ManifestDocument => ({

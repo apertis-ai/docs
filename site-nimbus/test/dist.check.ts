@@ -97,7 +97,7 @@ test('every output file derives from a publishable manifest entry or is referenc
   const markdown = manifest.documents.flatMap((d) => (d.eligibility.agent && d.markdown ? [d.markdown.path.slice(1)] : []));
   // #13: root files derived from the manifest and inventory; their content is checked below.
   // docs-agent-access adds /llms.txt and /llms-full.txt (from the publish+agent entries), checked below too.
-  const derived = ['sitemap.xml', 'robots.txt', '_redirects', 'llms.txt', 'llms-full.txt'];
+  const derived = ['sitemap.xml', 'robots.txt', '_redirects', 'llms.txt', 'llms-full.txt', ...(manifest.documents.some(isNativeArticle) ? ['blog/index.md'] : [])];
   const allowed = new Set([...html, ...referenced, ...markdown, ...derived, ...FRAMEWORK_ASSETS, ...STATIC_ASSETS, ...SEARCH_FILES]);
   for (const f of STATIC_ASSETS) assert.ok(files.includes(f), `missing static asset ${f}`);
   assert.deepEqual(files.filter((f) => !allowed.has(f)), []);
@@ -328,9 +328,11 @@ test('m8: sitemap.xml lists exactly the canonical URLs of the published HTML rou
   const expected = [
     ...manifest.documents.filter((d) => d.eligibility.publish).map((d) => servedUrl(d.canonicalUrl)),
     ...routes.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r) => servedUrl(r.live!.canonical!)),
+    // The /blog/ index is not a manifest document: it is listed once an article is published.
+    ...(native.length ? ['https://docs.apertis.ai/blog/'] : []),
   ].sort();
   assert.deepEqual(locs, expected);
-  assert.equal(locs.length, 84 + native.length);
+  assert.equal(locs.length, 85 + native.length);
   assert.equal(read('sitemap.xml'), publicationFiles(manifest, routes, dist)['sitemap.xml']);
 });
 
@@ -353,7 +355,7 @@ test('m8: retired routes are in no publication channel and every path they had a
   // So are the native listing pages: the tags index supersedes the retired /blog/tags row, and a tag or author page
   // sits under /blog/tags or /blog/authors without ever naming a retired path itself (converter/articles.ts).
   // The live article templates too: their names start with `_`, which no retired path has.
-  const index = (r: InventoryRoute, f: string) => (r.path === '/blog' && (f === 'blog/index.html' || listings.includes(f) || templates.includes(f) || native.some((d) => f.startsWith(d.servedPath.slice(1)))))
+  const index = (r: InventoryRoute, f: string) => (r.path === '/blog' && (f === 'blog/index.html' || f === 'blog/index.md' || listings.includes(f) || templates.includes(f) || native.some((d) => f.startsWith(d.servedPath.slice(1)))))
     || (['/blog/tags', '/blog/authors'].includes(r.path) && listings.includes(f));
   for (const r of retired) {
     const servedBy = [`${rel(r.path)}.html`, `${rel(r.path)}/index.html`, rel(r.path)].filter((f) => files.includes(f) && !index(r, f));
@@ -444,15 +446,16 @@ test('llms.txt lists exactly the publish+agent Markdown artifacts, in sidebar se
   const body = read('llms.txt');
   const entries = parseIndex(body);
   assert.equal(body.split('\n').filter((l) => l.startsWith('- ')).length, entries.length, 'an entry line does not parse');
-  assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), agentDocs.map(mdUrl).sort());
-  assert.equal(entries.length, 82 + native.length);
+  // The /blog/ index's own Markdown twin is listed too, once an article is published.
+  assert.deepEqual(entries.map((e) => e.markdownUrl).sort(), [...agentDocs.map(mdUrl), ...(native.length ? [`${MANIFEST_SITE}/blog/index.md`] : [])].sort());
+  assert.equal(entries.length, 83 + native.length);
   assert.equal(new Set(entries.map((e) => e.markdownUrl)).size, entries.length);
   for (const e of entries) assert.match(e.description, /\S/, e.markdownUrl);
   // page:index (publish, not agent) and every draft article are absent; retired rows are checked with m8 above.
   assert.equal(entries.some((e) => pageKey(e.markdownUrl) === '/'), false);
   for (const a of readArticles(root).filter((x) => x.draft)) assert.equal(entries.some((e) => e.markdownUrl.includes(`/blog/${a.slug}`)), false, a.slug);
   assert.deepEqual([...new Set(entries.map((e) => e.section))], ['Getting Started', 'Account & Access', 'Integrations', 'Configuration', 'Help & Security',
-    'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other']);
+    'Resources', 'API Reference', 'Text Generation', 'Search', 'Vision & Images', 'Audio & Video', 'Embeddings & Rerank', 'SDKs & Libraries', 'Utilities', 'Other', 'Blog']);
   assert.equal(body, llmsFiles(manifest, routes, dist)['llms.txt']);
 });
 
@@ -469,7 +472,8 @@ test('an llms.txt description is the page header description wherever the page s
 });
 
 test('llms-full.txt holds the bytes of every llms.txt artifact, in the same order, each under its Source line', () => {
-  const byMd = new Map(agentDocs.map((d) => [mdUrl(d), d]));
+  const blog = { canonicalUrl: `${MANIFEST_SITE}/blog/`, id: 'page:blog', markdown: { path: '/blog/index.md' } };
+  const byMd = new Map<string, { canonicalUrl: string; id: string; markdown: { path: string } | null }>([...agentDocs.map((d) => [mdUrl(d), d] as const), [`${MANIFEST_SITE}/blog/index.md`, blog]]);
   const order = parseIndex(read('llms.txt')).map((e) => byMd.get(e.markdownUrl)!);
   const full = parseFull(read('llms-full.txt'));
   assert.deepEqual(full.map((f) => f.url), order.map((d) => d.canonicalUrl));
@@ -511,12 +515,12 @@ test('feedback: the published paths read from the built sitemap are the publish-
   const docs = publishedPaths(manifest.documents);
   const sitemap = publishedFromSitemap(read('sitemap.xml'));
   assert.deepEqual([...docs].filter((p) => !sitemap.has(p)), []);
-  assert.deepEqual([...sitemap].filter((p) => !docs.has(p)), ['/search/']);
+  assert.deepEqual([...sitemap].filter((p) => !docs.has(p)), ['/blog/', '/search/']);
 });
 
 test('seo: every sitemap <loc> is the page it names (200, same canonical, og:url), with metadata and parseable JSON-LD', () => {
   const entries = [...read('sitemap.xml').matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
-  assert.equal(entries.length, 84 + native.length);
+  assert.equal(entries.length, 85 + native.length);
   let described = 0;
   let posts = 0;
   let articles = 0;
@@ -612,4 +616,19 @@ test('the live article templates: noindex, in no sitemap, search index or llms f
   }
   const listing = read(`${LISTING_TEMPLATE_PATH.slice(1)}index.html`);
   assert.match(listing, /<p class="blog-index__crumb"><a href="\/blog\/">Blog<\/a> \/ <a href="\/blog\/categories\/">Categories<\/a><\/p><h1>Category<\/h1><p>0 articles<\/p><\/div><div class="blog-index__list"><ol class="article-list"><\/ol>/);
+});
+
+test('the /blog/ index: a 140 to 160 character description, Blog JSON-LD of every article, a served social card and a Markdown twin', () => {
+  const html = read('blog/index.html');
+  const desc = /<meta name="description" content="([^"]*)"/.exec(html)![1];
+  assert.ok(desc.length >= 140 && desc.length <= 160, `${desc.length} characters`);
+  const blog = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((b) => b['@type'] === 'Blog');
+  assert.deepEqual(blog.blogPost.map((p: { url: string }) => p.url).sort(), native.map((d) => servedUrl(d.canonicalUrl)).sort());
+  for (const p of blog.blogPost) assert.match(p.datePublished, /^\d{4}-\d{2}-\d{2}$/);
+  const card = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
+  assert.ok(card && files.includes(new URL(card).pathname.slice(1)), 'og:image is a file in dist');
+  assert.equal(/<meta name="twitter:image" content="([^"]+)"/.exec(html)?.[1], card);
+  const md = read('blog/index.md');
+  assert.ok(md.startsWith('# Apertis blog\n'));
+  for (const d of native) assert.ok(md.includes(`](${servedUrl(d.canonicalUrl)}): `), d.id);
 });

@@ -142,6 +142,15 @@ test('published articles render at /blog/<slug>/ with a /blog/ index, reach Mark
   // Sitemap, redirects: /blog/ is live; the legacy posts are still not served.
   const sitemap = html('sitemap.xml');
   for (const slug of ['routing-requests-across-providers', 'choosing-a-plan']) assert.match(sitemap, new RegExp(`/blog/${slug}/</loc>`));
+  assert.match(sitemap, /<loc>https:\/\/docs\.apertis\.ai\/blog\/<\/loc>/);
+  // The index: a 140 to 160 character description, Blog JSON-LD listing the articles, a social card, a Markdown twin, an llms.txt entry.
+  const desc = /<meta name="description" content="([^"]*)">/.exec(index)![1];
+  assert.ok(desc.length >= 140 && desc.length <= 160, `description is ${desc.length} characters`);
+  const ld = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(index)![1]);
+  assert.equal(ld['@type'], 'Blog');
+  assert.ok(ld.blogPost.some((p: { headline: string; url: string; datePublished: string }) => p.url.endsWith('/blog/choosing-a-plan/') && p.headline === 'Choosing a plan' && /^\d{4}-\d\d-\d\d/.test(p.datePublished)));
+  assert.match(html('blog/index.md'), /^# Apertis blog\n[\s\S]*\]\(https:\/\/docs\.apertis\.ai\/blog\/choosing-a-plan\/\): /);
+  assert.match(html('llms.txt'), /^- \[Apertis blog\]\(https:\/\/docs\.apertis\.ai\/blog\/index\.md\): /m);
   const redirects = fs.existsSync(path.join(dist, '_redirects')) ? html('_redirects') : '';
   assert.doesNotMatch(redirects, /^\/blog\/? /m);
   // The native tags index is live too; the legacy posts, tags and authors (and an authors index) are still not served.
