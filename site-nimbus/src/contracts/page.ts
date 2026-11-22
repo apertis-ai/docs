@@ -55,6 +55,22 @@ export interface SeoProps {
   trail?: string[];
   /** A native article: BlogPosting JSON-LD with its byline, publication date and tags, and its social card when it has one. */
   post?: { author: string; published: string; image?: SocialImage; tags?: string[] };
+  /** The blog index: a Blog JSON-LD block listing its articles, and a social card. */
+  blog?: { posts: { headline: string; url: string; datePublished: string }[]; image?: SocialImage };
+}
+
+/** The Blog JSON-LD of the /blog/ index: every published article as a BlogPosting (headline, url, datePublished). */
+export function blogLd(url: string, name: string, description: string | null, posts: { headline: string; url: string; datePublished: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name,
+    url,
+    mainEntityOfPage: url,
+    ...(description ? { description } : {}),
+    publisher: { '@type': 'Organization', name: 'Apertis', url: 'https://apertis.ai' },
+    blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.headline, url: p.url, datePublished: p.datePublished })),
+  };
 }
 
 /** A social card (src/assets/og/<slug>.png), as Astro's image import describes it. */

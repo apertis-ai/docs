@@ -18,6 +18,7 @@ import { llmsFull, llmsIndex, type LlmsPage } from '../src/agent/llms.ts';
 import { leadSentence, topLevelParagraphs } from '../src/components/shell/page-header.ts';
 import { buildNavigation } from '../src/components/shell/navigation.ts';
 import { MANIFEST_SITE, type ManifestV1 } from '../src/contracts/manifest.ts';
+import { BLOG_DESCRIPTION, isNativeArticle } from '../src/contracts/articles.ts';
 import { servedUrl } from '../src/contracts/page.ts';
 import type { InventoryRoute, SidebarId } from '../src/contracts/navigation.ts';
 import { decodeEntities, validateManifest } from '../src/contracts/validate-manifest.ts';
@@ -131,6 +132,10 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
     ...manifest.documents.filter((d) => d.eligibility.publish).map((d): [string, string | undefined] => [servedUrl(d.canonicalUrl), updated[d.id]?.updated]),
     ...inventory.filter((r) => r.kind === 'generated' && r.eligibility.publish && r.live?.canonical).map((r): [string, string | undefined] => [servedUrl(r.live!.canonical!), undefined]),
   ].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  // The /blog/ index is not a manifest document, so it is added here once an article is published; its lastmod is the newest article's.
+  const posts = manifest.documents.filter(isNativeArticle);
+  if (posts.length) urls.push(['https://docs.apertis.ai/blog/', posts.map((d) => updated[d.id]?.updated).filter(Boolean).sort().at(-1)]);
+  urls.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
   const files: Record<string, string> = {
     'sitemap.xml': `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, m]) => `  <url><loc>${xml(u)}</loc>${m ? `<lastmod>${m}</lastmod>` : ''}</url>\n`).join('')}</urlset>\n`,
   };
@@ -148,6 +153,11 @@ export function publicationFiles(manifest: ManifestV1, inventory: InventoryRoute
 /** `llms.txt` and `llms-full.txt` (openspec docs-agent-access), from the built pages and artifacts in `outDir`. */
 export function llmsFiles(manifest: ManifestV1, inventory: InventoryRoute[], outDir: string): Record<string, string> {
   const pages = llmsPages(manifest, inventory, outDir);
+  // The /blog/ index, once an article is published: its own Markdown twin, which the build wrote.
+  const twin = path.join(outDir, 'blog/index.md');
+  if (manifest.documents.some(isNativeArticle) && fs.existsSync(twin)) {
+    pages.push({ title: 'Apertis blog', url: `${MANIFEST_SITE}/blog/`, markdownUrl: `${MANIFEST_SITE}/blog/index.md`, description: BLOG_DESCRIPTION, section: 'Blog', markdown: fs.readFileSync(twin, 'utf8') });
+  }
   return { 'llms.txt': llmsIndex(pages), 'llms-full.txt': llmsFull(pages) };
 }
 

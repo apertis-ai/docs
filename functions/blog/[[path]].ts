@@ -26,6 +26,7 @@ import { fetchAuthors, type LiveAuthors } from '../../site-nimbus/src/components
 import {
   ARTICLE_TEMPLATE_PATH, bylineParts, CATEGORIES_PATH, categoryPath, LISTING_TEMPLATE_PATH, TAGS_PATH, tagPath, titleId,
 } from '../../site-nimbus/src/contracts/articles.ts';
+import { blogLine } from '../../site-nimbus/src/contracts/blog-index.ts';
 import { MANIFEST_SITE } from '../../site-nimbus/src/contracts/manifest.ts';
 import { BLOG_TITLE_SUFFIX, bylineAuthor, safeJsonLd, type SocialImage } from '../../site-nimbus/src/contracts/page.ts';
 import { displayDate } from '../../site-nimbus/src/components/shell/page-header.ts';
@@ -41,7 +42,7 @@ const RESERVED = new Set(['tags', 'categories', 'authors']);
 type Route =
   | { kind: 'article'; slug: string; slash: boolean }
   | { kind: 'markdown'; slug: string }
-  | { kind: 'index' | 'tags' | 'categories' }
+  | { kind: 'index' | 'indexmd' | 'tags' | 'categories' }
   | { kind: 'tag' | 'category' | 'author'; slug: string }
   | { kind: 'template' }
   | { kind: 'other' };
@@ -50,6 +51,7 @@ type Route =
 export function route(pathname: string): Route {
   if (pathname === ARTICLE_TEMPLATE_PATH || pathname === LISTING_TEMPLATE_PATH) return { kind: 'template' };
   if (pathname === '/blog/') return { kind: 'index' };
+  if (pathname === '/blog/index.md') return { kind: 'indexmd' };
   if (pathname === TAGS_PATH) return { kind: 'tags' };
   if (pathname === CATEGORIES_PATH) return { kind: 'categories' };
   const sub = /^\/blog\/(tags|categories|authors)\/([^/]+)\/$/.exec(pathname);
@@ -98,6 +100,7 @@ export function handler(deps: Deps) {
     try {
       if (r.kind === 'article') return await live.article(r.slug, r.slash, res);
       if (r.kind === 'markdown') return await live.markdown(r.slug, res);
+      if (r.kind === 'indexmd') return await live.indexMarkdown(res);
       return await live.listing(r, res);
     } catch (e) {
       deps.log('blog-articles:', e instanceof Error ? e.message : e);
@@ -254,7 +257,20 @@ class Live {
     return new Response([`# ${a.title}`, ...(a.description ? [a.description] : []), a.markdown].join('\n\n'), { headers: { 'content-type': 'text/markdown; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
   }
 
-  async listing(r: Exclude<Route, { kind: 'article' | 'markdown' | 'template' | 'other' }>, res: Response): Promise<Response> {
+  /** The /blog/index.md twin with the live articles listed after the built ones (the built twin's lines name which slugs it has). */
+  async indexMarkdown(res: Response): Promise<Response> {
+    const text = await res.text();
+    this.fallback = new Response(text, res);
+    const built = new Set([...text.matchAll(/\]\(https:\/\/docs\.apertis\.ai\/blog\/([a-z0-9-]+)\/\)/g)].map((m) => m[1]));
+    const fresh = (await this.rows()).filter((x) => !built.has(x.slug));
+    if (!fresh.length) return this.fallback;
+    const headers = new Headers(res.headers);
+    headers.delete('etag');
+    headers.delete('content-length');
+    return new Response(`${text.trimEnd()}\n${fresh.map((x) => blogLine({ title: x.title, url: `${MANIFEST_SITE}/blog/${x.slug}/`, description: x.description })).join('\n')}\n`, { status: 200, headers });
+  }
+
+  async listing(r: Exclude<Route, { kind: 'article' | 'markdown' | 'indexmd' | 'template' | 'other' }>, res: Response): Promise<Response> {
     const all = await this.rows();
     if (res.status === 404) {
       // A tag or category page only live articles have.
@@ -431,7 +447,28 @@ function list(kind: 'index' | 'tag' | 'category', page: Shown, rows: LiveRow[], 
     })
     .on('ol.article-list > li', { element(e) { const at = p.before.get(k++); if (at) e.before(at.map(row).join(''), html); } });
   if (kind !== 'index') rw.on('.blog-index__intro > p:not([class])', setText(countText(target.rows.length + rows.length)));
+  else rw.on('script[type="application/ld+json"]', blogLdWith(rows));
   return rw;
+}
+
+/** The index's Blog JSON-LD with the live rows added to its blogPost list (a block that is not the Blog's, or does not parse, is left as it is). */
+function blogLdWith(rows: LiveRow[]) {
+  let text = '';
+  return {
+    text(t: Text) {
+      text += t.text;
+      if (!t.lastInTextNode) { t.remove(); return; }
+      let out = text;
+      try {
+        const ld = JSON.parse(text);
+        if (ld?.['@type'] === 'Blog' && Array.isArray(ld.blogPost)) {
+          ld.blogPost.push(...rows.map((x) => ({ '@type': 'BlogPosting', headline: x.title, url: `${MANIFEST_SITE}/blog/${x.slug}/`, datePublished: publishedDay(x) })));
+          out = safeJsonLd(ld);
+        }
+      } catch { /* left as it is */ }
+      t.replace(out, html);
+    },
+  };
 }
 
 /** An author's page: each live row in its year's list (a new year gets its own section and table of contents entry), and the count. */
