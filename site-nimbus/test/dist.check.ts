@@ -367,7 +367,8 @@ test('m8: retired routes are in no publication channel and every path they had a
   for (const r of retired) assert.equal(text.includes(`https://docs.apertis.ai${r.path}<`) || fragments().some((f) => f.url.replace(/\/$/, '') === r.path), false, r.path);
   // docs-agent-access supersedes "no llms* outputs": they exist, and no retired path is in them.
   const agentKeys = new Set(parseIndex(read('llms.txt')).map((e) => pageKey(e.markdownUrl)));
-  for (const r of retired) assert.equal(agentKeys.has(r.path), false, `${r.path} in llms.txt`);
+  // The /blog/ index supersedes the retired legacy /blog row (above), so its own Markdown twin is the one listed path.
+  for (const r of retired.filter((x) => x.path !== '/blog')) assert.equal(agentKeys.has(r.path), false, `${r.path} in llms.txt`);
 });
 
 test('every recorded post-cutover content change matches its built page', () => {
