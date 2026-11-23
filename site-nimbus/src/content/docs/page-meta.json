@@ -4,7 +4,7 @@
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
-    "updated": "2026-11-23T17:48:45+08:00",
+    "updated": "2026-10-06T16:40:47+08:00",
     "readingMinutes": 6
   },
   "api:audio-video/video": {
@@ -24,7 +24,7 @@
     "readingMinutes": 1
   },
   "api:sdks/agent-sdk": {
-    "updated": "2026-11-23T17:48:45+08:00",
+    "updated": "2026-11-23T17:50:29+08:00",
     "readingMinutes": 2
   },
   "api:sdks/ai-sdk-provider": {
@@ -224,7 +224,7 @@
     "readingMinutes": 2
   },
   "default:help/migration-guides": {
-    "updated": "2026-11-23T17:48:25+08:00",
+    "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 4
   },
   "default:help/troubleshooting": {
