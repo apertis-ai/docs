@@ -7,6 +7,12 @@
       "links": {},
       "headings": { "removed": ["standard-api-keys-sk-", "subscription-api-keys-sk-sub-", "organization-api-keys-sk-org_"] }
     },
+    "default:help/migration-guides": {
+      "commit": "a13b0c6",
+      "decision": "https://github.com/theQuert/stima-api/issues/8122 (public docs name no competitor; the per-product migration headings became category headings)",
+      "links": {},
+      "headings": { "removed": ["litellm", "openrouter"] }
+    },
     "default:help/faq": {
       "commit": "55608c9",
       "decision": "https://github.com/apertis-ai/docs/issues/4 (after-cutover follow-up: the FAQ Playground answer)",
