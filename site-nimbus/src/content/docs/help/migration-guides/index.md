@@ -316,15 +316,20 @@ text = response.choices[0].message.content
 
 ## Migrating from Other Providers
 
-### LiteLLM
+### From a self-hosted proxy
 
-If you're using LiteLLM, you can switch to Apertis:
+If you run your own OpenAI-compatible proxy, point the client at Apertis instead:
 
-**Before (LiteLLM):**
+**Before (self-hosted proxy):**
 ```python
-from litellm import completion
+from openai import OpenAI
 
-response = completion(
+client = OpenAI(
+    api_key="your-proxy-key",
+    base_url="https://your-proxy.example/v1"
+)
+
+response = client.chat.completions.create(
     model="gpt-5.5",
     messages=[{"role": "user", "content": "Hello!"}]
 )
@@ -345,15 +350,15 @@ response = client.chat.completions.create(
 )
 ```
 
-### OpenRouter
+### From a routing marketplace
 
-**Before (OpenRouter):**
+**Before (routing marketplace):**
 ```python
 from openai import OpenAI
 
 client = OpenAI(
-    api_key="sk-or-xxx",
-    base_url="https://openrouter.ai/api/v1"
+    api_key="your-marketplace-key",
+    base_url="https://your-current-gateway.example/v1"
 )
 ```
 

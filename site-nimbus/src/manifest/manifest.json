@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e786a2bb7dfc595d719e57869074abcb855da21f",
-  "buildId": "e786a2bb7dfc595d719e57869074abcb855da21f.415e64e19d2a",
+  "sourceSha": "a13b0c67615e95e6f671e25ac2783acb8bb46799",
+  "buildId": "a13b0c67615e95e6f671e25ac2783acb8bb46799.415e64e19d2a",
   "documents": [
     {
       "id": "page:index",
@@ -1041,9 +1041,9 @@
       },
       "markdown": {
         "path": "/help/migration-guides.md",
-        "sha256": "2c43277408b514c7c1531c317106dc7c84bbe2769712ba0f3dca7b1c25f18ba9"
+        "sha256": "ddd6f76149fac7acf3eb320be73a3470fb23c91737dab75489cd03341d651ba3"
       },
-      "contentSha256": "2c43277408b514c7c1531c317106dc7c84bbe2769712ba0f3dca7b1c25f18ba9"
+      "contentSha256": "ddd6f76149fac7acf3eb320be73a3470fb23c91737dab75489cd03341d651ba3"
     },
     {
       "id": "default:help/troubleshooting",
