@@ -80,7 +80,7 @@ Also available: `getReasoningStream()`, `getToolCallsStream()`, `getToolStream()
 
 ## Tool approval (human-in-the-loop)
 
-Mark a tool with `requireApproval` to pause the loop before it runs. State is **client-side** — bring your own `StateAccessor` (Redis, a database, files) to survive restarts.
+Mark a tool with `requireApproval` to pause the loop before it runs. State is **client-side** — supply your own `StateAccessor` (Redis, a database, files) to survive restarts.
 
 ```typescript
 import { InMemoryStateAccessor } from "@apertis/agent";
