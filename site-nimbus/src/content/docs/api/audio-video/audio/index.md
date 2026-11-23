@@ -453,7 +453,7 @@ curl https://api.apertis.ai/v1/chat/completions \
 
 - Subscription tokens are blocked at the gateway with HTTP 403 / `audio_requires_payg`. Use a PAYG token.
 - Streaming (`stream: true`) is not yet supported for audio output — request a non-streaming response.
-- Other adaptors that route through OpenAI-format channels (e.g., OpenRouter) inherit the same content-block shape.
+- Other adaptors that route through OpenAI-format channels inherit the same content-block shape.
 
 ## Supported Languages
 

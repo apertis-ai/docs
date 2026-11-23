@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "a13b0c67615e95e6f671e25ac2783acb8bb46799",
-  "buildId": "a13b0c67615e95e6f671e25ac2783acb8bb46799.415e64e19d2a",
+  "sourceSha": "7007f92f07b7d7f2876406f1587a1f847d723ea9",
+  "buildId": "7007f92f07b7d7f2876406f1587a1f847d723ea9.415e64e19d2a",
   "documents": [
     {
       "id": "page:index",
@@ -51,9 +51,9 @@
       },
       "markdown": {
         "path": "/api/audio-video/audio.md",
-        "sha256": "c11ce81b815a8d3238d8bc9ec0210f24e85c83cdfe4ab8b8fa5a31e95f0282ce"
+        "sha256": "670a49b317a74656b3973d30c75f1b96ecdbd413d751f4510bb87f44ba154fc9"
       },
-      "contentSha256": "c11ce81b815a8d3238d8bc9ec0210f24e85c83cdfe4ab8b8fa5a31e95f0282ce"
+      "contentSha256": "670a49b317a74656b3973d30c75f1b96ecdbd413d751f4510bb87f44ba154fc9"
     },
     {
       "id": "api:audio-video/video",
@@ -141,9 +141,9 @@
       },
       "markdown": {
         "path": "/api/sdks/agent-sdk.md",
-        "sha256": "11f2ad09487076698be749f63830a1f9679add5bc48fb19884ae345e09f56b19"
+        "sha256": "48f980025413769aaefbbce75a7c0ec849ec5691f3f09566ff74d4071a732979"
       },
-      "contentSha256": "11f2ad09487076698be749f63830a1f9679add5bc48fb19884ae345e09f56b19"
+      "contentSha256": "48f980025413769aaefbbce75a7c0ec849ec5691f3f09566ff74d4071a732979"
     },
     {
       "id": "api:sdks/ai-sdk-provider",

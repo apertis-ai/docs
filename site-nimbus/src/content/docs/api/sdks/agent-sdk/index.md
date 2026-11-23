@@ -8,7 +8,7 @@ title: "@apertis/agent"
 
 The differentiator: the `maxCost` stop condition halts on **real measured spend**, not a token estimate.
 
-> Migrating from `@openrouter/agent`? The surface is intentionally close — `callModel`, `tool()`, and the stop conditions map across, so most code ports with a one-import swap.
+> Migrating from another agent SDK that uses `callModel`, `tool()` and stop conditions? Those map across, so most code ports with a one-import swap.
 
 GitHub: [apertis-ai/apertis-agent](https://github.com/apertis-ai/apertis-agent) · npm: `@apertis/agent`
 
