@@ -285,11 +285,11 @@ No. The Apertis Playground has been retired. To try a model, send your first req
 Yes. We implement industry-standard security practices:
 - HTTPS/TLS encryption for all connections
 - API keys are encrypted at rest
-- No logging of request/response content by default
+- API request and response content is stored encrypted
 
 ### Do you store my prompts or responses?
 
-By default, we don't store prompt or response content. Only metadata (token counts, timestamps) is logged for billing.
+Yes. The content of API requests and responses is stored encrypted, together with related request records (such as user ID, model and token counts) and encrypted backup copies. It is not deleted automatically today, including when you delete your account, and it is not used to train Apertis models. See the [Privacy Policy](https://apertis.ai/privacy) and the [Trust Center](https://apertis.ai/trust).
 
 ### Is Apertis SOC 2 compliant?
 
