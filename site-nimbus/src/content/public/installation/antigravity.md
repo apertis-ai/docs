@@ -4,7 +4,7 @@ Google Antigravity is an agentic IDE built on VS Code. Its extensions come from 
 
 > **Info: Antigravity's built-in agent**
 >
-> Antigravity's own agent panel only runs the models Google offers in its model selector. Google's plan documentation states that Antigravity does not support bring-your-own-key or bring-your-own-endpoint. You cannot point the built-in agent at Apertis. The routes below run alongside it.
+> Antigravity's own agent panel only runs the models Google offers in its model selector. Google's plan documentation states that Antigravity does not support custom API keys or custom endpoints. You cannot point the built-in agent at Apertis. The routes below run alongside it.
 
 ## Prerequisites
 

@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "c92848ad073963c6e0548faf29f1812c4c605157",
-  "buildId": "c92848ad073963c6e0548faf29f1812c4c605157.5153ef4bc9ba",
+  "sourceSha": "1a97025e4864eac64b7b11d195e7b5b77a8f9908",
+  "buildId": "1a97025e4864eac64b7b11d195e7b5b77a8f9908.5153ef4bc9ba",
   "documents": [
     {
       "id": "page:index",
@@ -1095,9 +1095,9 @@
       },
       "markdown": {
         "path": "/installation/antigravity.md",
-        "sha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+        "sha256": "82aa83f17d9df1c1052d4b873df46c97cd23635abb761f5e76589a29b0413094"
       },
-      "contentSha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+      "contentSha256": "82aa83f17d9df1c1052d4b873df46c97cd23635abb761f5e76589a29b0413094"
     },
     {
       "id": "default:installation/codex",
