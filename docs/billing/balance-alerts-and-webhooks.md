@@ -135,6 +135,7 @@ def apertis_webhook():
 
 - Answer with any `2xx` status within 10 seconds to acknowledge an event. Redirects are not followed.
 - Any other answer, a timeout or a connection error is retried with exponential backoff: 1 minute, 2 minutes, 4 minutes and so on, up to 13 attempts over about 3 days. After that the delivery is marked failed.
+- A `webhook.test` event is sent once and not retried.
 - Each retry sends the same `id` and the same body, with a fresh signature. An event can arrive more than once, so deduplicate on `id`.
 - In **Webhooks → Deliveries** you can see each attempt's status and resend any failed or delivered event. A resend uses the same `id` and body.
 - Deliveries are kept for 30 days.
