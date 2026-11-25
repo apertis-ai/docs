@@ -28,7 +28,9 @@ export APERTIS_API_KEY="sk-your-api-key"
 
 Replace the project's `urls.py` with:
 
-```python title="mysite/urls.py"
+`mysite/urls.py`:
+
+```python
 import os
 
 from django.contrib import admin

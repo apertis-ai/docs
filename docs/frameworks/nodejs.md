@@ -25,7 +25,9 @@ export APERTIS_API_KEY="sk-your-api-key"
 
 ## Minimal script
 
-```ts title="index.ts"
+`index.ts`:
+
+```ts
 import OpenAI from "openai";
 
 const client = new OpenAI({

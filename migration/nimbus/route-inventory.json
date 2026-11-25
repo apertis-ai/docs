@@ -5018,6 +5018,325 @@
       "live": null
     },
     {
+      "path": "/frameworks/django",
+      "kind": "doc",
+      "documentId": "default:frameworks/django",
+      "sourcePath": "docs/frameworks/django.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "Frameworks"
+        ],
+        "order": 30
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/frameworks/django",
+        "status": 308,
+        "location": "/frameworks/django/",
+        "final": {
+          "path": "/frameworks/django/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/frameworks/django/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/frameworks/django",
+        "title": "Django | Apertis Documentation",
+        "headingIds": [
+          "install",
+          "set-your-api-key",
+          "minimal-view",
+          "run-and-test",
+          "next-steps"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/chat-completions",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/getting-started/quick-start",
+          "/help/error-codes",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://github.com/apertis-ai/docs/tree/main/docs/frameworks/django.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/frameworks/fastapi",
+      "kind": "doc",
+      "documentId": "default:frameworks/fastapi",
+      "sourcePath": "docs/frameworks/fastapi.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "Frameworks"
+        ],
+        "order": 29
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/frameworks/fastapi",
+        "status": 308,
+        "location": "/frameworks/fastapi/",
+        "final": {
+          "path": "/frameworks/fastapi/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/frameworks/fastapi/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/frameworks/fastapi",
+        "title": "FastAPI | Apertis Documentation",
+        "headingIds": [
+          "install",
+          "set-your-api-key",
+          "minimal-app",
+          "run-and-test",
+          "next-steps"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/chat-completions",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/getting-started/quick-start",
+          "/help/error-codes",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://github.com/apertis-ai/docs/tree/main/docs/frameworks/fastapi.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/frameworks/flask",
+      "kind": "doc",
+      "documentId": "default:frameworks/flask",
+      "sourcePath": "docs/frameworks/flask.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "Frameworks"
+        ],
+        "order": 31
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/frameworks/flask",
+        "status": 308,
+        "location": "/frameworks/flask/",
+        "final": {
+          "path": "/frameworks/flask/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/frameworks/flask/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/frameworks/flask",
+        "title": "Flask | Apertis Documentation",
+        "headingIds": [
+          "install",
+          "set-your-api-key",
+          "minimal-app",
+          "run-and-test",
+          "next-steps"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/chat-completions",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/getting-started/quick-start",
+          "/help/error-codes",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://github.com/apertis-ai/docs/tree/main/docs/frameworks/flask.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/frameworks/nextjs",
+      "kind": "doc",
+      "documentId": "default:frameworks/nextjs",
+      "sourcePath": "docs/frameworks/nextjs.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "Frameworks"
+        ],
+        "order": 32
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/frameworks/nextjs",
+        "status": 308,
+        "location": "/frameworks/nextjs/",
+        "final": {
+          "path": "/frameworks/nextjs/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/frameworks/nextjs/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/frameworks/nextjs",
+        "title": "Next.js | Apertis Documentation",
+        "headingIds": [
+          "install",
+          "set-your-api-key",
+          "minimal-route",
+          "run-and-test",
+          "next-steps"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/chat-completions",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/getting-started/quick-start",
+          "/help/error-codes",
+          "https://apertis.ai/models",
+          "https://github.com/apertis-ai/docs/tree/main/docs/frameworks/nextjs.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
+      "path": "/frameworks/nodejs",
+      "kind": "doc",
+      "documentId": "default:frameworks/nodejs",
+      "sourcePath": "docs/frameworks/nodejs.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Integrations",
+          "Frameworks"
+        ],
+        "order": 33
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/frameworks/nodejs",
+        "status": 308,
+        "location": "/frameworks/nodejs/",
+        "final": {
+          "path": "/frameworks/nodejs/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/frameworks/nodejs/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/frameworks/nodejs",
+        "title": "Node.js and TypeScript | Apertis Documentation",
+        "headingIds": [
+          "install",
+          "set-your-api-key",
+          "minimal-script",
+          "run",
+          "next-steps"
+        ],
+        "links": [
+          "/",
+          "/api/text-generation/chat-completions",
+          "/api/text-generation/messages",
+          "/authentication/api-keys",
+          "/getting-started/quick-start",
+          "/help/error-codes",
+          "https://apertis.ai/models",
+          "https://apertis.ai/setting?tab=keys",
+          "https://github.com/apertis-ai/docs/tree/main/docs/frameworks/nodejs.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/getting-started/quick-start",
       "kind": "doc",
       "documentId": "default:getting-started/quick-start",
@@ -5118,7 +5437,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 34
+        "order": 39
       },
       "listed": true,
       "disposition": "preserve",
@@ -5214,7 +5533,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 32
+        "order": 37
       },
       "listed": true,
       "disposition": "preserve",
@@ -5386,7 +5705,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 35
+        "order": 40
       },
       "listed": true,
       "disposition": "preserve",
@@ -5477,7 +5796,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 33
+        "order": 38
       },
       "listed": true,
       "disposition": "preserve",
@@ -6321,7 +6640,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 29
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",
@@ -6994,7 +7313,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 30
+        "order": 35
       },
       "listed": true,
       "disposition": "preserve",
@@ -7346,7 +7665,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 36
+        "order": 41
       },
       "listed": true,
       "disposition": "preserve",
@@ -7578,7 +7897,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 36
       },
       "listed": true,
       "disposition": "preserve",
@@ -7708,7 +8027,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 37
+        "order": 42
       },
       "listed": true,
       "disposition": "preserve",

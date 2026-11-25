@@ -24,7 +24,9 @@ export APERTIS_API_KEY="sk-your-api-key"
 
 ## Minimal app
 
-```python title="app.py"
+`app.py`:
+
+```python
 import os
 
 from flask import Flask, jsonify, request

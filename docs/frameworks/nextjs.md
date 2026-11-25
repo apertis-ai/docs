@@ -20,13 +20,17 @@ npm install openai
 
 Put the key in `.env.local`. Do not prefix it with `NEXT_PUBLIC_`: that would ship it to the browser.
 
-```bash title=".env.local"
+`.env.local`:
+
+```bash
 APERTIS_API_KEY=sk-your-api-key
 ```
 
 ## Minimal route
 
-```ts title="app/api/chat/route.ts"
+`app/api/chat/route.ts`:
+
+```ts
 import OpenAI from "openai";
 
 const client = new OpenAI({

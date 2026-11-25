@@ -24,7 +24,9 @@ export APERTIS_API_KEY="sk-your-api-key"
 
 ## Minimal app
 
-```python title="main.py"
+`main.py`:
+
+```python
 import os
 
 from fastapi import FastAPI
