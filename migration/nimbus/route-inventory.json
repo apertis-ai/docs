@@ -3409,6 +3409,66 @@
       }
     },
     {
+      "path": "/billing/balance-alerts-and-webhooks",
+      "kind": "doc",
+      "documentId": "default:billing/balance-alerts-and-webhooks",
+      "sourcePath": "docs/billing/balance-alerts-and-webhooks.md",
+      "sidebar": {
+        "sidebar": "tutorialSidebar",
+        "trail": [
+          "Account & Access"
+        ],
+        "order": 10
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/billing/balance-alerts-and-webhooks",
+        "status": 308,
+        "location": "/billing/balance-alerts-and-webhooks/",
+        "final": {
+          "path": "/billing/balance-alerts-and-webhooks/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/billing/balance-alerts-and-webhooks/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/billing/balance-alerts-and-webhooks",
+        "title": "Balance Alerts and Webhooks | Apertis Documentation",
+        "headingIds": [
+          "set-the-alert-threshold",
+          "email-alerts",
+          "webhooks",
+          "add-an-endpoint",
+          "events",
+          "headers",
+          "verify-the-signature",
+          "responses-retries-and-duplicates",
+          "rotate-or-remove-an-endpoint"
+        ],
+        "links": [
+          "/",
+          "https://github.com/apertis-ai/docs/tree/main/docs/billing/balance-alerts-and-webhooks.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/billing/payment-methods",
       "kind": "doc",
       "documentId": "default:billing/payment-methods",
@@ -3418,7 +3478,7 @@
         "trail": [
           "Account & Access"
         ],
-        "order": 10
+        "order": 11
       },
       "listed": true,
       "disposition": "preserve",
@@ -3605,7 +3665,7 @@
         "trail": [
           "Account & Access"
         ],
-        "order": 11
+        "order": 12
       },
       "listed": true,
       "disposition": "preserve",
@@ -3692,7 +3752,7 @@
         "trail": [
           "Account & Access"
         ],
-        "order": 12
+        "order": 13
       },
       "listed": true,
       "disposition": "preserve",
@@ -4998,7 +5058,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 33
+        "order": 34
       },
       "listed": true,
       "disposition": "preserve",
@@ -5094,7 +5154,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 31
+        "order": 32
       },
       "listed": true,
       "disposition": "preserve",
@@ -5266,7 +5326,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 34
+        "order": 35
       },
       "listed": true,
       "disposition": "preserve",
@@ -5357,7 +5417,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 32
+        "order": 33
       },
       "listed": true,
       "disposition": "preserve",
@@ -5805,7 +5865,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 20
+        "order": 21
       },
       "listed": true,
       "disposition": "preserve",
@@ -5873,7 +5933,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 15
+        "order": 16
       },
       "listed": true,
       "disposition": "preserve",
@@ -5939,7 +5999,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 27
+        "order": 28
       },
       "listed": true,
       "disposition": "preserve",
@@ -6002,7 +6062,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 25
+        "order": 26
       },
       "listed": true,
       "disposition": "preserve",
@@ -6063,7 +6123,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 13
+        "order": 14
       },
       "listed": true,
       "disposition": "preserve",
@@ -6144,7 +6204,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 18
+        "order": 19
       },
       "listed": true,
       "disposition": "preserve",
@@ -6201,7 +6261,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 28
+        "order": 29
       },
       "listed": true,
       "disposition": "preserve",
@@ -6261,7 +6321,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 21
+        "order": 22
       },
       "listed": true,
       "disposition": "preserve",
@@ -6324,7 +6384,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 16
+        "order": 17
       },
       "listed": true,
       "disposition": "preserve",
@@ -6398,7 +6458,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 19
+        "order": 20
       },
       "listed": true,
       "disposition": "preserve",
@@ -6461,7 +6521,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 17
+        "order": 18
       },
       "listed": true,
       "disposition": "preserve",
@@ -6536,7 +6596,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 24
+        "order": 25
       },
       "listed": true,
       "disposition": "preserve",
@@ -6608,7 +6668,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 23
+        "order": 24
       },
       "listed": true,
       "disposition": "preserve",
@@ -6732,7 +6792,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 14
+        "order": 15
       },
       "listed": true,
       "disposition": "preserve",
@@ -6811,7 +6871,7 @@
           "Integrations",
           "AI Coding Assistants"
         ],
-        "order": 22
+        "order": 23
       },
       "listed": true,
       "disposition": "preserve",
@@ -6874,7 +6934,7 @@
         "trail": [
           "Configuration"
         ],
-        "order": 29
+        "order": 30
       },
       "listed": true,
       "disposition": "preserve",
@@ -6930,7 +6990,7 @@
           "Integrations",
           "Client Applications"
         ],
-        "order": 26
+        "order": 27
       },
       "listed": true,
       "disposition": "preserve",
@@ -7226,7 +7286,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 35
+        "order": 36
       },
       "listed": true,
       "disposition": "preserve",
@@ -7458,7 +7518,7 @@
         "trail": [
           "Help & Security"
         ],
-        "order": 30
+        "order": 31
       },
       "listed": true,
       "disposition": "preserve",
@@ -7588,7 +7648,7 @@
         "trail": [
           "Resources"
         ],
-        "order": 36
+        "order": 37
       },
       "listed": true,
       "disposition": "preserve",
