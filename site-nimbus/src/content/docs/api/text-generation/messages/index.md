@@ -671,10 +671,10 @@ The Messages API supports Claude models via Anthropic-type channels:
 | `claude-sonnet-4-6` | Claude Sonnet 4.6 - balanced |
 | `claude-haiku-4.5` | Claude Haiku 4.5 - fast and efficient |
 
-<aside class="admonition admonition-warning">
-<p class="admonition-title">Anthropic Channels Only</p>
+<aside class="admonition admonition-note">
+<p class="admonition-title">Claude and non-Claude models</p>
 
-This endpoint routes exclusively to Anthropic-type channels. If you need to access non-Claude models, use the [Chat Completions](/api/text-generation/chat-completions) endpoint instead.
+Claude models are routed to Anthropic-type channels. Non-Claude models are also accepted on this endpoint: the request is converted to the Chat Completions format and the response is converted back.
 
 Note: Some advanced OpenAI models (like `gpt-5-pro`, `o1-pro`, `gpt-5-codex-*`) only support the [Responses API](/api/text-generation/responses) and cannot be used with this endpoint.
 
