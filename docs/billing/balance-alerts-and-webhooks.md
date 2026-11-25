@@ -46,7 +46,7 @@ Every event is a JSON `POST` with this shape:
     "balance_usd": 4.82,
     "threshold_usd": 5,
     "currency": "USD",
-    "add_credits_url": "https://apertis.ai/setting?tab=credits&utm_source=email&utm_medium=transactional&utm_campaign=balance-alert-webhook"
+    "add_credits_url": "https://apertis.ai/setting?tab=credits"
   }
 }
 ```
@@ -59,7 +59,7 @@ Every event is a JSON `POST` with this shape:
 | `data.user_id` | Your Apertis account id. |
 | `data.balance_usd` | Balance right after the request that crossed the threshold. |
 | `data.threshold_usd` | Your alert threshold. |
-| `data.add_credits_url` | Link to the credits page. |
+| `data.add_credits_url` | Link to the credits page. It can carry tracking parameters. |
 
 A `webhook.test` event carries `data.endpoint_id`.
 
