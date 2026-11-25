@@ -40,6 +40,7 @@ for item in response.json()["models"]:
   "window": "24h",
   "window_start": "2026-11-24T03:00:00Z",
   "window_end": "2026-11-25T03:00:00Z",
+  "coverage_start": null,
   "generated_at": "2026-11-25T04:02:11Z",
   "models": [
     {
@@ -58,8 +59,9 @@ for item in response.json()["models"]:
 
 The window ends at the last full hour that Apertis has finished measuring, which is usually one to
 two hours ago, and covers the 1, 24 or 168 hours before it. `window_start` and `window_end` give the
-exact bounds. Measurements started when this endpoint was released, so for its first week the `24h` and `7d`
-windows hold fewer hours than they span.
+exact bounds. Latency and TTFT measurements have no backfill: when they begin later than
+`window_start`, `coverage_start` gives the first measured hour and both metrics cover only the hours
+from it. Otherwise `coverage_start` is `null`.
 
 ## Metrics
 
@@ -81,7 +83,7 @@ Request counts are never returned. Instead each metric says how much it rests on
 | `observed` | P50 needs 20 samples and P95 needs 100; below 100, `p95_seconds` is `null`. The success ratio needs 100 finished requests. |
 | `insufficient_samples` | There were samples, but fewer than the floor; the values are `null`. |
 | `no_data` | There were no samples in the window. |
-| `unavailable` | Measurement is delayed by more than 2 hours; all values are `null`, and so are `window_start` and `window_end`. |
+| `unavailable` | Measurement is delayed by more than 2 hours: all values are `null`, and so are `window_start` and `window_end`. Or, for `latency` and `ttft` only, they were not measured in this window. |
 
 Hidden, unknown and non-public ids are listed in `not_found`, in request order. Without `ids`, every
 public model is returned, sorted by id.
