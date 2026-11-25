@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "fd8c4e92ccab0d68c7f997ae45cac04419970bcc",
-  "buildId": "fd8c4e92ccab0d68c7f997ae45cac04419970bcc.d36464e22ed5",
+  "sourceSha": "e5e1880ead3729fcf29c08291577b211160eafd9",
+  "buildId": "e5e1880ead3729fcf29c08291577b211160eafd9.d36464e22ed5",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+        "sha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
       },
-      "contentSha256": "46626ef02f390f16ee7f08052f44a76b2acf7624821be47ce3bba90bdb9ee248"
+      "contentSha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
     },
     {
       "id": "api:audio-video/audio",
@@ -573,9 +573,9 @@
       },
       "markdown": {
         "path": "/api/text-generation/messages.md",
-        "sha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
+        "sha256": "98b7fc5c04e168a08b1b142cae9db68ec89e6fbe8459f8d688aab82066d313a0"
       },
-      "contentSha256": "9dd3117e98df247e58a4655d2fe32e0a1ac0e6f7df4b384d9d813da99a364db0"
+      "contentSha256": "98b7fc5c04e168a08b1b142cae9db68ec89e6fbe8459f8d688aab82066d313a0"
     },
     {
       "id": "api:text-generation/prompt-cache",
@@ -1149,9 +1149,9 @@
       },
       "markdown": {
         "path": "/installation/claude-code.md",
-        "sha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+        "sha256": "5ce86a81720b9c59ef598dc8b8714b5a6b011daa382ae4416f90e790010ffe2d"
       },
-      "contentSha256": "4dfbc2ba3eaa1272f1a3179608a02b946a7c3e6297bdd1b871890e20c6c9f78f"
+      "contentSha256": "5ce86a81720b9c59ef598dc8b8714b5a6b011daa382ae4416f90e790010ffe2d"
     },
     {
       "id": "default:installation/cline",
@@ -1185,9 +1185,9 @@
       },
       "markdown": {
         "path": "/installation/connection.md",
-        "sha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+        "sha256": "0335f28bba830e6b78a2247088d3c183abd20d2a4133244cfaa5edddce6471ea"
       },
-      "contentSha256": "2a93ff7a1fb8f58980b60d777726cae6a8d965bc291ceb621beb0a24e0e0a914"
+      "contentSha256": "0335f28bba830e6b78a2247088d3c183abd20d2a4133244cfaa5edddce6471ea"
     },
     {
       "id": "default:installation/continue",
@@ -1239,9 +1239,9 @@
       },
       "markdown": {
         "path": "/installation/cursor.md",
-        "sha256": "bbc7db82934d595a1e377f2445ba3e1854cbcbc36b0333432d1ceda9a132a4b7"
+        "sha256": "60e9eaea51c98735b1dad075b5d9a232dc0bb99aeac5f40bf163129586986da2"
       },
-      "contentSha256": "bbc7db82934d595a1e377f2445ba3e1854cbcbc36b0333432d1ceda9a132a4b7"
+      "contentSha256": "60e9eaea51c98735b1dad075b5d9a232dc0bb99aeac5f40bf163129586986da2"
     },
     {
       "id": "default:installation/goose",
@@ -1293,9 +1293,9 @@
       },
       "markdown": {
         "path": "/installation/kilo-code.md",
-        "sha256": "8d393b63661a68dac56d9703e681dac7a7fda87203e9b57e27d731827d6a52c0"
+        "sha256": "dc5bf641f819f31d2618cd2f46671b125cf58032746af3966e1ef374388b90d8"
       },
-      "contentSha256": "8d393b63661a68dac56d9703e681dac7a7fda87203e9b57e27d731827d6a52c0"
+      "contentSha256": "dc5bf641f819f31d2618cd2f46671b125cf58032746af3966e1ef374388b90d8"
     },
     {
       "id": "default:installation/models",
@@ -1329,9 +1329,9 @@
       },
       "markdown": {
         "path": "/installation/opencode.md",
-        "sha256": "6b6288358a56175d6102543494a61bb370b0c78d722b234dc74c5ef270175d48"
+        "sha256": "efdd24f227c8712d8a6381b074d9e81b083ea5234b9bc066ba1b2a822b1c3af2"
       },
-      "contentSha256": "6b6288358a56175d6102543494a61bb370b0c78d722b234dc74c5ef270175d48"
+      "contentSha256": "efdd24f227c8712d8a6381b074d9e81b083ea5234b9bc066ba1b2a822b1c3af2"
     },
     {
       "id": "default:installation/roocode",
