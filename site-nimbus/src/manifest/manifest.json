@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e155b922edfeaf785f5fc668fb9c211ce0a9c671",
-  "buildId": "e155b922edfeaf785f5fc668fb9c211ce0a9c671.5153ef4bc9ba",
+  "sourceSha": "c92848ad073963c6e0548faf29f1812c4c605157",
+  "buildId": "c92848ad073963c6e0548faf29f1812c4c605157.5153ef4bc9ba",
   "documents": [
     {
       "id": "page:index",
@@ -879,9 +879,9 @@
       },
       "markdown": {
         "path": "/billing/balance-alerts-and-webhooks.md",
-        "sha256": "50fff583959cb64933076b46dbb7576ecb77c7b445fd497954e5a9b45bdb8199"
+        "sha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
       },
-      "contentSha256": "50fff583959cb64933076b46dbb7576ecb77c7b445fd497954e5a9b45bdb8199"
+      "contentSha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
     },
     {
       "id": "default:billing/payment-methods",
