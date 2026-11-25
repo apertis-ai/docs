@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e5e1880ead3729fcf29c08291577b211160eafd9",
-  "buildId": "e5e1880ead3729fcf29c08291577b211160eafd9.423908b4f29a",
+  "sourceSha": "c92848ad073963c6e0548faf29f1812c4c605157",
+  "buildId": "c92848ad073963c6e0548faf29f1812c4c605157.5153ef4bc9ba",
   "documents": [
     {
       "id": "page:index",
@@ -864,6 +864,24 @@
         "sha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
       },
       "contentSha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+    },
+    {
+      "id": "default:billing/balance-alerts-and-webhooks",
+      "sourcePath": "docs/billing/balance-alerts-and-webhooks.md",
+      "servedPath": "/billing/balance-alerts-and-webhooks/",
+      "canonicalUrl": "https://docs.apertis.ai/billing/balance-alerts-and-webhooks",
+      "title": "Balance Alerts and Webhooks",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/billing/balance-alerts-and-webhooks.md",
+        "sha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
+      },
+      "contentSha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
     },
     {
       "id": "default:billing/payment-methods",

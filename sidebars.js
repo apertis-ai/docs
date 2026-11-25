@@ -41,6 +41,7 @@ const sidebars = {
         'billing/subscription-plans',
         'billing/quota-management',
         'billing/payg',
+        'billing/balance-alerts-and-webhooks',
         'billing/payment-methods',
         'billing/rate-limits',
         'billing/per-key-limits',
