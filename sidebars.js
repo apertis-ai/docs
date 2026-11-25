@@ -84,6 +84,18 @@ const sidebars = {
             'installation/bolt_diy',
           ],
         },
+        {
+          type: 'category',
+          label: 'Frameworks',
+          collapsed: false,
+          items: [
+            'frameworks/fastapi',
+            'frameworks/django',
+            'frameworks/flask',
+            'frameworks/nextjs',
+            'frameworks/nodejs',
+          ],
+        },
       ],
     },
 
