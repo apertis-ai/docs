@@ -44,7 +44,7 @@ export interface ManifestDocument {
 export interface ManifestV1 {
   manifestVersion: 1;
   site: 'https://docs.apertis.ai';
-  /** 40-hex commit of the legacy content the candidate was generated from. */
+  /** 40-hex content identity (SHA-1 of the `git ls-tree` of the legacy roots, not a commit id) of the legacy content the candidate was generated from. */
   sourceSha: string;
   /** `<sourceSha>.<first 12 hex of SHA-256 over the candidate lockfile and converter sources>`. */
   buildId: string;

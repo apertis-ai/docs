@@ -39,7 +39,7 @@ differs from `bb057a7`.
 of these change:
 
 - `site-nimbus/**`
-- the legacy publication roots, which feed `sourceSha`: `docs/**`, `docs-api/**`, `src/**`, `blog/**`,
+- the legacy publication roots, which feed `sourceSha` (the SHA-1 of their git trees, a content identity that survives a squash merge, not a commit id): `docs/**`, `docs-api/**`, `src/**`, `blog/**`,
   `static/**`
 - `functions/**`, `assistant/**`, `indexer/**`, `supabase/migrations/**`
 - `migration/nimbus/**`, `scripts/**`

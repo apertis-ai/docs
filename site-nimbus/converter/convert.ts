@@ -18,7 +18,7 @@ export { decodeEntities };
 
 export const SITE_ROOT = path.resolve(import.meta.dirname, '..');
 export const REPO_ROOT = path.resolve(SITE_ROOT, '..');
-/** Legacy publication roots; `sourceSha` is the last commit touching any of them. */
+/** Legacy publication roots; `sourceSha` is a content identity of their git trees (not a commit). */
 export const LEGACY_ROOTS = ['docs', 'docs-api', 'src/pages', 'blog', 'static'];
 export const INVENTORY_PATH = 'migration/nimbus/route-inventory.json';
 export const GENERATED_DOCS = 'src/content/docs';
@@ -26,14 +26,17 @@ export const GENERATED_PUBLIC = 'src/content/public';
 const MANIFEST_FILE = 'src/manifest/manifest.json';
 /**
  * Page header meta (#8 reading layout), keyed by document id: `updated` is the author date (`%aI`) of
- * the last legacy commit touching the source file, as of `sourceSha`; `readingMinutes` comes from
- * readingMinutes(). Written here so the build never calls git. It lives in src/content/docs (covered
+ * the last legacy commit touching the source file (`git log -1 %aI HEAD`), carried forward unchanged
+ * while the file's bytes (`sourceSha256`) are unchanged, so a squash merge does not move it;
+ * `readingMinutes` comes from readingMinutes(). Written here so the build never calls git. It lives in src/content/docs (covered
  * by the drift test) but is not a collection entry (the loader globs Markdown only). Not front matter:
  * Nimbus's docs schema rejects unknown keys, and src/content.config.ts is outside this packet.
  */
 export const PAGE_META_FILE = `${GENERATED_DOCS}/page-meta.json`;
 export interface PageMeta {
   updated: string;
+  /** SHA-256 of the source file bytes `updated` was computed for; absent on native articles. */
+  sourceSha256?: string;
   readingMinutes: number;
 }
 /** Standalone pages (`page:*`) are rendered by their own .astro route; they only get a manifest entry. */
@@ -313,10 +316,10 @@ export function readingMinutes(clean: string): number {
   return Math.max(1, Math.ceil(prose.split(/\s+/).filter(Boolean).length / 200));
 }
 
-/** Author date of the last commit touching `sourcePath` up to `sourceSha` (deterministic for a given sourceSha). */
-export function lastUpdatedOf(repoRoot: string, sourceSha: string, sourcePath: string): string {
-  const date = git(repoRoot, ['log', '-1', '--format=%aI', sourceSha, '--', sourcePath]);
-  if (!/^\d{4}-\d{2}-\d{2}T/.test(date)) throw new ConversionError(`${sourcePath}: no commit up to ${sourceSha} touches it`);
+/** Author date of the last commit touching `sourcePath` up to HEAD; only used when the source bytes changed. */
+export function lastUpdatedOf(repoRoot: string, sourcePath: string): string {
+  const date = git(repoRoot, ['log', '-1', '--format=%aI', 'HEAD', '--', sourcePath]);
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(date)) throw new ConversionError(`${sourcePath}: no commit up to HEAD touches it`);
   return date;
 }
 
@@ -347,12 +350,23 @@ export function mainTextSha256(html: string): string {
 
 const git = (repoRoot: string, args: string[]) => execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8' }).trim();
 
-/** Last commit touching the legacy publication roots; refuses shallow clones and uncommitted source edits. */
+/**
+ * Content identity of the legacy publication roots: the SHA-1 of `git ls-tree HEAD -- <roots>` (each
+ * root's tree id and path). A squash, rebase or merge that leaves the trees identical gives the same
+ * value, any change under a root changes it. 40 hex like a commit id, but it names no commit.
+ * Refuses shallow clones and uncommitted source edits.
+ */
 export function sourceShaOf(repoRoot: string): string {
   if (git(repoRoot, ['rev-parse', '--is-shallow-repository']) === 'true') throw new Error('sourceSha needs full history (shallow clone)');
   const dirty = git(repoRoot, ['status', '--porcelain', '--', ...LEGACY_ROOTS]);
   if (dirty) throw new Error(`sourceSha: uncommitted changes under legacy roots:\n${dirty}`);
-  return git(repoRoot, ['log', '-1', '--format=%H', '--', ...LEGACY_ROOTS]);
+  const tree = execFileSync('git', ['-C', repoRoot, 'ls-tree', 'HEAD', '--', ...LEGACY_ROOTS], { encoding: 'utf8' });
+  return crypto.createHash('sha1').update(tree).digest('hex');
+}
+
+/** `<sourceSha>.<build hash>`: the one computation behind both the converter and check-build-id. */
+export function expectedBuildId(repoRoot: string = REPO_ROOT, siteRoot: string = SITE_ROOT): string {
+  return `${sourceShaOf(repoRoot)}.${buildHashOf(siteRoot, repoRoot)}`;
 }
 
 /**
@@ -426,8 +440,10 @@ export const readInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
 export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot), siteRoot = SITE_ROOT }:
   { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[]; siteRoot?: string } = {}): ManifestV1 {
   const ctx = { inventory, repoRoot };
-  const sourceSha = sourceShaOf(repoRoot);
-  const buildId = `${sourceSha}.${buildHashOf(SITE_ROOT, repoRoot)}`;
+  const buildId = expectedBuildId(repoRoot, siteRoot);
+  const sourceSha = buildId.slice(0, 40);
+  const metaFile = path.join(siteRoot, PAGE_META_FILE);
+  const committedMeta: Record<string, PageMeta> = fs.existsSync(metaFile) ? JSON.parse(fs.readFileSync(metaFile, 'utf8')) : {};
   const previous = path.join(outRoot, MANIFEST_FILE);
   const previousHashes = new Map(fs.existsSync(previous)
     ? ((JSON.parse(fs.readFileSync(previous, 'utf8')) as ManifestV1).documents ?? []).map((d) => [d.id, d.contentSha256])
@@ -461,7 +477,10 @@ export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory =
     // HTML and no artifact, so contentSha256 is the hash of the clean Markdown.
     if (!row.eligibility.publish) return { ...base, markdown: null, contentSha256: sha256(out.clean) };
     writeFile(outRoot, `${GENERATED_DOCS}${base.servedPath}index.md`, out.render);
-    pageMeta[base.id] = { updated: lastUpdatedOf(repoRoot, sourceSha, row.sourcePath!), readingMinutes: readingMinutes(out.clean) };
+    const srcSha = sha256(fs.readFileSync(path.join(repoRoot, row.sourcePath!)));
+    const before = committedMeta[base.id];
+    const updated = before?.sourceSha256 === srcSha && before.updated ? before.updated : lastUpdatedOf(repoRoot, row.sourcePath!);
+    pageMeta[base.id] = { updated, sourceSha256: srcSha, readingMinutes: readingMinutes(out.clean) };
     for (const a of out.assets) {
       const dest = path.join(outRoot, GENERATED_PUBLIC, a.publicPath);
       if (!fs.existsSync(dest)) writeFile(outRoot, `${GENERATED_PUBLIC}${a.publicPath}`, fs.readFileSync(path.join(repoRoot, a.file)));
