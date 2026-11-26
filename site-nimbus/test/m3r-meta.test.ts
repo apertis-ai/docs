@@ -37,6 +37,7 @@ test('every published document has committed meta: its last legacy commit author
       // one while the source bytes (sourceSha256) are unchanged (#10486).
       assert.match(meta[d.id].updated, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/, d.id);
       assert.equal(meta[d.id].sourceSha256, crypto.createHash('sha256').update(fs.readFileSync(path.join(repoRoot, d.sourcePath))).digest('hex'), d.id);
+    }
     const clean = fs.readFileSync(path.join(site, 'src/content/public', d.markdown!.path), 'utf8');
     assert.equal(meta[d.id].readingMinutes, readingMinutes(clean), d.id);
     assert.ok(meta[d.id].readingMinutes >= 1 && meta[d.id].readingMinutes < 60, d.id);

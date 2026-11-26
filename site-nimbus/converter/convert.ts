@@ -437,10 +437,11 @@ export const readInventory = (repoRoot: string = REPO_ROOT): InventoryRoute[] =>
   readRawInventory(repoRoot)
     .map((r) => (r.live?.title ? { ...r, live: { ...r.live, title: decodeEntities(r.live.title) } } : r));
 
-export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot), siteRoot = SITE_ROOT }:
-  { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[]; siteRoot?: string } = {}): ManifestV1 {
+/** `siteRoot` holds the native articles and the committed page-meta; `buildRoot` is the tree whose tracked files feed the build hash. */
+export function convert({ outRoot = SITE_ROOT, repoRoot = REPO_ROOT, inventory = readInventory(repoRoot), siteRoot = SITE_ROOT, buildRoot = SITE_ROOT }:
+  { outRoot?: string; repoRoot?: string; inventory?: InventoryRoute[]; siteRoot?: string; buildRoot?: string } = {}): ManifestV1 {
   const ctx = { inventory, repoRoot };
-  const buildId = expectedBuildId(repoRoot, siteRoot);
+  const buildId = expectedBuildId(repoRoot, buildRoot);
   const sourceSha = buildId.slice(0, 40);
   const metaFile = path.join(siteRoot, PAGE_META_FILE);
   const committedMeta: Record<string, PageMeta> = fs.existsSync(metaFile) ? JSON.parse(fs.readFileSync(metaFile, 'utf8')) : {};

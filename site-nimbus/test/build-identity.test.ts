@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { PAGE_META_FILE, convert, expectedBuildId, readInventory, sourceShaOf } from '../converter/convert.ts';
-import type { InventoryRoute } from '../converter/inventory.ts';
+import type { InventoryRoute } from '../src/contracts/navigation.ts';
 
 const realRepo = path.resolve(import.meta.dirname, '../..');
 const template = readInventory(realRepo).find((r) => r.documentId === 'api:index') as InventoryRoute;
@@ -41,7 +41,7 @@ function fixture() {
   /** Convert, commit the generated page-meta as the regenerate PR would, and return the output root. */
   const regenerate = (date: string) => {
     const o = out();
-    const m = convert({ outRoot: o, repoRoot: repo, siteRoot, inventory });
+    const m = convert({ outRoot: o, repoRoot: repo, siteRoot, buildRoot: siteRoot, inventory });
     put('site-nimbus/src/content/docs/page-meta.json', meta(o));
     put('site-nimbus/src/manifest/manifest.json', `${JSON.stringify(m)}\n`);
     run(date, 'add', '-A');
@@ -77,7 +77,7 @@ test('a squash-equivalent commit (same tree, other parent and author date) keeps
   assert.equal(expectedBuildId(f.repo, f.siteRoot), id, 'buildId survives the squash');
   assert.equal(expectedBuildId(f.repo, f.siteRoot), f.committedBuildId(), 'the committed manifest is still fresh');
   const again = f.out();
-  convert({ outRoot: again, repoRoot: f.repo, siteRoot: f.siteRoot, inventory: f.inventory });
+  convert({ outRoot: again, repoRoot: f.repo, siteRoot: f.siteRoot, buildRoot: f.siteRoot, inventory: f.inventory });
   assert.equal(f.meta(again), f.meta(first.o), 'page-meta, updated included, is byte-identical');
   assert.match(f.meta(again), new RegExp(`"updated": "${T1}"`));
 });
@@ -110,7 +110,7 @@ test('updated is carried forward while the source bytes are unchanged and recomp
   f.put('docs/a.md', '# A\n\nalpha edited\n');
   f.run(T3, 'add', '-A'); f.run(T3, 'commit', '-q', '-m', 'edit a');
   const o = f.out();
-  convert({ outRoot: o, repoRoot: f.repo, siteRoot: f.siteRoot, inventory: f.inventory });
+  convert({ outRoot: o, repoRoot: f.repo, siteRoot: f.siteRoot, buildRoot: f.siteRoot, inventory: f.inventory });
   const m = JSON.parse(f.meta(o));
   assert.equal(m['docs:a'].updated, T3, 'changed source: the author date of the last commit touching it at HEAD');
   assert.equal(m['docs:b'].updated, T1, 'unchanged source: carried forward');
@@ -122,6 +122,6 @@ test('updated is carried forward while the source bytes are unchanged and recomp
   fs.writeFileSync(path.join(f.siteRoot, PAGE_META_FILE), JSON.stringify(legacy));
   const o2 = f.out();
   // the working tree is dirty only under site-nimbus/src/content, which is not a legacy root
-  convert({ outRoot: o2, repoRoot: f.repo, siteRoot: f.siteRoot, inventory: f.inventory });
+  convert({ outRoot: o2, repoRoot: f.repo, siteRoot: f.siteRoot, buildRoot: f.siteRoot, inventory: f.inventory });
   assert.equal(JSON.parse(f.meta(o2))['docs:b'].updated, T1);
 });
