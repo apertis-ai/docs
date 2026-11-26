@@ -26,7 +26,7 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 | Pricing | Standard rates | Discounted rates |
 | Quota Reset | Never (balance-based) | Monthly cycle |
 | Best For | Variable usage | Predictable usage |
-| Minimum | $5 | Plan price |
+| Minimum top-up | $15 (card) | Plan price |
 
 ### When to Use PAYG
 
@@ -64,7 +64,7 @@ All payments are securely processed through **Stripe**.
 
 | Method | Minimum |
 |--------|---------|
-| Credit Card | $5 |
+| Credit Card | $15 |
 
 ## PAYG Pricing
 
