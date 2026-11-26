@@ -2,7 +2,7 @@
 // from git at conversion time (never at build time) and committed in src/content/docs/page-meta.json.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -25,7 +25,7 @@ test('reading time is prose words (fenced code excluded) / 200, rounded up, at l
   assert.equal(readingMinutes(`${words(400)}\n\n\`\`\`json\n${words(900)}\n\`\`\`\n\n> ~~~\n> ${words(300)}\n> ~~~\n\nend`), 3);
 });
 
-test('every published document has committed meta: the last legacy commit author date and its reading time', () => {
+test('every published document has committed meta: its last legacy commit author date (kept across a squash), the source hash it was computed for, and its reading time', () => {
   const meta = committed();
   assert.deepEqual(Object.keys(meta).sort(), docs.map((d) => d.id).sort());
   for (const d of docs) {
@@ -33,9 +33,10 @@ test('every published document has committed meta: the last legacy commit author
       // A native article's date is the one its front matter states, not a commit's.
       assert.match(meta[d.id].updated, /^\d{4}-\d{2}-\d{2}$/, d.id);
     } else {
-      const date = execFileSync('git', ['-C', repoRoot, 'log', '-1', '--format=%aI', manifest.sourceSha, '--', d.sourcePath], { encoding: 'utf8' }).trim();
-      assert.match(date, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, d.id);
-      assert.equal(meta[d.id].updated, date, d.id);
+      // Not compared with `git log HEAD`: a squash merge rewrites that date, and the converter keeps the committed
+      // one while the source bytes (sourceSha256) are unchanged (#10486).
+      assert.match(meta[d.id].updated, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/, d.id);
+      assert.equal(meta[d.id].sourceSha256, crypto.createHash('sha256').update(fs.readFileSync(path.join(repoRoot, d.sourcePath))).digest('hex'), d.id);
     }
     const clean = fs.readFileSync(path.join(site, 'src/content/public', d.markdown!.path), 'utf8');
     assert.equal(meta[d.id].readingMinutes, readingMinutes(clean), d.id);

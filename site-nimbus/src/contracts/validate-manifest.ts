@@ -42,7 +42,7 @@ export function validateManifest(
   if (m.manifestVersion !== 1) errors.push('manifest: manifestVersion must be 1');
   if (m.site !== MANIFEST_SITE) errors.push(`manifest: site must be ${MANIFEST_SITE}`);
   const sourceSha = typeof m.sourceSha === 'string' ? m.sourceSha : '';
-  if (!HEX40.test(sourceSha)) errors.push('manifest: sourceSha must be a 40-hex commit');
+  if (!HEX40.test(sourceSha)) errors.push('manifest: sourceSha must be a 40-hex content identity');
   const buildId = typeof m.buildId === 'string' ? m.buildId : '';
   if (!(buildId.startsWith(`${sourceSha}.`) && HEX12.test(buildId.slice(sourceSha.length + 1)))) {
     errors.push('manifest: buildId must be <sourceSha>.<12 hex>');
