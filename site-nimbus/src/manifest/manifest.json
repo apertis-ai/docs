@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "5174b507f3ad03ceb91c4e3bb9827c4e3f15191c",
-  "buildId": "5174b507f3ad03ceb91c4e3bb9827c4e3f15191c.3ff01f306319",
+  "sourceSha": "b298a357451bcbcd91dd811816df8727184dc049",
+  "buildId": "b298a357451bcbcd91dd811816df8727184dc049.a39a340d7927",
   "documents": [
     {
       "id": "page:index",
@@ -990,6 +990,96 @@
         "sha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
       },
       "contentSha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+    },
+    {
+      "id": "default:frameworks/django",
+      "sourcePath": "docs/frameworks/django.md",
+      "servedPath": "/frameworks/django/",
+      "canonicalUrl": "https://docs.apertis.ai/frameworks/django",
+      "title": "Django",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/frameworks/django.md",
+        "sha256": "f405d819a1bfa6d40e0a851a6c815a89c09467b04f8972533bea02ae01e1e3d0"
+      },
+      "contentSha256": "f405d819a1bfa6d40e0a851a6c815a89c09467b04f8972533bea02ae01e1e3d0"
+    },
+    {
+      "id": "default:frameworks/fastapi",
+      "sourcePath": "docs/frameworks/fastapi.md",
+      "servedPath": "/frameworks/fastapi/",
+      "canonicalUrl": "https://docs.apertis.ai/frameworks/fastapi",
+      "title": "FastAPI",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/frameworks/fastapi.md",
+        "sha256": "692ccb895a0a5a77451e5f8f473be746e20e0403b9664709d71aa2607aa94c99"
+      },
+      "contentSha256": "692ccb895a0a5a77451e5f8f473be746e20e0403b9664709d71aa2607aa94c99"
+    },
+    {
+      "id": "default:frameworks/flask",
+      "sourcePath": "docs/frameworks/flask.md",
+      "servedPath": "/frameworks/flask/",
+      "canonicalUrl": "https://docs.apertis.ai/frameworks/flask",
+      "title": "Flask",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/frameworks/flask.md",
+        "sha256": "1664af6a97e6098d420c3fa41830658897644cb09c032653f68a348d57010d33"
+      },
+      "contentSha256": "1664af6a97e6098d420c3fa41830658897644cb09c032653f68a348d57010d33"
+    },
+    {
+      "id": "default:frameworks/nextjs",
+      "sourcePath": "docs/frameworks/nextjs.md",
+      "servedPath": "/frameworks/nextjs/",
+      "canonicalUrl": "https://docs.apertis.ai/frameworks/nextjs",
+      "title": "Next.js",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/frameworks/nextjs.md",
+        "sha256": "9ffd56e5f8fbff705010c4256678edb287b9a92857586e5da278a057ac8647c1"
+      },
+      "contentSha256": "9ffd56e5f8fbff705010c4256678edb287b9a92857586e5da278a057ac8647c1"
+    },
+    {
+      "id": "default:frameworks/nodejs",
+      "sourcePath": "docs/frameworks/nodejs.md",
+      "servedPath": "/frameworks/nodejs/",
+      "canonicalUrl": "https://docs.apertis.ai/frameworks/nodejs",
+      "title": "Node.js and TypeScript",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/frameworks/nodejs.md",
+        "sha256": "f827c4e7ac0436c6d800fedfbf842dd3d8169931e5b339811cdcf76e15a0bc6d"
+      },
+      "contentSha256": "f827c4e7ac0436c6d800fedfbf842dd3d8169931e5b339811cdcf76e15a0bc6d"
     },
     {
       "id": "default:getting-started/quick-start",
