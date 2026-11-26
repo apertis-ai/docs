@@ -70,7 +70,8 @@ test('a squash-equivalent commit (same tree, other parent and author date) keeps
   assert.equal(id, first.m.buildId);
   const before = f.run(T3, 'rev-parse', 'HEAD');
   const tree = f.run(T3, 'rev-parse', 'HEAD^{tree}');
-  const root = f.run(T3, 'rev-list', '--max-parents=0', 'HEAD');
+  // A parent whose tree is empty, as main was before the PR: the squash commit then touches every legacy root.
+  const root = f.run(T3, 'commit-tree', '4b825dc642cb6eb9a060e54bf8d69288fbee4904', '-m', 'main before the PR');
   const squash = f.run(T4, 'commit-tree', tree, '-p', root, '-m', 'squash');
   f.run(T4, 'reset', '-q', '--hard', squash);
   assert.notEqual(squash, before, 'a different commit');
