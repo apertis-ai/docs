@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "34a8dd5282acf9cffd095102017ab2180ec67921",
-  "buildId": "34a8dd5282acf9cffd095102017ab2180ec67921.5153ef4bc9ba",
+  "sourceSha": "3f1f0a6bef9210ce9d9bb3f1fb779dfd707baafb",
+  "buildId": "3f1f0a6bef9210ce9d9bb3f1fb779dfd707baafb.5153ef4bc9ba",
   "documents": [
     {
       "id": "page:index",
@@ -861,9 +861,9 @@
       },
       "markdown": {
         "path": "/billing/payg.md",
-        "sha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+        "sha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
       },
-      "contentSha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+      "contentSha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
     },
     {
       "id": "default:billing/balance-alerts-and-webhooks",
