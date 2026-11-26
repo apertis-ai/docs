@@ -215,6 +215,26 @@
     "updated": "2026-07-20T11:55:30+08:00",
     "readingMinutes": 7
   },
+  "default:frameworks/django": {
+    "updated": "2026-11-25T18:36:31+08:00",
+    "readingMinutes": 1
+  },
+  "default:frameworks/fastapi": {
+    "updated": "2026-11-25T18:36:31+08:00",
+    "readingMinutes": 1
+  },
+  "default:frameworks/flask": {
+    "updated": "2026-11-27T01:32:13+08:00",
+    "readingMinutes": 1
+  },
+  "default:frameworks/nextjs": {
+    "updated": "2026-11-25T18:36:31+08:00",
+    "readingMinutes": 1
+  },
+  "default:frameworks/nodejs": {
+    "updated": "2026-11-27T01:32:13+08:00",
+    "readingMinutes": 1
+  },
   "default:getting-started/quick-start": {
     "updated": "2026-10-06T14:59:11+08:00",
     "readingMinutes": 3
