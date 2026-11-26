@@ -52,9 +52,11 @@ def chat():
 ## Run and test
 
 ```bash
-flask --app app run
-curl "http://127.0.0.1:5000/chat?q=Say+hi"
+flask --app app run --port 8000
+curl "http://127.0.0.1:8000/chat?q=Say+hi"
 ```
+
+The app runs on port 8000 because macOS reserves Flask's default port 5000 for AirPlay Receiver.
 
 The SDK sends `Authorization: Bearer` with your key to `https://api.apertis.ai/v1`. Pick any model ID from the [Models page](https://apertis.ai/models).
 
