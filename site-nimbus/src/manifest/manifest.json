@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "431096b1375f444f16df4c78ae0bb1f82ef8b2a9",
-  "buildId": "431096b1375f444f16df4c78ae0bb1f82ef8b2a9.5153ef4bc9ba",
+  "sourceSha": "5174b507f3ad03ceb91c4e3bb9827c4e3f15191c",
+  "buildId": "5174b507f3ad03ceb91c4e3bb9827c4e3f15191c.3ff01f306319",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
+        "sha256": "c6ebf91d3e70acbe21a82290306638afcebf59c04f3a1516a4aae6a8ee6d5445"
       },
-      "contentSha256": "551ee608a2cdfe47cccd8d9b8dae22834b933bbfb72023f20ee7af9d27f71ec4"
+      "contentSha256": "c6ebf91d3e70acbe21a82290306638afcebf59c04f3a1516a4aae6a8ee6d5445"
     },
     {
       "id": "api:audio-video/audio",
@@ -666,6 +666,24 @@
         "sha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
       },
       "contentSha256": "36c71868e3e54286f21d0245105bd807139d1807b8588ad4114442c14ff8caf0"
+    },
+    {
+      "id": "api:utilities/model-performance",
+      "sourcePath": "docs-api/utilities/model-performance.md",
+      "servedPath": "/api/utilities/model-performance/",
+      "canonicalUrl": "https://docs.apertis.ai/api/utilities/model-performance",
+      "title": "Model Performance",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/utilities/model-performance.md",
+        "sha256": "5505dfce8aad298dfe327b34161ff2730084eb411b5b80204ae7dc53f2817254"
+      },
+      "contentSha256": "5505dfce8aad298dfe327b34161ff2730084eb411b5b80204ae7dc53f2817254"
     },
     {
       "id": "api:utilities/organization-usage-costs",

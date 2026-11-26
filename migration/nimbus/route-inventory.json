@@ -159,6 +159,7 @@
           "/api/text-generation/messages",
           "/api/text-generation/responses",
           "/api/utilities/billing-credits",
+          "/api/utilities/model-performance",
           "/api/vision/image-generation",
           "/api/vision/read-image",
           "/authentication/api-keys",
@@ -2638,6 +2639,65 @@
       }
     },
     {
+      "path": "/api/utilities/model-performance",
+      "kind": "doc",
+      "documentId": "api:utilities/model-performance",
+      "sourcePath": "docs-api/utilities/model-performance.md",
+      "sidebar": {
+        "sidebar": "apiSidebar",
+        "trail": [
+          "Utilities"
+        ],
+        "order": 43
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/api/utilities/model-performance",
+        "status": 308,
+        "location": "/api/utilities/model-performance/",
+        "final": {
+          "path": "/api/utilities/model-performance/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/api/utilities/model-performance/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/api/utilities/model-performance",
+        "title": "Model Performance | Apertis Documentation",
+        "headingIds": [
+          "parameters",
+          "example",
+          "response",
+          "window",
+          "metrics",
+          "data_state",
+          "errors",
+          "caching"
+        ],
+        "links": [
+          "/",
+          "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/model-performance.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/api/utilities/organization-usage-costs",
       "kind": "doc",
       "documentId": "api:utilities/organization-usage-costs",
@@ -2647,7 +2707,7 @@
         "trail": [
           "Utilities"
         ],
-        "order": 43
+        "order": 44
       },
       "listed": true,
       "disposition": "preserve",

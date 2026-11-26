@@ -26,6 +26,7 @@
     "/api/text-generation/prompt-cache",
     "/api/utilities/billing-credits",
     "/api/utilities/fallback-models",
+    "/api/utilities/model-performance",
     "/api/utilities/models",
     "/api/vision/image-generation",
     "/api/vision/read-image",
