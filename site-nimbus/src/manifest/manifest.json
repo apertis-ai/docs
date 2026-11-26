@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "e5e1880ead3729fcf29c08291577b211160eafd9",
-  "buildId": "e5e1880ead3729fcf29c08291577b211160eafd9.423908b4f29a",
+  "sourceSha": "431096b1375f444f16df4c78ae0bb1f82ef8b2a9",
+  "buildId": "431096b1375f444f16df4c78ae0bb1f82ef8b2a9.5153ef4bc9ba",
   "documents": [
     {
       "id": "page:index",
@@ -861,9 +861,27 @@
       },
       "markdown": {
         "path": "/billing/payg.md",
-        "sha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+        "sha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
       },
-      "contentSha256": "c3f3eaf63eed28e0334b4144a98523aac0b523f1c6bfce168a295181bc3b857c"
+      "contentSha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
+    },
+    {
+      "id": "default:billing/balance-alerts-and-webhooks",
+      "sourcePath": "docs/billing/balance-alerts-and-webhooks.md",
+      "servedPath": "/billing/balance-alerts-and-webhooks/",
+      "canonicalUrl": "https://docs.apertis.ai/billing/balance-alerts-and-webhooks",
+      "title": "Balance Alerts and Webhooks",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/billing/balance-alerts-and-webhooks.md",
+        "sha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
+      },
+      "contentSha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2"
     },
     {
       "id": "default:billing/payment-methods",
@@ -1077,9 +1095,9 @@
       },
       "markdown": {
         "path": "/installation/antigravity.md",
-        "sha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+        "sha256": "82aa83f17d9df1c1052d4b873df46c97cd23635abb761f5e76589a29b0413094"
       },
-      "contentSha256": "ae6f075db50074415aff504b8e2bc1d2094a1c10912e3e503f6e9fd78d00f788"
+      "contentSha256": "82aa83f17d9df1c1052d4b873df46c97cd23635abb761f5e76589a29b0413094"
     },
     {
       "id": "default:installation/codex",

@@ -184,8 +184,12 @@
     "readingMinutes": 6
   },
   "default:billing/payg": {
-    "updated": "2026-06-10T11:32:17+08:00",
+    "updated": "2026-11-26T10:16:30+08:00",
     "readingMinutes": 6
+  },
+  "default:billing/balance-alerts-and-webhooks": {
+    "updated": "2026-11-25T19:17:47+08:00",
+    "readingMinutes": 4
   },
   "default:billing/payment-methods": {
     "updated": "2026-01-26T12:03:18+08:00",
@@ -232,7 +236,7 @@
     "readingMinutes": 4
   },
   "default:installation/antigravity": {
-    "updated": "2026-11-10T16:38:22+08:00",
+    "updated": "2026-11-25T23:49:58+08:00",
     "readingMinutes": 3
   },
   "default:installation/codex": {
