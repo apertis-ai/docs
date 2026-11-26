@@ -224,7 +224,7 @@
     "readingMinutes": 1
   },
   "default:frameworks/flask": {
-    "updated": "2026-11-25T18:36:31+08:00",
+    "updated": "2026-11-27T01:32:13+08:00",
     "readingMinutes": 1
   },
   "default:frameworks/nextjs": {
@@ -232,7 +232,7 @@
     "readingMinutes": 1
   },
   "default:frameworks/nodejs": {
-    "updated": "2026-11-25T18:36:31+08:00",
+    "updated": "2026-11-27T01:32:13+08:00",
     "readingMinutes": 1
   },
   "default:getting-started/quick-start": {

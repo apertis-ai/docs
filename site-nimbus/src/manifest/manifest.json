@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "b298a357451bcbcd91dd811816df8727184dc049",
-  "buildId": "b298a357451bcbcd91dd811816df8727184dc049.a39a340d7927",
+  "sourceSha": "c1ccf2a14a76a875617441fe96ea585c83e4e518",
+  "buildId": "c1ccf2a14a76a875617441fe96ea585c83e4e518.a39a340d7927",
   "documents": [
     {
       "id": "page:index",
@@ -1041,9 +1041,9 @@
       },
       "markdown": {
         "path": "/frameworks/flask.md",
-        "sha256": "1664af6a97e6098d420c3fa41830658897644cb09c032653f68a348d57010d33"
+        "sha256": "f5f893c471926047e4b4710e477fa7badf5b1708b43b9668de5e197429ce9770"
       },
-      "contentSha256": "1664af6a97e6098d420c3fa41830658897644cb09c032653f68a348d57010d33"
+      "contentSha256": "f5f893c471926047e4b4710e477fa7badf5b1708b43b9668de5e197429ce9770"
     },
     {
       "id": "default:frameworks/nextjs",
@@ -1077,9 +1077,9 @@
       },
       "markdown": {
         "path": "/frameworks/nodejs.md",
-        "sha256": "f827c4e7ac0436c6d800fedfbf842dd3d8169931e5b339811cdcf76e15a0bc6d"
+        "sha256": "afb31a45e5b3866f02ca4ec0b269e294fd3cf82e8222004117a1ea7e1842e918"
       },
-      "contentSha256": "f827c4e7ac0436c6d800fedfbf842dd3d8169931e5b339811cdcf76e15a0bc6d"
+      "contentSha256": "afb31a45e5b3866f02ca4ec0b269e294fd3cf82e8222004117a1ea7e1842e918"
     },
     {
       "id": "default:getting-started/quick-start",

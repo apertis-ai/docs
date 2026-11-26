@@ -19,7 +19,7 @@ export APERTIS_API_KEY="sk-your-api-key"
 
 ## Minimal script
 
-`index.ts`:
+`index.mts`:
 
 ```ts
 import OpenAI from "openai";
@@ -37,12 +37,12 @@ const completion = await client.chat.completions.create({
 console.log(completion.choices[0].message.content);
 ```
 
-For plain JavaScript, save the same code as `index.mjs` and run it with `node index.mjs`.
+The `.mts` extension makes the file an ES module, which the top-level `await` needs; a `.ts` file in a project without `"type": "module"` fails to run. For plain JavaScript, save the same code as `index.mjs` and run it with `node index.mjs`.
 
 ## Run
 
 ```bash
-npx tsx index.ts
+npx tsx index.mts
 ```
 
 The SDK sends `Authorization: Bearer` with your key to `https://api.apertis.ai/v1`. Pick any model ID from the [Models page](https://apertis.ai/models).
