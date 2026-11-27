@@ -245,8 +245,8 @@
     "readingMinutes": 4
   },
   "default:billing/payment-methods": {
-    "updated": "2026-11-27T12:43:11+08:00",
-    "sourceSha256": "62746cf87add48903dc98629839bb25e1db115d2179f844c8a6bc61e823134ac",
+    "updated": "2026-11-27T17:26:30+08:00",
+    "sourceSha256": "d9ce5bfacb3cc484c1e45a96e1f435b2b4ce8da4ee569cab4e56e20e3a9752ae",
     "readingMinutes": 6
   },
   "default:billing/quota-management": {

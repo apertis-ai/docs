@@ -7,6 +7,7 @@ Apertis supports multiple payment methods to accommodate users worldwide. This g
 | Method | Availability | Currencies | Processing Time |
 |--------|--------------|------------|-----------------|
 | Credit/Debit Card | Global | USD | Instant |
+| Link | Global | USD | Instant |
 | Alipay | Customers in China, Add Credits only | USD | Instant |
 | WeChat Pay | Customers in China, Add Credits only | USD | Instant |
 
@@ -16,9 +17,17 @@ All payments are securely processed through **Stripe**.
 
 When you add credits, the checkout can also offer **Alipay** and **WeChat Pay** to customers in China. You pay in USD, and the credits arrive as soon as the payment is confirmed.
 
-- Each is a one-time payment: it is not saved as a payment method, so it cannot be used for auto top-up or subscription renewals. Those use a card.
+- Each is a one-time payment: it is not saved as a payment method, so it cannot be used for auto top-up or subscription renewals. Those use a saved card or Link.
 - Alipay opens the Alipay page or app to approve the payment. WeChat Pay shows a QR code to scan with the WeChat app.
 - If you close the page or the QR code before approving, nothing is charged.
+
+## Link
+
+**Link** is Stripe's saved checkout. When you add a payment method, you can choose Link instead of entering a card.
+
+- A saved Link payment method shows as **Link** with its email address.
+- It can be your default payment method and is charged for auto top-up, the same way as a saved card.
+- When you add credits by hand, the checkout asks you to choose a card or Link again: a saved Link payment method is used only for charges made while you are away.
 
 ## Credit & Debit Cards
 
@@ -104,7 +113,7 @@ Automatically add funds when your balance drops below a threshold. Ensures unint
 ```
 Balance drops below $10 (threshold)
         ↓
-System charges $50 to your card
+System charges $50 to your saved card or Link
         ↓
 Balance increases by $50
         ↓
@@ -117,7 +126,7 @@ Continue using API without interruption
 |---------|-------------|-------------|
 | Threshold | Balance level to trigger | $10-$50 |
 | Amount | Amount to add each time | $20-$100 |
-| Payment Method | Card to charge | Default card |
+| Payment Method | Card or Link to charge | Default payment method |
 
 ### Auto Top-Up Best Practices
 
