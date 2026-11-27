@@ -60,8 +60,8 @@
     "readingMinutes": 1
   },
   "api:sdks/mcp-server": {
-    "updated": "2026-10-05T18:57:03+08:00",
-    "sourceSha256": "8e68db94e8565a6c12ebb08cdab56824c1549785625291acf7dd7c110bcb96da",
+    "updated": "2026-11-27T09:51:32+08:00",
+    "sourceSha256": "5ee35c1f629b59f1898407d855ffbefcce3cc08d203ac19f0c7f09bf48af0744",
     "readingMinutes": 5
   },
   "api:sdks/python-sdk/index": {
