@@ -195,8 +195,8 @@
     "readingMinutes": 7
   },
   "api:utilities/fallback-models": {
-    "updated": "2026-11-28T07:21:24+08:00",
-    "sourceSha256": "280c87c75f685a88df925b5e351334615f6f5bcc0cca85ce6fec42b1cc13a9e0",
+    "updated": "2026-11-28T07:40:40+08:00",
+    "sourceSha256": "14cb4067ad17d8b2309a0c23be59acd404c41e30ff3eeb925f0acf447324d6aa",
     "readingMinutes": 6
   },
   "api:utilities/models": {

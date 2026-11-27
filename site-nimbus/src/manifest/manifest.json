@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "9e342c09b9120f81b7fe498926dabf567ccd78ee",
-  "buildId": "9e342c09b9120f81b7fe498926dabf567ccd78ee.364431b195a9",
+  "sourceSha": "4dfcc81107c76485a86b24148928da5d0a970a56",
+  "buildId": "4dfcc81107c76485a86b24148928da5d0a970a56.364431b195a9",
   "documents": [
     {
       "id": "page:index",
@@ -735,9 +735,9 @@
       },
       "markdown": {
         "path": "/api/utilities/fallback-models.md",
-        "sha256": "2c3265acfff210f84b1831bc34eb635380b1a00869afc14826a84183ddbd6f24"
+        "sha256": "aededb63c03e87749f1fb734b57cf19da32efce1bdc02a328960ec26cbfa3da1"
       },
-      "contentSha256": "2c3265acfff210f84b1831bc34eb635380b1a00869afc14826a84183ddbd6f24"
+      "contentSha256": "aededb63c03e87749f1fb734b57cf19da32efce1bdc02a328960ec26cbfa3da1"
     },
     {
       "id": "api:utilities/models",

@@ -32,7 +32,7 @@ You can specify fallback model configuration directly in each API request:
 
 ### The `models` Alias
 
-`models` is an alias for `fallback_models` on `/v1/chat/completions`, `/v1/responses` and `/v1/messages`. It lets one array name the whole chain of models to try:
+`models` is an alias for `fallback_models` on the Chat Completions, Responses and Anthropic-format endpoints. It lets one array name the whole chain of models to try:
 
 ```json
 {
