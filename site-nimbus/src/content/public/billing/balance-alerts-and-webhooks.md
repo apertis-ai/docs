@@ -1,6 +1,6 @@
 # Balance Alerts and Webhooks
 
-Apertis can tell you when your credit balance runs low, by email and by a signed webhook to your own application. Both use the same alert threshold.
+Apertis can tell you when your credit balance runs low, by email and by a signed webhook to your own application or a Slack channel. Both use the same alert threshold. Webhooks can also tell you when a key hits a limit, when a key's spend looks unusual, and when a model is deprecated or its price changes.
 
 ## Set the alert threshold
 
@@ -16,22 +16,34 @@ To stop alert emails, turn off email notifications in **Preferences** or use the
 
 ## Webhooks
 
-Add a webhook endpoint to receive the alert in your own system, such as a Slack bot, an auto top-up script or an on-call pager.
+Add a webhook endpoint to receive events in your own system, such as an auto top-up script or an on-call pager, or post them to a Slack channel.
 
 ### Add an endpoint
 
 1. Open **Settings → Preferences → Webhooks** and select **Add endpoint**.
-2. Enter a public `https://` URL. URLs that resolve to private, loopback, link-local or cloud-metadata addresses are refused.
-3. Copy the **signing secret** (`whsec_…`). It is shown only once. If you lose it, rotate the secret to get a new one.
-4. Select **Send test event** to confirm your endpoint answers.
+2. Keep **Webhook** selected and enter a public `https://` URL. URLs that resolve to private, loopback, link-local or cloud-metadata addresses are refused.
+3. Choose the events to send. `balance.low` is selected by default.
+4. Copy the **signing secret** (`whsec_…`). It is shown only once. If you lose it, rotate the secret to get a new one.
+5. Select **Send test event** to confirm your endpoint answers.
 
-You can have up to 5 endpoints.
+You can have up to 5 endpoints. An endpoint created before event selection existed receives `balance.low` only.
+
+### Send events to Slack
+
+1. In Slack, create an [incoming webhook](https://api.slack.com/messaging/webhooks) for the channel. Its URL starts with `https://hooks.slack.com/services/`.
+2. In **Add endpoint**, select **Slack**, paste that URL and choose the events.
+
+Treat the Slack URL like a password: anyone who has it can post to your channel. Apertis stores it encrypted and afterwards shows only `https://hooks.slack.com/services/********`. Each event is posted as a one-line message, such as `Apertis balance.low: balance is US$4.82, below the US$5.00 threshold`. Slack endpoints have no signing secret; retries, deliveries and resends work as for webhooks.
 
 ### Events
 
 | Type | Sent when |
 |------|-----------|
 | `balance.low` | Your balance crossed your alert threshold. |
+| `key.limit_reached` | A key was refused because it has no quota left (at most once per key per UTC day) or reached its hourly spend cap (at most once per key per UTC hour). |
+| `key.spend_spike` | A key's spend looks unusual against its own history (at most once per key per UTC hour). |
+| `model.deprecated` | A listed model got a deprecation date. |
+| `model.price_changed` | A listed price of a model changed. A newly listed model sends nothing. |
 | `webhook.test` | You sent a test event from the dashboard. |
 
 Every event is a JSON `POST` with this shape:
@@ -61,7 +73,15 @@ Every event is a JSON `POST` with this shape:
 | `data.threshold_usd` | Your alert threshold. |
 | `data.add_credits_url` | Link to the credits page. It can carry tracking parameters. |
 
-A `webhook.test` event carries `data.endpoint_id`.
+That table describes `balance.low`. The other events carry these `data` fields:
+
+| Type | `data` fields |
+|------|---------------|
+| `key.limit_reached` | `key_id`, `key_name`, `limit` (`remain_quota` or `hourly_spend`); for `hourly_spend` also `limit_usd` and `window_end` (RFC 3339, when the key can spend again) |
+| `key.spend_spike` | `key_id`, `key_name`, `rule`, `window_spend_usd`, `baseline_peak_usd`, `contained` (whether the key was throttled for an hour) |
+| `model.deprecated` | `model_id`, `deprecated_at` |
+| `model.price_changed` | `model_id`, `component`, `unit`, `old_value`, `new_value`, `effective_at` (RFC 3339) |
+| `webhook.test` | `endpoint_id` |
 
 ### Headers
 

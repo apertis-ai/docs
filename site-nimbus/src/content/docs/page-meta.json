@@ -240,9 +240,9 @@
     "readingMinutes": 6
   },
   "default:billing/balance-alerts-and-webhooks": {
-    "updated": "2026-11-25T19:17:47+08:00",
-    "sourceSha256": "6945a7bf18de78f7f4fe36722030abc4e124685d25e7c556973b48ff048543c2",
-    "readingMinutes": 4
+    "updated": "2026-11-27T23:44:38+08:00",
+    "sourceSha256": "9e4206f3f749ea1c47a07ca4e75e3b1a2549f76ee2d5ad3a740755afdfbd218e",
+    "readingMinutes": 5
   },
   "default:billing/payment-methods": {
     "updated": "2026-11-27T12:43:11+08:00",
