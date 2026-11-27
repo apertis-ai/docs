@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "0d63e1889b9ce8d038e0c54227212f38517c556d",
-  "buildId": "0d63e1889b9ce8d038e0c54227212f38517c556d.b2f6c57fa8cd",
+  "sourceSha": "8aba7938877fe761a9c699ed601da31ac5e11437",
+  "buildId": "8aba7938877fe761a9c699ed601da31ac5e11437.b2f6c57fa8cd",
   "documents": [
     {
       "id": "page:index",
@@ -879,9 +879,9 @@
       },
       "markdown": {
         "path": "/billing/payg.md",
-        "sha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
+        "sha256": "5f827827a6c1dd3972b52374c2222e684c5990f64b7bb8f6100df6fb720a2b84"
       },
-      "contentSha256": "ea1a345dc256b6529784b1181c799f7cbf1318d765459ce02478cea999be3b6e"
+      "contentSha256": "5f827827a6c1dd3972b52374c2222e684c5990f64b7bb8f6100df6fb720a2b84"
     },
     {
       "id": "default:billing/balance-alerts-and-webhooks",
@@ -915,9 +915,9 @@
       },
       "markdown": {
         "path": "/billing/payment-methods.md",
-        "sha256": "3d8de97c71d6b06268d16230437efe53f64206facec0b6374652fca9fb975a4a"
+        "sha256": "7aa3048c4b9f251c1ae2f43d7ffad05ae8820b997bf7622e6556273dce54ea6d"
       },
-      "contentSha256": "3d8de97c71d6b06268d16230437efe53f64206facec0b6374652fca9fb975a4a"
+      "contentSha256": "7aa3048c4b9f251c1ae2f43d7ffad05ae8820b997bf7622e6556273dce54ea6d"
     },
     {
       "id": "default:billing/quota-management",

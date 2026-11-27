@@ -235,8 +235,8 @@
     "readingMinutes": 6
   },
   "default:billing/payg": {
-    "updated": "2026-11-26T10:16:30+08:00",
-    "sourceSha256": "6527e5f63c0a6cafa205e36bc21a57b8d319b9ff5f26e0bda97f86a5f5c4dfc7",
+    "updated": "2026-11-27T12:43:11+08:00",
+    "sourceSha256": "d890e0c1151d4697a8034db00f416c747e5ffa4ac1590e3b8ca090c0b49699f6",
     "readingMinutes": 6
   },
   "default:billing/balance-alerts-and-webhooks": {
@@ -245,9 +245,9 @@
     "readingMinutes": 4
   },
   "default:billing/payment-methods": {
-    "updated": "2026-01-26T12:03:18+08:00",
-    "sourceSha256": "99152f8d70f593cebd11dc02cab224f042150f9a6b394f8eb5be80f5f9a6d679",
-    "readingMinutes": 5
+    "updated": "2026-11-27T12:43:11+08:00",
+    "sourceSha256": "62746cf87add48903dc98629839bb25e1db115d2179f844c8a6bc61e823134ac",
+    "readingMinutes": 6
   },
   "default:billing/quota-management": {
     "updated": "2026-06-10T11:32:17+08:00",
