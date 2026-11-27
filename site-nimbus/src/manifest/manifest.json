@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "4dfcc81107c76485a86b24148928da5d0a970a56",
-  "buildId": "4dfcc81107c76485a86b24148928da5d0a970a56.364431b195a9",
+  "sourceSha": "a55232901167897694e77e25b74deb8c23d261d0",
+  "buildId": "a55232901167897694e77e25b74deb8c23d261d0.364431b195a9",
   "documents": [
     {
       "id": "page:index",
@@ -933,9 +933,9 @@
       },
       "markdown": {
         "path": "/billing/payment-methods.md",
-        "sha256": "7aa3048c4b9f251c1ae2f43d7ffad05ae8820b997bf7622e6556273dce54ea6d"
+        "sha256": "b1d346feb1247bf562ce01583bb0c2820eb66f3c66d967820a597b6961224ff2"
       },
-      "contentSha256": "7aa3048c4b9f251c1ae2f43d7ffad05ae8820b997bf7622e6556273dce54ea6d"
+      "contentSha256": "b1d346feb1247bf562ce01583bb0c2820eb66f3c66d967820a597b6961224ff2"
     },
     {
       "id": "default:billing/quota-management",
