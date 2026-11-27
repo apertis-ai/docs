@@ -7,8 +7,18 @@ Apertis supports multiple payment methods to accommodate users worldwide. This g
 | Method | Availability | Currencies | Processing Time |
 |--------|--------------|------------|-----------------|
 | Credit/Debit Card | Global | USD | Instant |
+| Alipay | Customers in China, Add Credits only | USD | Instant |
+| WeChat Pay | Customers in China, Add Credits only | USD | Instant |
 
 All payments are securely processed through **Stripe**.
+
+## Alipay and WeChat Pay
+
+When you add credits, the checkout can also offer **Alipay** and **WeChat Pay** to customers in China. You pay in USD, and the credits arrive as soon as the payment is confirmed.
+
+- Each is a one-time payment: it is not saved as a payment method, so it cannot be used for auto top-up or subscription renewals. Those use a card.
+- Alipay opens the Alipay page or app to approve the payment. WeChat Pay shows a QR code to scan with the WeChat app.
+- If you close the page or the QR code before approving, nothing is charged.
 
 ## Credit & Debit Cards
 
