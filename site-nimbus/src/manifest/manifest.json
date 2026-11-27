@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "0d63e1889b9ce8d038e0c54227212f38517c556d",
-  "buildId": "0d63e1889b9ce8d038e0c54227212f38517c556d.b2f6c57fa8cd",
+  "sourceSha": "288e756693ba972fefe203967b040f22bac508f4",
+  "buildId": "288e756693ba972fefe203967b040f22bac508f4.b2f6c57fa8cd",
   "documents": [
     {
       "id": "page:index",
@@ -933,9 +933,9 @@
       },
       "markdown": {
         "path": "/billing/quota-management.md",
-        "sha256": "182bfbd2054e08a781b12ba160f5487db024afc647f84bb13f6e697d35732dfc"
+        "sha256": "58bfb20e179c688548c719a519d49003241cc977a4cbcb14282de47294833b21"
       },
-      "contentSha256": "182bfbd2054e08a781b12ba160f5487db024afc647f84bb13f6e697d35732dfc"
+      "contentSha256": "58bfb20e179c688548c719a519d49003241cc977a4cbcb14282de47294833b21"
     },
     {
       "id": "default:billing/rate-limits",
