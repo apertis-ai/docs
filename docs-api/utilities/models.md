@@ -76,8 +76,8 @@ When the model catalogue has the information, each model in a standard-key respo
   "context_length": 400000,
   "pricing": {
     "charge_type": "Pay As You Go",
-    "input_price": 1.25,
-    "output_price": 10,
+    "input_price": 0.00125,
+    "output_price": 0.01,
     "currency": "USD"
   },
   "features": ["tool-calling", "vision"],
@@ -89,8 +89,8 @@ When the model catalogue has the information, each model in a standard-key respo
 |-------|-------------|
 | `context_length` | Maximum context window size in tokens |
 | `pricing.charge_type` | How the model is charged, for example `Pay As You Go` or `Pay Per Request` |
-| `pricing.input_price` | Input price for the model, in `pricing.currency` |
-| `pricing.output_price` | Output price for the model, in `pricing.currency` |
+| `pricing.input_price` | For token-priced models: price per 1,000 input tokens, in `pricing.currency` |
+| `pricing.output_price` | For token-priced models: price per 1,000 output tokens, in `pricing.currency` |
 | `pricing.price_table` | For models priced per request: a list of `{ "spec", "price" }` entries, with a `resolution` where the price depends on one |
 | `pricing.currency` | Always `USD` |
 | `features` | Capabilities the catalogue lists for the model |

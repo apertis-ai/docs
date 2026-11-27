@@ -76,13 +76,13 @@ You can also pre-configure fallback models in your API Token settings, which wil
 - **Type**: Integer
 - **Unit**: Milliseconds (ms)
 - **Range**: 5,000 - 300,000 milliseconds (5 - 300 seconds)
-- **Default**: 15,000 milliseconds (15 seconds)
+- **Default**: 30,000 milliseconds (30 seconds)
 - **Description**: Wait time before switching to the next fallback model. Automatically capped by remaining `X-Timeout` budget.
 
 ### `fallback_enabled`
 - **Type**: Boolean
-- **Default**: false
-- **Description**: Whether to enable the fallback model mechanism
+- **Default**: fallback is on whenever fallback models are set
+- **Description**: Send `false` to switch fallback off for this request
 
 ## Fallback Trigger Conditions
 
