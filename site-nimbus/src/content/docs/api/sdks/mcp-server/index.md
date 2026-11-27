@@ -4,7 +4,7 @@ title: "Apertis MCP Server"
 
 # Apertis MCP Server
 
-`@apertis/mcp-server` is an [MCP](https://modelcontextprotocol.io) server that lets agents (Claude Code, OpenCode, or any MCP-compatible client) manage your Apertis account and query the API gateway at runtime — list models, check quota, create API keys, ask for task-aware model recommendations, and delegate bulk grunt work to a cheap coworker model.
+`@apertis/mcp-server` is an [MCP](https://modelcontextprotocol.io) server that lets agents (Claude Code, OpenCode, or any MCP-compatible client) manage your Apertis account and query the API gateway at runtime — list models, check quota, list API keys, ask for task-aware model recommendations, and delegate bulk grunt work to a cheap coworker model.
 
 GitHub: [apertis-ai/apertis-mcp](https://github.com/apertis-ai/apertis-mcp) · npm: `@apertis/mcp-server`
 
@@ -68,7 +68,6 @@ Restart your agent and the Apertis tools become available.
 | `check_quota` | Check account balance, subscription status, remaining quota |
 | `get_usage_stats` | Usage statistics by model and period (today/week/month) |
 | `list_api_keys` | List API keys with status and quota (masked) |
-| `create_api_key` | Create a new API key with optional quota limit |
 | `suggest_model` | Freeform keyword-based model search over the full catalog |
 | `recommend_model` | Curated Apertis pick for a task type with live pricing |
 | `delegate` | Offload bulk grunt work (file reads, boilerplate, summarization) to a cheap coworker model — keeps your Claude usage limit intact |
@@ -149,7 +148,6 @@ In addition to tools, the server exposes three read-only resources:
 ## Security
 
 - All API keys in tool output are masked (first 4 + last 4 characters)
-- New keys are shown in full **once** — save them immediately
 - Keep `APERTIS_API_KEY` out of source control; use your MCP client's env-var expansion
 
 ## Docs MCP server (this documentation)
