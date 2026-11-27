@@ -45,6 +45,8 @@ Add Funds → Make Requests → Deduct from Balance → Top Up When Low
 | Method | Availability | Processing |
 |--------|--------------|------------|
 | Credit/Debit Card | Global | Instant |
+| Alipay | Customers in China | Instant |
+| WeChat Pay | Customers in China | Instant |
 
 All payments are securely processed through **Stripe**.
 
