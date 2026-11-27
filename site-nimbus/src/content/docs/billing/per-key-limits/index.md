@@ -20,6 +20,9 @@ You set these in the dashboard when you create or edit a key.
 | **Quota** (or **Unlimited**) | Total amount the key may spend over its lifetime. | Never. Add quota to the key to continue. |
 | **Monthly limit** | Maximum the key may spend in one monthly window. | Every month on your account's monthly reset day, at 00:00 UTC. A reset day past the end of a month uses that month's last day. |
 | **Hourly spend limit** | Maximum the key may spend in any trailing hour, in US dollars. | Continuously: spend older than one hour stops counting. |
+| **Daily spend limit** | Maximum the key may spend in one UTC day, in US dollars. Counts spend since the limit was set. | Every day at 00:00 UTC. |
+| **Weekly spend limit** | Maximum the key may spend in one UTC week, in US dollars. Counts spend since the limit was set. | Every Monday at 00:00 UTC. |
+| **Requests per minute** | Maximum number of requests the key may start in a minute, from 1 to 10,000. | Each minute. A refused request returns `Retry-After`. |
 | **Expiration** | Date after which the key stops working. | Never. Edit the expiration or create a new key. |
 | **Allowed models** | The only models the key may call. Empty means all models available to you. | — |
 | **IP allowlist** (subnet) | The only client addresses the key may be used from. | — |
@@ -55,9 +58,15 @@ A request's estimated cost is always reserved up front when the key or the accou
 | Situation | HTTP status | `Retry-After` | `error.code` |
 |-----------|-------------|---------------|--------------|
 | Key's hourly spend limit reached | `429` | Yes | `api_key_spend_rate_exceeded` |
+| Key's daily or weekly spend limit reached | `429` | Yes | `api_key_spend_limit_exceeded` |
+| Key's requests-per-minute limit reached | `429` | Yes | `api_key_rpm_limit_exceeded` |
 | Too many requests to one model with one key | `429` | Yes | `rate_limit_exceeded` |
 
 The hourly spend limit's message names the limit and the wait: `This API key has reached its spend limit of US$<amount> per hour. Retry after <seconds> seconds, or raise the limit in the key's settings.`
+
+The daily and weekly spend limits answer with the amount, the period and the wait: `This API key has reached its spend limit of US$<amount> per day, counting spend since the limit was set, which resets at 00:00 UTC. Retry after <seconds> seconds, or raise the limit in the key's settings.` For the weekly limit, `day` is `week` and the reset is `Monday 00:00 UTC`. `Retry-After` is the number of seconds until that reset.
+
+The requests-per-minute limit's message reads `This API key has reached its limit of <number> requests per minute. Retry after <seconds> seconds, or raise the limit in the key's settings.`
 
 The other request-rate limits, and how to retry them, are in [Rate Limits](/billing/rate-limits).
 

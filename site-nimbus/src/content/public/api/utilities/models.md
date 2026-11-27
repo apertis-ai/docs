@@ -63,6 +63,41 @@ for await (const model of client.models.list()) {
 }
 ```
 
+### Catalogue fields
+
+When the model catalogue has the information, each model in a standard-key response also carries these fields. A field with no value is left out of the model object.
+
+```json
+{
+  "id": "gpt-5.5",
+  "object": "model",
+  "created": 1626777600,
+  "owned_by": "OpenAI",
+  "context_length": 400000,
+  "pricing": {
+    "charge_type": "Pay As You Go",
+    "input_price": 1.25,
+    "output_price": 10,
+    "currency": "USD"
+  },
+  "features": ["tool-calling", "vision"],
+  "tasks": ["chat"]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `context_length` | Maximum context window size in tokens |
+| `pricing.charge_type` | How the model is charged, for example `Pay As You Go` or `Pay Per Request` |
+| `pricing.input_price` | Input price for the model, in `pricing.currency` |
+| `pricing.output_price` | Output price for the model, in `pricing.currency` |
+| `pricing.price_table` | For models priced per request: a list of `{ "spec", "price" }` entries, with a `resolution` where the price depends on one |
+| `pricing.currency` | Always `USD` |
+| `features` | Capabilities the catalogue lists for the model |
+| `tasks` | Tasks the catalogue lists for the model |
+
+The values above are illustrative. These fields are additive. The fields shown in the first response, such as `id` and `owned_by`, are unchanged, and standard OpenAI SDKs ignore the new ones.
+
 ### Response (Subscription Key)
 
 When using a subscription API key, the response includes additional fields to help you understand quota costs:
@@ -153,7 +188,7 @@ console.log(model.id, model.owned_by);
 
 ### Response
 
-Returns the model object if found. When using a subscription key, only models within your plan are accessible — requesting a model outside your plan returns a `model_not_found` error.
+Returns the model object if found. For a standard key, the object carries the same [catalogue fields](#catalogue-fields) as the list, when the catalogue has them. When using a subscription key, only models within your plan are accessible — requesting a model outside your plan returns a `model_not_found` error.
 
 ### Python Example
 

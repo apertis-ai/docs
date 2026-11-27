@@ -30,6 +30,36 @@ You can specify fallback model configuration directly in each API request:
 }
 ```
 
+### The `models` Alias
+
+`models` is an alias for `fallback_models` on `/v1/chat/completions`, `/v1/responses` and `/v1/messages`. It lets one array name the whole chain of models to try:
+
+```json
+{
+  "model": "gpt-5.5",
+  "models": ["gpt-5.4-mini", "claude-haiku-4.5"],
+  "messages": [{"role": "user", "content": "Hello, how are you?"}]
+}
+```
+
+This request is handled as primary model `gpt-5.5` with `fallback_models` set to `["gpt-5.4-mini", "claude-haiku-4.5"]`.
+
+| You send | Primary model | Fallback models |
+|----------|---------------|-----------------|
+| `{"model": "a", "models": ["b", "c"]}` | `a` | `b`, `c` |
+| `{"models": ["b", "c"]}` | `b` | `c` |
+| `{"model": "a", "models": ["a", "b"]}` | `a` | `b` |
+| `{"model": "a", "models": ["b"], "fallback_models": ["c"]}` | `a` | `c` |
+
+Rules:
+- `model` stays the primary model. Entries of `models` that repeat `model`, or repeat each other, are dropped. Entries are compared without a leading `apertis/` prefix.
+- Without `model`, the first entry of `models` becomes the primary model.
+- If a request sends both `fallback_models` and `models`, `fallback_models` is used and `models` is ignored. A `fallback_models` of `null` counts as not sent.
+- `models` set to `null` or `[]` is ignored.
+- `models` must be an array of non-empty strings. Any other shape, or sending `models` more than once, returns `400`.
+- A key restricted to certain models is refused when any listed model is outside its list, as for `fallback_models`.
+- `models` is removed from the request before it is forwarded. The maximum of 5 fallback models, `fallback_timeout` and `fallback_enabled` apply as for `fallback_models`.
+
 ### Token-Level Configuration
 
 You can also pre-configure fallback models in your API Token settings, which will automatically apply to all requests using that token.
