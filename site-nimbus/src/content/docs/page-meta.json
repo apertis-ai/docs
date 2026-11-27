@@ -195,13 +195,13 @@
     "readingMinutes": 7
   },
   "api:utilities/fallback-models": {
-    "updated": "2026-11-28T07:16:32+08:00",
-    "sourceSha256": "7c846c281d730cbb808fd67ac374e1c033a54c604a8bcf9fa1b2c81c345e5160",
+    "updated": "2026-11-28T07:21:24+08:00",
+    "sourceSha256": "280c87c75f685a88df925b5e351334615f6f5bcc0cca85ce6fec42b1cc13a9e0",
     "readingMinutes": 6
   },
   "api:utilities/models": {
-    "updated": "2026-11-28T07:16:32+08:00",
-    "sourceSha256": "b8c9cde09934584e4e882e9f81e2030fb9fcadb7790df88138a9979eef5cebb6",
+    "updated": "2026-11-28T07:21:24+08:00",
+    "sourceSha256": "44cd4cf17ed92d330d019f5025f1e20d86fcb4f3de6964aa3f3d4764cb3a54af",
     "readingMinutes": 3
   },
   "api:utilities/recommend": {
@@ -260,8 +260,8 @@
     "readingMinutes": 9
   },
   "default:billing/rate-limits": {
-    "updated": "2026-06-10T11:32:17+08:00",
-    "sourceSha256": "d56f2710dbd56f893c812326151649130840fed4b8c1a28f89d5b08409f7c972",
+    "updated": "2026-11-28T07:21:24+08:00",
+    "sourceSha256": "f34f2acf114e396c26eb681795afad330fa0192ed77754d8216deece49fa693d",
     "readingMinutes": 5
   },
   "default:billing/per-key-limits": {

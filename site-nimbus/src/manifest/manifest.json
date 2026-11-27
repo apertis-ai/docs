@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "919b1f6f909431bf3753900739b2cff598fd8d3c",
-  "buildId": "919b1f6f909431bf3753900739b2cff598fd8d3c.364431b195a9",
+  "sourceSha": "9e342c09b9120f81b7fe498926dabf567ccd78ee",
+  "buildId": "9e342c09b9120f81b7fe498926dabf567ccd78ee.364431b195a9",
   "documents": [
     {
       "id": "page:index",
@@ -735,9 +735,9 @@
       },
       "markdown": {
         "path": "/api/utilities/fallback-models.md",
-        "sha256": "440155a0139a05d6b8f1c42daf86d87695101847f1bead92e17efafb4511e638"
+        "sha256": "2c3265acfff210f84b1831bc34eb635380b1a00869afc14826a84183ddbd6f24"
       },
-      "contentSha256": "440155a0139a05d6b8f1c42daf86d87695101847f1bead92e17efafb4511e638"
+      "contentSha256": "2c3265acfff210f84b1831bc34eb635380b1a00869afc14826a84183ddbd6f24"
     },
     {
       "id": "api:utilities/models",
@@ -753,9 +753,9 @@
       },
       "markdown": {
         "path": "/api/utilities/models.md",
-        "sha256": "425cced3830f2efe7ca5d3415df8577247448e7656d97e6d778cd840d49671ff"
+        "sha256": "5b7aab269a9cca9169ec539100f43b70a6305d23f2c1e39f17b99687bbef02b2"
       },
-      "contentSha256": "425cced3830f2efe7ca5d3415df8577247448e7656d97e6d778cd840d49671ff"
+      "contentSha256": "5b7aab269a9cca9169ec539100f43b70a6305d23f2c1e39f17b99687bbef02b2"
     },
     {
       "id": "api:utilities/recommend",
@@ -969,9 +969,9 @@
       },
       "markdown": {
         "path": "/billing/rate-limits.md",
-        "sha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
+        "sha256": "9b4bbf444f829eb8a0aa8e0eed54058e14e66f7fb39ca643d3f40a9cd6473452"
       },
-      "contentSha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
+      "contentSha256": "9b4bbf444f829eb8a0aa8e0eed54058e14e66f7fb39ca643d3f40a9cd6473452"
     },
     {
       "id": "default:billing/per-key-limits",
