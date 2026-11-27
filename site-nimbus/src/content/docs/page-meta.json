@@ -250,9 +250,9 @@
     "readingMinutes": 6
   },
   "default:billing/quota-management": {
-    "updated": "2026-06-10T11:32:17+08:00",
-    "sourceSha256": "8538c4c2ea59e2a71c521615646cb18e92b342d889534d0ad280ee32ce767394",
-    "readingMinutes": 5
+    "updated": "2026-11-27T14:48:14+08:00",
+    "sourceSha256": "191ea7d4a82a447e5842fba8b72f70bad7b9edaf690aa2d6ac2832ce749ed870",
+    "readingMinutes": 6
   },
   "default:billing/rate-limits": {
     "updated": "2026-06-10T11:32:17+08:00",

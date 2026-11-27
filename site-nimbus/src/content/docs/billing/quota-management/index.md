@@ -314,6 +314,26 @@ View detailed usage reports in the dashboard:
 3. Filter by model, key, or endpoint
 4. Export as CSV if needed
 
+### CSV export
+
+The usage export writes one row per model per UTC day for the selected range, up to 90 days back. The columns, in this order:
+
+| Column | Description |
+|--------|-------------|
+| `date` | UTC day, `YYYY-MM-DD` |
+| `model_id` | Model ID as requested |
+| `model_name` | Display name of the model |
+| `provider` | Model provider |
+| `requests` | Charged requests |
+| `quota` | Quota charged (1,000,000 quota = 1 USD) |
+| `spend_usd` | Amount charged in USD |
+| `prompt_tokens` | Input tokens |
+| `completion_tokens` | Output tokens |
+| `cache_read_tokens` | Input tokens read from the prompt cache |
+| `cache_write_tokens` | Input tokens written to the prompt cache (5-minute and 1-hour) |
+
+The token columns come after `spend_usd`, so a parser that reads the first seven columns by position keeps working. A blank token cell means the count was not available for that row, not zero usage.
+
 ### Report Metrics
 
 | Metric | Description |
