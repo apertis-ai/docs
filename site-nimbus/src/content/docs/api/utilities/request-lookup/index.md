@@ -119,8 +119,31 @@ console.log(data.total_charged_usd);
 | `ttft_ms` | Time to first token in milliseconds, when measured |
 | `is_stream` | Whether the request was streamed, when recorded |
 | `finish_reason` | Why generation stopped, when recorded |
+| `billing_reason` | Why the request was charged what it was, when recorded. See [Billing reasons](#billing-reasons) |
 
 Fields marked "when measured", "when recorded" or "when the model reports them" are left out of the entry when there is no value.
+
+## Billing reasons
+
+`billing_reason` explains the `charged_usd` of an entry. Values starting with `billed_` mean the request was charged; values starting with `free_` mean it was not.
+
+| Value | Meaning |
+|-------|---------|
+| `billed_usage` | Charged for the usage of a completed answer |
+| `billed_per_request` | Charged the model's fixed per-request price |
+| `billed_partial_client_left` | The client disconnected after output started; charged for the usage delivered |
+| `billed_partial_upstream_failed` | The provider failed after output started; charged for the usage delivered |
+| `billed_cache_only` | The answer was empty; charged for the cached prompt only |
+| `billed_reserved_bound` | Part of an audio response was delivered; charged the reserved amount |
+| `free_upstream_error` | The model provider returned an error; not charged |
+| `free_upstream_cut_short` | The provider failed mid-stream before any usable output; not charged |
+| `free_timeout` | The request timed out before any output; not charged |
+| `free_client_left_before_output` | The client disconnected before any output; not charged |
+| `free_empty_answer` | The answer was empty; not charged |
+| `free_empty_per_request` | A per-request priced call produced no output; not charged |
+| `free_outcome_unknown` | The outcome could not be confirmed; not charged |
+
+Requests made before this field was introduced have no `billing_reason`.
 
 ## Timing
 
