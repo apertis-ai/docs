@@ -129,7 +129,8 @@ const FORBIDDEN = [
   [/14-day right of withdrawal|unused purchase within 7 days|We aim to send a first response/, 'phase C candidate wording, superseded by the legal source'],
 ];
 
-const ARCHIVE = [['site-nimbus/src/components/catalog/changelog.json', 'you may cancel your subscription at any time before 2026-04-24 00:00 UTC']];
+// Empty since the changelog snapshot became summaries (the dated notice no longer lives in any source); add a pair here to pin one.
+const ARCHIVE = [];
 
 const decode = (s) => s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
   .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
