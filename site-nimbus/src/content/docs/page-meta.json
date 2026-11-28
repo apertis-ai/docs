@@ -240,9 +240,9 @@
     "readingMinutes": 6
   },
   "default:billing/payg": {
-    "updated": "2026-11-27T12:43:11+08:00",
-    "sourceSha256": "d890e0c1151d4697a8034db00f416c747e5ffa4ac1590e3b8ca090c0b49699f6",
-    "readingMinutes": 6
+    "updated": "2026-11-28T21:56:35+08:00",
+    "sourceSha256": "5089b7ed363e4f3e4d1871b15884e0953b6f4357c14169c09e2654c97c013c63",
+    "readingMinutes": 11
   },
   "default:billing/balance-alerts-and-webhooks": {
     "updated": "2026-11-27T23:44:38+08:00",
@@ -250,9 +250,9 @@
     "readingMinutes": 5
   },
   "default:billing/payment-methods": {
-    "updated": "2026-11-27T17:26:30+08:00",
-    "sourceSha256": "d9ce5bfacb3cc484c1e45a96e1f435b2b4ce8da4ee569cab4e56e20e3a9752ae",
-    "readingMinutes": 6
+    "updated": "2026-11-28T21:56:35+08:00",
+    "sourceSha256": "016906008ab74176188ec859bb2531c2eff1c76b6f2ffe4167ee58c032fe3844",
+    "readingMinutes": 8
   },
   "default:billing/quota-management": {
     "updated": "2026-11-28T07:16:32+08:00",
@@ -270,9 +270,9 @@
     "readingMinutes": 7
   },
   "default:billing/subscription-plans": {
-    "updated": "2026-07-20T11:55:30+08:00",
-    "sourceSha256": "6efad7c6e0b40c307e39dc86a96e4bee50b14bbb36d526427e7fa5d0ed954d88",
-    "readingMinutes": 7
+    "updated": "2026-11-28T21:56:35+08:00",
+    "sourceSha256": "4f10da1ac7db4bc35d44d635547fbd23d622a40e61501af694e900c8081ed445",
+    "readingMinutes": 12
   },
   "default:frameworks/django": {
     "updated": "2026-11-27T01:37:33+08:00",
@@ -310,9 +310,9 @@
     "readingMinutes": 4
   },
   "default:help/faq": {
-    "updated": "2026-11-24T11:20:42+08:00",
-    "sourceSha256": "8552fbc239facfc7a8f9402ade3e7f27d254f927a31026eca299008d79164930",
-    "readingMinutes": 7
+    "updated": "2026-11-28T21:56:35+08:00",
+    "sourceSha256": "d2c3c0c4d2219933b9de10268082d693859a106dc5ac3fa5d315846c82175f2b",
+    "readingMinutes": 9
   },
   "default:help/ideas": {
     "updated": "2026-03-25T16:38:38+08:00",
