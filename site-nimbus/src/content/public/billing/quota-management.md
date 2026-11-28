@@ -307,6 +307,8 @@ View detailed usage reports in the dashboard:
 3. Filter by model, key, or endpoint
 4. Export as CSV if needed
 
+The dashboard's Logs view also has a **Filter by finish reason** control. Pick one or more of `stop`, `length`, `content_filter` and `tool_calls` to list only the requests that stopped for those reasons. Entries that are not requests, and requests with no recorded finish reason, are not listed while the filter is on.
+
 ### CSV export
 
 The usage export writes one row per model per UTC day for the selected range, up to 90 days back. The columns, in this order:
@@ -344,6 +346,7 @@ curl -X POST "https://api.apertis.ai/api/log/self/usage-exports?start_timestamp=
 | `end_timestamp` | End of the range, Unix seconds |
 | `model_name` | Only requests for this model |
 | `token_name` | Only requests made with the API key of this name |
+| `finish_reason` | Only requests that stopped for this reason: `stop`, `length`, `content_filter` or `tool_calls`. Separate several values with commas. Any other value returns `400` and no job is started |
 
 The call returns `202` with the job in `data`:
 
