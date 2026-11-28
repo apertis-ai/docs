@@ -334,6 +334,92 @@ The usage export writes one row per model per UTC day for the selected range, up
 
 The token columns come after `spend_usd`, so a parser that reads the first seven columns by position keeps working. A blank token cell means the count was not available for that row, not zero usage.
 
+### Request-level export through the API
+
+The CSV export above summarizes usage per model per day. To export one row per request, start an export job and then fetch its file. Both calls authenticate with your dashboard access token in the `Authorization` header, not with an API key.
+
+**1. Start the job**
+
+```bash
+curl -X POST "https://api.apertis.ai/api/log/self/usage-exports?start_timestamp=1795910400&end_timestamp=1796515200&model_name=<MODEL>" \
+    -H "Authorization: <ACCESS_TOKEN>"
+```
+
+| Query parameter | Description |
+|-----------------|-------------|
+| `start_timestamp` | Start of the range, Unix seconds. Defaults to the start of the 30-day request-log window |
+| `end_timestamp` | End of the range, Unix seconds |
+| `model_name` | Only requests for this model |
+| `token_name` | Only requests made with the API key of this name |
+
+The call returns `202` with the job in `data`:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "job_id": "<JOB_ID>",
+    "status": "running",
+    "start_timestamp": 1795910400,
+    "end_timestamp": 1796515200
+  }
+}
+```
+
+**2. Read the job**
+
+```bash
+curl "https://api.apertis.ai/api/log/self/usage-exports/<JOB_ID>" \
+    -H "Authorization: <ACCESS_TOKEN>"
+```
+
+The state comes back in `data`. While the job runs, `status` is `running`. It becomes `done` or `failed`. A job that is `done` reports `total_rows` and `row_count`. When `status` is `done`, add `format=csv` or `format=json` to download the file:
+
+```bash
+curl "https://api.apertis.ai/api/log/self/usage-exports/<JOB_ID>?format=csv" \
+    -H "Authorization: <ACCESS_TOKEN>" -o account-usage.csv
+```
+
+The JSON file is an object with `rows`, `total_rows`, `start_timestamp` and `end_timestamp`.
+
+The file holds your requests, newest first, up to 10,000 rows. When the range has more rows, the file holds the newest 10,000, the response carries `X-Apertis-Truncated: true` and `X-Apertis-Total-Rows`, and `total_rows` is larger than `row_count`. Narrow the range and export again. A finished export is kept for one hour, and an account keeps one finished export: a job that finishes replaces the previous one.
+
+| Column | Description |
+|--------|-------------|
+| `created_at` | Unix timestamp, in seconds |
+| `request_id` | The request's `X-Apertis-Request-Id` |
+| `api_key_name` | Name of the API key |
+| `model_name` | Model |
+| `prompt_tokens` | Input tokens |
+| `completion_tokens` | Output tokens |
+| `cache_read_tokens` | Input tokens read from the prompt cache |
+| `cache_creation_5m_tokens` | Input tokens written to the 5-minute prompt cache |
+| `cache_creation_1h_tokens` | Input tokens written to the 1-hour prompt cache |
+| `reasoning_tokens` | Reasoning tokens. Blank when not counted |
+| `quota` | Quota charged (1,000,000 quota = 1 USD) |
+| `cost_usd` | Cost in USD |
+| `charged_to_balance` | Whether the cost was charged to your credits |
+| `is_stream` | Whether the request was streamed. Blank when not recorded |
+| `latency_ms` | Total request time in milliseconds. Blank when not measured |
+| `ttft_ms` | Time to first token in milliseconds. Blank when not measured |
+| `finish_reason` | Why generation stopped. Blank when not recorded |
+
+The export never includes request or response content.
+
+Errors answer with `"success": false`, a `message`, and for the cases below an `error` field (`code` for `range_not_available`) that names the case:
+
+| Status | Identifier | Meaning |
+|--------|------------|---------|
+| `400` | | `start_timestamp` is older than the 30-day request-log window |
+| `400` | `range_not_available` | Request-level rows for the start of the range are no longer held |
+| `400` | `invalid_format` | `format` is not `csv` or `json` |
+| `404` | `export_not_found` | The job does not exist, belongs to another account, or has been replaced |
+| `409` | `export_in_progress` | You already have a job running; wait for it to finish |
+| `409` | `export_not_ready` | You asked for a file before the job is `done` |
+| `429` | `export_busy` | Other exports are running; retry after the `Retry-After` interval (60 seconds) |
+| `503` | `export_unavailable` | Exports are temporarily unavailable; nothing was started |
+
 ### Report Metrics
 
 | Metric | Description |

@@ -143,6 +143,7 @@ const sidebars = {
         "utilities/fallback-models",
         "utilities/billing-credits",
         "utilities/model-performance",
+        "utilities/request-lookup",
         "utilities/organization-usage-costs",
       ],
     },

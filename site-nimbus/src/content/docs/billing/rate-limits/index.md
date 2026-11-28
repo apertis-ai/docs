@@ -17,7 +17,7 @@ Rate limits are applied at multiple levels to protect the service:
 | **Per-Model** | Varies by plan | 1 minute | Per Key + Per Model |
 | **Web Dashboard** | 120 requests | 3 minutes | Per IP |
 | **Critical Operations** | 20 requests | 20 minutes | Per IP |
-| **Log Queries** | 30 requests | 60 seconds | Per User |
+| **Log Queries** | 60 requests | 60 seconds | Per User |
 
 ## API Rate Limits
 
@@ -291,7 +291,7 @@ Higher restrictions for security-sensitive operations:
 For log and usage queries:
 
 ```
-30 requests per 60 seconds per user
+60 requests per 60 seconds per user
 ```
 
 <aside class="admonition admonition-note">

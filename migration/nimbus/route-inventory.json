@@ -160,6 +160,7 @@
           "/api/text-generation/responses",
           "/api/utilities/billing-credits",
           "/api/utilities/model-performance",
+          "/api/utilities/request-lookup",
           "/api/vision/image-generation",
           "/api/vision/read-image",
           "/authentication/api-keys",
@@ -2698,6 +2699,65 @@
       }
     },
     {
+      "path": "/api/utilities/request-lookup",
+      "kind": "doc",
+      "documentId": "api:utilities/request-lookup",
+      "sourcePath": "docs-api/utilities/request-lookup.md",
+      "sidebar": {
+        "sidebar": "apiSidebar",
+        "trail": [
+          "Utilities"
+        ],
+        "order": 44
+      },
+      "listed": true,
+      "disposition": "preserve",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "legacy": {
+        "search": false,
+        "rag": false
+      },
+      "poc": false,
+      "built": false,
+      "live": {
+        "requested": "/api/utilities/request-lookup",
+        "status": 308,
+        "location": "/api/utilities/request-lookup/",
+        "final": {
+          "path": "/api/utilities/request-lookup/",
+          "status": 200
+        },
+        "slashVariant": {
+          "path": "/api/utilities/request-lookup/",
+          "status": 200,
+          "location": null
+        },
+        "canonical": "https://docs.apertis.ai/api/utilities/request-lookup",
+        "title": "Request Lookup | Apertis Documentation",
+        "headingIds": [
+          "example",
+          "response",
+          "data-fields",
+          "entry-fields",
+          "timing",
+          "errors",
+          "reading-the-request-id-in-a-browser"
+        ],
+        "links": [
+          "/",
+          "/billing/rate-limits",
+          "https://github.com/apertis-ai/docs/tree/main/docs-api/utilities/request-lookup.md"
+        ],
+        "images": [],
+        "articleSha256": null
+      }
+    },
+    {
       "path": "/api/utilities/organization-usage-costs",
       "kind": "doc",
       "documentId": "api:utilities/organization-usage-costs",
@@ -2707,7 +2767,7 @@
         "trail": [
           "Utilities"
         ],
-        "order": 44
+        "order": 45
       },
       "listed": true,
       "disposition": "preserve",
@@ -5514,6 +5574,7 @@
         "links": [
           "/",
           "/authentication/api-keys",
+          "/billing/per-key-limits",
           "/billing/rate-limits",
           "/cdn-cgi/l/email-protection#4a22230a2b3a2f383e2339642b23",
           "/help/troubleshooting",

@@ -1,7 +1,7 @@
 {
   "api:index": {
-    "updated": "2026-11-25T13:02:26+08:00",
-    "sourceSha256": "8b2a26dae5faa71f2b65b0ad8e34edbeb65b7601b68856efcd24c039f4bb7ae4",
+    "updated": "2026-11-28T07:16:32+08:00",
+    "sourceSha256": "0ade2c59b3d4bd636ccbd594fd62d324585ad4f3babea6811ba847a7ddd23693",
     "readingMinutes": 3
   },
   "api:audio-video/audio": {
@@ -184,20 +184,25 @@
     "sourceSha256": "5505dfce8aad298dfe327b34161ff2730084eb411b5b80204ae7dc53f2817254",
     "readingMinutes": 3
   },
+  "api:utilities/request-lookup": {
+    "updated": "2026-11-28T07:16:32+08:00",
+    "sourceSha256": "d77851f6e14938909dbd0d42823d8291f9449229fda19d25cadcca544311f8af",
+    "readingMinutes": 3
+  },
   "api:utilities/organization-usage-costs": {
     "updated": "2026-11-09T20:11:02+08:00",
     "sourceSha256": "e408a8e1f26fb5201aad95c82b7dac21f72ce0757c3e9c05a5648fbe41cb2380",
     "readingMinutes": 7
   },
   "api:utilities/fallback-models": {
-    "updated": "2026-10-06T16:09:16+08:00",
-    "sourceSha256": "db2e43b0158447be787c6eb9f0bf45a7a1e6b790438eeb4eca1b1ef58062409a",
-    "readingMinutes": 4
+    "updated": "2026-11-28T07:40:40+08:00",
+    "sourceSha256": "14cb4067ad17d8b2309a0c23be59acd404c41e30ff3eeb925f0acf447324d6aa",
+    "readingMinutes": 6
   },
   "api:utilities/models": {
-    "updated": "2026-10-06T14:59:11+08:00",
-    "sourceSha256": "728f6f108ca72e818f945ec45e53e30aa5c4b45f3f6b13a0a9bca22ce357c93b",
-    "readingMinutes": 2
+    "updated": "2026-11-28T07:21:24+08:00",
+    "sourceSha256": "44cd4cf17ed92d330d019f5025f1e20d86fcb4f3de6964aa3f3d4764cb3a54af",
+    "readingMinutes": 3
   },
   "api:utilities/recommend": {
     "updated": "2026-10-06T16:40:47+08:00",
@@ -245,24 +250,24 @@
     "readingMinutes": 5
   },
   "default:billing/payment-methods": {
-    "updated": "2026-11-27T12:43:11+08:00",
-    "sourceSha256": "62746cf87add48903dc98629839bb25e1db115d2179f844c8a6bc61e823134ac",
+    "updated": "2026-11-27T17:26:30+08:00",
+    "sourceSha256": "d9ce5bfacb3cc484c1e45a96e1f435b2b4ce8da4ee569cab4e56e20e3a9752ae",
     "readingMinutes": 6
   },
   "default:billing/quota-management": {
-    "updated": "2026-11-27T14:48:14+08:00",
-    "sourceSha256": "191ea7d4a82a447e5842fba8b72f70bad7b9edaf690aa2d6ac2832ce749ed870",
-    "readingMinutes": 6
+    "updated": "2026-11-28T07:16:32+08:00",
+    "sourceSha256": "de356d8d4699f3bbd43f6c03ff30327b0539def964c184c0bc70b02fc68e4082",
+    "readingMinutes": 9
   },
   "default:billing/rate-limits": {
-    "updated": "2026-06-10T11:32:17+08:00",
-    "sourceSha256": "d56f2710dbd56f893c812326151649130840fed4b8c1a28f89d5b08409f7c972",
+    "updated": "2026-11-28T07:21:24+08:00",
+    "sourceSha256": "f34f2acf114e396c26eb681795afad330fa0192ed77754d8216deece49fa693d",
     "readingMinutes": 5
   },
   "default:billing/per-key-limits": {
-    "updated": "2026-10-27T15:15:42+08:00",
-    "sourceSha256": "446a8a2fb6627a4460ba4bc4748d63aebaf7c67ce600f72ae9657f34e2c5aedb",
-    "readingMinutes": 6
+    "updated": "2026-11-28T07:16:32+08:00",
+    "sourceSha256": "0227eee06225c3668b335f6317f626b81c8245dc60c35fa625846fd4b800417c",
+    "readingMinutes": 7
   },
   "default:billing/subscription-plans": {
     "updated": "2026-07-20T11:55:30+08:00",
@@ -300,8 +305,8 @@
     "readingMinutes": 3
   },
   "default:help/error-codes": {
-    "updated": "2026-06-10T11:32:17+08:00",
-    "sourceSha256": "d12a5e8b755ece49348d8d516ad2caae2369dc7e308dda086fa756573784f2f0",
+    "updated": "2026-11-28T07:16:32+08:00",
+    "sourceSha256": "47c6c3553e1ee423d2a42c7316907e88aa7595f2396b9a599a3a5951c1de821e",
     "readingMinutes": 4
   },
   "default:help/faq": {

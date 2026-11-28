@@ -29,7 +29,7 @@ test('published articles become blog:<slug> entries eligible everywhere, with a 
   ]);
   for (const d of native) assert.deepEqual(d.eligibility, { publish: true, search: true, agent: true, rag: true });
   // The legacy corpus is untouched: 90 documents before the articles.
-  assert.equal(m.documents.length - native.length, 90);
+  assert.equal(m.documents.length - native.length, 91);
   const md = fs.readFileSync(path.join(out, 'src/content/public/blog/choosing-a-plan/index.md'), 'utf8');
   assert.equal(md, '# Choosing a plan\n\nA fixture article: subscription or pay-as-you-go, compared on one page.\n\nThis fixture stands in for a real article in tests only.\n\n## Subscription\n\nFixed quota per request.\n');
   const meta = JSON.parse(fs.readFileSync(path.join(out, 'src/content/docs/page-meta.json'), 'utf8'));
@@ -113,7 +113,7 @@ test('the committed tree: the 85 legacy documents plus the one published article
   const out = tmp();
   const m = convert({ outRoot: out });
   assert.deepEqual(m.documents.filter(isNativeArticle).map((d) => d.id), ['blog:ci-moved-three-times']);
-  assert.equal(m.documents.length, 91);
+  assert.equal(m.documents.length, 92);
   assert.ok(fs.existsSync(path.join(out, 'src/content/public/blog/ci-moved-three-times/index.md')));
 });
 

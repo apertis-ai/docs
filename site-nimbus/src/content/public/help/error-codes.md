@@ -403,6 +403,49 @@ Retry-After: 45
 
 ---
 
+### `api_key_rpm_limit_exceeded`
+
+```json
+{
+  "error": {
+    "message": "This API key has reached its limit of 60 requests per minute. Retry after 12 seconds, or raise the limit in the key's settings.",
+    "type": "rate_limit_error",
+    "code": "api_key_rpm_limit_exceeded"
+  }
+}
+```
+
+**Causes:**
+- The key has a **Requests per minute** limit and has started that many requests in the last minute
+
+**Solutions:**
+1. Wait for `Retry-After` seconds
+2. Spread requests across several keys
+3. Raise or remove the limit in the key's settings
+
+### `api_key_spend_limit_exceeded`
+
+```json
+{
+  "error": {
+    "message": "This API key has reached its spend limit of US$5.00 per day, counting spend since the limit was set, which resets at 00:00 UTC. Retry after 3600 seconds, or raise the limit in the key's settings.",
+    "type": "rate_limit_error",
+    "code": "api_key_spend_limit_exceeded"
+  }
+}
+```
+
+**Causes:**
+- The key has reached its **Spend limit per day** (resets at 00:00 UTC) or **Spend limit per week** (resets Monday 00:00 UTC)
+
+**Solutions:**
+1. Wait until the reset time. `Retry-After` is the number of seconds left
+2. Raise or remove the limit in the key's settings
+
+See [Per-Key Limits and Budget Blocks](/billing/per-key-limits) for every limit a key can carry.
+
+---
+
 ## Server Errors (5xx)
 
 ### `internal_error` (500)
