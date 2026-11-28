@@ -28,6 +28,7 @@
     "/api/utilities/fallback-models",
     "/api/utilities/model-performance",
     "/api/utilities/models",
+    "/api/utilities/request-lookup",
     "/api/vision/image-generation",
     "/api/vision/read-image",
     "/authentication/organizations",

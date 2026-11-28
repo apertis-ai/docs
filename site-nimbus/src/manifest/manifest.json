@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "c4f132557c221a082e969882f51067a98775d2b2",
-  "buildId": "c4f132557c221a082e969882f51067a98775d2b2.b2f6c57fa8cd",
+  "sourceSha": "a55232901167897694e77e25b74deb8c23d261d0",
+  "buildId": "a55232901167897694e77e25b74deb8c23d261d0.364431b195a9",
   "documents": [
     {
       "id": "page:index",
@@ -33,9 +33,9 @@
       },
       "markdown": {
         "path": "/api/index.md",
-        "sha256": "c6ebf91d3e70acbe21a82290306638afcebf59c04f3a1516a4aae6a8ee6d5445"
+        "sha256": "1586296b84387fd25aaa5ab2274a138d6596d3979a77f2eca885719a3745fb32"
       },
-      "contentSha256": "c6ebf91d3e70acbe21a82290306638afcebf59c04f3a1516a4aae6a8ee6d5445"
+      "contentSha256": "1586296b84387fd25aaa5ab2274a138d6596d3979a77f2eca885719a3745fb32"
     },
     {
       "id": "api:audio-video/audio",
@@ -686,6 +686,24 @@
       "contentSha256": "5505dfce8aad298dfe327b34161ff2730084eb411b5b80204ae7dc53f2817254"
     },
     {
+      "id": "api:utilities/request-lookup",
+      "sourcePath": "docs-api/utilities/request-lookup.md",
+      "servedPath": "/api/utilities/request-lookup/",
+      "canonicalUrl": "https://docs.apertis.ai/api/utilities/request-lookup",
+      "title": "Request Lookup",
+      "eligibility": {
+        "publish": true,
+        "search": true,
+        "agent": true,
+        "rag": true
+      },
+      "markdown": {
+        "path": "/api/utilities/request-lookup.md",
+        "sha256": "d77851f6e14938909dbd0d42823d8291f9449229fda19d25cadcca544311f8af"
+      },
+      "contentSha256": "d77851f6e14938909dbd0d42823d8291f9449229fda19d25cadcca544311f8af"
+    },
+    {
       "id": "api:utilities/organization-usage-costs",
       "sourcePath": "docs-api/utilities/organization-usage-costs.md",
       "servedPath": "/api/utilities/organization-usage-costs/",
@@ -717,9 +735,9 @@
       },
       "markdown": {
         "path": "/api/utilities/fallback-models.md",
-        "sha256": "187cde27f59ef25255331a1a999ec67b1b1e2919d0ccabd008cc7d7d518dd32d"
+        "sha256": "aededb63c03e87749f1fb734b57cf19da32efce1bdc02a328960ec26cbfa3da1"
       },
-      "contentSha256": "187cde27f59ef25255331a1a999ec67b1b1e2919d0ccabd008cc7d7d518dd32d"
+      "contentSha256": "aededb63c03e87749f1fb734b57cf19da32efce1bdc02a328960ec26cbfa3da1"
     },
     {
       "id": "api:utilities/models",
@@ -735,9 +753,9 @@
       },
       "markdown": {
         "path": "/api/utilities/models.md",
-        "sha256": "347a5aa8fa7df8f86fd046b45c1edde4a9916724aa25f061a36830aafa21dd0e"
+        "sha256": "5b7aab269a9cca9169ec539100f43b70a6305d23f2c1e39f17b99687bbef02b2"
       },
-      "contentSha256": "347a5aa8fa7df8f86fd046b45c1edde4a9916724aa25f061a36830aafa21dd0e"
+      "contentSha256": "5b7aab269a9cca9169ec539100f43b70a6305d23f2c1e39f17b99687bbef02b2"
     },
     {
       "id": "api:utilities/recommend",
@@ -933,9 +951,9 @@
       },
       "markdown": {
         "path": "/billing/quota-management.md",
-        "sha256": "58bfb20e179c688548c719a519d49003241cc977a4cbcb14282de47294833b21"
+        "sha256": "2f5c6803836b158dff90e1ef522f6d119283dff500ed0184dcf86467f065139c"
       },
-      "contentSha256": "58bfb20e179c688548c719a519d49003241cc977a4cbcb14282de47294833b21"
+      "contentSha256": "2f5c6803836b158dff90e1ef522f6d119283dff500ed0184dcf86467f065139c"
     },
     {
       "id": "default:billing/rate-limits",
@@ -951,9 +969,9 @@
       },
       "markdown": {
         "path": "/billing/rate-limits.md",
-        "sha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
+        "sha256": "9b4bbf444f829eb8a0aa8e0eed54058e14e66f7fb39ca643d3f40a9cd6473452"
       },
-      "contentSha256": "33c7b374908b144dfcdc3dc01909611f24ed66b13507fa02dc05c33e5661c551"
+      "contentSha256": "9b4bbf444f829eb8a0aa8e0eed54058e14e66f7fb39ca643d3f40a9cd6473452"
     },
     {
       "id": "default:billing/per-key-limits",
@@ -969,9 +987,9 @@
       },
       "markdown": {
         "path": "/billing/per-key-limits.md",
-        "sha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+        "sha256": "0dc4c3f9f89caded2530952cb044826ee082bdc215b471db5e8c3ea7604dbe9f"
       },
-      "contentSha256": "c8e9795b453df32d405a19776b762f6465ca5eef29e3f67f25e4c8a02cbf3aa2"
+      "contentSha256": "0dc4c3f9f89caded2530952cb044826ee082bdc215b471db5e8c3ea7604dbe9f"
     },
     {
       "id": "default:billing/subscription-plans",
@@ -1113,9 +1131,9 @@
       },
       "markdown": {
         "path": "/help/error-codes.md",
-        "sha256": "46636a154941fea7107b6e4cbbb9441a6d30219ced512b8c1df793b95b7ccc33"
+        "sha256": "a70ebdcca09ece0c6351d4778909ff5fb79575eaa3957f12828c14b16a19bbba"
       },
-      "contentSha256": "46636a154941fea7107b6e4cbbb9441a6d30219ced512b8c1df793b95b7ccc33"
+      "contentSha256": "a70ebdcca09ece0c6351d4778909ff5fb79575eaa3957f12828c14b16a19bbba"
     },
     {
       "id": "default:help/faq",
