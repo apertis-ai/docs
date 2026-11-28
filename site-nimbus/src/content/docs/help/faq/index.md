@@ -341,7 +341,16 @@ Yes, you can set IP whitelists for each API key in the dashboard.
 
 ### How do I delete my account?
 
-Contact support at hi@apertis.ai to request account deletion.
+Go to **Settings > Security** and choose **Delete account**, then confirm in the dialog.
+
+### Can I download my data before I delete my account?
+
+Yes. The **Delete account** dialog has a **Download your data first** section with two files:
+
+- **Usage history (CSV)**: your recent requests, in the same columns as the usage export.
+- **Account and API keys (CSV)**: your account details and one row per API key. Key values are never included.
+
+Download them before you confirm. After deletion your API keys stop working at once, and request records are kept for billing without your details.
 
 ### Can I have multiple accounts?
 
