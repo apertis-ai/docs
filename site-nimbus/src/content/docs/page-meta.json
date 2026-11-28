@@ -255,8 +255,8 @@
     "readingMinutes": 6
   },
   "default:billing/quota-management": {
-    "updated": "2026-11-28T07:16:32+08:00",
-    "sourceSha256": "de356d8d4699f3bbd43f6c03ff30327b0539def964c184c0bc70b02fc68e4082",
+    "updated": "2026-11-28T15:07:26+08:00",
+    "sourceSha256": "d7318d607f787bd22400ee14fd4b424ef706d293ec0e52d233bc300fefdc3b46",
     "readingMinutes": 9
   },
   "default:billing/rate-limits": {
@@ -265,9 +265,9 @@
     "readingMinutes": 5
   },
   "default:billing/per-key-limits": {
-    "updated": "2026-11-28T07:16:32+08:00",
-    "sourceSha256": "0227eee06225c3668b335f6317f626b81c8245dc60c35fa625846fd4b800417c",
-    "readingMinutes": 7
+    "updated": "2026-11-28T15:18:25+08:00",
+    "sourceSha256": "cdd8f6bb9ef4c9d8e3a4a4bf6e3b66ca97f252076cdb4d171fc8eaef1d310711",
+    "readingMinutes": 8
   },
   "default:billing/subscription-plans": {
     "updated": "2026-07-20T11:55:30+08:00",
