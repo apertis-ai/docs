@@ -19,6 +19,7 @@ You set these in the dashboard when you create or edit a key.
 | **Daily spend limit** | Maximum the key may spend in one UTC day, in US dollars. Counts spend since the limit was set. | Every day at 00:00 UTC. |
 | **Weekly spend limit** | Maximum the key may spend in one UTC week, in US dollars. Counts spend since the limit was set. | Every Monday at 00:00 UTC. |
 | **Requests per minute** | Maximum number of requests the key may start in a minute, from 1 to 10,000. | Each minute. A refused request returns `Retry-After`. |
+| **Tokens per minute** | Maximum number of tokens (input plus output) the key may use in a minute, up to 100,000,000. Empty means no limit. | Continuously: tokens older than one minute stop counting. A refused request returns `Retry-After`. |
 | **Expiration** | Date after which the key stops working. | Never. Edit the expiration or create a new key. |
 | **Allowed models** | The only models the key may call. Empty means all models available to you. | — |
 | **IP allowlist** (subnet) | The only client addresses the key may be used from. | — |
@@ -53,6 +54,7 @@ A request's estimated cost is always reserved up front when the key or the accou
 | Key's hourly spend limit reached | `429` | Yes | `api_key_spend_rate_exceeded` |
 | Key's daily or weekly spend limit reached | `429` | Yes | `api_key_spend_limit_exceeded` |
 | Key's requests-per-minute limit reached | `429` | Yes | `api_key_rpm_limit_exceeded` |
+| Key's tokens-per-minute limit reached | `429` | Yes | `api_key_tpm_limit_exceeded` |
 | Too many requests to one model with one key | `429` | Yes | `rate_limit_exceeded` |
 
 The hourly spend limit's message names the limit and the wait: `This API key has reached its spend limit of US$<amount> per hour. Retry after <seconds> seconds, or raise the limit in the key's settings.`
@@ -60,6 +62,12 @@ The hourly spend limit's message names the limit and the wait: `This API key has
 The daily and weekly spend limits answer with the amount, the period and the wait: `This API key has reached its spend limit of US$<amount> per day, counting spend since the limit was set, which resets at 00:00 UTC. Retry after <seconds> seconds, or raise the limit in the key's settings.` For the weekly limit, `day` is `week` and the reset is `Monday 00:00 UTC`. `Retry-After` is the number of seconds until that reset.
 
 The requests-per-minute limit's message reads `This API key has reached its limit of <number> requests per minute. Retry after <seconds> seconds, or raise the limit in the key's settings.`
+
+The tokens-per-minute limit's message reads `This API key has reached its limit of <number> tokens per minute. Retry after <seconds> seconds, or raise the limit in the key's settings.` The response also carries `x-ratelimit-limit-tokens` (the limit), `x-ratelimit-remaining-tokens` (`0`) and `x-ratelimit-reset-tokens`.
+
+Tokens are counted when a request finishes, as its input tokens plus its output tokens, so the limit is checked against the tokens of requests that have already completed in the last minute. A request that is admitted is never cut off part-way, so one large request can take the key past the limit; the next request is refused until enough of the minute has passed. The limit is checked after the requests-per-minute limit. A key with no tokens-per-minute limit is not checked.
+
+To set the limit through the key API, send `tpm_limit` as an integer from `0` to `100000000` when you create or update a key. `0` removes the limit, and an update that does not include `tpm_limit` keeps the current value. A value outside that range returns `400` with `error.code` `invalid_tpm_limit` and the message `Tokens per minute limit must be between 0 and 100000000`. The key's `limits` object returns the current `tpm_limit`.
 
 The other request-rate limits, and how to retry them, are in [Rate Limits](./rate-limits).
 
