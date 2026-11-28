@@ -332,7 +332,7 @@ Enable 2FA on your Apertis account:
 
 ### Sign-in History
 
-Go to **Settings > Security** and choose **View sign-in history**. It opens **Logs** filtered to account events from the last 90 days: each sign-in shows its device, sign-in method and country, and failed attempts are listed too (a wrong password for your account, or a wrong two-factor or backup code).
+Go to **Settings > Security** and choose **View sign-in history**. It opens **Logs** filtered to account events from the last 30 days: each sign-in shows its device, sign-in method and country, and failed attempts are listed too (a wrong password for your account, or a wrong two-factor or backup code).
 
 If you see a sign-in or failed attempt you do not recognise, change your password, enable two-factor authentication and revoke your API keys.
 
