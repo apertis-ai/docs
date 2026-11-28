@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "site": "https://docs.apertis.ai",
-  "sourceSha": "bfc29fef0153bc6656731b70dda0c6fa7d6479c6",
-  "buildId": "bfc29fef0153bc6656731b70dda0c6fa7d6479c6.364431b195a9",
+  "sourceSha": "7eb601cd47e00f90c7ffe67eeb8318bd449060c8",
+  "buildId": "7eb601cd47e00f90c7ffe67eeb8318bd449060c8.364431b195a9",
   "documents": [
     {
       "id": "page:index",
@@ -897,9 +897,9 @@
       },
       "markdown": {
         "path": "/billing/payg.md",
-        "sha256": "5f827827a6c1dd3972b52374c2222e684c5990f64b7bb8f6100df6fb720a2b84"
+        "sha256": "d44f349715860ab43151491543088fe93baeb5c8fa1758b00d2ce78e3ff1b5a3"
       },
-      "contentSha256": "5f827827a6c1dd3972b52374c2222e684c5990f64b7bb8f6100df6fb720a2b84"
+      "contentSha256": "d44f349715860ab43151491543088fe93baeb5c8fa1758b00d2ce78e3ff1b5a3"
     },
     {
       "id": "default:billing/balance-alerts-and-webhooks",
@@ -933,9 +933,9 @@
       },
       "markdown": {
         "path": "/billing/payment-methods.md",
-        "sha256": "b1d346feb1247bf562ce01583bb0c2820eb66f3c66d967820a597b6961224ff2"
+        "sha256": "ad6129ddc6bede8ba54f709e071234ac25185a47e15e55e179f84bf321135fb2"
       },
-      "contentSha256": "b1d346feb1247bf562ce01583bb0c2820eb66f3c66d967820a597b6961224ff2"
+      "contentSha256": "ad6129ddc6bede8ba54f709e071234ac25185a47e15e55e179f84bf321135fb2"
     },
     {
       "id": "default:billing/quota-management",
@@ -1005,9 +1005,9 @@
       },
       "markdown": {
         "path": "/billing/subscription-plans.md",
-        "sha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+        "sha256": "0305ca5c9e509b46412a65c0f82220d3558950766701f281045d0630e36563cd"
       },
-      "contentSha256": "cc2fc8f109c9e805ee7c251b485bf74247c3a70650d7eb9f03c14ef407239955"
+      "contentSha256": "0305ca5c9e509b46412a65c0f82220d3558950766701f281045d0630e36563cd"
     },
     {
       "id": "default:frameworks/django",
@@ -1149,9 +1149,9 @@
       },
       "markdown": {
         "path": "/help/faq.md",
-        "sha256": "8d4aae8342a25cf47bc40f9d56316b401791eb2c78b96f103063ae48f8f49b1e"
+        "sha256": "4fbddc88949f497b2dae42ad701ef715cba5830e47eb0f4761a731b37072082f"
       },
-      "contentSha256": "8d4aae8342a25cf47bc40f9d56316b401791eb2c78b96f103063ae48f8f49b1e"
+      "contentSha256": "4fbddc88949f497b2dae42ad701ef715cba5830e47eb0f4761a731b37072082f"
     },
     {
       "id": "default:help/ideas",
